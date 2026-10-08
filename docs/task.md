@@ -28,7 +28,7 @@
 
 | Phase | Contenu | Écrans / réf. | Statut |
 |---|---|---|---|
-| 0 | Fondations techniques et composants de base | — | ⬜ À faire |
+| 0 | Fondations techniques et composants de base | — | ✅ Terminée |
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ⬜ À faire |
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ⬜ À faire |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ⬜ À faire |
@@ -56,19 +56,19 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - Tab bar avec **+ Signaler** central surélevé, en bleu marque, jamais en rouge (Citizen, adapté)
 - CSS des tokens et composants **repris de `docs/design-system/index.html`** (source visuelle unique)
 
-- [ ] **0.1** Créer `prototype/index.html` : React 18.3.1 + ReactDOM + Babel standalone (cdnjs), police Inter (Google Fonts), **sprite SVG Phosphor intégré** (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1` : les artefacts bloquent les feuilles de style jsDelivr)
-- [ ] **0.2** Tokens CSS sur `:root` (couleurs, familles d'alertes, statuts, typo, espacements, rayons, ombres) + mode sombre (`prefers-color-scheme` et `data-theme`) — DS §2–§4
-- [ ] **0.3** Cadre téléphone 390 × 844 sur desktop, plein écran sur mobile ; zone sûre (encoche, barre d'accueil)
-- [ ] **0.4** Store unique (`useReducer`) : session, préférences, alertes, votes, commentaires, suivis, notifications
-- [ ] **0.5** Routeur interne : onglets + pile d'écrans + bottom sheets + modales, bouton retour
-- [ ] **0.6** Données fictives : territoire du Val-d'Oise, communes (Cergy, Pontoise, Argenteuil, Sarcelles, Garges-lès-Gonesse, Montmorency, Enghien-les-Bains, L'Isle-Adam, Saint-Ouen-l'Aumône, Ermont…), quartiers, catégories ± avec icônes Phosphor, services et règles de routage, ~30 alertes (positives et négatives, à différents âges et statuts), commentaires, personnes fictives
-- [ ] **0.7** Utilitaires : temps relatif (« il y a 12 min »), compteur d'expiration de 24 h, distance, horloge simulée, routage simulé
-- [ ] **0.8** Composants de base : `Button` (4 variantes + loading), `IconButton`, `Chip`, `SegmentedControl`, `Card`, `Input`/`Textarea`, `RadioCard`, `Switch`, `ListItem`
-- [ ] **0.9** Composants de feedback : `Toast` (aria-live), `Modal` de confirmation, `BottomSheet` (3 hauteurs), `Banner`, `Skeleton`, `EmptyState`, `Spinner`
-- [ ] **0.10** `TabBar` : Carte · Alertes · **+ Signaler** (central, surélevé) · Activité · Profil
-- [ ] **0.11** Panneau **« Mode démo »** discret : réinitialiser, forcer hors connexion, permission refusée, erreur, zone vide, beaucoup d'alertes, accélérer le temps
-- [ ] **0.12** `localStorage` encapsulé (`try/catch`) pour le thème, la taille du texte et l'onboarding vu
-- [ ] **0.13** Composants transverses issus du benchmark : `CategoryTile`, `Timeline`, `RadioCard` avec aperçu, `Pill` flottante
+- [x] **0.1** Créer `prototype/index.html` (assemblé par `tools/build_prototype.py` depuis `prototype/src/`) : React 18.3.1 + ReactDOM + Babel standalone (cdnjs), police Inter (Google Fonts), **sprite SVG Phosphor intégré** (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1` : les artefacts bloquent les feuilles de style jsDelivr)
+- [x] **0.2** Tokens CSS sur `:root` (couleurs, familles d'alertes, statuts, typo, espacements, rayons, ombres) + mode sombre (`prefers-color-scheme` et `data-theme`) — DS §2–§4
+- [x] **0.3** Cadre téléphone 390 × 844 sur desktop, plein écran sur mobile ; zone sûre (encoche, barre d'accueil)
+- [x] **0.4** Store unique (`useReducer`) : session, préférences, alertes, votes, commentaires, suivis, notifications
+- [x] **0.5** Routeur interne : onglets + pile d'écrans + bottom sheets + modales, bouton retour
+- [x] **0.6** Données fictives : territoire du Val-d'Oise, communes (Cergy, Pontoise, Argenteuil, Sarcelles, Garges-lès-Gonesse, Montmorency, Enghien-les-Bains, L'Isle-Adam, Saint-Ouen-l'Aumône, Ermont…), quartiers, catégories ± avec icônes Phosphor, services et règles de routage, ~30 alertes (positives et négatives, à différents âges et statuts), commentaires, personnes fictives
+- [x] **0.7** Utilitaires : temps relatif (« il y a 12 min »), compteur d'expiration de 24 h, distance, horloge simulée, routage simulé
+- [x] **0.8** Composants de base : `Button` (4 variantes + loading), `IconButton`, `Chip`, `SegmentedControl`, `Card`, `Input`/`Textarea`, `RadioCard`, `Switch`, `ListItem`
+- [x] **0.9** Composants de feedback : `Toast` (aria-live), `Modal` de confirmation, `BottomSheet` (3 hauteurs), `Banner`, `Skeleton`, `EmptyState`, `Spinner`
+- [x] **0.10** `TabBar` : Carte · Alertes · **+ Signaler** (central, surélevé) · Activité · Profil
+- [x] **0.11** Panneau **« Mode démo »** discret : réinitialiser, forcer hors connexion, permission refusée, erreur, zone vide, beaucoup d'alertes, accélérer le temps
+- [x] **0.12** `localStorage` encapsulé (`try/catch`) pour le thème, la taille du texte et l'onboarding vu
+- [x] **0.13** Composants transverses issus du benchmark : `CategoryTile`, `Timeline`, `RadioCard` avec aperçu, `Pill` flottante
 - [x] **0.14** Page de référence du Design System : `docs/design-system/index.html` (tokens, icônes, composants, états)
 
 **Validation** : la page s'ouvre sans erreur console ; les onglets naviguent vers des écrans vides ; le thème sombre fonctionne ; les composants sont visibles sur une page de démonstration interne.
@@ -336,3 +336,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 |---|---|---|
 | 2026-10-08 | — | Création du plan de tâches |
 | 2026-10-08 | — | Benchmark Mobbin : 10 principes et décisions UX reportés dans chaque phase ; icônes Phosphor intégrées en sprite SVG (CSS jsDelivr bloqué dans les artefacts) ; page Design System `docs/design-system/index.html` créée |
+| 2026-10-08 | 0 | Phase 0 terminée : `prototype/src/` (app.jsx, app.css, sprite) assemblé en `prototype/index.html` ; store, routeur à pile, BottomSheet 3 crans (glisser + clavier), modale, toasts, composants de base et 95 Alerte, écrans d'onglets provisoires, bibliothèque de composants, mode démo. Babel chargé depuis jsDelivr (`@babel/standalone@7.26.4`). |

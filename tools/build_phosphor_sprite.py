@@ -34,6 +34,9 @@ ICONS = [
     "envelope", "identification-card", "buildings", "paper-plane-tilt", "users-three",
     "arrows-clockwise", "house", "sun", "moon", "text-aa", "circle-half", "vibrate",
     "trash-simple", "copy",
+    # Prototype : barre d'état, démo, navigation
+    "wifi-high", "cell-signal-full", "battery-full", "arrow-left", "squares-four",
+    "play", "fast-forward", "arrow-counter-clockwise", "path",
 ]
 FILL = [
     "map-trifold", "list-bullets", "pulse", "user-circle", "bell", "arrow-fat-up",
@@ -41,6 +44,7 @@ FILL = [
     "fire", "car", "traffic-cone", "shield-warning", "leaf", "trash", "speaker-high",
     "hand-heart", "mask-happy", "soccer-ball", "calendar-star", "barricade", "lightbulb",
     "dots-three", "drop", "tree", "megaphone", "info", "warning", "siren", "star",
+    "paper-plane-tilt", "squares-four",
 ]
 
 

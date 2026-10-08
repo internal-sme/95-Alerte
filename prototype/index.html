@@ -1,0 +1,1641 @@
+<title>95 Alerte</title>
+<!-- Fichier généré par tools/build_prototype.py : modifier prototype/src/ puis relancer le script. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* ============ TOKENS — DESIGN_SYSTEM.md §2–§4 ============ */
+:root{
+  /* Base */
+  --bg:#F8FAFC; --surface:#FFFFFF; --surface-2:#F1F5F9; --border:#E2E8F0;
+  --text:#0F172A; --text-muted:#475569; --primary:#1E40AF; --on-primary:#FFFFFF; --focus-ring:#2563EB;
+  /* Familles d'alertes */
+  --alert-incident:#B91C1C; --alert-vigilance:#C2410C; --alert-positive:#15803D; --alert-info:#0369A1;
+  --alert-incident-soft:color-mix(in srgb,#B91C1C 10%,transparent);
+  --alert-vigilance-soft:color-mix(in srgb,#C2410C 10%,transparent);
+  --alert-positive-soft:color-mix(in srgb,#15803D 10%,transparent);
+  --alert-info-soft:color-mix(in srgb,#0369A1 10%,transparent);
+  --primary-soft:color-mix(in srgb,#1E40AF 10%,transparent);
+  --on-alert:#FFFFFF;
+  /* États et feedback */
+  --neutral:#64748B; --status-progress:#C2410C; --status-done:#15803D; --status-error:#B91C1C;
+  --success:#15803D; --warning:#B45309; --error:#B91C1C; --info:#0369A1;
+  /* Typographie */
+  --font:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --fs-display:1.75rem; --lh-display:2.125rem;
+  --fs-h1:1.375rem; --lh-h1:1.75rem;
+  --fs-h2:1.125rem; --lh-h2:1.5rem;
+  --fs-h3:1rem; --lh-h3:1.375rem;
+  --fs-body:1rem; --lh-body:1.5rem;
+  --fs-sm:.875rem; --lh-sm:1.25rem;
+  --fs-caption:.75rem; --lh-caption:1rem;
+  /* Espacements (échelle 4/8) */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-6:24px; --s-8:32px; --s-12:48px;
+  /* Rayons */
+  --r-sm:8px; --r-md:12px; --r-lg:20px; --r-full:999px;
+  /* Élévation */
+  --shadow-1:0 1px 2px rgba(15,23,42,.08);
+  --shadow-2:0 4px 12px rgba(15,23,42,.12);
+  --shadow-3:0 -8px 28px rgba(15,23,42,.16);
+  /* Cibles tactiles */
+  --tap:48px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1220; --surface:#111A2E; --surface-2:#1A2540; --border:#273452;
+  --text:#F1F5F9; --text-muted:#A3B1C6; --primary:#7AA2FF; --on-primary:#0B1220; --focus-ring:#93B4FF;
+  --alert-incident:#F87171; --alert-vigilance:#FB923C; --alert-positive:#4ADE80; --alert-info:#38BDF8;
+  --alert-incident-soft:color-mix(in srgb,#F87171 18%,transparent);
+  --alert-vigilance-soft:color-mix(in srgb,#FB923C 18%,transparent);
+  --alert-positive-soft:color-mix(in srgb,#4ADE80 18%,transparent);
+  --alert-info-soft:color-mix(in srgb,#38BDF8 18%,transparent);
+  --primary-soft:color-mix(in srgb,#7AA2FF 18%,transparent);
+  --on-alert:#0B1220;
+  --neutral:#94A3B8; --status-progress:#FB923C; --status-done:#4ADE80; --status-error:#F87171;
+  --success:#4ADE80; --warning:#FBBF24; --error:#F87171; --info:#38BDF8;
+  --shadow-1:none; --shadow-2:0 4px 12px rgba(0,0,0,.4); --shadow-3:0 -8px 28px rgba(0,0,0,.5);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1220; --surface:#111A2E; --surface-2:#1A2540; --border:#273452;
+  --text:#F1F5F9; --text-muted:#A3B1C6; --primary:#7AA2FF; --on-primary:#0B1220; --focus-ring:#93B4FF;
+  --alert-incident:#F87171; --alert-vigilance:#FB923C; --alert-positive:#4ADE80; --alert-info:#38BDF8;
+  --alert-incident-soft:color-mix(in srgb,#F87171 18%,transparent);
+  --alert-vigilance-soft:color-mix(in srgb,#FB923C 18%,transparent);
+  --alert-positive-soft:color-mix(in srgb,#4ADE80 18%,transparent);
+  --alert-info-soft:color-mix(in srgb,#38BDF8 18%,transparent);
+  --primary-soft:color-mix(in srgb,#7AA2FF 18%,transparent);
+  --on-alert:#0B1220;
+  --neutral:#94A3B8; --status-progress:#FB923C; --status-done:#4ADE80; --status-error:#F87171;
+  --success:#4ADE80; --warning:#FBBF24; --error:#F87171; --info:#38BDF8;
+  --shadow-1:none; --shadow-2:0 4px 12px rgba(0,0,0,.4); --shadow-3:0 -8px 28px rgba(0,0,0,.5);
+  color-scheme:dark}
+/* Réglages d'accessibilité internes (PARAM-01) */
+:root[data-contrast="high"]{--border:var(--text-muted)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+:root[data-motion="reduce"] *{animation:none!important;transition:none!important}
+
+/* ============ COMPOSANTS (repris par prototype/index.html) ============ */
+*{box-sizing:border-box}
+.ph{width:1.25em;height:1.25em;fill:currentColor;flex:none;vertical-align:-.25em}
+.ph-sm{width:1rem;height:1rem} .ph-lg{width:1.5rem;height:1.5rem}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:var(--tap);padding:0 var(--s-6);border-radius:var(--r-md);border:1.5px solid transparent;font:600 var(--fs-body)/1 var(--font);cursor:pointer;text-decoration:none;transition:filter .15s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,.icon-btn:focus-visible,.radio-card:focus-within,.vote button:focus-visible,.tab:focus-visible,.switch input:focus-visible+span{outline:2px solid var(--focus-ring);outline-offset:2px}
+.btn-primary{background:var(--primary);color:var(--on-primary)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-secondary{background:transparent;color:var(--primary);border-color:var(--primary)}
+.btn-ghost{background:transparent;color:var(--primary)}
+.btn-ghost:hover{background:var(--primary-soft)}
+.btn-destructive{background:var(--error);color:var(--on-alert)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn-block{width:100%}
+.spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.icon-btn{display:inline-grid;place-items:center;width:var(--tap);height:var(--tap);border-radius:var(--r-full);border:0;background:var(--surface);color:var(--text);box-shadow:var(--shadow-2);cursor:pointer;position:relative}
+.icon-btn .badge-count{position:absolute;top:6px;right:6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--error);color:var(--on-alert);font:700 11px/18px var(--font);text-align:center}
+
+.field{display:grid;gap:6px}
+.field label{font:600 var(--fs-sm)/var(--lh-sm) var(--font);color:var(--text)}
+.field .help{font:400 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--text-muted);display:flex;justify-content:space-between;gap:8px}
+.input{width:100%;min-height:var(--tap);padding:var(--s-3) var(--s-4);border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font:400 var(--fs-body)/var(--lh-body) var(--font)}
+.input:focus{outline:none;border-color:var(--focus-ring);box-shadow:0 0 0 3px var(--primary-soft)}
+.input[aria-invalid="true"]{border-color:var(--error)}
+.input:disabled{background:var(--surface-2);color:var(--text-muted)}
+textarea.input{min-height:96px;resize:vertical}
+.field .err{display:flex;gap:6px;align-items:center;color:var(--error);font:500 var(--fs-caption)/var(--lh-caption) var(--font)}
+
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 var(--s-3);border-radius:var(--r-full);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font:500 var(--fs-sm)/1 var(--font);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.chip .ph{width:1rem;height:1rem}
+.seg{display:inline-flex;padding:4px;border-radius:var(--r-full);background:var(--surface-2);gap:4px}
+.seg button{min-height:40px;padding:0 var(--s-4);border:0;border-radius:var(--r-full);background:transparent;color:var(--text-muted);font:600 var(--fs-sm)/1 var(--font);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--text);box-shadow:var(--shadow-1)}
+
+.radio-card{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s-3);align-items:center;padding:var(--s-4);border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--surface);cursor:pointer}
+.radio-card input{position:absolute;opacity:0;pointer-events:none}
+.radio-card .rc-icon{width:44px;height:44px;border-radius:var(--r-full);display:grid;place-items:center}
+.radio-card b{display:block;font:600 var(--fs-h3)/var(--lh-h3) var(--font)}
+.radio-card small{display:block;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.radio-card .rc-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:grid;place-items:center}
+.radio-card:has(input:checked){border-color:var(--primary);background:var(--primary-soft)}
+.radio-card:has(input:checked) .rc-dot{border-color:var(--primary)}
+.radio-card:has(input:checked) .rc-dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--primary)}
+.preview-author{display:flex;gap:var(--s-2);align-items:center;padding:var(--s-3);border-radius:var(--r-sm);background:var(--surface-2);font:400 var(--fs-sm)/var(--lh-sm) var(--font);color:var(--text-muted)}
+.preview-author b{color:var(--text)}
+
+.switch{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4);min-height:var(--tap);font:400 var(--fs-body)/var(--lh-body) var(--font)}
+.switch input{position:absolute;opacity:0}
+.switch span{width:48px;height:28px;border-radius:14px;background:var(--border);position:relative;flex:none;transition:background .2s}
+.switch span::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow-1);transition:transform .2s}
+.switch input:checked+span{background:var(--primary)}
+.switch input:checked+span::after{transform:translateX(20px)}
+
+.list{background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border);overflow:hidden}
+.list-item{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s-3);align-items:center;min-height:56px;padding:0 var(--s-4);border-bottom:1px solid var(--border);color:var(--text);font:400 var(--fs-body)/var(--lh-body) var(--font)}
+.list-item:last-child{border-bottom:0}
+.list-item .val{color:var(--text-muted);font-size:var(--fs-sm);display:flex;align-items:center;gap:4px}
+
+.card{background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow-1);border:1px solid var(--border);padding:var(--s-4)}
+
+.toast{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4);border-radius:var(--r-md);background:var(--text);color:var(--bg);font:500 var(--fs-sm)/var(--lh-sm) var(--font);box-shadow:var(--shadow-2)}
+.toast .ph{color:var(--alert-positive)}
+.toast.is-error .ph{color:var(--alert-incident)}
+.toast .toast-action{margin-left:auto;background:none;border:0;color:inherit;font:700 var(--fs-sm)/1 var(--font);text-decoration:underline;cursor:pointer;min-height:32px}
+:root[data-theme="dark"] .toast .ph{filter:saturate(1.2)}
+
+.banner{display:flex;gap:var(--s-3);align-items:flex-start;padding:var(--s-3) var(--s-4);border-radius:var(--r-sm);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.banner b{display:block;font-weight:600}
+.banner-offline{background:var(--surface-2);color:var(--text)}
+.banner-emergency{background:var(--alert-incident-soft);color:var(--text)}
+.banner-emergency .ph{color:var(--alert-incident)}
+.banner-info{background:var(--alert-info-soft);color:var(--text)}
+.banner-info .ph{color:var(--alert-info)}
+
+.modal{background:var(--surface);border-radius:var(--r-lg);padding:var(--s-6);box-shadow:var(--shadow-3);display:grid;gap:var(--s-3);max-width:340px}
+.modal h3{margin:0;font:700 var(--fs-h2)/var(--lh-h2) var(--font)}
+.modal p{margin:0;color:var(--text-muted);font:400 var(--fs-body)/var(--lh-body) var(--font)}
+.modal .actions{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2);margin-top:var(--s-2)}
+
+.sheet{background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:var(--shadow-3);padding:var(--s-2) var(--s-4) var(--s-4);display:grid;gap:var(--s-3)}
+.sheet .grab{justify-self:center;width:40px;height:5px;border-radius:3px;background:var(--border)}
+
+.skeleton{background:linear-gradient(90deg,var(--surface-2) 25%,var(--border) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--r-sm)}
+@keyframes shimmer{to{background-position:-200% 0}}
+
+.empty{display:grid;justify-items:center;text-align:center;gap:var(--s-2);padding:var(--s-8) var(--s-4)}
+.empty .empty-ill{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--text-muted)}
+.empty h4{margin:var(--s-2) 0 0;font:600 var(--fs-h3)/var(--lh-h3) var(--font)}
+.empty p{margin:0 0 var(--s-2);color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font);max-width:30ch}
+
+.stepper{display:grid;gap:var(--s-2)}
+.stepper .lbl{display:flex;justify-content:space-between;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--text-muted)}
+.stepper .track{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.stepper .track i{display:block;height:100%;background:var(--primary);border-radius:3px}
+
+/* Tab bar */
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;background:var(--surface);border-top:1px solid var(--border);padding:6px 4px 10px}
+.tab{display:grid;justify-items:center;gap:2px;min-height:var(--tap);border:0;background:none;color:var(--text-muted);font:500 11px/14px var(--font);cursor:pointer;padding-top:6px}
+.tab .ph{width:24px;height:24px}
+.tab[aria-current="page"]{color:var(--primary)}
+.tab-report{position:relative;top:-14px}
+.tab-report .fab{width:56px;height:56px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;box-shadow:var(--shadow-2);border:4px solid var(--surface)}
+.tab-report .fab .ph{width:26px;height:26px}
+.tab-report{color:var(--text)}
+
+/* ---- Spécifiques 95 Alerte ---- */
+.fam-incident{--fam:var(--alert-incident);--fam-soft:var(--alert-incident-soft)}
+.fam-vigilance{--fam:var(--alert-vigilance);--fam-soft:var(--alert-vigilance-soft)}
+.fam-positive{--fam:var(--alert-positive);--fam-soft:var(--alert-positive-soft)}
+.fam-info{--fam:var(--alert-info);--fam-soft:var(--alert-info-soft)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;min-height:24px;padding:0 9px;border-radius:var(--r-full);font:600 var(--fs-caption)/1 var(--font);white-space:nowrap}
+.badge .ph{width:14px;height:14px}
+.badge-type{background:var(--fam-soft);color:var(--fam)}
+.badge-status{background:var(--surface-2);color:var(--text)}
+.badge-status .ph{color:var(--st,var(--text-muted))}
+.badge-status.st-active{--st:var(--fam,var(--alert-positive))}
+.badge-status.st-soon{--st:var(--alert-vigilance);background:var(--alert-vigilance-soft)}
+.badge-status.st-sent{--st:var(--primary);background:var(--primary-soft)}
+.badge-status.st-progress{--st:var(--status-progress);background:var(--alert-vigilance-soft)}
+.badge-status.st-done{--st:var(--status-done);background:var(--alert-positive-soft)}
+.badge-status.st-expired,.badge-status.st-draft{--st:var(--neutral);color:var(--text-muted)}
+.badge-status.st-rejected{--st:var(--status-error);background:var(--alert-incident-soft)}
+.badge-status.st-moderated{--st:var(--text-muted);border:1px dashed var(--border);background:transparent}
+
+.marker{position:relative;width:36px;height:36px;display:inline-grid;place-items:center;color:var(--on-alert)}
+.marker svg.shape{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.marker svg.shape path,.marker svg.shape rect,.marker svg.shape circle{fill:var(--fam);stroke:var(--surface);stroke-width:2.5}
+.marker .ph{position:relative;width:16px;height:16px}
+.marker.is-selected{width:44px;height:44px}
+.marker.is-selected .ph{width:20px;height:20px}
+.marker.is-selected::before{content:"";position:absolute;inset:-8px;border-radius:50%;background:var(--fam-soft)}
+.marker.is-critical::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px solid var(--fam);animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{from{transform:scale(.7);opacity:1}to{transform:scale(1.25);opacity:0}}
+.marker-label{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;padding:1px 6px;border-radius:4px;background:var(--fam);color:var(--on-alert);font:700 10px/14px var(--font);white-space:nowrap}
+.cluster{display:inline-grid;place-items:center;border-radius:50%;background:var(--primary);color:var(--on-primary);font:700 var(--fs-sm)/1 var(--font);border:2.5px solid var(--surface);box-shadow:var(--shadow-2);font-variant-numeric:tabular-nums}
+.cluster.c-s{width:32px;height:32px}.cluster.c-m{width:40px;height:40px}.cluster.c-l{width:48px;height:48px}
+.me{position:relative;width:18px;height:18px;border-radius:50%;background:var(--focus-ring);border:3px solid var(--surface);box-shadow:0 0 0 14px color-mix(in srgb,var(--focus-ring) 18%,transparent)}
+
+.alert-card{display:grid;gap:var(--s-2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-4);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none}
+.alert-card .ac-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.alert-card .ac-top .exp{margin-left:auto;display:inline-flex;gap:4px;align-items:center;color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font);font-variant-numeric:tabular-nums}
+.alert-card h4{margin:0;font:600 var(--fs-h3)/var(--lh-h3) var(--font);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.alert-card .meta{display:flex;gap:6px;align-items:center;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.alert-card .photo{aspect-ratio:16/9;border-radius:var(--r-sm);max-width:100%;background:linear-gradient(135deg,var(--fam-soft),var(--surface-2));display:grid;place-items:center;color:var(--fam)}
+.alert-card .photo .ph{width:40px;height:40px;opacity:.7}
+.alert-card .stats{display:flex;gap:var(--s-4);color:var(--text-muted);font:500 var(--fs-sm)/1 var(--font);font-variant-numeric:tabular-nums}
+.alert-card .stats span{display:inline-flex;gap:4px;align-items:center}
+.alert-card .svc{display:flex;gap:6px;align-items:center;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--primary)}
+
+.vote{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2)}
+.vote button{display:flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:var(--tap);border-radius:var(--r-md);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font:600 var(--fs-sm)/1 var(--font);cursor:pointer;font-variant-numeric:tabular-nums}
+.vote button .n{color:var(--text-muted);font-weight:500}
+.vote button.up[aria-pressed="true"]{background:var(--alert-positive-soft);border-color:var(--alert-positive);color:var(--text)}
+.vote button.up[aria-pressed="true"] .ph{color:var(--alert-positive)}
+.vote button.down[aria-pressed="true"]{background:var(--alert-vigilance-soft);border-color:var(--alert-vigilance);color:var(--text)}
+.vote button.down[aria-pressed="true"] .ph{color:var(--alert-vigilance)}
+
+.comment{display:grid;grid-template-columns:36px 1fr;gap:var(--s-3)}
+.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--primary-soft);color:var(--primary);font:700 var(--fs-sm)/1 var(--font)}
+.avatar.anon{background:var(--surface-2);color:var(--text-muted)}
+.comment .who{display:flex;gap:6px;align-items:baseline;font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
+.comment .who time{font-weight:400;color:var(--text-muted);font-size:var(--fs-caption)}
+.comment p{margin:2px 0 6px;font:400 var(--fs-body)/var(--lh-body) var(--font)}
+.comment .acts{display:flex;gap:var(--s-4);color:var(--text-muted);font:600 var(--fs-caption)/1 var(--font)}
+.comment .acts button{background:none;border:0;color:inherit;font:inherit;cursor:pointer;min-height:32px;padding:0}
+.comment.reply{margin-left:48px}
+
+.location{display:grid;gap:var(--s-2)}
+.location .mini-map{height:96px;border-radius:var(--r-sm);position:relative;overflow:hidden;background:
+  linear-gradient(115deg,transparent 46%,var(--border) 46% 49%,transparent 49%),
+  linear-gradient(25deg,transparent 58%,var(--border) 58% 61%,transparent 61%),var(--surface-2)}
+.location .mini-map .zone{position:absolute;left:30%;top:18%;width:42%;height:64%;border-radius:40% 55% 45% 50%;background:var(--fam-soft);border:1.5px dashed var(--fam)}
+.location .row{display:flex;align-items:center;gap:var(--s-2);font:500 var(--fs-sm)/var(--lh-sm) var(--font)}
+.location .row .ph{color:var(--text-muted)}
+.location .row button{margin-left:auto}
+
+.service{display:flex;gap:var(--s-3);align-items:center;padding:var(--s-3) var(--s-4);border-radius:var(--r-md);background:var(--primary-soft)}
+.service .ph{color:var(--primary);width:24px;height:24px}
+.service b{display:block;font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
+.service small{color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
+
+.timeline{list-style:none;margin:0;padding:0;display:grid}
+.timeline li{display:grid;grid-template-columns:24px 1fr;gap:var(--s-3);position:relative;padding-bottom:var(--s-4)}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{content:"";position:absolute;left:11px;top:22px;bottom:-2px;width:2px;background:var(--border)}
+.timeline li:last-child::before{display:none}
+.timeline li.done::before{background:var(--status-done)}
+.timeline .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:grid;place-items:center;z-index:1}
+.timeline li.done .dot{background:var(--status-done);border-color:var(--status-done);color:var(--on-alert)}
+.timeline li.current .dot{border-color:var(--status-progress);color:var(--status-progress)}
+.timeline .dot .ph{width:14px;height:14px}
+.timeline b{display:block;font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
+.timeline li:not(.done):not(.current) b{color:var(--text-muted);font-weight:500}
+.timeline small{color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
+
+.expiry{display:grid;gap:6px}
+.expiry .lbl{display:flex;align-items:center;gap:6px;font:500 var(--fs-sm)/var(--lh-sm) var(--font);font-variant-numeric:tabular-nums}
+.expiry .bar{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.expiry .bar i{display:block;height:100%;border-radius:3px;background:var(--primary)}
+.expiry.soon .lbl{color:var(--alert-vigilance)} .expiry.soon .bar i{background:var(--alert-vigilance)}
+.expiry.over .lbl{color:var(--text-muted)} .expiry.over .bar i{background:var(--neutral)}
+
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2)}
+.cat-tile{display:grid;justify-items:center;gap:var(--s-2);padding:var(--s-4) var(--s-2);border-radius:var(--r-md);background:var(--surface-2);border:1.5px solid transparent;color:var(--text);font:600 var(--fs-sm)/var(--lh-sm) var(--font);cursor:pointer;text-align:center}
+.cat-tile[aria-pressed="true"]{border-color:var(--primary);background:var(--primary-soft)}
+
+.upload{display:flex;gap:var(--s-2)}
+.upload-tile{position:relative;width:88px;height:88px;border-radius:var(--r-sm);overflow:hidden;background:linear-gradient(135deg,var(--alert-positive-soft),var(--surface-2));display:grid;place-items:center;color:var(--text-muted)}
+.upload-tile .rm{position:absolute;top:4px;right:4px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(15,23,42,.7);color:#fff;display:grid;place-items:center;cursor:pointer}
+.upload-tile .prog{position:absolute;left:6px;right:6px;bottom:6px;height:4px;border-radius:2px;background:rgba(255,255,255,.5)}
+.upload-tile .prog i{display:block;height:100%;width:62%;border-radius:2px;background:var(--primary)}
+.upload-tile.err{background:var(--alert-incident-soft);color:var(--alert-incident);font:600 var(--fs-caption)/1.2 var(--font);text-align:center;padding:6px}
+.upload-add{width:88px;height:88px;border-radius:var(--r-sm);border:1.5px dashed var(--border);background:transparent;color:var(--primary);display:grid;place-items:center;cursor:pointer}
+
+.pill{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 var(--s-4);border-radius:var(--r-full);background:var(--surface);color:var(--text);box-shadow:var(--shadow-2);font:600 var(--fs-sm)/1 var(--font);border:0;cursor:pointer}
+.pill .dot-new{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.tooltip{position:relative;display:inline-block;padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);background:var(--text);color:var(--bg);font:500 var(--fs-sm)/var(--lh-sm) var(--font)}
+.tooltip::after{content:"";position:absolute;bottom:-6px;left:50%;margin-left:-6px;border:6px solid transparent;border-bottom:0;border-top-color:var(--text)}
+
+/* ============ PROTOTYPE — styles propres à l'application ============
+   Les tokens et composants viennent de docs/design-system/index.html (injectés au-dessus par
+   tools/build_prototype.py). Ici : scène, cadre téléphone, structure des écrans, hôtes de
+   sheets / modales / toasts, panneau de démo. */
+
+:root{ --stage:#DCE3EC; --device:#0B0F19; --scrim:rgba(15,23,42,.45); --tabbar-h:76px; --statusbar-h:44px }
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){ --stage:#05080F; --device:#000; --scrim:rgba(0,0,0,.6) }}
+:root[data-theme="dark"]{ --stage:#05080F; --device:#000; --scrim:rgba(0,0,0,.6) }
+
+html{font-size:var(--text-scale,100%);height:100%}
+body{margin:0;height:100%;background:var(--stage);color:var(--text);font:400 var(--fs-body)/var(--lh-body) var(--font);-webkit-font-smoothing:antialiased}
+#root{height:100%}
+button{font-family:inherit}
+
+/* ---- Scène et cadre ---- */
+.stage{height:100%;display:flex;align-items:center;justify-content:center;gap:28px;padding:24px 16px;box-sizing:border-box}
+.device{position:relative;width:390px;height:844px;max-height:calc(100% - 8px);flex:none;border-radius:52px;border:11px solid var(--device);background:var(--bg);overflow:hidden;box-shadow:0 30px 80px rgba(15,23,42,.35)}
+.device::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:118px;height:32px;border-radius:20px;background:var(--device);z-index:60;pointer-events:none}
+@media (max-width:540px),(max-height:620px){
+  .stage{padding:0;gap:0}
+  .device{width:100%;height:100%;max-height:none;border:0;border-radius:0;box-shadow:none}
+  .device::before{display:none}
+  .statusbar{display:none!important}
+}
+
+/* ---- Application ---- */
+.app{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);color:var(--text)}
+.statusbar{height:var(--statusbar-h);flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 30px 0;font:600 15px/1 var(--font);font-variant-numeric:tabular-nums;color:var(--text);position:relative;z-index:55}
+.statusbar .sb-icons{display:flex;gap:5px;align-items:center}
+.statusbar .ph{width:17px;height:17px}
+.screen-area{position:relative;flex:1;min-height:0;overflow:hidden}
+.screen{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;background:var(--bg)}
+.screen-pad{padding:var(--s-4);display:grid;gap:var(--s-4);align-content:start}
+.stack-layer{position:absolute;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;animation:slide-in .22s ease-out}
+.stack-layer.is-modal{animation:rise-in .25s ease-out}
+.app-overlay{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column}
+@keyframes slide-in{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes rise-in{from{transform:translateY(32px);opacity:.4}to{transform:none;opacity:1}}
+
+.screen-header{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);border-bottom:1px solid var(--border)}
+.screen-header h1{margin:0;text-align:center;font:600 var(--fs-h2)/var(--lh-h2) var(--font);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen-header .icon-btn{box-shadow:none;background:transparent}
+.screen-title{padding:var(--s-4) var(--s-4) 0;display:grid;gap:4px}
+.screen-title h1{margin:0;font:700 var(--fs-h1)/var(--lh-h1) var(--font)}
+.screen-title p{margin:0;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.section-label{margin:var(--s-2) 0 0;font:600 var(--fs-caption)/var(--lh-caption) var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+
+.tabbar{flex:none;position:relative;z-index:30}
+
+/* ---- Carte de remplacement (phase 3 la remplace) ---- */
+.map-placeholder{position:absolute;inset:0;background:
+  linear-gradient(115deg,transparent 46%,var(--border) 46% 47.5%,transparent 47.5%),
+  linear-gradient(25deg,transparent 60%,var(--border) 60% 61%,transparent 61%),
+  linear-gradient(170deg,transparent 30%,var(--border) 30% 31%,transparent 31%),
+  radial-gradient(circle at 75% 70%,color-mix(in srgb,var(--alert-positive) 10%,transparent) 0 16%,transparent 17%),var(--surface-2)}
+.map-top{position:absolute;top:var(--s-3);left:var(--s-3);right:var(--s-3);display:flex;gap:var(--s-2);align-items:center;z-index:4}
+.map-top .search{flex:1;display:flex;align-items:center;gap:var(--s-2);min-height:var(--tap);padding:0 var(--s-4);border-radius:var(--r-full);background:var(--surface);box-shadow:var(--shadow-2);color:var(--text-muted);font:400 var(--fs-sm)/1 var(--font);border:0;text-align:left;cursor:pointer}
+
+/* ---- Bottom sheet (hôte) ---- */
+.bs-scrim{position:absolute;inset:0;background:var(--scrim);z-index:24;animation:fade .2s}
+.bs{position:absolute;left:0;right:0;bottom:0;z-index:25;display:flex;flex-direction:column;background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:var(--shadow-3);transition:height .28s cubic-bezier(.2,.8,.2,1);touch-action:none}
+.bs.is-dragging{transition:none}
+.bs-handle{flex:none;display:grid;place-items:center;height:28px;border:0;background:transparent;cursor:grab;width:100%}
+.bs-handle span{width:40px;height:5px;border-radius:3px;background:var(--border)}
+.bs-handle:focus-visible{outline:2px solid var(--focus-ring);outline-offset:-4px;border-radius:var(--r-lg)}
+.bs-head{flex:none;display:flex;align-items:center;gap:var(--s-2);padding:0 var(--s-4) var(--s-2)}
+.bs-head h2{margin:0;flex:1;font:600 var(--fs-h3)/var(--lh-h3) var(--font)}
+.bs-body{flex:1;min-height:0;overflow-y:auto;padding:0 var(--s-4) var(--s-4);display:grid;gap:var(--s-3);align-content:start}
+@keyframes fade{from{opacity:0}}
+
+/* ---- Modale ---- */
+.modal-scrim{position:absolute;inset:0;z-index:45;background:var(--scrim);display:grid;place-items:center;padding:var(--s-6);animation:fade .2s}
+.modal-scrim .modal{width:100%;animation:rise-in .2s ease-out}
+
+/* ---- Toasts ---- */
+.toast-host{position:absolute;left:var(--s-3);right:var(--s-3);bottom:calc(var(--tabbar-h) + var(--s-3));z-index:50;display:grid;gap:var(--s-2);pointer-events:none}
+.toast-host.no-tabbar{bottom:var(--s-4)}
+.toast-host .toast{pointer-events:auto;animation:rise-in .2s ease-out}
+.global-banner{position:relative;z-index:35;margin:0;border-radius:0}
+
+/* ---- Écran de chargement / erreur ---- */
+.boot{height:100%;display:grid;place-items:center;font:500 14px/1.4 system-ui,sans-serif;color:#475569}
+.fatal{padding:var(--s-6);display:grid;gap:var(--s-3);align-content:center;height:100%;text-align:center}
+
+/* ---- Panneau de démo ---- */
+.demo-toggle{position:fixed;right:16px;bottom:16px;z-index:200;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font:600 13px/1 var(--font);box-shadow:var(--shadow-2);cursor:pointer;opacity:.85}
+.demo-toggle:hover{opacity:1}
+@media (max-width:540px){.demo-toggle{right:8px;bottom:calc(var(--tabbar-h) + 8px);min-height:32px;padding:0 10px;font-size:11px;opacity:.6}.demo-panel{right:8px;left:8px;width:auto;top:8px;bottom:auto;max-height:calc(100% - var(--tabbar-h) - 56px)}}
+.demo-panel{position:fixed;right:16px;bottom:64px;z-index:201;width:min(340px,calc(100% - 32px));max-height:calc(100% - 96px);overflow-y:auto;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-3);padding:var(--s-4);display:grid;gap:var(--s-3)}
+.demo-panel h2{margin:0;font:700 var(--fs-h3)/var(--lh-h3) var(--font);display:flex;align-items:center;gap:8px}
+.demo-panel .switch{min-height:40px;font-size:var(--fs-sm)}
+.demo-panel .seg button{min-height:34px;padding:0 10px;font-size:var(--fs-caption)}
+.demo-panel .row{display:flex;align-items:center;justify-content:space-between;gap:8px;font:500 var(--fs-sm)/1.3 var(--font)}
+.demo-panel hr{border:0;border-top:1px solid var(--border);margin:0}
+.demo-note{font:400 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--text-muted)}
+
+/* ---- Bibliothèque de composants ---- */
+.lib-section{display:grid;gap:var(--s-3)}
+.lib-row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center}
+.lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
+.placeholder-phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.2 var(--font)}
+
+</style>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ph-fire" viewBox="0 0 256 256"><path d="M183.89,153.34a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68ZM216,144a88,88,0,0,1-176,0c0-27.92,11-56.47,32.66-84.85a8,8,0,0,1,11.93-.89l24.12,23.41,22-60.41a8,8,0,0,1,12.63-3.41C165.21,36,216,84.55,216,144Zm-16,0c0-46.09-35.79-85.92-58.21-106.33L119.52,98.74a8,8,0,0,1-13.09,3L80.06,76.16C64.09,99.21,56,122,56,144a72,72,0,0,0,144,0Z"/></symbol><symbol id="ph-car" viewBox="0 0 256 256"><path d="M240,104H229.2L201.42,41.5A16,16,0,0,0,186.8,32H69.2a16,16,0,0,0-14.62,9.5L26.8,104H16a8,8,0,0,0,0,16h8v80a16,16,0,0,0,16,16H64a16,16,0,0,0,16-16V184h96v16a16,16,0,0,0,16,16h24a16,16,0,0,0,16-16V120h8a8,8,0,0,0,0-16ZM69.2,48H186.8l24.89,56H44.31ZM64,200H40V184H64Zm128,0V184h24v16Zm24-32H40V120H216ZM56,144a8,8,0,0,1,8-8H80a8,8,0,0,1,0,16H64A8,8,0,0,1,56,144Zm112,0a8,8,0,0,1,8-8h16a8,8,0,0,1,0,16H176A8,8,0,0,1,168,144Z"/></symbol><symbol id="ph-traffic-cone" viewBox="0 0 256 256"><path d="M232,208H213.69L153.42,34.75A16,16,0,0,0,138.31,24H117.69a16,16,0,0,0-15.11,10.74L42.31,208H24a8,8,0,0,0,0,16H232a8,8,0,0,0,0-16ZM95.43,104h65.14l16.7,48H78.73Zm22.26-64h20.62L155,88H101ZM73.17,168H182.83l13.92,40H59.25Z"/></symbol><symbol id="ph-shield-warning" viewBox="0 0 256 256"><path d="M120,136V96a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,48a12,12,0,1,0-12-12A12,12,0,0,0,128,184ZM224,56v56c0,52.72-25.52,84.67-46.93,102.19-23.06,18.86-46,25.27-47,25.53a8,8,0,0,1-4.2,0c-1-.26-23.91-6.67-47-25.53C57.52,196.67,32,164.72,32,112V56A16,16,0,0,1,48,40H208A16,16,0,0,1,224,56Zm-16,0L48,56l0,56c0,37.3,13.82,67.51,41.07,89.81A128.25,128.25,0,0,0,128,223.62a129.3,129.3,0,0,0,39.41-22.2C194.34,179.16,208,149.07,208,112Z"/></symbol><symbol id="ph-leaf" viewBox="0 0 256 256"><path d="M223.45,40.07a8,8,0,0,0-7.52-7.52C139.8,28.08,78.82,51,52.82,94a87.09,87.09,0,0,0-12.76,49c.57,15.92,5.21,32,13.79,47.85l-19.51,19.5a8,8,0,0,0,11.32,11.32l19.5-19.51C81,210.73,97.09,215.37,113,215.94q1.67.06,3.33.06A86.93,86.93,0,0,0,162,203.18C205,177.18,227.93,116.21,223.45,40.07ZM153.75,189.5c-22.75,13.78-49.68,14-76.71.77l88.63-88.62a8,8,0,0,0-11.32-11.32L65.73,179c-13.19-27-13-54,.77-76.71,22.09-36.47,74.6-56.44,141.31-54.06C210.2,114.89,190.22,167.41,153.75,189.5Z"/></symbol><symbol id="ph-trash" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></symbol><symbol id="ph-speaker-high" viewBox="0 0 256 256"><path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol><symbol id="ph-hand-heart" viewBox="0 0 256 256"><path d="M230.33,141.06a24.34,24.34,0,0,0-18.61-4.77C230.5,117.33,240,98.48,240,80c0-26.47-21.29-48-47.46-48A47.58,47.58,0,0,0,156,48.75,47.58,47.58,0,0,0,119.46,32C93.29,32,72,53.53,72,80c0,11,3.24,21.69,10.06,33a31.87,31.87,0,0,0-14.75,8.4L44.69,144H16A16,16,0,0,0,0,160v40a16,16,0,0,0,16,16H120a7.93,7.93,0,0,0,1.94-.24l64-16a6.94,6.94,0,0,0,1.19-.4L226,182.82l.44-.2a24.6,24.6,0,0,0,3.93-41.56ZM119.46,48A31.15,31.15,0,0,1,148.6,67a8,8,0,0,0,14.8,0,31.15,31.15,0,0,1,29.14-19C209.59,48,224,62.65,224,80c0,19.51-15.79,41.58-45.66,63.9l-11.09,2.55A28,28,0,0,0,140,112H100.68C92.05,100.36,88,90.12,88,80,88,62.65,102.41,48,119.46,48ZM16,160H40v40H16Zm203.43,8.21-38,16.18L119,200H56V155.31l22.63-22.62A15.86,15.86,0,0,1,89.94,128H140a12,12,0,0,1,0,24H112a8,8,0,0,0,0,16h32a8.32,8.32,0,0,0,1.79-.2l67-15.41.31-.08a8.6,8.6,0,0,1,6.3,15.9Z"/></symbol><symbol id="ph-mask-happy" viewBox="0 0 256 256"><path d="M217,34.8a15.94,15.94,0,0,0-14.82-1.71C188.15,38.55,159.82,47.71,128,47.71S67.84,38.55,53.79,33.09A16,16,0,0,0,32,48v55.77c0,35.84,9.65,69.65,27.18,95.18,18.16,26.46,42.6,41,68.82,41s50.66-14.57,68.82-41C214.35,173.44,224,139.63,224,103.79V48A16,16,0,0,0,217,34.8Zm-9,69c0,32.64-8.66,63.23-24.37,86.13C168.54,211.9,148.79,224,128,224s-40.54-12.1-55.63-34.08C56.66,167,48,136.43,48,103.79V48c15.11,5.87,45.58,15.71,80,15.71S192.9,53.87,208,48v55.81Zm-18,18.87A8,8,0,1,1,178,133.33c-2.68-3-8.85-5.33-14-5.33s-11.36,2.34-14,5.33A8,8,0,1,1,138,122.66c5.71-6.38,16.14-10.66,26-10.66S184.25,116.28,190,122.66ZM92,128c-5.19,0-11.36,2.34-14,5.33A8,8,0,1,1,66,122.66C71.75,116.28,82.18,112,92,112s20.25,4.28,26,10.66A8,8,0,1,1,106,133.33C103.36,130.34,97.19,128,92,128Zm76.45,45.19a52.9,52.9,0,0,1-80.9,0A8,8,0,1,1,99.72,162.8a36.89,36.89,0,0,0,56.56,0,8,8,0,0,1,12.17,10.39Z"/></symbol><symbol id="ph-soccer-ball" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm76.52,147.42H170.9l-9.26-12.76,12.63-36.78,15-4.89,26.24,20.13A87.38,87.38,0,0,1,204.52,171.42Zm-164-34.3L66.71,117l15,4.89,12.63,36.78L85.1,171.42H51.48A87.38,87.38,0,0,1,40.47,137.12Zm10-50.64,5.51,18.6L40.71,116.77A87.33,87.33,0,0,1,50.43,86.48ZM109,152,97.54,118.65,128,97.71l30.46,20.94L147,152Zm91.07-46.92,5.51-18.6a87.33,87.33,0,0,1,9.72,30.29Zm-6.2-35.38-9.51,32.08-15.07,4.89L136,83.79V68.21l29.09-20A88.58,88.58,0,0,1,193.86,69.7ZM146.07,41.87,128,54.29,109.93,41.87a88.24,88.24,0,0,1,36.14,0ZM90.91,48.21l29.09,20V83.79L86.72,106.67l-15.07-4.89L62.14,69.7A88.58,88.58,0,0,1,90.91,48.21ZM63.15,187.42H83.52l7.17,20.27A88.4,88.4,0,0,1,63.15,187.42ZM110,214.13,98.12,180.71,107.35,168h41.3l9.23,12.71-11.83,33.42a88,88,0,0,1-36.1,0Zm55.36-6.44,7.17-20.27h20.37A88.4,88.4,0,0,1,165.31,207.69Z"/></symbol><symbol id="ph-calendar-star" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V208Zm-31.38-94.36-29.84-2.31-11.43-26.5a8,8,0,0,0-14.7,0l-11.43,26.5-29.84,2.31a8,8,0,0,0-4.47,14.14l22.52,18.59-6.86,27.71a8,8,0,0,0,11.82,8.81L128,167.82l25.61,15.07a8,8,0,0,0,11.82-8.81l-6.86-27.71,22.52-18.59a8,8,0,0,0-4.47-14.14Zm-32.11,23.6a8,8,0,0,0-2.68,8.09l3.5,14.12-13.27-7.81a8,8,0,0,0-8.12,0l-13.27,7.81,3.5-14.12a8,8,0,0,0-2.68-8.09l-11.11-9.18,14.89-1.15a8,8,0,0,0,6.73-4.8l6-13.92,6,13.92a8,8,0,0,0,6.73,4.8l14.89,1.15Z"/></symbol><symbol id="ph-barricade" viewBox="0 0 256 256"><path d="M224,64H32A16,16,0,0,0,16,80v72a16,16,0,0,0,16,16H56v32a8,8,0,0,0,16,0V168H184v32a8,8,0,0,0,16,0V168h24a16,16,0,0,0,16-16V80A16,16,0,0,0,224,64Zm0,64.69L175.31,80H224ZM80.69,80l72,72H103.31L32,80.69V80ZM32,103.31,80.69,152H32ZM224,152H175.31l-72-72h49.38L224,151.32V152Z"/></symbol><symbol id="ph-lightbulb" viewBox="0 0 256 256"><path d="M176,232a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.49C39.74,56.83,78.26,17.14,125.88,16A88,88,0,0,1,216,104Zm-16,0a72,72,0,0,0-73.74-72c-39,.92-70.47,33.39-70.26,72.39a71.65,71.65,0,0,0,27.64,56.3A32,32,0,0,1,96,186v6h64v-6a32.15,32.15,0,0,1,12.47-25.35A71.65,71.65,0,0,0,200,104Zm-16.11-9.34a57.6,57.6,0,0,0-46.56-46.55,8,8,0,0,0-2.66,15.78c16.57,2.79,30.63,16.85,33.44,33.45A8,8,0,0,0,176,104a9,9,0,0,0,1.35-.11A8,8,0,0,0,183.89,94.66Z"/></symbol><symbol id="ph-dots-three" viewBox="0 0 256 256"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"/></symbol><symbol id="ph-drop" viewBox="0 0 256 256"><path d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75ZM128,216a72.08,72.08,0,0,1-72-72c0-57.23,55.47-105,72-118,16.53,13,72,60.75,72,118A72.08,72.08,0,0,1,128,216Zm55.89-62.66a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/></symbol><symbol id="ph-tree" viewBox="0 0 256 256"><path d="M198.1,62.59a76,76,0,0,0-140.2,0A71.71,71.71,0,0,0,16,127.8C15.9,166,48,199,86.14,200A72.09,72.09,0,0,0,120,192.47V232a8,8,0,0,0,16,0V192.47A72.17,72.17,0,0,0,168,200l1.82,0C208,199,240.11,166,240,127.8A71.71,71.71,0,0,0,198.1,62.59ZM169.45,184a56.08,56.08,0,0,1-33.45-10v-41l43.58-21.78a8,8,0,1,0-7.16-14.32L136,115.06V88a8,8,0,0,0-16,0v51.06L83.58,120.84a8,8,0,1,0-7.16,14.32L120,156.94v17a56,56,0,0,1-33.45,10C56.9,183.23,31.92,157.52,32,127.84A55.77,55.77,0,0,1,67.11,76a8,8,0,0,0,4.53-4.67,60,60,0,0,1,112.72,0A8,8,0,0,0,188.89,76,55.79,55.79,0,0,1,224,127.84C224.08,157.52,199.1,183.23,169.45,184Z"/></symbol><symbol id="ph-megaphone" viewBox="0 0 256 256"><path d="M248,120a48.05,48.05,0,0,0-48-48H160.2c-2.91-.17-53.62-3.74-101.91-44.24A16,16,0,0,0,32,40V200a16,16,0,0,0,26.29,12.25c37.77-31.68,77-40.76,93.71-43.3v31.72A16,16,0,0,0,159.12,214l11,7.33A16,16,0,0,0,194.5,212l11.77-44.36A48.07,48.07,0,0,0,248,120ZM48,199.93V40h0c42.81,35.91,86.63,45,104,47.24v65.48C134.65,155,90.84,164.07,48,199.93Zm131,8,0,.11-11-7.33V168h21.6ZM200,152H168V88h32a32,32,0,1,1,0,64Z"/></symbol><symbol id="ph-info" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></symbol><symbol id="ph-map-trifold" viewBox="0 0 256 256"><path d="M228.92,49.69a8,8,0,0,0-6.86-1.45L160.93,63.52,99.58,32.84a8,8,0,0,0-5.52-.6l-64,16A8,8,0,0,0,24,56V200a8,8,0,0,0,9.94,7.76l61.13-15.28,61.35,30.68A8.15,8.15,0,0,0,160,224a8,8,0,0,0,1.94-.24l64-16A8,8,0,0,0,232,200V56A8,8,0,0,0,228.92,49.69ZM104,52.94l48,24V203.06l-48-24ZM40,62.25l48-12v127.5l-48,12Zm176,131.5-48,12V78.25l48-12Z"/></symbol><symbol id="ph-list-bullets" viewBox="0 0 256 256"><path d="M80,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm136,56H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM44,52A12,12,0,1,0,56,64,12,12,0,0,0,44,52Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,116Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,44,180Z"/></symbol><symbol id="ph-plus" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></symbol><symbol id="ph-pulse" viewBox="0 0 256 256"><path d="M240,128a8,8,0,0,1-8,8H204.94l-37.78,75.58A8,8,0,0,1,160,216h-.4a8,8,0,0,1-7.08-5.14L95.35,60.76,63.28,131.31A8,8,0,0,1,56,136H24a8,8,0,0,1,0-16H50.85L88.72,36.69a8,8,0,0,1,14.76.46l57.51,151,31.85-63.71A8,8,0,0,1,200,120h32A8,8,0,0,1,240,128Z"/></symbol><symbol id="ph-user-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24ZM74.08,197.5a64,64,0,0,1,107.84,0,87.83,87.83,0,0,1-107.84,0ZM96,120a32,32,0,1,1,32,32A32,32,0,0,1,96,120Zm97.76,66.41a79.66,79.66,0,0,0-36.06-28.75,48,48,0,1,0-59.4,0,79.66,79.66,0,0,0-36.06,28.75,88,88,0,1,1,131.52,0Z"/></symbol><symbol id="ph-bell" viewBox="0 0 256 256"><path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"/></symbol><symbol id="ph-magnifying-glass" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></symbol><symbol id="ph-sliders-horizontal" viewBox="0 0 256 256"><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z"/></symbol><symbol id="ph-crosshair" viewBox="0 0 256 256"><path d="M232,120h-8.34A96.14,96.14,0,0,0,136,32.34V24a8,8,0,0,0-16,0v8.34A96.14,96.14,0,0,0,32.34,120H24a8,8,0,0,0,0,16h8.34A96.14,96.14,0,0,0,120,223.66V232a8,8,0,0,0,16,0v-8.34A96.14,96.14,0,0,0,223.66,136H232a8,8,0,0,0,0-16Zm-96,87.6V200a8,8,0,0,0-16,0v7.6A80.15,80.15,0,0,1,48.4,136H56a8,8,0,0,0,0-16H48.4A80.15,80.15,0,0,1,120,48.4V56a8,8,0,0,0,16,0V48.4A80.15,80.15,0,0,1,207.6,120H200a8,8,0,0,0,0,16h7.6A80.15,80.15,0,0,1,136,207.6ZM128,88a40,40,0,1,0,40,40A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152Z"/></symbol><symbol id="ph-map-pin" viewBox="0 0 256 256"><path d="M128,64a40,40,0,1,0,40,40A40,40,0,0,0,128,64Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,128Zm0-112a88.1,88.1,0,0,0-88,88c0,31.4,14.51,64.68,42,96.25a254.19,254.19,0,0,0,41.45,38.3,8,8,0,0,0,9.18,0A254.19,254.19,0,0,0,174,200.25c27.45-31.57,42-64.85,42-96.25A88.1,88.1,0,0,0,128,16Zm0,206c-16.53-13-72-60.75-72-118a72,72,0,0,1,144,0C200,161.23,144.53,209,128,222Z"/></symbol><symbol id="ph-arrow-fat-up" viewBox="0 0 256 256"><path d="M229.66,114.34l-96-96a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,32,128H72v80a16,16,0,0,0,16,16h80a16,16,0,0,0,16-16V128h40a8,8,0,0,0,5.66-13.66ZM176,112a8,8,0,0,0-8,8v88H88V120a8,8,0,0,0-8-8H51.31L128,35.31,204.69,112Z"/></symbol><symbol id="ph-arrow-fat-down" viewBox="0 0 256 256"><path d="M231.39,132.94A8,8,0,0,0,224,128H184V48a16,16,0,0,0-16-16H88A16,16,0,0,0,72,48v80H32a8,8,0,0,0-5.66,13.66l96,96a8,8,0,0,0,11.32,0l96-96A8,8,0,0,0,231.39,132.94ZM128,220.69,51.31,144H80a8,8,0,0,0,8-8V48h80v88a8,8,0,0,0,8,8h28.69Z"/></symbol><symbol id="ph-chat-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"/></symbol><symbol id="ph-flag" viewBox="0 0 256 256"><path d="M42.76,50A8,8,0,0,0,40,56V224a8,8,0,0,0,16,0V179.77c26.79-21.16,49.87-9.75,76.45,3.41,16.4,8.11,34.06,16.85,53,16.85,13.93,0,28.54-4.75,43.82-18a8,8,0,0,0,2.76-6V56A8,8,0,0,0,218.76,50c-28,24.23-51.72,12.49-79.21-1.12C111.07,34.76,78.78,18.79,42.76,50ZM216,172.25c-26.79,21.16-49.87,9.74-76.45-3.41-25-12.35-52.81-26.13-83.55-8.4V59.79c26.79-21.16,49.87-9.75,76.45,3.4,25,12.35,52.82,26.13,83.55,8.4Z"/></symbol><symbol id="ph-share-network" viewBox="0 0 256 256"><path d="M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.66-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Zm0-128a24,24,0,1,1-24,24A24,24,0,0,1,176,32ZM64,152a24,24,0,1,1,24-24A24,24,0,0,1,64,152Zm112,72a24,24,0,1,1,24-24A24,24,0,0,1,176,224Z"/></symbol><symbol id="ph-bookmark-simple" viewBox="0 0 256 256"><path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z"/></symbol><symbol id="ph-timer" viewBox="0 0 256 256"><path d="M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216ZM173.66,90.34a8,8,0,0,1,0,11.32l-40,40a8,8,0,0,1-11.32-11.32l40-40A8,8,0,0,1,173.66,90.34ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z"/></symbol><symbol id="ph-seal-check" viewBox="0 0 256 256"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-11.55,39.29c-4.79,5-9.75,10.17-12.38,16.52-2.52,6.1-2.63,13.07-2.73,19.82-.1,7-.21,14.33-3.32,17.43s-10.39,3.22-17.43,3.32c-6.75.1-13.72.21-19.82,2.73-6.35,2.63-11.52,7.59-16.52,12.38S132,224,128,224s-9.15-4.92-14.11-9.69-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82-2.63-6.35-7.59-11.52-12.38-16.52S32,132,32,128s4.92-9.15,9.69-14.11,9.75-10.17,12.38-16.52c2.52-6.1,2.63-13.07,2.73-19.82.1-7,.21-14.33,3.32-17.43S70.51,56.9,77.55,56.8c6.75-.1,13.72-.21,19.82-2.73,6.35-2.63,11.52-7.59,16.52-12.38S124,32,128,32s9.15,4.92,14.11,9.69,10.17,9.75,16.52,12.38c6.1,2.52,13.07,2.63,19.82,2.73,7,.1,14.33.21,17.43,3.32s3.22,10.39,3.32,17.43c.1,6.75.21,13.72,2.73,19.82,2.63,6.35,7.59,11.52,12.38,16.52S224,124,224,128,219.08,137.15,214.31,142.11ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"/></symbol><symbol id="ph-detective" viewBox="0 0 256 256"><path d="M248,112H220.08l-47.5-65.41a16,16,0,0,0-25.31-.72l-12.85,14.9-.2.23a7.95,7.95,0,0,1-12.44,0l-.2-.23-12.85-14.9a16,16,0,0,0-25.31.72L35.92,112H8a8,8,0,0,0,0,16H248a8,8,0,0,0,0-16ZM96.34,56l.19.23,12.85,14.89a24,24,0,0,0,37.24,0l12.85-14.89c.06-.08.1-.15.17-.23l40.66,56H55.69ZM180,144a36,36,0,0,0-35.77,32H111.77a36,36,0,1,0-1.83,16h36.12A36,36,0,1,0,180,144ZM76,200a20,20,0,1,1,20-20A20,20,0,0,1,76,200Zm104,0a20,20,0,1,1,20-20A20,20,0,0,1,180,200Z"/></symbol><symbol id="ph-siren" viewBox="0 0 256 256"><path d="M120,16V8a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm80,32a8,8,0,0,0,5.66-2.34l8-8a8,8,0,0,0-11.32-11.32l-8,8A8,8,0,0,0,200,48ZM50.34,45.66A8,8,0,0,0,61.66,34.34l-8-8A8,8,0,0,0,42.34,37.66Zm87,26.45a8,8,0,1,0-2.64,15.78C153.67,91.08,168,108.32,168,128a8,8,0,0,0,16,0C184,100.6,163.93,76.57,137.32,72.11ZM232,176v24a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V176a16,16,0,0,1,16-16V128a88,88,0,0,1,88.67-88c48.15.36,87.33,40.29,87.33,89v31A16,16,0,0,1,232,176ZM56,160H200V129c0-40-32.05-72.71-71.45-73H128a72,72,0,0,0-72,72Zm160,40V176H40v24H216Z"/></symbol><symbol id="ph-wifi-slash" viewBox="0 0 256 256"><path d="M213.92,210.62a8,8,0,1,1-11.84,10.76l-52-57.15a60,60,0,0,0-57.41,7.24,8,8,0,1,1-9.42-12.93A75.43,75.43,0,0,1,128,144c1.28,0,2.55,0,3.82.1L104.9,114.49A108,108,0,0,0,61,135.31,8,8,0,0,1,49.73,134,8,8,0,0,1,51,122.77a124.27,124.27,0,0,1,41.71-21.66L69.37,75.4a155.43,155.43,0,0,0-40.29,24A8,8,0,0,1,18.92,87,171.87,171.87,0,0,1,58,62.86L42.08,45.38A8,8,0,1,1,53.92,34.62ZM128,192a12,12,0,1,0,12,12A12,12,0,0,0,128,192ZM237.08,87A172.3,172.3,0,0,0,106,49.4a8,8,0,1,0,2,15.87A158.33,158.33,0,0,1,128,64a156.25,156.25,0,0,1,98.92,35.37A8,8,0,0,0,237.08,87ZM195,135.31a8,8,0,0,0,11.24-1.3,8,8,0,0,0-1.3-11.24,124.25,124.25,0,0,0-51.73-24.2A8,8,0,1,0,150,114.24,108.12,108.12,0,0,1,195,135.31Z"/></symbol><symbol id="ph-warning" viewBox="0 0 256 256"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></symbol><symbol id="ph-check" viewBox="0 0 256 256"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></symbol><symbol id="ph-check-circle" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></symbol><symbol id="ph-x" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol><symbol id="ph-caret-right" viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol><symbol id="ph-caret-left" viewBox="0 0 256 256"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></symbol><symbol id="ph-caret-down" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></symbol><symbol id="ph-arrow-right" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></symbol><symbol id="ph-camera" viewBox="0 0 256 256"><path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.43l13.63,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"/></symbol><symbol id="ph-image" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,172l52-52,80,80H40Zm176,28H194.63l-36-36,20-20L216,181.38V200ZM144,100a12,12,0,1,1,12,12A12,12,0,0,1,144,100Z"/></symbol><symbol id="ph-pencil-simple" viewBox="0 0 256 256"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"/></symbol><symbol id="ph-eye" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"/></symbol><symbol id="ph-eye-slash" viewBox="0 0 256 256"><path d="M53.92,34.62A8,8,0,1,0,42.08,45.38L61.32,66.55C25,88.84,9.38,123.2,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208a127.11,127.11,0,0,0,52.07-10.83l22,24.21a8,8,0,1,0,11.84-10.76Zm47.33,75.84,41.67,45.85a32,32,0,0,1-41.67-45.85ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.16,133.16,0,0,1,25,128c4.69-8.79,19.66-33.39,47.35-49.38l18,19.75a48,48,0,0,0,63.66,70l14.73,16.2A112,112,0,0,1,128,192Zm6-95.43a8,8,0,0,1,3-15.72,48.16,48.16,0,0,1,38.77,42.64,8,8,0,0,1-7.22,8.71,6.39,6.39,0,0,1-.75,0,8,8,0,0,1-8-7.26A32.09,32.09,0,0,0,134,96.57Zm113.28,34.69c-.42.94-10.55,23.37-33.36,43.8a8,8,0,1,1-10.67-11.92A132.77,132.77,0,0,0,231.05,128a133.15,133.15,0,0,0-23.12-30.77C185.67,75.19,158.78,64,128,64a118.37,118.37,0,0,0-19.36,1.57A8,8,0,1,1,106,49.79,134,134,0,0,1,128,48c34.88,0,66.57,13.26,91.66,38.35,18.83,18.83,27.3,37.62,27.65,38.41A8,8,0,0,1,247.31,131.26Z"/></symbol><symbol id="ph-lock-simple" viewBox="0 0 256 256"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/></symbol><symbol id="ph-gear" viewBox="0 0 256 256"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"/></symbol><symbol id="ph-question" viewBox="0 0 256 256"><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></symbol><symbol id="ph-sign-out" viewBox="0 0 256 256"><path d="M120,216a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H56V208h56A8,8,0,0,1,120,216Zm109.66-93.66-40-40a8,8,0,0,0-11.32,11.32L204.69,120H112a8,8,0,0,0,0,16h92.69l-26.35,26.34a8,8,0,0,0,11.32,11.32l40-40A8,8,0,0,0,229.66,122.34Z"/></symbol><symbol id="ph-star" viewBox="0 0 256 256"><path d="M239.18,97.26A16.38,16.38,0,0,0,224.92,86l-59-4.76L143.14,26.15a16.36,16.36,0,0,0-30.27,0L90.11,81.23,31.08,86a16.46,16.46,0,0,0-9.37,28.86l45,38.83L53,211.75a16.38,16.38,0,0,0,24.5,17.82L128,198.49l50.53,31.08A16.4,16.4,0,0,0,203,211.75l-13.76-58.07,45-38.83A16.43,16.43,0,0,0,239.18,97.26Zm-15.34,5.47-48.7,42a8,8,0,0,0-2.56,7.91l14.88,62.8a.37.37,0,0,1-.17.48c-.18.14-.23.11-.38,0l-54.72-33.65a8,8,0,0,0-8.38,0L69.09,215.94c-.15.09-.19.12-.38,0a.37.37,0,0,1-.17-.48l14.88-62.8a8,8,0,0,0-2.56-7.91l-48.7-42c-.12-.1-.23-.19-.13-.5s.18-.27.33-.29l63.92-5.16A8,8,0,0,0,103,91.86l24.62-59.61c.08-.17.11-.25.35-.25s.27.08.35.25L153,91.86a8,8,0,0,0,6.75,4.92l63.92,5.16c.15,0,.24,0,.33.29S224,102.63,223.84,102.73Z"/></symbol><symbol id="ph-navigation-arrow" viewBox="0 0 256 256"><path d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"/></symbol><symbol id="ph-clock" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></symbol><symbol id="ph-phone" viewBox="0 0 256 256"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></symbol><symbol id="ph-envelope" viewBox="0 0 256 256"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48Zm-96,85.15L52.57,64H203.43ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"/></symbol><symbol id="ph-identification-card" viewBox="0 0 256 256"><path d="M200,112a8,8,0,0,1-8,8H152a8,8,0,0,1,0-16h40A8,8,0,0,1,200,112Zm-8,24H152a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm40-80V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Zm-80.26-34a8,8,0,1,1-15.5,4c-2.63-10.26-13.06-18-24.25-18s-21.61,7.74-24.25,18a8,8,0,1,1-15.5-4,39.84,39.84,0,0,1,17.19-23.34,32,32,0,1,1,45.12,0A39.76,39.76,0,0,1,135.75,166ZM96,136a16,16,0,1,0-16-16A16,16,0,0,0,96,136Z"/></symbol><symbol id="ph-buildings" viewBox="0 0 256 256"><path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"/></symbol><symbol id="ph-paper-plane-tilt" viewBox="0 0 256 256"><path d="M227.32,28.68a16,16,0,0,0-15.66-4.08l-.15,0L19.57,82.84a16,16,0,0,0-2.49,29.8L102,154l41.3,84.87A15.86,15.86,0,0,0,157.74,248q.69,0,1.38-.06a15.88,15.88,0,0,0,14-11.51l58.2-191.94c0-.05,0-.1,0-.15A16,16,0,0,0,227.32,28.68ZM157.83,231.85l-.05.14,0-.07-40.06-82.3,48-48a8,8,0,0,0-11.31-11.31l-48,48L24.08,98.25l-.07,0,.14,0L216,40Z"/></symbol><symbol id="ph-users-three" viewBox="0 0 256 256"><path d="M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z"/></symbol><symbol id="ph-arrows-clockwise" viewBox="0 0 256 256"><path d="M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z"/></symbol><symbol id="ph-house" viewBox="0 0 256 256"><path d="M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z"/></symbol><symbol id="ph-sun" viewBox="0 0 256 256"><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></symbol><symbol id="ph-moon" viewBox="0 0 256 256"><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"/></symbol><symbol id="ph-text-aa" viewBox="0 0 256 256"><path d="M87.24,52.59a8,8,0,0,0-14.48,0l-64,136a8,8,0,1,0,14.48,6.81L39.9,160h80.2l16.66,35.4a8,8,0,1,0,14.48-6.81ZM47.43,144,80,74.79,112.57,144ZM200,96c-12.76,0-22.73,3.47-29.63,10.32a8,8,0,0,0,11.26,11.36c3.8-3.77,10-5.68,18.37-5.68,13.23,0,24,9,24,20v3.22A42.76,42.76,0,0,0,200,128c-22.06,0-40,16.15-40,36s17.94,36,40,36a42.73,42.73,0,0,0,24-7.25,8,8,0,0,0,16-.75V132C240,112.15,222.06,96,200,96Zm0,88c-13.23,0-24-9-24-20s10.77-20,24-20,24,9,24,20S213.23,184,200,184Z"/></symbol><symbol id="ph-circle-half" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z"/></symbol><symbol id="ph-vibrate" viewBox="0 0 256 256"><path d="M160,32H96A24,24,0,0,0,72,56V200a24,24,0,0,0,24,24h64a24,24,0,0,0,24-24V56A24,24,0,0,0,160,32Zm8,168a8,8,0,0,1-8,8H96a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8h64a8,8,0,0,1,8,8ZM216,88v80a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Zm32,16v48a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0ZM56,88v80a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0ZM24,104v48a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></symbol><symbol id="ph-trash-simple" viewBox="0 0 256 256"><path d="M216,48H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM192,208H64V64H192ZM80,24a8,8,0,0,1,8-8h80a8,8,0,0,1,0,16H88A8,8,0,0,1,80,24Z"/></symbol><symbol id="ph-copy" viewBox="0 0 256 256"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></symbol><symbol id="ph-wifi-high" viewBox="0 0 256 256"><path d="M140,204a12,12,0,1,1-12-12A12,12,0,0,1,140,204ZM237.08,87A172,172,0,0,0,18.92,87,8,8,0,0,0,29.08,99.37a156,156,0,0,1,197.84,0A8,8,0,0,0,237.08,87ZM205,122.77a124,124,0,0,0-153.94,0A8,8,0,0,0,61,135.31a108,108,0,0,1,134.06,0,8,8,0,0,0,11.24-1.3A8,8,0,0,0,205,122.77Zm-32.26,35.76a76.05,76.05,0,0,0-89.42,0,8,8,0,0,0,9.42,12.94,60,60,0,0,1,70.58,0,8,8,0,1,0,9.42-12.94Z"/></symbol><symbol id="ph-cell-signal-full" viewBox="0 0 256 256"><path d="M168,72V200a8,8,0,0,1-16,0V72a8,8,0,0,1,16,0Zm32-48a8,8,0,0,0-8,8V200a8,8,0,0,0,16,0V32A8,8,0,0,0,200,24Zm-80,80a8,8,0,0,0-8,8v88a8,8,0,0,0,16,0V112A8,8,0,0,0,120,104ZM80,144a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V152A8,8,0,0,0,80,144ZM40,184a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-8A8,8,0,0,0,40,184Z"/></symbol><symbol id="ph-battery-full" viewBox="0 0 256 256"><path d="M200,56H32A24,24,0,0,0,8,80v96a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V80A24,24,0,0,0,200,56Zm8,120a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H200a8,8,0,0,1,8,8ZM184,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Zm-40,0v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Zm-40,0v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0ZM64,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Zm192,0v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0Z"/></symbol><symbol id="ph-arrow-left" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol><symbol id="ph-squares-four" viewBox="0 0 256 256"><path d="M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z"/></symbol><symbol id="ph-play" viewBox="0 0 256 256"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/></symbol><symbol id="ph-fast-forward" viewBox="0 0 256 256"><path d="M248.67,114.66,160.48,58.5A15.91,15.91,0,0,0,136,71.84v37.3L56.48,58.5A15.91,15.91,0,0,0,32,71.84V184.16A15.92,15.92,0,0,0,56.48,197.5L136,146.86v37.3a15.92,15.92,0,0,0,24.48,13.34l88.19-56.16a15.8,15.8,0,0,0,0-26.68ZM48,183.94V72.07L135.82,128Zm104,0V72.07L239.82,128Z"/></symbol><symbol id="ph-arrow-counter-clockwise" viewBox="0 0 256 256"><path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"/></symbol><symbol id="ph-path" viewBox="0 0 256 256"><path d="M200,168a32.06,32.06,0,0,0-31,24H72a32,32,0,0,1,0-64h96a40,40,0,0,0,0-80H72a8,8,0,0,0,0,16h96a24,24,0,0,1,0,48H72a48,48,0,0,0,0,96h97a32,32,0,1,0,31-40Zm0,48a16,16,0,1,1,16-16A16,16,0,0,1,200,216Z"/></symbol><symbol id="ph-map-trifold-fill" viewBox="0 0 256 256"><path d="M228.92,49.69a8,8,0,0,0-6.86-1.45L160.93,63.52,99.58,32.84a8,8,0,0,0-5.52-.6l-64,16A8,8,0,0,0,24,56V200a8,8,0,0,0,9.94,7.76l61.13-15.28,61.35,30.68A8.15,8.15,0,0,0,160,224a8,8,0,0,0,1.94-.24l64-16A8,8,0,0,0,232,200V56A8,8,0,0,0,228.92,49.69ZM96,176a8,8,0,0,0-1.94.24L40,189.75V62.25L95.07,48.48l.93.46Zm120,17.75-55.07,13.77-.93-.46V80a8,8,0,0,0,1.94-.23L216,66.25Z"/></symbol><symbol id="ph-list-bullets-fill" viewBox="0 0 256 256"><path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM68,188a12,12,0,1,1,12-12A12,12,0,0,1,68,188Zm0-48a12,12,0,1,1,12-12A12,12,0,0,1,68,140Zm0-48A12,12,0,1,1,80,80,12,12,0,0,1,68,92Zm124,92H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Zm0-48H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Zm0-48H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Z"/></symbol><symbol id="ph-pulse-fill" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm-8,96H188.64L159,188a8,8,0,0,1-6.95,4h-.46a8,8,0,0,1-6.89-4.84L103,89.92,79,132a8,8,0,0,1-7,4H48a8,8,0,0,1,0-16H67.36L97.05,68a8,8,0,0,1,14.3.82L153,166.08l24-42.05a8,8,0,0,1,6.95-4h24a8,8,0,0,1,0,16Z"/></symbol><symbol id="ph-user-circle-fill" viewBox="0 0 256 256"><path d="M172,120a44,44,0,1,1-44-44A44.05,44.05,0,0,1,172,120Zm60,8A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88.09,88.09,0,0,0-91.47-87.93C77.43,41.89,39.87,81.12,40,128.25a87.65,87.65,0,0,0,22.24,58.16A79.71,79.71,0,0,1,84,165.1a4,4,0,0,1,4.83.32,59.83,59.83,0,0,0,78.28,0,4,4,0,0,1,4.83-.32,79.71,79.71,0,0,1,21.79,21.31A87.62,87.62,0,0,0,216,128Z"/></symbol><symbol id="ph-bell-fill" viewBox="0 0 256 256"><path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216Z"/></symbol><symbol id="ph-arrow-fat-up-fill" viewBox="0 0 256 256"><path d="M231.39,123.06A8,8,0,0,1,224,128H184v80a16,16,0,0,1-16,16H88a16,16,0,0,1-16-16V128H32a8,8,0,0,1-5.66-13.66l96-96a8,8,0,0,1,11.32,0l96,96A8,8,0,0,1,231.39,123.06Z"/></symbol><symbol id="ph-arrow-fat-down-fill" viewBox="0 0 256 256"><path d="M229.66,141.66l-96,96a8,8,0,0,1-11.32,0l-96-96A8,8,0,0,1,32,128H72V48A16,16,0,0,1,88,32h80a16,16,0,0,1,16,16v80h40a8,8,0,0,1,5.66,13.66Z"/></symbol><symbol id="ph-bookmark-simple-fill" viewBox="0 0 256 256"><path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Z"/></symbol><symbol id="ph-check-circle-fill" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></symbol><symbol id="ph-seal-check-fill" viewBox="0 0 256 256"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-52.2,6.84-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></symbol><symbol id="ph-map-pin-fill" viewBox="0 0 256 256"><path d="M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z"/></symbol><symbol id="ph-fire-fill" viewBox="0 0 256 256"><path d="M143.38,17.85a8,8,0,0,0-12.63,3.41l-22,60.41L84.59,58.26a8,8,0,0,0-11.93.89C51,87.53,40,116.08,40,144a88,88,0,0,0,176,0C216,84.55,165.21,36,143.38,17.85Zm40.51,135.49a57.6,57.6,0,0,1-46.56,46.55A7.65,7.65,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/></symbol><symbol id="ph-car-fill" viewBox="0 0 256 256"><path d="M240,104H229.2L201.42,41.5A16,16,0,0,0,186.8,32H69.2a16,16,0,0,0-14.62,9.5L26.8,104H16a8,8,0,0,0,0,16h8v80a16,16,0,0,0,16,16H64a16,16,0,0,0,16-16v-8h96v8a16,16,0,0,0,16,16h24a16,16,0,0,0,16-16V120h8a8,8,0,0,0,0-16ZM80,152H56a8,8,0,0,1,0-16H80a8,8,0,0,1,0,16Zm120,0H176a8,8,0,0,1,0-16h24a8,8,0,0,1,0,16ZM44.31,104,69.2,48H186.8l24.89,56Z"/></symbol><symbol id="ph-traffic-cone-fill" viewBox="0 0 256 256"><path d="M232,208H213.69L153.42,34.75A16,16,0,0,0,138.31,24H117.69a16,16,0,0,0-15.11,10.74L42.31,208H24a8,8,0,0,0,0,16H232a8,8,0,0,0,0-16ZM95.43,104h65.14l16.7,48H78.73Z"/></symbol><symbol id="ph-shield-warning-fill" viewBox="0 0 256 256"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.27,47,25.53a8,8,0,0,0,4.2,0c1-.26,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40ZM120,96a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"/></symbol><symbol id="ph-leaf-fill" viewBox="0 0 256 256"><path d="M223.45,40.07a8,8,0,0,0-7.52-7.52C139.8,28.08,78.82,51,52.82,94a87.09,87.09,0,0,0-12.76,49A101.72,101.72,0,0,0,46.7,175.2a4,4,0,0,0,6.61,1.43l85-86.3a8,8,0,0,1,11.32,11.32L56.74,195.94,42.55,210.13a8.2,8.2,0,0,0-.6,11.1,8,8,0,0,0,11.71.43l16.79-16.79c14.14,6.84,28.41,10.57,42.56,11.07q1.67.06,3.33.06A86.93,86.93,0,0,0,162,203.18C205,177.18,227.93,116.21,223.45,40.07Z"/></symbol><symbol id="ph-trash-fill" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"/></symbol><symbol id="ph-speaker-high-fill" viewBox="0 0 256 256"><path d="M160,32.25V223.69a8.29,8.29,0,0,1-3.91,7.18,8,8,0,0,1-9-.56l-65.57-51A4,4,0,0,1,80,176.16V79.84a4,4,0,0,1,1.55-3.15l65.57-51a8,8,0,0,1,10,.16A8.27,8.27,0,0,1,160,32.25ZM60,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H60a4,4,0,0,0,4-4V84A4,4,0,0,0,60,80Zm126.77,20.84a8,8,0,0,0-.72,11.3,24,24,0,0,1,0,31.72,8,8,0,1,0,12,10.58,40,40,0,0,0,0-52.88A8,8,0,0,0,186.74,100.84Zm40.89-26.17a8,8,0,1,0-11.92,10.66,64,64,0,0,1,0,85.34,8,8,0,1,0,11.92,10.66,80,80,0,0,0,0-106.66Z"/></symbol><symbol id="ph-hand-heart-fill" viewBox="0 0 256 256"><path d="M230.33,141.06a24.34,24.34,0,0,0-18.61-4.77C230.5,117.33,240,98.48,240,80c0-26.47-21.29-48-47.46-48A47.58,47.58,0,0,0,156,48.75,47.58,47.58,0,0,0,119.46,32C93.29,32,72,53.53,72,80c0,11,3.24,21.69,10.06,33a31.87,31.87,0,0,0-14.75,8.4L44.69,144H16A16,16,0,0,0,0,160v40a16,16,0,0,0,16,16H120a7.93,7.93,0,0,0,1.94-.24l64-16a6.94,6.94,0,0,0,1.19-.4L226,182.82l.44-.2a24.6,24.6,0,0,0,3.93-41.56Zm-10.9,27.15-38,16.18L119,200H56V155.31l22.63-22.62A15.86,15.86,0,0,1,89.94,128H140a12,12,0,0,1,0,24H112a8,8,0,0,0,0,16h32a8.32,8.32,0,0,0,1.79-.2l67-15.41.31-.08a8.6,8.6,0,0,1,6.3,15.9Z"/></symbol><symbol id="ph-mask-happy-fill" viewBox="0 0 256 256"><path d="M217,34.8a15.94,15.94,0,0,0-14.82-1.71C188.15,38.55,159.82,47.71,128,47.71S67.84,38.55,53.79,33.09A16,16,0,0,0,32,48v55.77c0,35.84,9.65,69.65,27.18,95.18,18.16,26.46,42.6,41,68.82,41s50.66-14.57,68.82-41C214.35,173.44,224,139.63,224,103.79V48A16,16,0,0,0,217,34.8ZM78,133.33A8,8,0,1,1,66,122.66C71.75,116.28,82.18,112,92,112s20.25,4.28,26,10.66A8,8,0,1,1,106,133.33c-2.68-3-8.85-5.33-14-5.33S80.64,130.34,78,133.33Zm90.49,47.86a52.9,52.9,0,0,1-80.9,0A8,8,0,1,1,99.72,170.8a36.89,36.89,0,0,0,56.56,0,8,8,0,0,1,12.17,10.39ZM189.34,134a8,8,0,0,1-11.3-.63c-2.68-3-8.85-5.33-14-5.33s-11.36,2.34-14,5.33A8,8,0,1,1,138,122.66c5.71-6.38,16.14-10.66,26-10.66s20.25,4.28,26,10.66A8,8,0,0,1,189.34,134Z"/></symbol><symbol id="ph-soccer-ball-fill" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,39.38,24.79-17.05a88.41,88.41,0,0,1,36.18,27l-8,26.94c-.2,0-.41.1-.61.17l-22.82,7.41a7.59,7.59,0,0,0-1,.4L136,88.62c0-.2,0-.41,0-.62V64C136,63.79,136,63.58,136,63.38ZM95.24,46.33,120,63.38c0,.2,0,.41,0,.62V88c0,.21,0,.42,0,.62L91.44,108.29a7.59,7.59,0,0,0-1-.4l-22.82-7.41c-.2-.07-.41-.12-.61-.17l-8-26.94A88.41,88.41,0,0,1,95.24,46.33Zm-13,129.09H53.9a87.4,87.4,0,0,1-13.79-43.07l22-16.88a5.77,5.77,0,0,0,.58.22l22.83,7.42a7.83,7.83,0,0,0,.93.22l10.79,31.42c-.15.18-.3.36-.44.55L82.7,174.71A7.8,7.8,0,0,0,82.24,175.42ZM150.69,213a88.16,88.16,0,0,1-45.38,0L95.25,184.6c.13-.16.27-.31.39-.48l14.11-19.42a7.66,7.66,0,0,0,.46-.7h35.58a7.66,7.66,0,0,0,.46.7l14.11,19.42c.12.17.26.32.39.48Zm23.07-37.61a7.8,7.8,0,0,0-.46-.71L159.19,155.3c-.14-.19-.29-.37-.44-.55l10.79-31.42a7.83,7.83,0,0,0,.93-.22l22.83-7.42a5.77,5.77,0,0,0,.58-.22l22,16.88a87.4,87.4,0,0,1-13.79,43.07Z"/></symbol><symbol id="ph-calendar-star-fill" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,64V56a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm106.55,60.7-24.46,20.19L161.55,175a4,4,0,0,1-1.49,4.17,4.05,4.05,0,0,1-2.39.79,4,4,0,0,1-2-.55L128,163.18l-27.64,16.27A4,4,0,0,1,94.45,175l7.46-30.15L77.45,124.7a4,4,0,0,1,2.24-7.08l32.24-2.49,12.4-28.71a4,4,0,0,1,7.34,0l12.4,28.71,32.24,2.49a4,4,0,0,1,2.24,7.08ZM184,64a8,8,0,0,1-16,0V56a8,8,0,0,1,16,0Z"/></symbol><symbol id="ph-barricade-fill" viewBox="0 0 256 256"><path d="M224,64H32A16,16,0,0,0,16,80v72a16,16,0,0,0,16,16H56v32a8,8,0,0,0,16,0V168H184v32a8,8,0,0,0,16,0V168h24a16,16,0,0,0,16-16V80A16,16,0,0,0,224,64ZM32,152V92l60,60Zm192,0H167.31l-72-72H164l60,60v12Z"/></symbol><symbol id="ph-lightbulb-fill" viewBox="0 0 256 256"><path d="M176,232a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,232Zm40-128a87.55,87.55,0,0,1-33.64,69.21A16.24,16.24,0,0,0,176,186v6a16,16,0,0,1-16,16H96a16,16,0,0,1-16-16v-6a16,16,0,0,0-6.23-12.66A87.59,87.59,0,0,1,40,104.49C39.74,56.83,78.26,17.14,125.88,16A88,88,0,0,1,216,104Zm-32.11-9.34a57.6,57.6,0,0,0-46.56-46.55,8,8,0,0,0-2.66,15.78c16.57,2.79,30.63,16.85,33.44,33.45A8,8,0,0,0,176,104a9,9,0,0,0,1.35-.11A8,8,0,0,0,183.89,94.66Z"/></symbol><symbol id="ph-dots-three-fill" viewBox="0 0 256 256"><path d="M224,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V96A16,16,0,0,0,224,80ZM60,140a12,12,0,1,1,12-12A12,12,0,0,1,60,140Zm68,0a12,12,0,1,1,12-12A12,12,0,0,1,128,140Zm68,0a12,12,0,1,1,12-12A12,12,0,0,1,196,140Z"/></symbol><symbol id="ph-drop-fill" viewBox="0 0 256 256"><path d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75Zm9.85,105.59a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/></symbol><symbol id="ph-tree-fill" viewBox="0 0 256 256"><path d="M128,187.85a72.44,72.44,0,0,0,8,4.62V232a8,8,0,0,1-16,0V192.47A72.44,72.44,0,0,0,128,187.85ZM198.1,62.59a76,76,0,0,0-140.2,0A71.71,71.71,0,0,0,16,127.8C15.9,166,48,199,86.14,200A72.22,72.22,0,0,0,120,192.47V156.94L76.42,135.16a8,8,0,1,1,7.16-14.32L120,139.06V88a8,8,0,0,1,16,0v27.06l36.42-18.22a8,8,0,1,1,7.16,14.32L136,132.94v59.53A72.17,72.17,0,0,0,168,200l1.82,0C208,199,240.11,166,240,127.8A71.71,71.71,0,0,0,198.1,62.59Z"/></symbol><symbol id="ph-megaphone-fill" viewBox="0 0 256 256"><path d="M200,72H160.2c-2.91-.17-53.62-3.74-101.91-44.24A16,16,0,0,0,32,40V200a16,16,0,0,0,26.29,12.25c37.77-31.68,77-40.76,93.71-43.3v31.72A16,16,0,0,0,159.12,214l11,7.33A16,16,0,0,0,194.5,212l11.77-44.36A48,48,0,0,0,200,72ZM179,207.89l0,.11-11-7.33V168h21.6ZM200,152H168V88h32a32,32,0,1,1,0,64Z"/></symbol><symbol id="ph-info-fill" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-4,48a12,12,0,1,1-12,12A12,12,0,0,1,124,72Zm12,112a16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40a8,8,0,0,1,0,16Z"/></symbol><symbol id="ph-warning-fill" viewBox="0 0 256 256"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z"/></symbol><symbol id="ph-siren-fill" viewBox="0 0 256 256"><path d="M120,16V8a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm80,32a8,8,0,0,0,5.66-2.34l8-8a8,8,0,0,0-11.32-11.32l-8,8A8,8,0,0,0,200,48ZM50.34,45.66A8,8,0,0,0,61.66,34.34l-8-8A8,8,0,0,0,42.34,37.66ZM232,176v24a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V176a16,16,0,0,1,16-16V128a88,88,0,0,1,88.67-88c48.15.36,87.33,40.29,87.33,89v31A16,16,0,0,1,232,176ZM134.68,87.89C153.67,91.08,168,108.32,168,128a8,8,0,0,0,16,0c0-27.4-20.07-51.43-46.68-55.89a8,8,0,1,0-2.64,15.78ZM216,200V176H40v24H216Z"/></symbol><symbol id="ph-star-fill" viewBox="0 0 256 256"><path d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z"/></symbol><symbol id="ph-paper-plane-tilt-fill" viewBox="0 0 256 256"><path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z"/></symbol><symbol id="ph-squares-four-fill" viewBox="0 0 256 256"><path d="M120,56v48a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40h48A16,16,0,0,1,120,56Zm80-16H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm-96,96H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm96,0H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Z"/></symbol></svg>
+<div id="root"><div class="boot">Chargement de 95 Alerte…</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+/* =====================================================================
+   95 Alerte — prototype mobile (phase A)
+   Source : prototype/src/app.jsx → assemblé dans prototype/index.html
+   par tools/build_prototype.py. Lire AGENTS.md et docs/task.md avant
+   toute modification.
+   ===================================================================== */
+const { useState, useReducer, useEffect, useRef, useMemo, useCallback, createContext, useContext, Fragment } = React;
+
+/* =====================================================================
+   DATA — données fictives (communes réelles du Val-d'Oise, personnes fictives)
+   ===================================================================== */
+const MIN = 60 * 1000;
+const HOUR = 60 * MIN;
+const ALERT_TTL = 24 * HOUR; // R5 : une alerte expire au bout de 24 h
+const BOOT_TIME = Date.now();
+
+const INTERCOS = {
+  cp: "CA de Cergy-Pontoise",
+  vp: "CA Val Parisis",
+  sg: "CA Saint Germain Boucles de Seine",
+  pv: "CA Plaine Vallée",
+  rpf: "CA Roissy Pays de France",
+  vo3f: "CC Vallée de l'Oise et des Trois Forêts",
+  vvs: "CC Vexin Val de Seine",
+};
+
+const COMMUNES = [
+  { id: "pontoise", name: "Pontoise", interco: "cp", lat: 49.0508, lng: 2.1008, quartiers: ["Centre", "Les Louvrais", "Marcouville", "L'Hermitage"] },
+  { id: "cergy", name: "Cergy", interco: "cp", lat: 49.0364, lng: 2.0631, quartiers: ["Grand Centre", "Axe Majeur", "Saint-Christophe", "Hauts-de-Cergy"] },
+  { id: "saint-ouen-l-aumone", name: "Saint-Ouen-l'Aumône", interco: "cp", lat: 49.0447, lng: 2.1111, quartiers: ["Le Parc", "Liesse", "Épluches"] },
+  { id: "osny", name: "Osny", interco: "cp", lat: 49.0603, lng: 2.0628, quartiers: ["Centre", "Moulin-à-Vent"] },
+  { id: "argenteuil", name: "Argenteuil", interco: "sg", lat: 48.9472, lng: 2.2467, quartiers: ["Centre", "Val-Notre-Dame", "Orgemont", "Val d'Argent"] },
+  { id: "bezons", name: "Bezons", interco: "sg", lat: 48.9261, lng: 2.2178, quartiers: ["Centre", "Agriculture"] },
+  { id: "herblay", name: "Herblay-sur-Seine", interco: "vp", lat: 48.9897, lng: 2.165, quartiers: ["Centre", "Les Beauregards"] },
+  { id: "franconville", name: "Franconville", interco: "vp", lat: 48.9886, lng: 2.23, quartiers: ["Centre", "Montédour"] },
+  { id: "ermont", name: "Ermont", interco: "vp", lat: 48.99, lng: 2.2583, quartiers: ["Centre", "Les Chênes"] },
+  { id: "taverny", name: "Taverny", interco: "vp", lat: 49.0264, lng: 2.2219, quartiers: ["Les Lignières", "Lisière de la forêt"] },
+  { id: "montmorency", name: "Montmorency", interco: "pv", lat: 48.9883, lng: 2.3219, quartiers: ["Centre", "Les Champeaux"] },
+  { id: "enghien", name: "Enghien-les-Bains", interco: "pv", lat: 48.9697, lng: 2.3092, quartiers: ["Lac", "Centre"] },
+  { id: "sarcelles", name: "Sarcelles", interco: "rpf", lat: 48.9972, lng: 2.3797, quartiers: ["Lochères", "Les Vignes Blanches", "Village"] },
+  { id: "garges", name: "Garges-lès-Gonesse", interco: "rpf", lat: 48.9728, lng: 2.3992, quartiers: ["Dame Blanche", "La Muette"] },
+  { id: "villiers-le-bel", name: "Villiers-le-Bel", interco: "rpf", lat: 49.0089, lng: 2.3906, quartiers: ["Village", "Les Carreaux"] },
+  { id: "gonesse", name: "Gonesse", interco: "rpf", lat: 48.9869, lng: 2.4492, quartiers: ["Centre", "Saint-Blin"] },
+  { id: "goussainville", name: "Goussainville", interco: "rpf", lat: 49.0325, lng: 2.465, quartiers: ["Centre", "Les Grandes Bornes"] },
+  { id: "roissy", name: "Roissy-en-France", interco: "rpf", lat: 49.0036, lng: 2.5164, quartiers: ["Village"] },
+  { id: "isle-adam", name: "L'Isle-Adam", interco: "vo3f", lat: 49.1111, lng: 2.2228, quartiers: ["Centre", "Nogent"] },
+  { id: "magny", name: "Magny-en-Vexin", interco: "vvs", lat: 49.1556, lng: 1.7869, quartiers: ["Centre"] },
+];
+const COMMUNE_BY_ID = Object.fromEntries(COMMUNES.map((c) => [c.id, c]));
+
+/* Services destinataires (routage simulé, CDC §35–§37) */
+const SERVICE_TYPES = {
+  securite: { label: "Sécurité et secours", scope: "departement", delay: null },
+  voirie: { label: "Voirie", scope: "commune", delay: 72 },
+  eclairage: { label: "Éclairage public", scope: "commune", delay: 48 },
+  proprete: { label: "Propreté", scope: "commune", delay: 48 },
+  espaces_verts: { label: "Espaces verts", scope: "commune", delay: 72 },
+  tranquillite: { label: "Tranquillité publique", scope: "commune", delay: 24 },
+  vie_locale: { label: "Vie locale et associative", scope: "commune", delay: null },
+};
+
+/* Catégories (CDC §15, §18) — famille de marqueur, priorité, précision d'affichage, service */
+const CATEGORIES = [
+  // Négatives
+  { id: "incendie", label: "Incendie", type: "negative", family: "incident", icon: "fire", priority: "critique", precision: "rue", service: "securite" },
+  { id: "accident", label: "Accident", type: "negative", family: "incident", icon: "car", priority: "elevee", precision: "rue", service: "securite" },
+  { id: "securite", label: "Sécurité", type: "negative", family: "incident", icon: "shield-warning", priority: "elevee", precision: "quartier", service: "tranquillite" },
+  { id: "inondation", label: "Inondation", type: "negative", family: "incident", icon: "drop", priority: "elevee", precision: "quartier", service: "securite" },
+  { id: "voirie", label: "Voirie", type: "negative", family: "vigilance", icon: "traffic-cone", priority: "normale", precision: "rue", service: "voirie" },
+  { id: "eclairage", label: "Éclairage", type: "negative", family: "vigilance", icon: "lightbulb", priority: "normale", precision: "rue", service: "eclairage" },
+  { id: "proprete", label: "Propreté", type: "negative", family: "vigilance", icon: "trash", priority: "normale", precision: "rue", service: "proprete" },
+  { id: "arbre", label: "Arbre tombé", type: "negative", family: "vigilance", icon: "tree", priority: "normale", precision: "rue", service: "espaces_verts" },
+  { id: "nuisance", label: "Nuisance", type: "negative", family: "vigilance", icon: "speaker-high", priority: "normale", precision: "quartier", service: "tranquillite" },
+  { id: "environnement-neg", label: "Pollution", type: "negative", family: "vigilance", icon: "leaf", priority: "normale", precision: "quartier", service: "espaces_verts" },
+  { id: "travaux", label: "Travaux", type: "negative", family: "info", icon: "barricade", priority: "normale", precision: "rue", service: "voirie" },
+  { id: "autre-neg", label: "Autre problème", type: "negative", family: "vigilance", icon: "dots-three", priority: "normale", precision: "quartier", service: "tranquillite" },
+  // Positives
+  { id: "solidarite", label: "Solidarité", type: "positive", family: "positive", icon: "hand-heart", priority: "normale", precision: "quartier", service: "vie_locale" },
+  { id: "culture", label: "Culture", type: "positive", family: "positive", icon: "mask-happy", priority: "normale", precision: "rue", service: "vie_locale" },
+  { id: "sport", label: "Sport", type: "positive", family: "positive", icon: "soccer-ball", priority: "normale", precision: "rue", service: "vie_locale" },
+  { id: "evenement", label: "Événement", type: "positive", family: "positive", icon: "calendar-star", priority: "normale", precision: "rue", service: "vie_locale" },
+  { id: "environnement-pos", label: "Action environnementale", type: "positive", family: "positive", icon: "leaf", priority: "normale", precision: "quartier", service: "espaces_verts" },
+  { id: "info-utile", label: "Information utile", type: "positive", family: "info", icon: "megaphone", priority: "normale", precision: "quartier", service: "vie_locale" },
+  { id: "autre-pos", label: "Autre bonne nouvelle", type: "positive", family: "positive", icon: "star", priority: "normale", precision: "quartier", service: "vie_locale" },
+];
+const CATEGORY_BY_ID = Object.fromEntries(CATEGORIES.map((c) => [c.id, c]));
+
+/* Personnes fictives */
+const ME_ID = "me";
+const USERS = {
+  me: { id: "me", firstName: "Jean", lastName: "Dupont" },
+  u1: { id: "u1", firstName: "Camille", lastName: "Renaud" },
+  u2: { id: "u2", firstName: "Sami", lastName: "Lefèvre" },
+  u3: { id: "u3", firstName: "Inès", lastName: "Benali" },
+  u4: { id: "u4", firstName: "Thomas", lastName: "Marchand" },
+  u5: { id: "u5", firstName: "Léa", lastName: "Dubois" },
+  u6: { id: "u6", firstName: "Karim", lastName: "Aït-Saïd" },
+  u7: { id: "u7", firstName: "Julie", lastName: "Perrin" },
+  u8: { id: "u8", firstName: "Nora", lastName: "Haddad" },
+  u9: { id: "u9", firstName: "Hugo", lastName: "Vasseur" },
+  u10: { id: "u10", firstName: "Fatou", lastName: "Sow" },
+};
+
+/* Statuts (DESIGN_SYSTEM §2.3) */
+const TRANSMISSION_STEPS = [
+  { id: "envoye", label: "Signalement envoyé" },
+  { id: "transmis", label: "Transmis au service compétent" },
+  { id: "pris_en_compte", label: "Pris en compte" },
+  { id: "en_traitement", label: "En cours de traitement" },
+  { id: "traite", label: "Traité" },
+  { id: "cloture", label: "Clôturé" },
+];
+
+/* Graine d'alertes : [id, catégorie, titre, description, commune, quartier, rue, âge (min), auteur|null (anonyme), ⬆, ⬇, 💬, photo, transmission, statut, groupe doublon] */
+const ALERT_SEED = [
+  ["a1", "incendie", "Fumée importante visible rue Carnot", "Fumée noire épaisse au-dessus des immeubles côté gare. Les pompiers ne sont pas encore sur place.", "pontoise", "Centre", "Rue Carnot", 12, null, 24, 3, 8, true, "transmis", "active", "g1"],
+  ["a2", "accident", "Collision entre deux véhicules au rond-point", "Deux voitures accidentées, circulation très ralentie dans les deux sens.", "cergy", "Saint-Christophe", "Boulevard de l'Oise", 35, "u2", 15, 1, 4, true, "pris_en_compte", "active"],
+  ["a3", "proprete", "Déchets abandonnés au pied des conteneurs", "Sacs éventrés, cartons et un matelas déposés depuis hier soir.", "argenteuil", "Val-Notre-Dame", "Rue Paul-Vaillant-Couturier", 300, "u3", 31, 1, 7, true, "traite", "active"],
+  ["a4", "environnement-pos", "Nettoyage participatif du parc François-Mitterrand", "Rendez-vous à 10 h à l'entrée principale. Gants et sacs fournis, venez nombreux !", "cergy", "Axe Majeur", "Parc François-Mitterrand", 60, "u4", 43, 2, 12, true, "transmis", "active"],
+  ["a5", "eclairage", "Trois lampadaires éteints avenue de la Gare", "Toute la portion entre la gare et la pharmacie est plongée dans le noir.", "ermont", "Centre", "Avenue de la Gare", 140, "me", 12, 0, 2, false, "traite", "active"],
+  ["a6", "voirie", "Nid-de-poule dangereux sur la chaussée", "Trou d'environ 40 cm, déjà deux vélos tombés ce matin.", "saint-ouen-l-aumone", "Le Parc", "Chaussée Jules-César", 95, null, 22, 0, 3, true, "en_traitement", "active"],
+  ["a7", "culture", "Concert gratuit au théâtre de verdure ce soir", "Orchestre d'harmonie de la ville, à partir de 19 h. Pensez à apporter un plaid.", "isle-adam", "Centre", "Parc Manchez", 180, "u5", 38, 1, 6, true, "transmis", "active"],
+  ["a8", "arbre", "Arbre tombé sur la chaussée", "Un gros chêne bloque la voie de droite, la circulation se fait sur une seule file.", "montmorency", "Centre", "Rue de Jaigny", 50, "u6", 19, 0, 5, true, "en_traitement", "active"],
+  ["a9", "inondation", "Rue inondée après l'orage, voitures bloquées", "Environ 30 cm d'eau au carrefour, plusieurs véhicules arrêtés.", "sarcelles", "Les Vignes Blanches", "Avenue Paul-Valéry", 75, null, 27, 2, 9, true, "transmis", "active"],
+  ["a10", "sport", "Tournoi de football inter-quartiers samedi", "Inscriptions sur place dès 9 h, catégories 8-12 ans et 13-17 ans.", "garges", "Dame Blanche", "Stade Pierre-Bérégovoy", 400, "u7", 25, 0, 4, false, "transmis", "active"],
+  ["a11", "nuisance", "Musique très forte depuis 2 h du matin", "Rassemblement bruyant sur le parking du lac.", "enghien", "Lac", "Boulevard du Lac", 260, null, 6, 4, 2, false, "pris_en_compte", "active"],
+  ["a12", "securite", "Câble électrique arraché au sol", "Câble pendant jusqu'au trottoir près de l'arrêt de bus. Ne pas toucher.", "taverny", "Les Lignières", "Rue d'Herblay", 25, "u8", 17, 0, 3, true, "transmis", "active"],
+  ["a13", "environnement-pos", "Plantation de 200 arbres au parc du Château", "Une belle matinée avec les écoles du quartier. Merci à tous les bénévoles.", "franconville", "Centre", "Parc du Château", 500, "u9", 51, 1, 10, true, "transmis", "active"],
+  ["a14", "travaux", "Travaux de voirie : circulation alternée jusqu'à vendredi", "Feux provisoires installés, prévoir 10 minutes de plus aux heures de pointe.", "herblay", "Centre", "Rue de Paris", 220, "u10", 9, 0, 1, false, "transmis", "active"],
+  ["a15", "proprete", "Dépôt de gravats en bordure de forêt", "Une dizaine de sacs de gravats et des plaques de plâtre.", "taverny", "Lisière de la forêt", "Chemin des Bouleaux", 610, null, 12, 1, 2, true, "en_traitement", "active"],
+  ["a16", "evenement", "Fête de quartier place des Arts", "Stands, jeux pour enfants et repas partagé à partir de 12 h.", "villiers-le-bel", "Village", "Place des Arts", 90, "u2", 29, 0, 5, true, "transmis", "active"],
+  ["a17", "info-utile", "Distribution gratuite de composteurs samedi matin", "Au centre technique municipal, sur présentation d'un justificatif de domicile.", "osny", "Centre", "Rue de Cergy", 330, "u3", 18, 0, 2, false, "transmis", "active"],
+  ["a18", "accident", "Scooter renversé, conducteur pris en charge", "Les secours sont sur place, éviter le secteur.", "argenteuil", "Orgemont", "Rue d'Orgemont", 18, null, 8, 0, 2, false, "transmis", "active"],
+  ["a19", "incendie", "Fumée noire au-dessus de la gare", "On voit la fumée depuis le quai, ça semble venir de la rue Carnot.", "pontoise", "Centre", "Place de la Gare", 9, null, 11, 0, 3, false, "transmis", "active", "g1"],
+  ["a20", "solidarite", "Collecte de vêtements chauds au centre social", "Manteaux, couvertures et chaussures en bon état, jusqu'à 18 h.", "goussainville", "Centre", "Rue Louis-Basset", 700, "u4", 22, 0, 3, false, "transmis", "active"],
+  ["a21", "eclairage", "Passage souterrain plongé dans le noir", "Plus aucun éclairage dans le passage piéton sous la voie ferrée.", "gonesse", "Saint-Blin", "Passage de la Gare", 1400, "u5", 14, 0, 2, false, "pris_en_compte", "active"],
+  ["a22", "voirie", "Feu tricolore en panne au carrefour", "Feux éteints dans les deux sens, les voitures passent au hasard.", "cergy", "Grand Centre", "Boulevard de l'Hautil", 1410, null, 21, 1, 6, false, "en_traitement", "active"],
+  ["a23", "proprete", "Encombrants sur le trottoir", "Canapé et meuble déposés devant le n° 12, le passage piéton est bloqué.", "ermont", "Les Chênes", "Rue Saint-Flaive", 1700, "me", 9, 0, 1, true, "traite", "expiree"],
+  ["a24", "culture", "Exposition photo à la médiathèque", "« Le Vexin en lumière », entrée libre tout le week-end.", "magny", "Centre", "Rue de Crosne", 2000, "u6", 16, 0, 2, true, "transmis", "expiree"],
+  ["a25", "voirie", "Banc public cassé square Marcel-Pagnol", "L'assise est fendue et une latte dépasse, risque de blessure pour les enfants.", "pontoise", "Les Louvrais", "Square Marcel-Pagnol", 240, "me", 7, 0, 1, true, "pris_en_compte", "active"],
+  ["a26", "autre-neg", "Chien errant blessé près du canal", "Il boite et reste près du pont, il semble apeuré.", "saint-ouen-l-aumone", "Épluches", "Quai de l'Écluse", 45, null, 10, 0, 4, true, "transmis", "active"],
+  ["a27", "evenement", "Inauguration de la nouvelle aire de jeux", "Ouverture officielle à 15 h, goûter offert aux enfants.", "roissy", "Village", "Rue de la Mairie", 150, "u7", 33, 0, 4, true, "transmis", "active"],
+  ["a28", "eclairage", "Lampadaire clignotant (doublon)", "Supprimé par l'auteur : doublon d'une alerte existante.", "ermont", "Centre", "Avenue de la Gare", 600, "me", 0, 0, 0, false, "envoye", "supprimee"],
+];
+
+function seededJitter(id, amp) {
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const a = ((h % 1000) / 1000 - 0.5) * amp;
+  const b = ((((h / 1000) | 0) % 1000) / 1000 - 0.5) * amp;
+  return [a, b];
+}
+
+function buildAlert(row) {
+  const [id, categoryId, title, description, communeId, quartier, street, ageMin, authorId, up, down, comments, hasPhoto, transmission, status, duplicateGroup] = row;
+  const commune = COMMUNE_BY_ID[communeId];
+  const [dLat, dLng] = seededJitter(id, 0.012);
+  const createdAt = BOOT_TIME - ageMin * MIN;
+  return {
+    id, categoryId, title, description, communeId, quartier, street,
+    lat: commune.lat + dLat, lng: commune.lng + dLng,
+    createdAt, expiresAt: createdAt + ALERT_TTL,
+    authorId: authorId || `u${(id.length % 9) + 1}`, // l'auteur reste connu du système (CDC §9)
+    anonymous: !authorId,
+    votesUp: up, votesDown: down, commentsCount: comments,
+    hasPhoto, transmission, status, duplicateGroup: duplicateGroup || null,
+  };
+}
+
+const SEED_ALERTS = ALERT_SEED.map(buildAlert);
+
+/* Mode démo « beaucoup d'alertes » : alertes synthétiques réparties sur le territoire */
+function generateManyAlerts(count = 80) {
+  const titles = {
+    proprete: "Dépôt sauvage signalé", voirie: "Chaussée dégradée", eclairage: "Lampadaire en panne",
+    nuisance: "Nuisance sonore", solidarite: "Action solidaire", culture: "Animation culturelle",
+    sport: "Rencontre sportive", evenement: "Événement de quartier", travaux: "Travaux en cours",
+  };
+  const cats = Object.keys(titles);
+  return Array.from({ length: count }, (_, i) => {
+    const commune = COMMUNES[i % COMMUNES.length];
+    const cat = cats[i % cats.length];
+    return buildAlert([`m${i}`, cat, titles[cat], "Alerte générée pour tester l'affichage d'un grand nombre d'alertes.", commune.id, commune.quartiers[i % commune.quartiers.length], "", 5 + ((i * 37) % 1300), i % 3 ? `u${(i % 10) + 1}` : null, (i * 7) % 40, (i * 3) % 6, (i * 5) % 12, i % 4 === 0, "transmis", "active"]);
+  });
+}
+
+const SEED_COMMENTS = {
+  a1: [
+    { id: "c1", authorId: "u2", anonymous: false, body: "Les pompiers arrivent, on entend les sirènes depuis la place.", ageMin: 8 },
+    { id: "c2", authorId: "u5", anonymous: true, body: "Merci pour l'info, je passe par Saint-Martin.", ageMin: 4, parentId: "c1" },
+  ],
+  a3: [{ id: "c3", authorId: "u7", anonymous: false, body: "Le service est passé ce midi, tout est propre maintenant.", ageMin: 90 }],
+  a4: [
+    { id: "c4", authorId: "u1", anonymous: false, body: "Super initiative ! On viendra avec les enfants.", ageMin: 40 },
+    { id: "c5", authorId: "u9", anonymous: false, body: "Faut-il s'inscrire à l'avance ?", ageMin: 25 },
+    { id: "c6", authorId: "u4", anonymous: false, body: "Non, venez directement à 10 h.", ageMin: 20, parentId: "c5" },
+  ],
+};
+
+const SEED_NOTIFICATIONS = [
+  { id: "n1", kind: "traite", alertId: "a5", title: "Votre signalement a été traité", body: "Trois lampadaires éteints avenue de la Gare", ageMin: 30, read: false },
+  { id: "n2", kind: "proximite", alertId: "a1", title: "Nouvelle alerte à proximité", body: "Fumée importante visible rue Carnot · Pontoise", ageMin: 11, read: false },
+  { id: "n3", kind: "commentaire", alertId: "a25", title: "Quelqu'un a commenté votre alerte", body: "Banc public cassé square Marcel-Pagnol", ageMin: 120, read: true },
+];
+
+/* =====================================================================
+   UTILS
+   ===================================================================== */
+const storage = {
+  get(key, fallback) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* stockage indisponible : l'app fonctionne sans */ }
+  },
+};
+
+function fmtRelative(ms) {
+  const m = Math.max(0, Math.round(ms / MIN));
+  if (m < 1) return "à l'instant";
+  if (m < 60) return `il y a ${m} min`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `il y a ${h} h`;
+  const d = Math.floor(h / 24);
+  return `il y a ${d} j`;
+}
+
+function fmtRemaining(ms) {
+  if (ms <= 0) return "0 min";
+  const totalMin = Math.ceil(ms / MIN);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  if (h === 0) return `${m} min`;
+  return `${h} h ${String(m).padStart(2, "0")}`;
+}
+
+function fmtClock(ts) {
+  const d = new Date(ts);
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function haversineKm(a, b) {
+  const R = 6371;
+  const rad = (x) => (x * Math.PI) / 180;
+  const dLat = rad(b.lat - a.lat);
+  const dLng = rad(b.lng - a.lng);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+
+function fmtDistance(km) {
+  if (km < 1) return `${Math.max(50, Math.round((km * 1000) / 50) * 50)} m`;
+  return `${km.toFixed(1).replace(".", ",")} km`;
+}
+
+function publicName(user) {
+  return `${user.firstName} ${user.lastName[0]}.`;
+}
+
+/* Affichage public de l'auteur (CDC §9, §76, §89) : jamais d'email, téléphone ni adresse */
+function publicAuthor(item) {
+  if (item.anonymous) return { name: "Citoyen anonyme", anonymous: true, initials: null };
+  const u = USERS[item.authorId];
+  return { name: publicName(u), anonymous: false, initials: (u.firstName[0] + u.lastName[0]).toUpperCase() };
+}
+
+/* Lieu affiché selon la précision de la catégorie (CDC §78) */
+function displayPlace(alert) {
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const commune = COMMUNE_BY_ID[alert.communeId].name;
+  if (cat.precision === "rue" && alert.street) return `${alert.street}, ${commune}`;
+  return `${alert.quartier}, ${commune}`;
+}
+
+/* Routage simulé : catégorie + localisation → service compétent (CDC §35) */
+function routeAlert(alert) {
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const svc = SERVICE_TYPES[cat.service];
+  const commune = COMMUNE_BY_ID[alert.communeId];
+  const name = svc.scope === "departement" ? `${svc.label} · Val-d'Oise` : `Service ${svc.label} · Ville de ${commune.name}`;
+  return { id: cat.service, name, delayHours: svc.delay };
+}
+
+function alertLifecycle(alert, now) {
+  if (alert.status !== "active") return alert.status;
+  const left = alert.expiresAt - now;
+  if (left <= 0) return "expiree";
+  if (left <= HOUR) return "proche";
+  return "active";
+}
+
+function cx(...parts) {
+  return parts.filter(Boolean).join(" ");
+}
+
+/* =====================================================================
+   STORE — état unique (useReducer)
+   ===================================================================== */
+const PREFS_KEY = "95alerte:prefs";
+const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false };
+const DEFAULT_DEMO = { offline: false, permissionDenied: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
+
+function initialState() {
+  return {
+    prefs: { ...DEFAULT_PREFS, ...storage.get(PREFS_KEY, {}) },
+    demo: { ...DEFAULT_DEMO },
+    session: { user: USERS.me, identity: "verifiee", position: { lat: 49.0508, lng: 2.1008, source: "manual", communeId: "pontoise" } },
+    alerts: SEED_ALERTS,
+    votes: { a4: 1, a8: 1 },
+    follows: { a1: true },
+    comments: SEED_COMMENTS,
+    notifications: SEED_NOTIFICATIONS,
+    nav: { tab: "map", stack: [] },
+    sheet: null,
+    modal: null,
+    toasts: [],
+  };
+}
+
+let toastSeq = 0;
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_TAB":
+      return { ...state, nav: { tab: action.tab, stack: [] }, sheet: null };
+    case "PUSH":
+      return { ...state, nav: { ...state.nav, stack: [...state.nav.stack, { id: action.screen, params: action.params || {}, key: `${action.screen}-${Date.now()}` }] }, sheet: null };
+    case "POP":
+      return { ...state, nav: { ...state.nav, stack: state.nav.stack.slice(0, -1) } };
+    case "OPEN_SHEET":
+      return { ...state, sheet: { id: action.sheet, params: action.params || {}, snap: action.snap || "half" } };
+    case "SNAP_SHEET":
+      return state.sheet ? { ...state, sheet: { ...state.sheet, snap: action.snap } } : state;
+    case "CLOSE_SHEET":
+      return { ...state, sheet: null };
+    case "OPEN_MODAL":
+      return { ...state, modal: action.modal };
+    case "CLOSE_MODAL":
+      return { ...state, modal: null };
+    case "TOAST":
+      return { ...state, toasts: [...state.toasts.slice(-2), { id: ++toastSeq, ...action.toast }] };
+    case "DISMISS_TOAST":
+      return { ...state, toasts: state.toasts.filter((t) => t.id !== action.id) };
+    case "SET_PREF":
+      return { ...state, prefs: { ...state.prefs, [action.key]: action.value } };
+    case "SET_DEMO":
+      return { ...state, demo: { ...state.demo, [action.key]: action.value } };
+    case "VOTE": {
+      // R8 : un vote par utilisateur et par alerte, modifiable
+      const prev = state.votes[action.alertId] || 0;
+      const next = prev === action.value ? 0 : action.value;
+      const alerts = state.alerts.map((a) => {
+        if (a.id !== action.alertId) return a;
+        let { votesUp, votesDown } = a;
+        if (prev === 1) votesUp--;
+        if (prev === -1) votesDown--;
+        if (next === 1) votesUp++;
+        if (next === -1) votesDown++;
+        return { ...a, votesUp, votesDown };
+      });
+      return { ...state, alerts, votes: { ...state.votes, [action.alertId]: next } };
+    }
+    case "RESET":
+      return { ...initialState(), prefs: state.prefs };
+    default:
+      return state;
+  }
+}
+
+const StoreContext = createContext(null);
+const ClockContext = createContext(BOOT_TIME);
+const useStore = () => useContext(StoreContext);
+const useNow = () => useContext(ClockContext);
+
+/* Actions de haut niveau partagées par les écrans */
+function useActions() {
+  const { dispatch } = useStore();
+  return useMemo(() => ({
+    setTab: (tab) => dispatch({ type: "SET_TAB", tab }),
+    push: (screen, params) => dispatch({ type: "PUSH", screen, params }),
+    pop: () => dispatch({ type: "POP" }),
+    openSheet: (sheet, params, snap) => dispatch({ type: "OPEN_SHEET", sheet, params, snap }),
+    snapSheet: (snap) => dispatch({ type: "SNAP_SHEET", snap }),
+    closeSheet: () => dispatch({ type: "CLOSE_SHEET" }),
+    confirm: (modal) => dispatch({ type: "OPEN_MODAL", modal }),
+    closeModal: () => dispatch({ type: "CLOSE_MODAL" }),
+    toast: (text, opts = {}) => dispatch({ type: "TOAST", toast: { text, tone: "success", ...opts } }),
+    setPref: (key, value) => dispatch({ type: "SET_PREF", key, value }),
+    setDemo: (key, value) => dispatch({ type: "SET_DEMO", key, value }),
+    vote: (alertId, value) => dispatch({ type: "VOTE", alertId, value }),
+    reset: () => dispatch({ type: "RESET" }),
+  }), [dispatch]);
+}
+
+/* Sélecteurs */
+function useVisibleAlerts() {
+  const { state } = useStore();
+  const now = useNow();
+  return useMemo(() => {
+    if (state.demo.emptyZone) return [];
+    const base = state.demo.manyAlerts ? [...state.alerts, ...generateManyAlerts()] : state.alerts;
+    return base.filter((a) => a.status === "active" && a.expiresAt > now);
+  }, [state.alerts, state.demo.emptyZone, state.demo.manyAlerts, now]);
+}
+
+/* =====================================================================
+   COMPOSANTS DE BASE (CSS : docs/design-system/index.html)
+   ===================================================================== */
+function Icon({ name, className, label, style }) {
+  return (
+    <svg className={cx("ph", className)} style={style} aria-hidden={label ? undefined : true} role={label ? "img" : undefined} aria-label={label}>
+      <use href={`#ph-${name}`} />
+    </svg>
+  );
+}
+
+function Spinner() {
+  return <span className="spinner" aria-hidden="true" />;
+}
+
+function Button({ variant = "primary", block, loading, icon, children, className, ...rest }) {
+  return (
+    <button type="button" className={cx("btn", `btn-${variant}`, block && "btn-block", className)} aria-busy={loading || undefined} disabled={rest.disabled || loading} {...rest}>
+      {loading ? <Spinner /> : icon ? <Icon name={icon} /> : null}
+      {children}
+    </button>
+  );
+}
+
+function IconButton({ icon, label, badge, className, ...rest }) {
+  return (
+    <button type="button" className={cx("icon-btn", className)} aria-label={badge ? `${label}, ${badge} non lues` : label} {...rest}>
+      <Icon name={icon} />
+      {badge ? <span className="badge-count" aria-hidden="true">{badge}</span> : null}
+    </button>
+  );
+}
+
+function Chip({ selected, icon, children, onClick }) {
+  return (
+    <button type="button" className="chip" aria-pressed={!!selected} onClick={onClick}>
+      {selected ? <Icon name="check" /> : icon ? <Icon name={icon} /> : null}
+      {children}
+    </button>
+  );
+}
+
+function SegmentedControl({ options, value, onChange, label }) {
+  return (
+    <div className="seg" role="group" aria-label={label}>
+      {options.map((o) => (
+        <button key={o.value} type="button" aria-pressed={o.value === value} onClick={() => onChange(o.value)}>
+          {o.icon ? <Icon name={o.icon} className="ph-sm" /> : null}
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function Field({ id, label, help, error, counter, max, textarea, ...rest }) {
+  const Tag = textarea ? "textarea" : "input";
+  const describedBy = [help && `${id}-help`, error && `${id}-err`].filter(Boolean).join(" ") || undefined;
+  return (
+    <div className="field">
+      <label htmlFor={id}>{label}</label>
+      <Tag id={id} className="input" aria-invalid={error ? true : undefined} aria-describedby={describedBy} maxLength={max} {...rest} />
+      {error ? <span className="err" id={`${id}-err`}><Icon name="warning-fill" className="ph-sm" />{error}</span> : null}
+      {help || max ? (
+        <span className="help" id={`${id}-help`}>
+          <span>{help}</span>
+          {max ? <span>{(rest.value || "").length}/{max}</span> : null}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+function RadioCard({ name, value, checked, onChange, icon, iconTone = "primary", title, description }) {
+  const tone = iconTone === "muted" ? { background: "var(--surface-2)", color: "var(--text-muted)" } : { background: "var(--primary-soft)", color: "var(--primary)" };
+  return (
+    <label className="radio-card">
+      <input type="radio" name={name} value={value} checked={checked} onChange={() => onChange(value)} />
+      <span className="rc-icon" style={tone}><Icon name={icon} className="ph-lg" /></span>
+      <span><b>{title}</b><small>{description}</small></span>
+      <span className="rc-dot" />
+    </label>
+  );
+}
+
+function Switch({ label, checked, onChange, id }) {
+  return (
+    <label className="switch" htmlFor={id}>
+      {label}
+      <input id={id} type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <span />
+    </label>
+  );
+}
+
+function ListItem({ icon, label, value, onClick, chevron = true }) {
+  const Tag = onClick ? "button" : "div";
+  return (
+    <Tag type={onClick ? "button" : undefined} className="list-item" onClick={onClick} style={onClick ? { width: "100%", border: 0, background: "none", textAlign: "left", cursor: "pointer" } : undefined}>
+      {icon ? <Icon name={icon} /> : <span />}
+      <span>{label}</span>
+      <span className="val">{value}{chevron ? <Icon name="caret-right" className="ph-sm" /> : null}</span>
+    </Tag>
+  );
+}
+
+function Banner({ tone = "info", icon, title, children, className }) {
+  return (
+    <div className={cx("banner", `banner-${tone}`, className)} role={tone === "emergency" ? "note" : "status"}>
+      <Icon name={icon || (tone === "offline" ? "wifi-slash" : tone === "emergency" ? "siren-fill" : "info")} />
+      <span>{title ? <b>{title}</b> : null}{children}</span>
+    </div>
+  );
+}
+
+function Skeleton({ height = 14, width = "100%", radius }) {
+  return <div className="skeleton" aria-hidden="true" style={{ height, width, borderRadius: radius }} />;
+}
+
+function EmptyState({ icon = "map-trifold", tone, title, children, action }) {
+  const ill = tone === "error" ? { color: "var(--alert-incident)", background: "var(--alert-incident-soft)" } : undefined;
+  return (
+    <div className="empty">
+      <span className="empty-ill" style={ill}><Icon name={icon} style={{ width: 32, height: 32 }} /></span>
+      <h4>{title}</h4>
+      {children ? <p>{children}</p> : null}
+      {action}
+    </div>
+  );
+}
+
+function Stepper({ step, total, label }) {
+  return (
+    <div className="stepper" role="progressbar" aria-valuemin={1} aria-valuemax={total} aria-valuenow={step} aria-label={`Étape ${step} sur ${total}`}>
+      <div className="lbl"><span>Étape {step} sur {total}</span><span>{label}</span></div>
+      <div className="track"><i style={{ width: `${(step / total) * 100}%` }} /></div>
+    </div>
+  );
+}
+
+function Pill({ children, onClick, dot = true }) {
+  return (
+    <button type="button" className="pill" onClick={onClick}>
+      {dot ? <span className="dot-new" aria-hidden="true" /> : null}
+      {children}
+    </button>
+  );
+}
+
+function Tooltip({ children }) {
+  return <span className="tooltip" role="tooltip">{children}</span>;
+}
+
+/* ---- Composants spécifiques 95 Alerte ---- */
+const MARKER_SHAPES = {
+  incident: <path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" strokeLinejoin="round" />,
+  vigilance: <path d="M18 3 34 32H2Z" strokeLinejoin="round" />,
+  positive: <circle cx="18" cy="18" r="15.5" />,
+  info: <rect x="3" y="3" width="30" height="30" rx="8" />,
+};
+const FAMILY_LABEL = { incident: "Incident", vigilance: "Vigilance", positive: "Événement positif", info: "Information" };
+
+function Marker({ family, icon, selected, critical, label, style, onClick }) {
+  const content = (
+    <Fragment>
+      <svg className="shape" viewBox="0 0 36 36" aria-hidden="true">{MARKER_SHAPES[family]}</svg>
+      <Icon name={`${icon}-fill`} style={family === "vigilance" ? { top: 4 } : undefined} />
+      {critical ? <span className="marker-label">Urgent</span> : null}
+    </Fragment>
+  );
+  const cls = cx("marker", `fam-${family}`, selected && "is-selected", critical && "is-critical");
+  if (onClick) return <button type="button" className={cls} style={{ ...style, border: 0, background: "none", padding: 0, cursor: "pointer" }} aria-label={label} onClick={onClick}>{content}</button>;
+  return <span className={cls} style={style} role={label ? "img" : undefined} aria-label={label}>{content}</span>;
+}
+
+function ClusterMarker({ count, onClick, style }) {
+  const size = count < 10 ? "c-s" : count < 30 ? "c-m" : "c-l";
+  return <button type="button" className={cx("cluster", size)} style={{ ...style, cursor: "pointer" }} onClick={onClick} aria-label={`${count} alertes regroupées, zoomer`}>{count}</button>;
+}
+
+function TypeBadge({ category, showFamily }) {
+  return (
+    <span className={cx("badge", "badge-type", `fam-${category.family}`)}>
+      <Icon name={`${category.icon}-fill`} />
+      {showFamily ? (category.type === "positive" ? "Positif" : "Négatif") : category.label}
+    </span>
+  );
+}
+
+const STATUS_META = {
+  brouillon: { cls: "st-draft", icon: "pencil-simple", label: "Brouillon" },
+  active: { cls: "st-active", icon: "check-circle-fill", label: "Active" },
+  proche: { cls: "st-soon", icon: "timer", label: "Expire bientôt" },
+  transmis: { cls: "st-sent", icon: "paper-plane-tilt", label: "Transmise" },
+  pris_en_compte: { cls: "st-sent", icon: "check", label: "Prise en compte" },
+  en_traitement: { cls: "st-progress", icon: "arrows-clockwise", label: "En traitement" },
+  traite: { cls: "st-done", icon: "check-circle-fill", label: "Traitée" },
+  cloture: { cls: "st-done", icon: "check-circle-fill", label: "Clôturée" },
+  expiree: { cls: "st-expired", icon: "clock", label: "Expirée" },
+  supprimee: { cls: "st-expired", icon: "trash-simple", label: "Supprimée" },
+  moderee: { cls: "st-moderated", icon: "eye-slash", label: "Contenu modéré" },
+  rejetee: { cls: "st-rejected", icon: "x", label: "Rejetée" },
+};
+
+function StatusBadge({ status, label }) {
+  const m = STATUS_META[status] || STATUS_META.active;
+  return <span className={cx("badge", "badge-status", m.cls)}><Icon name={m.icon} />{label || m.label}</span>;
+}
+
+function ExpirationCounter({ alert, compact }) {
+  const now = useNow();
+  const left = alert.expiresAt - now;
+  const state = left <= 0 ? "over" : left <= HOUR ? "soon" : "ok";
+  const pct = Math.min(100, Math.max(0, (left / ALERT_TTL) * 100));
+  const text = state === "over" ? "Cette alerte a expiré." : state === "soon" ? `Expire dans ${fmtRemaining(left)}` : `Visible encore ${fmtRemaining(left)}`;
+  if (compact) {
+    const short = state === "over" ? "Expirée" : left >= HOUR ? `${Math.floor(left / HOUR)} h` : `${Math.ceil(left / MIN)} min`;
+    return <span className="exp" aria-label={text}><Icon name="timer" className="ph-sm" />{short}</span>;
+  }
+  return (
+    <div className={cx("expiry", state === "soon" && "soon", state === "over" && "over")}>
+      <span className="lbl"><Icon name={state === "over" ? "clock" : "timer"} className="ph-sm" />{text}</span>
+      <div className="bar" aria-hidden="true"><i style={{ width: `${state === "over" ? 100 : pct}%` }} /></div>
+    </div>
+  );
+}
+
+function AlertCard({ alert, onOpen }) {
+  const { state } = useStore();
+  const now = useNow();
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const pos = state.session.position;
+  const dist = pos ? fmtDistance(haversineKm(pos, alert)) : null;
+  const commune = COMMUNE_BY_ID[alert.communeId].name;
+  const life = alertLifecycle(alert, now);
+  const transmissionBadge = ["en_traitement", "traite", "cloture"].includes(alert.transmission) ? alert.transmission : alert.transmission === "transmis" || alert.transmission === "pris_en_compte" ? "transmis" : null;
+  const aria = `${cat.label}. ${alert.title}. ${commune}${dist ? `, ${dist}` : ""}, ${fmtRelative(now - alert.createdAt)}.`;
+  return (
+    <button type="button" className={cx("alert-card", `fam-${cat.family}`)} onClick={onOpen} aria-label={aria} style={{ textAlign: "left", cursor: "pointer", font: "inherit" }}>
+      <div className="ac-top">
+        <TypeBadge category={cat} />
+        {life === "proche" ? <StatusBadge status="proche" label={`Expire dans ${fmtRemaining(alert.expiresAt - now)}`} /> : transmissionBadge ? <StatusBadge status={transmissionBadge} /> : null}
+        {life === "active" ? <ExpirationCounter alert={alert} compact /> : null}
+      </div>
+      <h4>{alert.title}</h4>
+      <div className="meta"><Icon name="map-pin" className="ph-sm" />{commune}{dist ? ` · ${dist}` : ""} · {fmtRelative(now - alert.createdAt)}</div>
+      {alert.hasPhoto ? <div className="photo" aria-hidden="true"><Icon name="image" /></div> : null}
+      <div className="stats" aria-hidden="true">
+        <span><Icon name="arrow-fat-up" className="ph-sm" />{alert.votesUp}</span>
+        <span><Icon name="arrow-fat-down" className="ph-sm" />{alert.votesDown}</span>
+        <span><Icon name="chat-circle" className="ph-sm" />{alert.commentsCount}</span>
+      </div>
+    </button>
+  );
+}
+
+function VoteBar({ alert, compact }) {
+  const { state } = useStore();
+  const { vote, toast } = useActions();
+  const current = state.votes[alert.id] || 0;
+  const onVote = (v) => {
+    if (state.demo.offline) { toast("Vote impossible hors connexion.", { tone: "error" }); return; }
+    vote(alert.id, v);
+  };
+  return (
+    <div className="vote" role="group" aria-label="Votre avis sur ce signalement">
+      <button className="up" type="button" aria-pressed={current === 1} onClick={() => onVote(1)} aria-label={`Confirmer, ${alert.votesUp} confirmations`}>
+        <Icon name={current === 1 ? "arrow-fat-up-fill" : "arrow-fat-up"} />{compact ? null : "Confirmer"} <span className="n">{alert.votesUp}</span>
+      </button>
+      <button className="down" type="button" aria-pressed={current === -1} onClick={() => onVote(-1)} aria-label={`Contester, ${alert.votesDown} contestations`}>
+        <Icon name={current === -1 ? "arrow-fat-down-fill" : "arrow-fat-down"} />{compact ? null : "Contester"} <span className="n">{alert.votesDown}</span>
+      </button>
+    </div>
+  );
+}
+
+function Timeline({ steps, currentIndex }) {
+  return (
+    <ol className="timeline">
+      {steps.map((s, i) => {
+        const done = i < currentIndex || (i === currentIndex && s.final);
+        const current = i === currentIndex && !s.final;
+        return (
+          <li key={s.id} className={cx(done && "done", current && "current")}>
+            <span className="dot">{done ? <Icon name="check" /> : current ? <Icon name="arrows-clockwise" /> : null}</span>
+            <span><b>{s.label}</b>{s.detail ? <small>{s.detail}</small> : null}</span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function CategoryTile({ category, selected, onClick }) {
+  return (
+    <button type="button" className={cx("cat-tile", `fam-${category.family}`)} aria-pressed={!!selected} onClick={onClick}>
+      <Marker family={category.family} icon={category.icon} />
+      {category.label}
+    </button>
+  );
+}
+
+function CommentItem({ comment, reply }) {
+  const now = useNow();
+  const author = publicAuthor(comment);
+  return (
+    <div className={cx("comment", reply && "reply")}>
+      <span className={cx("avatar", author.anonymous && "anon")} aria-hidden="true">{author.anonymous ? <Icon name="detective" /> : author.initials}</span>
+      <div>
+        <div className="who">{author.name} <time>{fmtRelative(now - (BOOT_TIME - comment.ageMin * MIN))}</time></div>
+        <p>{comment.body}</p>
+        <div className="acts"><button type="button">Répondre</button><button type="button">Signaler</button></div>
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================================
+   NAVIGATION — barre d'onglets, en-têtes, hôtes (sheet, modale, toasts)
+   ===================================================================== */
+const TABS = [
+  { id: "map", label: "Carte", icon: "map-trifold" },
+  { id: "alerts", label: "Alertes", icon: "list-bullets" },
+  { id: "report", label: "Signaler", icon: "plus" },
+  { id: "activity", label: "Activité", icon: "pulse" },
+  { id: "profile", label: "Profil", icon: "user-circle" },
+];
+
+function TabBar() {
+  const { state } = useStore();
+  const { setTab, push } = useActions();
+  return (
+    <nav className="tabbar" aria-label="Navigation principale">
+      {TABS.map((t) => {
+        if (t.id === "report") {
+          return (
+            <button key={t.id} type="button" className="tab tab-report" onClick={() => push("report")} aria-label="Signaler un événement">
+              <span className="fab"><Icon name="plus" /></span>Signaler
+            </button>
+          );
+        }
+        const active = state.nav.tab === t.id;
+        return (
+          <button key={t.id} type="button" className="tab" aria-current={active ? "page" : undefined} onClick={() => setTab(t.id)}>
+            <Icon name={active && t.id !== "alerts" ? `${t.icon}-fill` : t.icon} />{t.label}
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
+function ScreenHeader({ title, onBack, action }) {
+  const { pop } = useActions();
+  return (
+    <header className="screen-header">
+      <IconButton icon="caret-left" label="Retour" onClick={onBack || pop} />
+      <h1>{title}</h1>
+      {action || <span />}
+    </header>
+  );
+}
+
+const SNAP_HEIGHTS = { peek: 132, half: 0.5, full: 0.92 };
+
+function BottomSheet({ snap = "half", onSnap, onClose, title, modal, children, dismissible = true }) {
+  const ref = useRef(null);
+  const drag = useRef(null);
+  const [dragH, setDragH] = useState(null);
+  const parentH = () => ref.current?.parentElement?.clientHeight || 700;
+  const heightFor = (s) => (SNAP_HEIGHTS[s] < 1 ? SNAP_HEIGHTS[s] * parentH() : SNAP_HEIGHTS[s]);
+  const order = ["peek", "half", "full"];
+
+  useEffect(() => {
+    if (!modal) return undefined;
+    const onKey = (e) => { if (e.key === "Escape" && dismissible) onClose?.(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [modal, dismissible, onClose]);
+
+  const onPointerDown = (e) => {
+    drag.current = { y: e.clientY, h: heightFor(snap), moved: false };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  const onPointerMove = (e) => {
+    if (!drag.current) return;
+    const dy = drag.current.y - e.clientY;
+    if (Math.abs(dy) > 4) drag.current.moved = true;
+    setDragH(Math.max(60, Math.min(parentH() * 0.95, drag.current.h + dy)));
+  };
+  const onPointerUp = () => {
+    if (!drag.current) return;
+    const { moved } = drag.current;
+    const h = dragH;
+    drag.current = null;
+    setDragH(null);
+    if (!moved || h == null) { cycle(); return; }
+    if (h < heightFor("peek") * 0.6 && dismissible) { onClose?.(); return; }
+    const nearest = order.reduce((best, s) => (Math.abs(heightFor(s) - h) < Math.abs(heightFor(best) - h) ? s : best), "peek");
+    onSnap?.(nearest);
+  };
+  const cycle = () => onSnap?.(order[(order.indexOf(snap) + 1) % order.length]);
+  const onHandleKey = (e) => {
+    if (e.key === "ArrowUp") { e.preventDefault(); onSnap?.(order[Math.min(2, order.indexOf(snap) + 1)]); }
+    if (e.key === "ArrowDown") { e.preventDefault(); const i = order.indexOf(snap); if (i === 0 && dismissible) onClose?.(); else onSnap?.(order[Math.max(0, i - 1)]); }
+  };
+
+  const height = dragH != null ? dragH : heightFor(snap);
+  return (
+    <Fragment>
+      {modal && snap !== "peek" ? <div className="bs-scrim" onClick={dismissible ? onClose : undefined} aria-hidden="true" /> : null}
+      <section ref={ref} className={cx("bs", dragH != null && "is-dragging")} style={{ height }} role={modal ? "dialog" : "region"} aria-label={title || "Panneau"} aria-modal={modal || undefined}>
+        <button type="button" className="bs-handle" aria-label={`Panneau ${snap === "full" ? "agrandi" : snap === "half" ? "à moitié" : "réduit"} : glisser ou utiliser les flèches pour redimensionner`}
+          onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onKeyDown={onHandleKey}>
+          <span />
+        </button>
+        {title || (modal && dismissible) ? (
+          <div className="bs-head">
+            {title ? <h2>{title}</h2> : <span style={{ flex: 1 }} />}
+            {modal && dismissible ? <IconButton icon="x" label="Fermer" onClick={onClose} style={{ boxShadow: "none", width: 40, height: 40 }} /> : null}
+          </div>
+        ) : null}
+        <div className="bs-body">{children}</div>
+      </section>
+    </Fragment>
+  );
+}
+
+function ConfirmModal({ modal, onClose }) {
+  const firstRef = useRef(null);
+  useEffect(() => {
+    firstRef.current?.focus();
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <div className="modal-scrim" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="modal" role="alertdialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-body">
+        <h3 id="modal-title">{modal.title}</h3>
+        {modal.body ? <p id="modal-body">{modal.body}</p> : null}
+        <div className="actions">
+          <button ref={firstRef} type="button" className="btn btn-secondary" onClick={onClose}>{modal.cancelLabel || "Annuler"}</button>
+          <button type="button" className={cx("btn", modal.destructive ? "btn-destructive" : "btn-primary")} onClick={() => { onClose(); modal.onConfirm?.(); }}>{modal.confirmLabel || "Confirmer"}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ToastHost({ hasTabbar }) {
+  const { state, dispatch } = useStore();
+  useEffect(() => {
+    const timers = state.toasts.filter((t) => t.tone !== "error").map((t) => setTimeout(() => dispatch({ type: "DISMISS_TOAST", id: t.id }), 4000));
+    return () => timers.forEach(clearTimeout);
+  }, [state.toasts, dispatch]);
+  return (
+    <div className={cx("toast-host", !hasTabbar && "no-tabbar")}>
+      <div aria-live="polite" style={{ display: "contents" }}>
+        {state.toasts.filter((t) => t.tone !== "error").map((t) => (
+          <div key={t.id} className="toast" role="status"><Icon name="check-circle-fill" />{t.text}</div>
+        ))}
+      </div>
+      <div aria-live="assertive" style={{ display: "contents" }}>
+        {state.toasts.filter((t) => t.tone === "error").map((t) => (
+          <div key={t.id} className="toast is-error" role="alert">
+            <Icon name="warning-fill" />{t.text}
+            <button type="button" className="toast-action" onClick={() => { dispatch({ type: "DISMISS_TOAST", id: t.id }); t.onAction?.(); }}>{t.actionLabel || "OK"}</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================================
+   ÉCRANS — phase 0 : écrans d'onglets provisoires + bibliothèque de composants
+   ===================================================================== */
+function PhaseTag({ phase }) {
+  return <span className="placeholder-phase"><Icon name="path" className="ph-sm" />Arrive en phase {phase}</span>;
+}
+
+function MapScreen() {
+  const { state } = useStore();
+  const { openSheet, snapSheet, closeSheet, push, toast } = useActions();
+  const alerts = useVisibleAlerts();
+  const unread = state.notifications.filter((n) => !n.read).length;
+  const positives = alerts.filter((a) => CATEGORY_BY_ID[a.categoryId].type === "positive").length;
+  return (
+    <div className="screen" style={{ overflow: "hidden" }}>
+      <div className="map-placeholder" aria-hidden="true" />
+      <div className="map-top">
+        <button type="button" className="search" onClick={() => toast("La recherche arrive en phase 4.")}><Icon name="magnifying-glass" />Rechercher une ville, une rue…</button>
+        <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive en phase 8.")} />
+      </div>
+      <BottomSheet snap={state.sheet?.id === "map-home" ? state.sheet.snap : "peek"} onSnap={(s) => openSheet("map-home", {}, s)} onClose={closeSheet} dismissible={false} title={`${alerts.length} alertes autour de vous`}>
+        <p className="demo-note" style={{ margin: 0 }}>{positives} positives · {alerts.length - positives} négatives · données fictives</p>
+        <PhaseTag phase={3} />
+        <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>La carte interactive (marqueurs, regroupements, ma position) remplacera ce fond. Le panneau, lui, est déjà le composant définitif : faites-le glisser.</p>
+        {alerts.slice(0, 3).map((a) => <AlertCard key={a.id} alert={a} onOpen={() => toast("La fiche alerte arrive en phase 5.")} />)}
+      </BottomSheet>
+    </div>
+  );
+}
+
+function AlertsScreen() {
+  const alerts = useVisibleAlerts();
+  const { toast } = useActions();
+  const [filter, setFilter] = useState("all");
+  const list = alerts
+    .filter((a) => filter === "all" || CATEGORY_BY_ID[a.categoryId].type === filter)
+    .sort((a, b) => b.createdAt - a.createdAt);
+  return (
+    <div className="screen">
+      <div className="screen-title"><h1>Alertes</h1><p>Aperçu des données fictives · la liste complète arrive en phase 4</p></div>
+      <div className="screen-pad">
+        <SegmentedControl label="Type d'alertes" value={filter} onChange={setFilter} options={[{ value: "all", label: "Toutes" }, { value: "positive", label: "Positives" }, { value: "negative", label: "Négatives" }]} />
+        {list.length === 0 ? (
+          <EmptyState title="Aucune alerte dans cette zone.">Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
+        ) : list.slice(0, 12).map((a) => <AlertCard key={a.id} alert={a} onOpen={() => toast("La fiche alerte arrive en phase 5.")} />)}
+      </div>
+    </div>
+  );
+}
+
+function ActivityScreen() {
+  const { push } = useActions();
+  return (
+    <div className="screen">
+      <div className="screen-title"><h1>Activité</h1><p>Mes alertes, mes commentaires, mes interactions</p></div>
+      <div className="screen-pad">
+        <EmptyState icon="pulse" title="Votre activité arrive bientôt" action={<PhaseTag phase={8} />}>Vous retrouverez ici vos alertes, leur suivi par les services et vos interactions.</EmptyState>
+      </div>
+    </div>
+  );
+}
+
+function ProfileScreen() {
+  const { state } = useStore();
+  const { push, setPref } = useActions();
+  const user = state.session.user;
+  return (
+    <div className="screen">
+      <div className="screen-title"><h1>Profil</h1><p>{publicName(user)} · <span style={{ color: "var(--alert-positive)" }}>✓ Identité vérifiée</span></p></div>
+      <div className="screen-pad">
+        <p className="section-label">Affichage</p>
+        <SegmentedControl label="Thème" value={state.prefs.theme} onChange={(v) => setPref("theme", v)} options={[{ value: "light", label: "Clair", icon: "sun" }, { value: "system", label: "Système", icon: "circle-half" }, { value: "dark", label: "Sombre", icon: "moon" }]} />
+        <SegmentedControl label="Taille du texte" value={state.prefs.textScale} onChange={(v) => setPref("textScale", v)} options={[100, 130, 160, 200].map((v) => ({ value: v, label: `${v} %` }))} />
+        <div className="list">
+          <div className="list-item" style={{ display: "block", padding: "0 var(--s-4)" }}><Switch id="pref-contrast" label="Contraste élevé" checked={state.prefs.highContrast} onChange={(v) => setPref("highContrast", v)} /></div>
+          <div className="list-item" style={{ display: "block", padding: "0 var(--s-4)" }}><Switch id="pref-motion" label="Réduire les animations" checked={state.prefs.reduceMotion} onChange={(v) => setPref("reduceMotion", v)} /></div>
+        </div>
+        <p className="section-label">Prototype</p>
+        <div className="list">
+          <ListItem icon="squares-four" label="Bibliothèque de composants" onClick={() => push("components")} />
+          <ListItem icon="gear" label="Paramètres complets" value="Phase 9" chevron={false} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReportScreen() {
+  const { pop } = useActions();
+  return (
+    <div className="screen">
+      <ScreenHeader title="Signaler" onBack={pop} />
+      <div className="screen-pad">
+        <Stepper step={1} total={7} label="Type" />
+        <EmptyState icon="plus" title="Création d'une alerte" action={<PhaseTag phase={6} />}>Le parcours en 7 étapes (type, catégorie, lieu, description, photo, identité, prévisualisation) arrive en phase 6.</EmptyState>
+      </div>
+    </div>
+  );
+}
+
+function ComponentsScreen() {
+  const { state } = useStore();
+  const { toast, confirm, openSheet } = useActions();
+  const now = useNow();
+  const [chips, setChips] = useState({ culture: true });
+  const [seg, setSeg] = useState("map");
+  const [pub, setPub] = useState("profile");
+  const [sw, setSw] = useState(true);
+  const [title, setTitle] = useState("");
+  const [cat, setCat] = useState("incendie");
+  const [loading, setLoading] = useState(false);
+  const sample = state.alerts.find((a) => a.id === "a1");
+  const sampleTreated = state.alerts.find((a) => a.id === "a25");
+  const route = routeAlert(sampleTreated);
+  const stepIndex = TRANSMISSION_STEPS.findIndex((s) => s.id === sampleTreated.transmission);
+  return (
+    <div className="screen">
+      <ScreenHeader title="Composants" />
+      <div className="screen-pad">
+        <p className="demo-note" style={{ margin: 0 }}>Bibliothèque interne du prototype : composants de base branchés au store. Référence visuelle complète : docs/design-system/index.html.</p>
+
+        <section className="lib-section"><p className="section-label">Boutons</p>
+          <Button>Publier l'alerte</Button>
+          <Button variant="secondary" icon="map-pin">Choisir sur la carte</Button>
+          <div className="lib-row"><Button variant="ghost">Plus tard</Button><Button variant="destructive" icon="trash-simple" onClick={() => confirm({ title: "Supprimer cette alerte ?", body: "Elle ne sera plus visible par les utilisateurs.", confirmLabel: "Supprimer", destructive: true, onConfirm: () => toast("Alerte supprimée.") })}>Supprimer</Button></div>
+          <Button loading={loading} onClick={() => { setLoading(true); setTimeout(() => { setLoading(false); toast("Votre alerte a été publiée."); }, 1200); }}>{loading ? "Publication…" : "Simuler une publication"}</Button>
+          <Button disabled>Confirmer cette position</Button>
+        </section>
+
+        <section className="lib-section"><p className="section-label">Champs</p>
+          <Field id="lib-title" label="Titre" placeholder="Arbre tombé sur la chaussée" max={80} help="Court et factuel" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <Field id="lib-code" label="Code reçu par SMS" defaultValue="48213" error="Code incorrect. Vérifiez le SMS ou demandez un nouveau code." />
+        </section>
+
+        <section className="lib-section"><p className="section-label">Chips · Segmented control</p>
+          <div className="lib-row">{["Culture", "Sport", "Propreté", "Voirie"].map((c) => { const k = c.toLowerCase(); return <Chip key={k} selected={chips[k]} onClick={() => setChips({ ...chips, [k]: !chips[k] })}>{c}</Chip>; })}</div>
+          <SegmentedControl label="Vue" value={seg} onChange={setSeg} options={[{ value: "map", label: "Carte", icon: "map-trifold" }, { value: "list", label: "Liste", icon: "list-bullets" }]} />
+        </section>
+
+        <section className="lib-section"><p className="section-label">RadioCard + aperçu public</p>
+          <RadioCard name="lib-pub" value="profile" checked={pub === "profile"} onChange={setPub} icon="user-circle" title="Publier avec mon profil" description="Les autres verront votre prénom et l'initiale de votre nom." />
+          <RadioCard name="lib-pub" value="anon" checked={pub === "anon"} onChange={setPub} icon="detective" iconTone="muted" title="Publier anonymement" description="Aucune identité visible. La plateforme peut retrouver l'auteur en cas d'abus." />
+          <div className="preview-author"><Icon name="eye" />Visible publiquement : <b>{pub === "profile" ? `Signalé par ${publicName(state.session.user)}` : "Signalement anonyme"}</b></div>
+        </section>
+
+        <section className="lib-section"><p className="section-label">Switch · ListItem</p>
+          <div className="list"><div className="list-item" style={{ display: "block", padding: "0 var(--s-4)" }}><Switch id="lib-sw" label="Alertes à proximité" checked={sw} onChange={setSw} /></div><ListItem icon="bell" label="Notifications" value="Activées" onClick={() => toast("Ouvre les réglages (phase 9).")} /></div>
+        </section>
+
+        <section className="lib-section"><p className="section-label">Feedback</p>
+          <div className="lib-row">
+            <Button variant="secondary" onClick={() => toast("Votre alerte a été publiée.")}>Toast succès</Button>
+            <Button variant="secondary" onClick={() => toast("Impossible de publier votre alerte. Vérifiez votre connexion.", { tone: "error", actionLabel: "Réessayer" })}>Toast erreur</Button>
+          </div>
+          <Button variant="secondary" icon="squares-four" onClick={() => openSheet("demo-sheet", {}, "half")}>Ouvrir une bottom sheet</Button>
+          <Banner tone="offline" title="Vous êtes actuellement hors connexion.">Les fonctionnalités dépendantes du réseau sont désactivées.</Banner>
+          <Banner tone="emergency">En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés.</Banner>
+          <Stepper step={3} total={7} label="Localisation" />
+          <div style={{ display: "grid", gap: 8 }}><Skeleton width="40%" /><Skeleton height={18} width="85%" /><Skeleton height={90} /></div>
+          <EmptyState title="Aucune alerte dans cette zone." action={<Button variant="secondary">Élargir à 10 km</Button>}>Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
+          <div className="lib-row"><Pill onClick={() => toast("Carte recentrée sur les nouvelles alertes.")}>3 nouvelles alertes</Pill><Tooltip>Signalez un événement ici</Tooltip></div>
+        </section>
+
+        <section className="lib-section"><p className="section-label">Marqueurs</p>
+          <div className="lib-markers">
+            <Marker family="incident" icon="fire" label="Incident" />
+            <Marker family="vigilance" icon="lightbulb" label="Vigilance" />
+            <Marker family="positive" icon="soccer-ball" label="Positif" />
+            <Marker family="info" icon="barricade" label="Information" />
+            <Marker family="positive" icon="mask-happy" selected label="Sélectionné" />
+            <Marker family="incident" icon="fire" critical label="Incident critique" />
+            <ClusterMarker count={12} onClick={() => toast("Zoom sur le regroupement (phase 3).")} />
+          </div>
+        </section>
+
+        <section className="lib-section"><p className="section-label">Badges</p>
+          <div className="lib-row">{["incendie", "proprete", "solidarite", "travaux"].map((id) => <TypeBadge key={id} category={CATEGORY_BY_ID[id]} />)}</div>
+          <div className="lib-row">{["active", "proche", "transmis", "en_traitement", "traite", "expiree", "moderee", "rejetee"].map((s) => <StatusBadge key={s} status={s} />)}</div>
+        </section>
+
+        <section className="lib-section"><p className="section-label">Alert Card · Vote · Expiration</p>
+          <AlertCard alert={sample} onOpen={() => toast("La fiche alerte arrive en phase 5.")} />
+          <VoteBar alert={state.alerts.find((a) => a.id === "a4")} />
+          <ExpirationCounter alert={sample} />
+          <ExpirationCounter alert={state.alerts.find((a) => a.id === "a22")} />
+          <ExpirationCounter alert={state.alerts.find((a) => a.id === "a23")} />
+        </section>
+
+        <section className="lib-section"><p className="section-label">Timeline · Service</p>
+          <div className="service"><Icon name="paper-plane-tilt-fill" /><span><b>Transmis au service compétent</b><small>{route.name}</small></span></div>
+          <Timeline currentIndex={stepIndex} steps={TRANSMISSION_STEPS.slice(0, 5).map((s, i) => ({ ...s, detail: i === 0 ? fmtRelative(now - sampleTreated.createdAt) : i === 1 ? route.name : i === stepIndex && route.delayHours ? `Délai indicatif : ${route.delayHours} h` : null }))} />
+        </section>
+
+        <section className="lib-section"><p className="section-label">Catégories</p>
+          <div className="cat-grid">{["incendie", "accident", "proprete", "eclairage", "solidarite", "culture"].map((id) => <CategoryTile key={id} category={CATEGORY_BY_ID[id]} selected={cat === id} onClick={() => setCat(id)} />)}</div>
+        </section>
+
+        <section className="lib-section"><p className="section-label">Commentaires</p>
+          {SEED_COMMENTS.a1.map((c) => <CommentItem key={c.id} comment={c} reply={!!c.parentId} />)}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function DemoSheetContent() {
+  return (
+    <Fragment>
+      <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>Faites glisser la poignée, ou utilisez les flèches ↑ ↓ du clavier quand elle a le focus. Échap ferme le panneau.</p>
+      {SEED_ALERTS.slice(3, 6).map((a) => <AlertCard key={a.id} alert={a} />)}
+    </Fragment>
+  );
+}
+
+const TAB_SCREENS = { map: MapScreen, alerts: AlertsScreen, activity: ActivityScreen, profile: ProfileScreen };
+const STACK_SCREENS = {
+  report: { component: ReportScreen, modal: true },
+  components: { component: ComponentsScreen },
+};
+const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent } };
+
+/* =====================================================================
+   PANNEAU DE DÉMO (hors de l'app)
+   ===================================================================== */
+function DemoPanel() {
+  const { state } = useStore();
+  const { setDemo, setPref, reset, push, toast, confirm } = useActions();
+  const [open, setOpen] = useState(false);
+  const d = state.demo;
+  return (
+    <Fragment>
+      <button type="button" className="demo-toggle" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="demo-panel"><Icon name="sliders-horizontal" className="ph-sm" />Démo</button>
+      {open ? (
+        <aside className="demo-panel" id="demo-panel" aria-label="Mode démo">
+          <h2><Icon name="sliders-horizontal" />Mode démo<IconButton icon="x" label="Fermer le mode démo" onClick={() => setOpen(false)} style={{ marginLeft: "auto", width: 40, height: 40, boxShadow: "none" }} /></h2>
+          <p className="demo-note">Force des états pour la présentation. Ces réglages ne font pas partie de l'application.</p>
+          <hr />
+          <Switch id="demo-offline" label="Hors connexion" checked={d.offline} onChange={(v) => setDemo("offline", v)} />
+          <Switch id="demo-perm" label="Localisation refusée" checked={d.permissionDenied} onChange={(v) => setDemo("permissionDenied", v)} />
+          <Switch id="demo-error" label="Erreur réseau" checked={d.networkError} onChange={(v) => setDemo("networkError", v)} />
+          <Switch id="demo-empty" label="Zone sans alerte" checked={d.emptyZone} onChange={(v) => setDemo("emptyZone", v)} />
+          <Switch id="demo-many" label="Beaucoup d'alertes (+80)" checked={d.manyAlerts} onChange={(v) => setDemo("manyAlerts", v)} />
+          <div className="row"><span>Vitesse du temps</span><SegmentedControl label="Vitesse du temps" value={d.timeSpeed} onChange={(v) => setDemo("timeSpeed", v)} options={[{ value: 1, label: "×1" }, { value: 60, label: "×60" }, { value: 600, label: "×600" }]} /></div>
+          <div className="row"><span>Thème</span><SegmentedControl label="Thème" value={state.prefs.theme} onChange={(v) => setPref("theme", v)} options={[{ value: "light", label: "Clair" }, { value: "system", label: "Auto" }, { value: "dark", label: "Sombre" }]} /></div>
+          <hr />
+          <Button variant="secondary" icon="squares-four" onClick={() => { push("components"); setOpen(false); }}>Bibliothèque de composants</Button>
+          <Button variant="ghost" icon="arrow-counter-clockwise" onClick={() => confirm({ title: "Réinitialiser le prototype ?", body: "Les alertes, votes et commentaires reviennent à leur état de départ. Vos préférences d'affichage sont conservées.", confirmLabel: "Réinitialiser", onConfirm: () => { reset(); toast("Prototype réinitialisé."); } })}>Réinitialiser</Button>
+        </aside>
+      ) : null}
+    </Fragment>
+  );
+}
+
+/* =====================================================================
+   APP
+   ===================================================================== */
+function useClock(speed) {
+  const [now, setNow] = useState(BOOT_TIME);
+  const last = useRef(Date.now());
+  useEffect(() => {
+    last.current = Date.now();
+    const interval = speed > 1 ? 1000 : 15000;
+    const id = setInterval(() => {
+      const t = Date.now();
+      const dt = t - last.current;
+      last.current = t;
+      setNow((n) => n + dt * speed);
+    }, interval);
+    return () => clearInterval(id);
+  }, [speed]);
+  return now;
+}
+
+function usePrefsEffects(prefs) {
+  useEffect(() => {
+    const root = document.documentElement;
+    if (prefs.theme === "system") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", prefs.theme);
+    root.style.setProperty("--text-scale", `${prefs.textScale}%`);
+    if (prefs.highContrast) root.setAttribute("data-contrast", "high"); else root.removeAttribute("data-contrast");
+    if (prefs.reduceMotion) root.setAttribute("data-motion", "reduce"); else root.removeAttribute("data-motion");
+    storage.set(PREFS_KEY, prefs);
+  }, [prefs]);
+}
+
+function App() {
+  const [state, dispatch] = useReducer(reducer, undefined, initialState);
+  const now = useClock(state.demo.timeSpeed);
+  usePrefsEffects(state.prefs);
+  const store = useMemo(() => ({ state, dispatch }), [state]);
+
+  const TabScreen = TAB_SCREENS[state.nav.tab];
+  const top = state.nav.stack[state.nav.stack.length - 1];
+  const topDef = top ? STACK_SCREENS[top.id] : null;
+  const hideTabbar = topDef?.modal;
+  const sheetDef = state.sheet && SHEETS[state.sheet.id];
+
+  return (
+    <StoreContext.Provider value={store}>
+      <ClockContext.Provider value={now}>
+        <div className="stage">
+          <div className="device">
+            <div className="app">
+              <div className="statusbar" aria-hidden="true">
+                <span>{fmtClock(now)}</span>
+                <span className="sb-icons"><Icon name="cell-signal-full" />{state.demo.offline ? <Icon name="wifi-slash" /> : <Icon name="wifi-high" />}<Icon name="battery-full" /></span>
+              </div>
+              {state.demo.offline ? <Banner tone="offline" className="global-banner" title="Vous êtes actuellement hors connexion.">Les fonctionnalités dépendantes du réseau sont désactivées.</Banner> : null}
+              <main className="screen-area">
+                <TabScreen />
+                {state.nav.stack.map((s) => {
+                  const def = STACK_SCREENS[s.id];
+                  const C = def.component;
+                  return <div key={s.key} className={cx("stack-layer", def.modal && "is-modal")}><C {...s.params} /></div>;
+                })}
+                {sheetDef ? (
+                  <BottomSheet modal snap={state.sheet.snap} title={sheetDef.title} onSnap={(s) => dispatch({ type: "SNAP_SHEET", snap: s })} onClose={() => dispatch({ type: "CLOSE_SHEET" })}>
+                    <sheetDef.component {...state.sheet.params} />
+                  </BottomSheet>
+                ) : null}
+              </main>
+              {hideTabbar ? null : <TabBar />}
+              <ToastHost hasTabbar={!hideTabbar} />
+              {state.modal ? <ConfirmModal modal={state.modal} onClose={() => dispatch({ type: "CLOSE_MODAL" })} /> : null}
+            </div>
+          </div>
+        </div>
+        <DemoPanel />
+      </ClockContext.Provider>
+    </StoreContext.Provider>
+  );
+}
+
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="fatal" role="alert">
+          <h1 style={{ margin: 0, font: "700 var(--fs-h1)/var(--lh-h1) var(--font)" }}>Une erreur est survenue</h1>
+          <p style={{ margin: 0, color: "var(--text-muted)" }}>Le prototype a rencontré un problème. Rechargez la page pour recommencer.</p>
+          <pre style={{ whiteSpace: "pre-wrap", fontSize: 12, color: "var(--text-muted)" }}>{String(this.state.error.message || this.state.error)}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App /></ErrorBoundary>);
+
+</script>

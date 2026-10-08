@@ -33,7 +33,7 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 
 ## Code Guidelines (prototype)
 
-- Un seul fichier `prototype/index.html`. Scripts depuis `cdnjs.cloudflare.com` (React 18.3.1, Babel standalone 7.x), toujours avec des **versions exactes**. Icônes Phosphor intégrées en **sprite SVG** dans la page (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1`) : les artefacts bloquent les feuilles de style jsDelivr. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
+- Livrable : un seul fichier `prototype/index.html`, **généré** par `python3 tools/build_prototype.py` à partir de `prototype/src/` (`app.jsx`, `app.css`, `phosphor-sprite.svg`) et du CSS de `docs/design-system/index.html`. On modifie `prototype/src/`, jamais `index.html` à la main. Scripts : React 18.3.1 + ReactDOM depuis `cdnjs.cloudflare.com`, Babel `@babel/standalone@7.26.4` depuis `cdn.jsdelivr.net/npm/`, toujours avec des **versions exactes**. Icônes Phosphor intégrées en **sprite SVG** dans la page (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1`) : les artefacts bloquent les feuilles de style jsDelivr. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
 - Le CSS des tokens et des composants vient de `docs/design-system/index.html` : le reprendre tel quel, et y ajouter tout nouveau composant avant de l'utiliser.
 - Composants fonctionnels React, petits et réutilisables ; noms en anglais PascalCase (`AlertCard`, `VoteBar`), textes UI en français.
 - Un store unique (`useReducer`) ; pas de duplication d'état.
@@ -60,10 +60,12 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 
 ## Commands
 
-Prototype (aucun build) :
+Prototype :
 ```bash
-# servir localement pour le tester
-npx serve prototype      # ou : python3 -m http.server -d prototype 8080
+python3 tools/build_prototype.py   # régénère prototype/index.html depuis prototype/src/
+npx serve prototype                # ou : python3 -m http.server -d prototype 8080
+# icônes : npm pack @phosphor-icons/core@2.1.1 && tar xzf phosphor-icons-core-2.1.1.tgz
+#          python3 tools/build_phosphor_sprite.py package/assets > prototype/src/phosphor-sprite.svg
 ```
 Les commandes de l'application de production (pnpm + Turborepo) seront fixées à l'initialisation du monorepo ; stack proposée dans ARCHITECTURE §7.
 
