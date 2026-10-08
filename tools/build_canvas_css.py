@@ -61,6 +61,8 @@ SCREEN = r"""
 .screen95.auth .scroll95{display:flex;flex-direction:column}
 .screen95.auth .scroll95 > .screen-pad{flex:1 0 auto}
 .screen95 > .screen-footer{flex:none}
+.screen95.welcome{background:var(--map-land)}
+a.pill{text-decoration:none}
 .tap-through{display:flex;flex-direction:column;flex:1;color:inherit}
 /* Icônes Phosphor en masques : <span class="ph i i-fire" aria-hidden="true"></span> */
 .i{display:inline-block;background-color:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}

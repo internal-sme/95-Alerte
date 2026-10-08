@@ -1322,37 +1322,35 @@ function AuthHero() {
     <div className="auth-hero" aria-hidden="true">
       <div className="map95">{MAP_ART}</div>
       <span className="map-pin" style={{ left: 120, top: 108 }}><Marker family="positive" icon="hand-heart" /></span>
-      <span className="map-pin" style={{ left: 196, top: 42 }}><Marker family="incident" icon="fire" /></span>
+      <span className="map-pin" style={{ left: 186, top: 132 }}><Marker family="incident" icon="fire" /></span>
       <span className="map-pin" style={{ left: 290, top: 132 }}><Marker family="vigilance" icon="lightbulb" /></span>
       <span className="map-pin" style={{ left: 64, top: 52 }}><Marker family="info" icon="megaphone" /></span>
     </div>
   );
 }
 
+/* Accueil de connexion (Mobbin : Dot, Kit, Lloyds) : la carte occupe l'écran, un panneau en bas
+   porte un titre court et les actions ; « Explorer sans compte » en pastille sur la carte (Breathwrk). */
 function LoginScreen() {
   const { dispatch } = useStore();
   const online = useOnline();
   const go = (step) => dispatch({ type: "AUTH_GO", step });
   return (
-    <div className="screen auth">
+    <div className="screen auth welcome">
       <AuthHero />
-      <div className="screen-pad auth-body">
+      <button type="button" className="pill auth-skip" onClick={() => dispatch({ type: "GUEST" })}>Explorer sans compte<Icon name="caret-right" className="ph-sm" /></button>
+      <div className="welcome-panel">
         <div className="auth-intro">
-          <h1 className="auth-title">Bienvenue sur 95 Alerte</h1>
-          <p className="auth-lead">Voyez ce qui se passe autour de vous, signalez un problème ou partagez une bonne nouvelle du Val-d'Oise.</p>
+          <span className="welcome-brand"><BrandMark size={32} />95 Alerte</span>
+          <h1 className="auth-title">Votre territoire, votre vigilance.</h1>
+          <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
         </div>
         <div className="auth-actions">
           <Button block icon="identification-card" onClick={online(() => go("fc"))}>Continuer avec FranceConnect</Button>
-          <p className="help-text"><Icon name="seal-check" className="ph-sm" />FranceConnect vérifie votre identité avec un compte de service public que vous avez déjà. Vos alertes peuvent rester anonymes.</p>
-          <div className="or" aria-hidden="true"><span>ou</span></div>
           <Button block variant="secondary" onClick={() => go("signup-info")}>Créer un compte</Button>
           <Button block variant="ghost" onClick={() => go("signin")}>J'ai déjà un compte</Button>
         </div>
-        <div className="auth-guest">
-          <p className="legal">Sans compte, vous pouvez consulter les alertes. Un compte est demandé pour signaler, voter et commenter.</p>
-          <Button block variant="ghost" icon="map-trifold" onClick={() => dispatch({ type: "GUEST" })}>Continuer sans compte</Button>
-          <p className="legal">En continuant, vous acceptez les conditions d'utilisation et la politique de confidentialité.</p>
-        </div>
+        <p className="legal">FranceConnect vérifie votre identité ; vos alertes peuvent rester anonymes. En continuant, vous acceptez les conditions d'utilisation.</p>
       </div>
     </div>
   );
