@@ -1,0 +1,877 @@
+<title>Benchmark 95 Alerte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout : rapport civique — sommaire collant à gauche sur grand écran, colonne de lecture unique,
+   fiches d'applications en grille, croquis de patterns dessinés en CSS (pas de captures). */
+:root{
+  --bg:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#D9E0EA;
+  --ink:#0E1A2B; --muted:#4A5A70; --accent:#1E40AF; --accent-soft:#E3E9FA;
+  --incident:#B91C1C; --incident-soft:#FBE7E7; --vigil:#C2410C; --vigil-soft:#FCEBDD;
+  --positive:#15803D; --positive-soft:#E2F4E8; --info:#0369A1; --info-soft:#E0F0FA;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1220; --surface:#111A2C; --surface-2:#18243A; --line:#26344D;
+  --ink:#EEF2F8; --muted:#A5B3C8; --accent:#8FAEFF; --accent-soft:#1B2A4D;
+  --incident:#F58C8C; --incident-soft:#3A1A1E; --vigil:#F6A66A; --vigil-soft:#3A2416;
+  --positive:#6FD893; --positive-soft:#15301F; --info:#6CC4F0; --info-soft:#122C3D;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1220; --surface:#111A2C; --surface-2:#18243A; --line:#26344D;
+  --ink:#EEF2F8; --muted:#A5B3C8; --accent:#8FAEFF; --accent-soft:#1B2A4D;
+  --incident:#F58C8C; --incident-soft:#3A1A1E; --vigil:#F6A66A; --vigil-soft:#3A2416;
+  --positive:#6FD893; --positive-soft:#15301F; --info:#6CC4F0; --info-soft:#122C3D;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 1rem/1.6 var(--f-body);padding-inline:16px;padding-block:0 64px}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.5rem,1.2rem + 1.2vw,2rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:700}
+h4{font-size:.78rem;font-family:var(--f-body);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-size:.82em}
+.shell{max-width:1180px;margin-inline:auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+@media (max-width:900px){.shell{grid-template-columns:minmax(0,1fr);gap:0}.toc{display:none}}
+.toc{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-top:40px;font-size:.88rem}
+.toc ol{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:2px}
+.toc a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);text-decoration:none}
+.toc a:hover{background:var(--surface-2);color:var(--ink)}
+main{min-width:0;display:grid;gap:72px;padding-top:40px}
+section{display:grid;gap:24px;scroll-margin-top:24px}
+.lede{max-width:68ch;color:var(--muted)}
+
+/* En-tête */
+.hero{display:grid;gap:20px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.eyebrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dot95{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--bg);font:800 .8rem var(--f-display);letter-spacing:0}
+.hero h1{font-size:clamp(2.1rem,1.4rem + 3vw,3.4rem);font-weight:800;letter-spacing:-.02em;max-width:18ch}
+.hero .lede{font-size:1.08rem}
+.facts{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:.88rem;color:var(--muted);padding-bottom:20px}
+.facts b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* Enseignements clés */
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;counter-reset:k}
+.key{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:8px;align-content:start}
+.key h3{font-size:1.05rem}
+.key p{color:var(--muted);font-size:.95rem}
+.key .src{font-size:.8rem;color:var(--muted)}
+
+/* Fiches applications */
+.apps{display:grid;gap:20px}
+.app{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:grid;gap:18px}
+.app-head{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:baseline;justify-content:space-between}
+.app-head h3{font-size:1.45rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.tag.i{background:var(--incident-soft);color:var(--incident)}
+.tag.v{background:var(--vigil-soft);color:var(--vigil)}
+.tag.p{background:var(--positive-soft);color:var(--positive)}
+.tag.n{background:var(--info-soft);color:var(--info)}
+.app-sum{max-width:72ch}
+.axes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:760px){.axes{grid-template-columns:minmax(0,1fr)}}
+.axes ul{margin:8px 0 0;padding-left:18px;display:grid;gap:6px;font-size:.93rem}
+.verdict{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:760px){.verdict{grid-template-columns:minmax(0,1fr)}}
+.take,.avoid{border-radius:10px;padding:14px 16px;font-size:.93rem}
+.take{background:var(--positive-soft)}
+.avoid{background:var(--vigil-soft)}
+.take b,.avoid b{display:block;font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.take b{color:var(--positive)} .avoid b{color:var(--vigil)}
+.refs{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.84rem}
+.refs span{color:var(--muted)}
+
+/* Matrice */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.88rem}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+thead th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);position:sticky;top:0}
+tbody tr:last-child td{border-bottom:0}
+td.c{text-align:center;font-weight:700}
+.y{color:var(--positive)} .m{color:var(--muted)}
+
+/* Croquis de patterns */
+.sketches{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:20px}
+.sketch{display:grid;gap:10px;justify-items:center;text-align:center}
+.sketch figcaption{font-size:.88rem;color:var(--muted);max-width:30ch}
+.sketch figcaption b{color:var(--ink);display:block;font-size:.95rem}
+.phone{width:180px;max-width:100%;aspect-ratio:9/18.5;border:2px solid var(--ink);border-radius:26px;background:var(--surface-2);position:relative;overflow:hidden}
+.map{position:absolute;inset:0;background:
+  linear-gradient(115deg,transparent 46%,var(--line) 46% 49%,transparent 49%),
+  linear-gradient(25deg,transparent 60%,var(--line) 60% 62%,transparent 62%),
+  linear-gradient(170deg,transparent 30%,var(--line) 30% 32%,transparent 32%),var(--surface-2)}
+.pin{position:absolute;width:16px;height:16px;border:2px solid var(--surface)}
+.pin.i{background:var(--incident);transform:rotate(45deg);border-radius:3px}
+.pin.p{background:var(--positive);border-radius:50%}
+.pin.v{background:var(--vigil);clip-path:polygon(50% 0,100% 100%,0 100%);border:0;width:18px;height:16px}
+.pin.c{background:var(--accent);border-radius:50%;width:24px;height:24px;color:var(--bg);font:700 .66rem/20px var(--f-body);text-align:center}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:18px 18px 0 0;padding:10px 12px 14px;display:grid;gap:7px;box-shadow:0 -4px 14px rgba(14,26,43,.12)}
+.grab{width:34px;height:4px;border-radius:2px;background:var(--line);justify-self:center}
+.bar{height:7px;border-radius:4px;background:var(--line)}
+.bar.s{width:60%} .bar.xs{width:35%}
+.bar.ink{background:var(--ink);opacity:.75;height:8px}
+.chips{display:flex;gap:4px}
+.chips i{display:block;height:12px;width:30px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line)}
+.chips i:first-child{background:var(--accent);border-color:var(--accent)}
+.fab{position:absolute;right:12px;bottom:118px;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--bg);display:grid;place-items:center;font:700 1.1rem var(--f-body)}
+.screen{position:absolute;inset:0;background:var(--surface);padding:22px 12px 12px;display:grid;align-content:start;gap:9px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tile{background:var(--surface-2);border-radius:9px;padding:8px 4px;display:grid;justify-items:center;gap:5px}
+.tile i{width:22px;height:22px;border-radius:50%;display:block}
+.tile .bar{width:70%;height:5px}
+.tl{display:grid;gap:9px;padding-left:4px}
+.tl div{display:grid;grid-template-columns:14px 1fr;gap:8px;align-items:center}
+.tl i{width:12px;height:12px;border-radius:50%;border:2px solid var(--line);display:block}
+.tl i.on{background:var(--positive);border-color:var(--positive)}
+.big{height:26px;border-radius:13px;background:var(--incident)}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.row i{display:block;height:34px;border-radius:8px;background:var(--surface-2)}
+.vote{display:flex;gap:6px}
+.vote i{display:block;height:18px;flex:1;border-radius:9px;border:1px solid var(--line)}
+.vote i.sel{background:var(--positive-soft);border-color:var(--positive)}
+
+/* Direction artistique */
+.da{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.da-card{border:1px solid var(--line);border-radius:var(--r);padding:18px;background:var(--surface);display:grid;gap:8px;align-content:start}
+.da-card p{font-size:.93rem;color:var(--muted)}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.sw{width:38px;height:38px;border-radius:10px;display:grid;place-items:end start;padding:3px;font:600 .55rem var(--f-mono);color:#fff}
+.sw.dark{color:var(--ink)}
+
+/* Plan */
+.principles{counter-reset:p;display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.principles li{counter-increment:p;display:grid;grid-template-columns:2.2rem minmax(0,1fr);gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.principles li::before{content:"P" counter(p);font:500 .8rem/1.6 var(--f-mono);color:var(--accent)}
+.principles b{display:block}
+.principles span{color:var(--muted);font-size:.93rem}
+.phases{display:grid;gap:14px}
+.phase{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.phase summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 20px}
+.phase summary::-webkit-details-marker{display:none}
+.phase summary .num{font:500 .8rem var(--f-mono);color:var(--accent);background:var(--accent-soft);padding:4px 8px;border-radius:6px}
+.phase summary h3{font-size:1.08rem}
+.phase summary .chev{transition:transform .2s;color:var(--muted)}
+.phase[open] summary .chev{transform:rotate(90deg)}
+.phase .body{padding:0 20px 20px;display:grid;gap:14px}
+.phase .cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px}
+@media (max-width:760px){.phase .cols{grid-template-columns:minmax(0,1fr)}}
+.phase ul{margin:6px 0 0;padding-left:18px;display:grid;gap:6px;font-size:.93rem}
+.phase .done{font-size:.88rem;border-top:1px dashed var(--line);padding-top:12px;color:var(--muted)}
+.phase .done b{color:var(--ink)}
+.note{border-left:3px solid var(--line);padding:4px 0 4px 14px;color:var(--muted);font-size:.9rem;max-width:75ch}
+footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padding-top:20px;display:grid;gap:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="shell">
+  <nav class="toc" aria-label="Sommaire">
+    <h4>Sommaire</h4>
+    <ol>
+      <li><a href="#synthese">Synthèse</a></li>
+      <li><a href="#apps">Applications analysées</a></li>
+      <li><a href="#matrice">Matrice des patterns</a></li>
+      <li><a href="#croquis">Patterns à reprendre</a></li>
+      <li><a href="#da">Direction artistique</a></li>
+      <li><a href="#plan">Plan de conception</a></li>
+      <li><a href="#methode">Méthode et limites</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow"><span class="dot95" aria-hidden="true">95</span> 95 Alerte · Benchmark UX / UI · Octobre 2026</div>
+      <h1>Ce que les meilleures apps d'alerte nous apprennent</h1>
+      <p class="lede">Analyse, à partir de Mobbin, des applications de signalement, de sécurité et de voisinage les plus pertinentes pour 95 Alerte. Pour chacune : ses points forts en patterns de design, en expérience utilisateur et en direction artistique, puis ce qu'on reprend et ce qu'on évite. Le rapport se termine par un plan de conception aligné sur les 11 phases de <span class="mono">docs/task.md</span>.</p>
+      <div class="facts">
+        <span><b>12</b> applications retenues</span>
+        <span><b>~90</b> écrans et parcours examinés</span>
+        <span><b>10</b> recherches Mobbin (iOS)</span>
+        <span><b>10</b> principes de conception</span>
+      </div>
+    </header>
+
+    <!-- SYNTHÈSE -->
+    <section id="synthese" aria-labelledby="t-synth">
+      <h2 id="t-synth">Synthèse : 6 enseignements</h2>
+      <div class="keys">
+        <article class="key">
+          <h3>La carte reste visible, le détail monte en bottom sheet</h3>
+          <p>Nextdoor, Waze, Tesla et Flighty gardent la carte en fond et font monter un panneau à plusieurs hauteurs. On ne quitte jamais le contexte géographique avant d'avoir choisi d'ouvrir le détail.</p>
+          <span class="src">Nextdoor · Waze · Flighty · Tesla</span>
+        </article>
+        <article class="key">
+          <h3>Signaler = une grille d'icônes, puis presque rien</h3>
+          <p>Google Maps et Waze affichent une grille de grandes tuiles colorées. Un tap suffit, la position est déduite. La confirmation est un simple toast, non bloquant : « Hazard Reported · Just now ».</p>
+          <span class="src">Google Maps · Waze · Apple Maps</span>
+        </article>
+        <article class="key">
+          <h3>La communauté confirme, elle ne « like » pas</h3>
+          <p>Waze affiche « 3 hrs ago by Wazer » et un pouce « 33 » qui sert à confirmer que l'incident est toujours là. C'est exactement le rôle du vote ⬆/⬇ de 95 Alerte : mesurer la fiabilité, pas la popularité.</p>
+          <span class="src">Waze · Nextdoor</span>
+        </article>
+        <article class="key">
+          <h3>Un signalement se suit comme un colis</h3>
+          <p>Bumble montre une timeline « Envoyé → Pris en charge → Examiné », avec le délai attendu (« environ 72 h »). Pinterest affiche un statut explicite (« Non examiné · Aucune action »). C'est le modèle de notre statut de transmission.</p>
+          <span class="src">Bumble · Pinterest</span>
+        </article>
+        <article class="key">
+          <h3>L'urgence est isolée et rouge, le reste est calme</h3>
+          <p>inDrive, Careem, DoorDash et Waymo réservent un unique bouton rouge plein à l'appel d'urgence, séparé des autres actions. DoorDash impose même un glissement pour éviter les appels accidentels.</p>
+          <span class="src">inDrive · Careem · DoorDash · Waymo</span>
+        </article>
+        <article class="key">
+          <h3>On explique avant de demander</h3>
+          <p>Greenlight et lululemon présentent une illustration et le bénéfice concret avant la demande système, avec « Not now » toujours visible. Citizen règle le rayon d'alerte avec un curseur et un cercle sur la carte.</p>
+          <span class="src">Greenlight · lululemon · Sesame · Citizen</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- APPLICATIONS -->
+    <section id="apps" aria-labelledby="t-apps">
+      <h2 id="t-apps">Applications analysées</h2>
+      <p class="lede">Classées par proximité avec 95 Alerte. Les liens ouvrent les écrans sur Mobbin (compte Mobbin requis).</p>
+
+      <div class="apps">
+
+        <!-- WAZE -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Waze</h3>
+            <div class="tags"><span class="tag i">Signalement communautaire</span><span class="tag">Carte</span><span class="tag">Confirmation</span></div>
+          </div>
+          <p class="app-sum">La référence du signalement participatif sur carte. Chaque contribution est publique, datée, confirmée par les autres, et visible à l'endroit exact où elle a lieu.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Grille « Update the map » de 10 types, grandes pastilles rondes illustrées</li>
+              <li>Fermeture de route : on tape des flèches directement sur la carte, avec une bulle d'instruction</li>
+              <li>Clusters de marqueurs avec badge numérique (« 2 »)</li>
+              <li>Liste « Reports ahead » triée par distance</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Bandeau d'alerte : type, « 1.0 km away », lieu, « 3 hrs ago by Wazer »</li>
+              <li>Pouce de confirmation avec compteur + bouton commentaire, en un tap</li>
+              <li>Transparence d'identité : « Reports are public. Your Waze username will appear with your report. »</li>
+              <li>Réglages par type : « Show on map » / « Alert while driving »</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Illustrations ludiques et chaleureuses, très reconnaissables</li>
+              <li>Une couleur de pastille par famille de signalement</li>
+              <li>Carte claire et désaturée qui laisse ressortir les marqueurs</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>La mention claire de ce qui sera public avant l'envoi. Le compteur de confirmation dans l'aperçu de l'alerte. La liste triée par distance. Les préférences de notification par catégorie.</p>
+            <p class="avoid"><b>On évite</b>Les illustrations « personnages » pour les incidents graves : elles banalisent un incendie. On réserve un ton plus chaleureux aux événements positifs.</p>
+          </div>
+          <div class="refs"><span>Écrans :</span>
+            <a href="https://mobbin.com/screens/c58c2829-399b-4ea9-9afc-df4fce23d252">Update the map</a>
+            <a href="https://mobbin.com/screens/65009195-ecf5-43a3-9f69-626da89b7c6c">Alerte sur carte</a>
+            <a href="https://mobbin.com/screens/d1c748fd-ab3d-4241-b8ae-83728aa3c29b">Fermeture sur carte</a>
+            <a href="https://mobbin.com/screens/38ec59c1-b198-46e8-b823-342850ee7986">Reports ahead</a>
+            <a href="https://mobbin.com/screens/a62752d5-9870-429b-a964-cf04f5ca36e8">Réglages par type</a>
+          </div>
+        </article>
+
+        <!-- NEXTDOOR -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Nextdoor</h3>
+            <div class="tags"><span class="tag p">Voisinage</span><span class="tag">Alertes locales</span><span class="tag">Commentaires</span></div>
+          </div>
+          <p class="app-sum">Le plus proche de 95 Alerte par son ton : un réseau de quartier qui mélange alertes (pannes, sécurité, météo, incendies) et vie locale, sur une carte sobre.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>« Alerts in Boston » : carte + bottom sheet + chips de filtres (All, Safety, Outages, Weather, Fires)</li>
+              <li>Zone touchée dessinée en polygone sur la carte, pas seulement un point</li>
+              <li>Composer de commentaire avec photo, lieu et mention</li>
+              <li>Menu ⋯ en sheet : Modifier / Supprimer / Partager, chacun avec une ligne d'explication</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Carte d'alerte : icône, « 1.1 mi away · 4d », statut « ✓ Resolved »</li>
+              <li>Journal de mises à jour horodatées dans le détail</li>
+              <li>Invitation à contribuer directement dans la carte : « Write about this alert »</li>
+              <li>Toasts sobres : « Report submitted. », « Comment deleted »</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Fond clair, cartes blanches très arrondies, typographie neutre</li>
+              <li>Couleur réservée aux icônes de catégorie et au statut</li>
+              <li>Ton bienveillant, jamais alarmiste</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>Le duo carte + sheet + chips pour l'écran Alertes. Le badge de statut (Traité) sur la carte d'alerte. Les actions ⋯ expliquées. Le polygone pour les alertes de zone (inondation, travaux).</p>
+            <p class="avoid"><b>On évite</b>Les mises à jour en texte brut collé (« [Update 7/18…] ») : on les structure en timeline.</p>
+          </div>
+          <div class="refs"><span>Écrans :</span>
+            <a href="https://mobbin.com/screens/630a319b-deeb-4fdc-a05c-978a1e1701b6">Alerts in Boston</a>
+            <a href="https://mobbin.com/screens/fffdd381-a09f-460e-838d-049314184180">Détail d'une panne</a>
+            <a href="https://mobbin.com/screens/b45d5e41-8b12-4adf-bf00-fd5bded281bd">Commentaires</a>
+            <a href="https://mobbin.com/screens/4c338342-1ca9-4357-8a4a-290fa1b8e1ce">Menu ⋯</a>
+            <a href="https://mobbin.com/screens/5380096e-48ba-40b2-8485-07d3e7e2d1ed">Toast signalement</a>
+          </div>
+        </article>
+
+        <!-- CITIZEN -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Citizen</h3>
+            <div class="tags"><span class="tag i">Sécurité citoyenne</span><span class="tag">Temps réel</span><span class="tag">Notifications</span></div>
+          </div>
+          <p class="app-sum">L'application d'alerte de sécurité la plus aboutie techniquement, et aussi le contre-modèle de ton dont 95 Alerte doit se distinguer.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Carte plein écran, FAB « + » avec bulle « Alert your community »</li>
+              <li>Pilule « Key Alerts · 13 new » flottante sur la carte</li>
+              <li>Détail : média en tête, Summary, Timeline des mises à jour, partage</li>
+              <li>Réglages : rayon d'alerte avec curseur et cercle sur une mini-carte, puis catégories</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Distance et rue en tête du détail : on sait tout de suite si c'est près de soi</li>
+              <li>Mises à jour horodatées qui racontent l'évolution</li>
+              <li>Indicateur « 0 alerts past 1d » : un état vide utile</li>
+              <li>Centre de sécurité en grille d'actions</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Fond noir, carte sombre, accents rouges : dramatique</li>
+              <li>Titres sensationnels, réactions emoji, « 1.87M notified »</li>
+              <li>Très efficace pour l'attention, mais anxiogène</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>Le curseur de rayon avec un cercle sur la carte (réglage des alertes de proximité). La timeline du détail. La pilule « nouvelles alertes » sur la carte. Le FAB avec une bulle d'aide la première fois.</p>
+            <p class="avoid"><b>On évite</b>Le dark mode imposé, le rouge partout, les emoji, le sensationnalisme. C'est l'opposé de la règle « vigilance, pas dénonciation » du CDC.</p>
+          </div>
+          <div class="refs"><span>Écrans :</span>
+            <a href="https://mobbin.com/screens/ff63cabc-c1ed-47c4-bb38-09ed02352c62">Carte + FAB</a>
+            <a href="https://mobbin.com/screens/ff2be75d-e8b3-49d6-8bb1-6e7b235ca276">Détail incident</a>
+            <a href="https://mobbin.com/screens/e1f57136-7750-4cbd-b390-51552b7b3f98">Rayon d'alerte</a>
+            <a href="https://mobbin.com/screens/edcc097c-31ce-477d-bebd-7a8c3854a075">Safety Center</a>
+          </div>
+        </article>
+
+        <!-- GOOGLE MAPS + APPLE MAPS -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Google Maps et Apple Maps</h3>
+            <div class="tags"><span class="tag v">Signalement express</span><span class="tag">Feedback</span></div>
+          </div>
+          <p class="app-sum">Deux variantes du signalement en un tap, pensées pour quelqu'un qui n'a que quelques secondes.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Google : grille 2 colonnes de tuiles teintées, icône dans un rond coloré + libellé</li>
+              <li>Apple : liste courte de 3 types, rond coloré par famille (rouge, jaune, bleu)</li>
+              <li>Contribution par triple choix ✓ / ✕ / ? (« Yes · No · Not sure »)</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Rappel de sécurité : « Only tap if it's safe to do so »</li>
+              <li>Confirmation non bloquante : « Object on road added to the map » + chip « 1 reported »</li>
+              <li>L'alerte créée apparaît immédiatement sur la carte</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Fonds de tuile très pâles, la couleur vit dans l'icône</li>
+              <li>Code couleur sémantique stable : rouge accident, jaune danger, bleu information</li>
+              <li>Sobriété système, grande lisibilité</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>La grille de catégories en tuiles teintées pour l'étape « Catégorie ». La phrase de prudence. Le retour sur la carte avec l'alerte visible juste après la publication.</p>
+            <p class="avoid"><b>On évite</b>Le jaune comme couleur de danger : contraste insuffisant sur fond clair. On garde l'orange foncé du Design System.</p>
+          </div>
+          <div class="refs"><span>Écrans :</span>
+            <a href="https://mobbin.com/screens/7e3b6798-0461-449e-88e1-d7ccb909acef">Add a report</a>
+            <a href="https://mobbin.com/flows/43be898e-75de-4464-a7c2-621404aa0b27">Parcours Google Maps</a>
+            <a href="https://mobbin.com/flows/b2ae1786-5fc7-44e2-a9b7-47c599e0b6fd">Parcours Apple Maps</a>
+            <a href="https://mobbin.com/screens/9df9a1c4-c9c0-4a2f-8526-870df87e5987">Oui / Non / Je ne sais pas</a>
+          </div>
+        </article>
+
+        <!-- BIRD -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Bird</h3>
+            <div class="tags"><span class="tag v">Signalement avec photo</span><span class="tag">Formulaire</span></div>
+          </div>
+          <p class="app-sum">Un parcours de signalement de dégradation complet et court : photo, lieu, nature du problème, envoi, puis une explication de la suite.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Caméra plein écran avec consigne : « Snap a photo that shows the issue or location »</li>
+              <li>Formulaire en étapes numérotées sur un seul écran, avec coche de validation</li>
+              <li>Choix de cause en pilules (une seule sélection)</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Bouton « Submit » désactivé tant que les étapes ne sont pas complètes</li>
+              <li>Modale finale qui dit ce qui va se passer : l'équipe est notifiée et intervient</li>
+              <li>Vignette photo avec ✕ et « + » pour en ajouter</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Capitales espacées pour les titres d'étape</li>
+              <li>Palette réduite : marine + cyan de marque</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>La consigne dans la caméra. La progression visible. Le message final qui nomme la suite (« transmis au service Propreté de Cergy »).</p>
+            <p class="avoid"><b>On évite</b>Les capitales pour du texte long et la modale bloquante : chez nous, l'écran de confirmation est un écran à part entière.</p>
+          </div>
+          <div class="refs"><span>Parcours :</span>
+            <a href="https://mobbin.com/flows/4bb0fda2-0003-46b3-b0e0-9ab39d7a7721">Reporting an issue (10 écrans)</a>
+          </div>
+        </article>
+
+        <!-- BUMBLE + PINTEREST + CLUBHOUSE -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Bumble, Pinterest, Clubhouse</h3>
+            <div class="tags"><span class="tag n">Suivi et modération</span><span class="tag">Timeline</span></div>
+          </div>
+          <p class="app-sum">Trois références sur un sujet rarement bien traité : ce qui se passe <em>après</em> un signalement.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Bumble : timeline verticale (Envoyé → Pris en charge → Examiné → Votre avis)</li>
+              <li>Pinterest : « Centre des signalements », statut + date de mise à jour</li>
+              <li>Clubhouse : motifs de signalement classés, avec une phrase d'aide sous le titre</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Délai annoncé : « It typically takes 72 hours to review »</li>
+              <li>Étapes futures visibles en gris : on sait ce qui vient</li>
+              <li>Merci final + liens utiles (règles de la communauté, aide)</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Points pleins / vides et trait continu : lisible sans couleur</li>
+              <li>Ton calme, institutionnel, rassurant</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>Le composant Alert Timeline (Envoyé → Transmis → Pris en compte → En traitement → Traité). Le délai indicatif quand le service le fournit. L'écran « Merci » de fin de signalement de contenu.</p>
+            <p class="avoid"><b>On évite</b>« No action taken » sans explication : on dit toujours pourquoi un statut n'avance pas.</p>
+          </div>
+          <div class="refs"><span>Écrans :</span>
+            <a href="https://mobbin.com/screens/09426d05-9e3c-4a74-b206-da7d04e07ba4">Bumble · Your report</a>
+            <a href="https://mobbin.com/screens/4925b368-3f36-46ea-be5b-69b312d5ec4c">Pinterest · Reports center</a>
+            <a href="https://mobbin.com/flows/5de4e383-75ee-49ef-9073-1a5b11881c89">Clubhouse · Report</a>
+          </div>
+        </article>
+
+        <!-- SAFETY RIDE APPS -->
+        <article class="app">
+          <div class="app-head">
+            <h3>inDrive, Careem, DoorDash, Waymo</h3>
+            <div class="tags"><span class="tag i">Urgence</span><span class="tag">Bottom sheet</span></div>
+          </div>
+          <p class="app-sum">Les apps de mobilité ont toutes convergé vers le même « centre de sécurité » : utile pour notre écran d'information d'urgence.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Sheet « Safety » sur la carte : actions secondaires en tuiles, urgence en bouton plein largeur</li>
+              <li>DoorDash : « Swipe for 911 », un glissement contre les appels accidentels</li>
+              <li>Waymo : ligne « 999 emergency — Place a direct call or text »</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Hiérarchie nette : l'urgence est isolée des autres actions</li>
+              <li>Phrase qui dit quand l'utiliser : « If you're hurt or in an emergency… »</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Le rouge plein est utilisé une seule fois par écran</li>
+              <li>Icône sirène/bouclier + libellé explicite</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>L'écran « Situation urgente ? » : un seul bouton rouge, les numéros (112, 18, 17, 15) affichés en clair, et un rappel que 95 Alerte ne remplace pas les secours.</p>
+            <p class="avoid"><b>On évite</b>Afficher un bouton d'appel d'urgence sur chaque alerte : cela ferait passer l'app pour un service de secours (CDC §49).</p>
+          </div>
+          <div class="refs"><span>Écrans :</span>
+            <a href="https://mobbin.com/screens/a641d7d3-f4b6-4f15-8488-8ab3bf6c786c">inDrive</a>
+            <a href="https://mobbin.com/screens/a62fd4a9-d424-4838-8ac9-ef2af81a4e5f">Careem</a>
+            <a href="https://mobbin.com/screens/5f829794-614d-4369-babc-c961c9923e70">DoorDash</a>
+            <a href="https://mobbin.com/screens/c7c8fad4-d718-41cb-ba54-cecbdb553c05">Waymo</a>
+          </div>
+        </article>
+
+        <!-- PERMISSIONS -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Greenlight, lululemon, Sesame, Transit</h3>
+            <div class="tags"><span class="tag n">Permissions</span><span class="tag">Onboarding</span><span class="tag">Opt-in</span></div>
+          </div>
+          <p class="app-sum">Comment demander la localisation et les notifications sans braquer l'utilisateur.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Greenlight : écran d'amorce illustré → demande système → récapitulatif « Success! »</li>
+              <li>lululemon : 3 bénéfices en liste avec icônes, puis « Turn on Notifications » / « Not now »</li>
+              <li>Sesame : écran Permissions avec explication sous chaque ligne et état « Allow › » / « ✓ Allowed »</li>
+              <li>Transit : après une action, sheet « Recevoir des alertes ? Heures de pointe / Toujours / Non merci »</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Indicateur d'étape « Step 2/3 »</li>
+              <li>La demande arrive au moment où elle a du sens (opt-in contextuel)</li>
+              <li>Le refus est toujours possible et sans culpabilisation</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Illustration unique et grand titre, beaucoup d'air</li>
+              <li>Un seul CTA principal par écran</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>L'amorce avant la demande système (UI-007). La page Confidentialité façon Sesame. La sheet Transit au moment de « Suivre cette alerte » pour proposer les notifications.</p>
+            <p class="avoid"><b>On évite</b>Demander localisation et notifications au même moment, au premier lancement.</p>
+          </div>
+          <div class="refs"><span>Parcours :</span>
+            <a href="https://mobbin.com/flows/a6ce754b-866e-430b-bb8d-6199102da393">Greenlight</a>
+            <a href="https://mobbin.com/flows/68559489-94dd-47cd-b157-c17687bef70f">lululemon</a>
+            <a href="https://mobbin.com/flows/02f763a9-8d56-4f33-8a76-43d8ee56d09e">Sesame</a>
+            <a href="https://mobbin.com/screens/c4feb70b-1924-4248-b4c2-d568ffa68a21">Transit</a>
+          </div>
+        </article>
+
+        <!-- NOTIFICATIONS + MAP LAYERS -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Cleo, Tabby, Grab, Flighty</h3>
+            <div class="tags"><span class="tag n">Notifications</span><span class="tag">Filtres</span><span class="tag">Vue d'ensemble</span></div>
+          </div>
+          <p class="app-sum">Des références hors du domaine de l'alerte, choisies pour un composant précis.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Cleo / Tabby : notifications groupées par date, chips de filtre, point « non lu »</li>
+              <li>Cleo : action directe dans la notification (« Track my card »)</li>
+              <li>Grab : « Customise your map », grille de calques avec coche</li>
+              <li>Flighty : sections « For you » et « Major issues » dans une sheet sur la carte</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>On retrouve vite le non-lu</li>
+              <li>Les filtres de carte deviennent visuels, pas une liste de cases</li>
+              <li>On voit d'abord ce qui me concerne, puis le reste</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Cartes de notification pâles, icône dans un rond</li>
+              <li>Coches vertes sur les calques actifs : état lisible sans texte</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>Le centre de notifications groupé par date avec une action directe (« Voir l'alerte »). Le panneau de filtres en grille d'icônes. Les sections « Mes alertes suivies » puis « À proximité ».</p>
+            <p class="avoid"><b>On évite</b>Mélanger les notifications promotionnelles et les alertes : 95 Alerte n'a que des notifications de service.</p>
+          </div>
+          <div class="refs"><span>Écrans :</span>
+            <a href="https://mobbin.com/screens/a4d7c5bf-fd3f-4f4b-855c-1030f40182e5">Cleo</a>
+            <a href="https://mobbin.com/screens/6d39e50e-d8b5-43e0-b78a-7f96fcc12007">Tabby</a>
+            <a href="https://mobbin.com/screens/c8562675-9d02-4d85-b54e-5776d6bea80f">Grab</a>
+            <a href="https://mobbin.com/screens/f13e04dd-3a91-4c8e-b409-72256f8ee7f9">Flighty</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- MATRICE -->
+    <section id="matrice" aria-labelledby="t-mat">
+      <h2 id="t-mat">Matrice des patterns</h2>
+      <p class="lede">Où chaque pattern est le mieux exécuté, et à quel écran de 95 Alerte il s'applique.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Pattern</th><th>Meilleure référence</th><th>Autres</th><th>Écran 95 Alerte</th><th>Phase task.md</th></tr></thead>
+          <tbody>
+            <tr><td>Carte + bottom sheet à hauteurs multiples</td><td>Nextdoor</td><td>Waze, Flighty, Tesla</td><td>HOME-01, ALERT-01</td><td class="mono">3, 4</td></tr>
+            <tr><td>Marqueurs par famille + clusters numérotés</td><td>Waze</td><td>Tesla</td><td>HOME-01</td><td class="mono">3</td></tr>
+            <tr><td>Pilule « nouvelles alertes » sur la carte</td><td>Citizen</td><td>—</td><td>HOME-01</td><td class="mono">3</td></tr>
+            <tr><td>Chips de filtres au-dessus de la liste</td><td>Nextdoor</td><td>Cleo, Tabby</td><td>ALERT-01, filtres</td><td class="mono">4</td></tr>
+            <tr><td>Grille de catégories en tuiles teintées</td><td>Google Maps</td><td>Waze, Apple Maps, Grab</td><td>ALERT-02 étape 2, filtres</td><td class="mono">4, 6</td></tr>
+            <tr><td>Mention « ce qui sera public » avant l'envoi</td><td>Waze</td><td>Google (Posting publicly)</td><td>ALERT-02 étape Identité</td><td class="mono">6</td></tr>
+            <tr><td>Consigne dans la caméra</td><td>Bird</td><td>—</td><td>ALERT-02 étape Médias</td><td class="mono">6</td></tr>
+            <tr><td>Toast de confirmation + alerte visible sur la carte</td><td>Google Maps</td><td>Apple Maps</td><td>Publication</td><td class="mono">6</td></tr>
+            <tr><td>Confirmation communautaire avec compteur</td><td>Waze</td><td>Nextdoor</td><td>Vote ⬆/⬇</td><td class="mono">5</td></tr>
+            <tr><td>Timeline de mises à jour</td><td>Citizen</td><td>Nextdoor</td><td>ALERT-03</td><td class="mono">5</td></tr>
+            <tr><td>Timeline de traitement + délai indicatif</td><td>Bumble</td><td>Pinterest</td><td>ALERT-03, Mes alertes</td><td class="mono">5, 8</td></tr>
+            <tr><td>Menu ⋯ en sheet, actions expliquées</td><td>Nextdoor</td><td>Clubhouse</td><td>ALERT-03, commentaires</td><td class="mono">5, 7</td></tr>
+            <tr><td>Motifs de signalement + écran « Merci »</td><td>Clubhouse</td><td>Nextdoor</td><td>Signaler un contenu</td><td class="mono">7</td></tr>
+            <tr><td>Notifications groupées par date + action directe</td><td>Cleo</td><td>Tabby, eBay</td><td>UI-013</td><td class="mono">8</td></tr>
+            <tr><td>Rayon d'alerte : curseur + cercle sur carte</td><td>Citizen</td><td>—</td><td>Paramètres notifications</td><td class="mono">9</td></tr>
+            <tr><td>Amorce illustrée avant la demande système</td><td>Greenlight</td><td>lululemon</td><td>UI-007</td><td class="mono">2</td></tr>
+            <tr><td>Permissions expliquées ligne par ligne</td><td>Sesame</td><td>—</td><td>UI-016 Confidentialité</td><td class="mono">9</td></tr>
+            <tr><td>Opt-in contextuel aux notifications</td><td>Transit</td><td>—</td><td>Suivre une alerte</td><td class="mono">5</td></tr>
+            <tr><td>Urgence isolée, bouton rouge unique</td><td>DoorDash</td><td>inDrive, Careem, Waymo</td><td>Écran Urgence</td><td class="mono">5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CROQUIS -->
+    <section id="croquis" aria-labelledby="t-sk">
+      <h2 id="t-sk">Patterns à reprendre, transposés pour 95 Alerte</h2>
+      <p class="lede">Croquis de principe, déjà aux couleurs et aux formes de marqueurs du Design System : losange incident, triangle vigilance, cercle positif.</p>
+      <div class="sketches">
+        <figure class="sketch">
+          <div class="phone" role="img" aria-label="Carte avec marqueurs, cluster de 12, bouton plus et bottom sheet avec chips de filtres">
+            <div class="map"></div>
+            <span class="pin i" style="top:22%;left:30%"></span>
+            <span class="pin p" style="top:36%;left:62%"></span>
+            <span class="pin v" style="top:50%;left:24%"></span>
+            <span class="pin c" style="top:28%;left:66%">12</span>
+            <span class="fab" aria-hidden="true">+</span>
+            <div class="sheet"><span class="grab"></span><div class="chips"><i></i><i></i><i></i><i></i></div><span class="bar ink s"></span><span class="bar"></span><span class="bar xs"></span></div>
+          </div>
+          <figcaption><b>Carte + sheet + chips</b>Nextdoor × Waze. La liste « Alertes à proximité » vit dans la sheet, la carte reste visible.</figcaption>
+        </figure>
+        <figure class="sketch">
+          <div class="phone" role="img" aria-label="Écran de choix de catégorie en grille de six tuiles">
+            <div class="screen">
+              <span class="bar ink s"></span><span class="bar xs"></span>
+              <div class="tiles">
+                <div class="tile"><i style="background:var(--incident)"></i><span class="bar"></span></div>
+                <div class="tile"><i style="background:var(--incident)"></i><span class="bar"></span></div>
+                <div class="tile"><i style="background:var(--vigil)"></i><span class="bar"></span></div>
+                <div class="tile"><i style="background:var(--vigil)"></i><span class="bar"></span></div>
+                <div class="tile"><i style="background:var(--vigil)"></i><span class="bar"></span></div>
+                <div class="tile"><i style="background:var(--info)"></i><span class="bar"></span></div>
+              </div>
+            </div>
+          </div>
+          <figcaption><b>Grille de catégories</b>Google Maps. Tuile pâle, icône Phosphor dans la forme de sa famille, libellé court.</figcaption>
+        </figure>
+        <figure class="sketch">
+          <div class="phone" role="img" aria-label="Fiche alerte avec boutons de vote et timeline de traitement">
+            <div class="screen">
+              <span class="bar ink s"></span><span class="bar"></span><span class="bar xs"></span>
+              <div class="vote"><i class="sel"></i><i></i></div>
+              <div class="tl">
+                <div><i class="on"></i><span class="bar s"></span></div>
+                <div><i class="on"></i><span class="bar"></span></div>
+                <div><i class="on"></i><span class="bar s"></span></div>
+                <div><i></i><span class="bar xs"></span></div>
+                <div><i></i><span class="bar xs"></span></div>
+              </div>
+            </div>
+          </div>
+          <figcaption><b>Vote de confirmation + timeline</b>Waze × Bumble. « Confirmer / Contester », puis le suivi du traitement par le service.</figcaption>
+        </figure>
+        <figure class="sketch">
+          <div class="phone" role="img" aria-label="Écran d'urgence avec un bouton rouge unique et des numéros">
+            <div class="screen">
+              <span class="bar ink s"></span><span class="bar"></span><span class="bar"></span><span class="bar xs"></span>
+              <div class="row"><i></i><i></i><i></i></div>
+              <span class="big"></span>
+            </div>
+          </div>
+          <figcaption><b>Situation urgente ?</b>DoorDash × Waymo. Numéros 112 / 18 / 17 / 15 en clair, un seul bouton rouge.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- DIRECTION ARTISTIQUE -->
+    <section id="da" aria-labelledby="t-da">
+      <h2 id="t-da">Direction artistique : trois familles observées</h2>
+      <div class="da">
+        <div class="da-card">
+          <h3>Dramatique</h3>
+          <div class="swatches"><span class="sw" style="background:#000">BG</span><span class="sw" style="background:#E5242B">RED</span><span class="sw" style="background:#2563EB">BLU</span></div>
+          <p>Citizen. Fond noir, rouge vif, médias plein écran. Capte l'attention mais entretient l'anxiété. <b>À ne pas suivre.</b></p>
+        </div>
+        <div class="da-card">
+          <h3>Ludique illustrée</h3>
+          <div class="swatches"><span class="sw dark" style="background:#F5C542">YEL</span><span class="sw" style="background:#33A3E0">BLU</span><span class="sw dark" style="background:#8EE3A8">GRN</span></div>
+          <p>Waze. Personnages et pastilles rondes très colorées. Chaleureux et mémorable. <b>Bon ton pour les événements positifs uniquement.</b></p>
+        </div>
+        <div class="da-card">
+          <h3>Civique sobre</h3>
+          <div class="swatches"><span class="sw dark" style="background:#F5F7FA">BG</span><span class="sw" style="background:#1E40AF">PRI</span><span class="sw" style="background:#15803D">POS</span><span class="sw" style="background:#B91C1C">INC</span></div>
+          <p>Nextdoor, Google et Apple Maps, Bumble. Fond clair, couleur portée par les icônes et les statuts, beaucoup d'air. <b>Direction retenue pour 95 Alerte.</b></p>
+        </div>
+      </div>
+      <p class="note">Recommandation : <b>« vigilance lumineuse »</b>. Carte claire et désaturée par défaut (mode sombre disponible). Bleu institutionnel pour la marque et les CTA. Rouge réservé aux incidents et à l'urgence. Vert positif traité avec la même intensité que le rouge (règle R11). Pictogrammes Phosphor dans des formes de famille. Une seule touche chaleureuse : de petites illustrations sur l'onboarding et les états vides positifs. Cette direction est déjà cohérente avec <span class="mono">DESIGN_SYSTEM.md</span> : aucun token à changer.</p>
+    </section>
+
+    <!-- PLAN -->
+    <section id="plan" aria-labelledby="t-plan">
+      <h2 id="t-plan">Plan de conception des interfaces</h2>
+      <p class="lede">D'abord 10 principes transverses issus du benchmark, puis, phase par phase de <span class="mono">docs/task.md</span>, les patterns à appliquer, leurs sources et ce qui permet de valider l'écran.</p>
+
+      <h3>10 principes</h3>
+      <ol class="principles">
+        <li><div><b>La carte ne disparaît jamais en premier.</b><span>Tout détail commence en bottom sheet (peek → moitié → plein). On passe à une page seulement sur « Voir le détail ». (Nextdoor, Waze)</span></div></li>
+        <li><div><b>Signaler en 3 taps minimum, 7 étapes maximum.</b><span>Type → grille de catégories → position pré-remplie. Description et photo restent facultatives pour les incidents. (Google Maps, Waze)</span></div></li>
+        <li><div><b>Dire ce qui sera public, avant l'envoi.</b><span>Aperçu exact de l'affichage (« Jean D. » ou « Citoyen anonyme ») à l'étape Identité et dans la prévisualisation. (Waze, Google Maps)</span></div></li>
+        <li><div><b>Le vote confirme, il ne flatte pas.</b><span>Libellés « Confirmer » / « Contester » avec compteur. Le compteur est présent dans l'aperçu de l'alerte, pas seulement dans le détail. (Waze)</span></div></li>
+        <li><div><b>Après l'envoi, montrer la suite.</b><span>Écran de confirmation qui nomme le service destinataire, puis une timeline de traitement avec les étapes futures en gris. (Bird, Bumble)</span></div></li>
+        <li><div><b>Le rouge est rare.</b><span>Rouge plein réservé aux incidents critiques et à l'urgence. Le reste de l'interface est neutre et bleu. (contre-exemple Citizen)</span></div></li>
+        <li><div><b>Le positif a la même place que le négatif.</b><span>Même taille de marqueur et de carte d'alerte, même place dans les filtres ; le vert a la même saturation que le rouge. Touche illustrée réservée au positif. (Waze)</span></div></li>
+        <li><div><b>Demander au bon moment.</b><span>Localisation à l'onboarding avec une amorce ; notifications seulement au premier suivi ou à la première publication. « Plus tard » toujours visible. (Greenlight, Transit)</span></div></li>
+        <li><div><b>Toute action laisse une trace visible.</b><span>Toast non bloquant pour les actions courantes, écran dédié pour la publication, confirmation pour les actions sensibles. (Google Maps, Nextdoor)</span></div></li>
+        <li><div><b>Lisible sans couleur, sans son, à 200 %.</b><span>Forme + icône + texte pour chaque marqueur et statut. Timeline en points pleins ou vides. Tout son a un équivalent visuel. (Bumble, Apple Maps)</span></div></li>
+      </ol>
+
+      <h3>Plan par phase</h3>
+      <div class="phases">
+
+        <details class="phase" open>
+          <summary><span class="num">P0</span><h3>Fondations</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Composant <b>BottomSheet</b> à 3 crans (peek 120 px / 50 % / plein), avec poignée et glissement : c'est le pivot de l'app</li>
+              <li><b>Toast</b> non bloquant en bas, au-dessus de la tab bar (modèle Google Maps / Nextdoor)</li>
+              <li><b>CategoryTile</b> : tuile pâle + icône Phosphor dans la forme de sa famille</li>
+              <li><b>Timeline</b> générique (points pleins/vides), réutilisée pour les mises à jour et le traitement</li>
+              <li>Tab bar avec + central surélevé (Citizen, mais en bleu)</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Nextdoor, Google Maps, Bumble, Citizen</li></ul></div>
+          </div><p class="done"><b>Validé si</b> la sheet est utilisable au doigt et au clavier, et que le toast est annoncé par le lecteur d'écran.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P1</span><h3>Splash + Connexion</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Écran de connexion avec <b>un seul CTA principal</b> (FranceConnect) ; les alternatives en secondaire ; « Continuer sans compte » en lien</li>
+              <li>Création de compte : stepper « Étape 2 sur 4 » (Greenlight), un champ principal par écran</li>
+              <li>Vérification d'identité affichée en <b>timeline</b> (même composant que le traitement) avec un délai indicatif</li>
+              <li>Aperçu du nom public dès la création du profil (transparence Waze)</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Greenlight, Bumble, Waze</li></ul></div>
+          </div><p class="done"><b>Validé si</b> chaque état de vérification a un message qui dit quoi faire ensuite.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P2</span><h3>Onboarding + territoire + localisation</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>4 écrans : une illustration, un titre court, une phrase ; le 3ᵉ (« Une bonne nouvelle ? ») est le plus chaleureux</li>
+              <li><b>Amorce de localisation</b> avant la demande système : bénéfice, précision approximative par défaut, « Choisir manuellement », « Plus tard »</li>
+              <li>Choix du territoire : recherche + liste de communes, refus hors zone expliqué</li>
+              <li><b>Pas</b> de demande de notifications ici (reportée au premier suivi)</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Greenlight, lululemon, Sesame</li></ul></div>
+          </div><p class="done"><b>Validé si</b> le parcours S1 fonctionne avec la localisation refusée sans aucune impasse.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P3</span><h3>Accueil : carte</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Carte claire désaturée, marqueurs en formes de famille, clusters bleus numérotés</li>
+              <li>Sheet en position <b>peek</b> par défaut : « 12 alertes autour de vous » + chips Toutes / Positives / Négatives</li>
+              <li>Pilule flottante « 3 nouvelles alertes » (Citizen), qui recentre la carte au tap</li>
+              <li>Tap sur un marqueur → sheet de résumé avec compteur de confirmations (Waze)</li>
+              <li>Alerte de zone (inondation, travaux) dessinée en polygone translucide (Nextdoor)</li>
+              <li>Bulle d'aide sur le + au premier lancement : « Signalez un événement »</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Nextdoor, Waze, Citizen, Tesla</li></ul></div>
+          </div><p class="done"><b>Validé si</b> en 5 secondes, un testeur sait dire ce qui se passe près de lui et comment signaler.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P4</span><h3>Liste, recherche, filtres</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>AlertCard : icône de famille, titre, « Cergy · 1,2 km · il y a 12 min », badge de statut, ⬆ ⬇ 💬</li>
+              <li>Sections « À proximité », « Récentes », « Positives » (Flighty « For you / Major issues »)</li>
+              <li>Filtres en sheet : grille de catégories cochables (Grab), chips de période et de distance, bouton « Voir 18 alertes »</li>
+              <li>Liste « Autour de moi » triée par distance (Waze « Reports ahead »)</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Nextdoor, Grab, Flighty, Waze</li></ul></div>
+          </div><p class="done"><b>Validé si</b> les filtres donnent le même résultat sur la carte et dans la liste, et que le nombre de résultats est annoncé avant de valider.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P5</span><h3>Fiche alerte + votes</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Ordre de lecture : média → type et titre → lieu et distance → compteur d'expiration → description → votes → service et timeline → commentaires (Citizen, apaisé)</li>
+              <li>Votes « Confirmer / Contester » pleine largeur, état sélectionné rempli</li>
+              <li>Timeline de traitement + délai indicatif si le service en fournit un (Bumble)</li>
+              <li>« Suivre » → sheet d'opt-in aux notifications la première fois (Transit)</li>
+              <li>Menu ⋯ en sheet avec actions expliquées (Nextdoor)</li>
+              <li>Écran Urgence : numéros en clair et un seul bouton rouge (DoorDash, Waymo)</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Citizen, Waze, Bumble, Transit, Nextdoor, DoorDash</li></ul></div>
+          </div><p class="done"><b>Validé si</b> le statut de traitement se comprend sans lire le texte (points et trait seuls).</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P6</span><h3>Création d'une alerte</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Ouverture en sheet plein écran depuis le + ; barre de progression fine en haut</li>
+              <li>Étape Type : deux grandes RadioCards Positif / Négatif, de même poids visuel</li>
+              <li>Étape Catégorie : <b>grille 2 colonnes</b> de tuiles (Google Maps) + rappel « Ne signalez que si vous êtes en sécurité » pour les catégories critiques</li>
+              <li>Étape Lieu : épingle centrale fixe sur une carte qu'on déplace, adresse mise à jour en direct</li>
+              <li>Étape Médias : consigne dans la caméra (Bird), vignettes avec ✕ / ↻ et progression</li>
+              <li>Étape Identité : aperçu exact du nom public (Waze)</li>
+              <li>Confirmation : écran dédié « Alerte publiée », animation de routage vers « Service Propreté · Ville de Cergy », puis retour à la carte centrée sur l'alerte</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Google Maps, Waze, Bird, Apple Maps</li></ul></div>
+          </div><p class="done"><b>Validé si</b> S4 (incendie, anonyme) se fait en moins de 30 secondes sans description longue.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P7</span><h3>Commentaires + signalement de contenu</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Composer collé en bas, avec photo (Nextdoor) ; réponses indentées d'un niveau</li>
+              <li>Signaler : liste de motifs avec une phrase d'aide sous le titre (Clubhouse), puis écran « Merci » avec lien vers les règles</li>
+              <li>Toasts « Commentaire publié » / « Commentaire supprimé »</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Nextdoor, Clubhouse, Pinterest</li></ul></div>
+          </div><p class="done"><b>Validé si</b> S9 et S10 se terminent chacun par un retour visible.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P8</span><h3>Activité + notifications</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Mes alertes : chips de statut, chaque carte affiche la dernière étape de la timeline</li>
+              <li>Centre de notifications groupé par date (Aujourd'hui, Hier…), point non lu, action directe « Voir l'alerte » (Cleo)</li>
+              <li>Push simulé en bannière en haut de l'écran, avec un équivalent visuel de la vibration</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Cleo, Tabby, Pinterest, Bumble</li></ul></div>
+          </div><p class="done"><b>Validé si</b> depuis une notification, on arrive sur l'alerte en 1 tap (S7).</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P9</span><h3>Profil, paramètres, aide</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>Alertes de proximité : <b>curseur de rayon avec cercle sur une mini-carte</b>, puis catégories cochables (Citizen)</li>
+              <li>Préférences par type d'alerte : « Afficher sur la carte » / « Me notifier » (Waze)</li>
+              <li>Confidentialité : une ligne par permission, explication et état (Sesame)</li>
+              <li>Accessibilité avec aperçu en direct de la taille du texte</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Citizen, Waze, Sesame</li></ul></div>
+          </div><p class="done"><b>Validé si</b> un réglage modifié a un effet visible immédiatement.</p></div>
+        </details>
+
+        <details class="phase">
+          <summary><span class="num">P10</span><h3>États, finitions, recette</h3><span class="chev" aria-hidden="true">›</span></summary>
+          <div class="body"><div class="cols">
+            <div><h4>Patterns et décisions</h4><ul>
+              <li>États vides utiles, avec chiffre et action (« 0 alerte depuis 24 h · Élargir la zone ») (Citizen)</li>
+              <li>Hors connexion : bannière persistante et actions grisées avec explication</li>
+              <li>Relecture du « rouge rare » : compter les éléments rouges par écran (cible : 1 au plus, hors alerte critique)</li>
+              <li>Test à 200 % de texte et en niveaux de gris</li>
+            </ul></div>
+            <div><h4>Sources</h4><ul><li>Citizen, Bumble, Apple Maps</li></ul></div>
+          </div><p class="done"><b>Validé si</b> les 10 scénarios passent et que la vérification en niveaux de gris ne fait perdre aucune information.</p></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- MÉTHODE -->
+    <section id="methode" aria-labelledby="t-meth">
+      <h2 id="t-meth">Méthode et limites</h2>
+      <div class="note">
+        <p>Recherches Mobbin (iOS) le 8 octobre 2026 : carte d'incidents avec bottom sheet ; parcours de signalement ; détail d'incident avec timeline ; détail d'alerte Nextdoor ; permissions ; listes d'alertes et notifications ; flux d'alertes Citizen ; grille de signalement Google Maps ; votes ; carte Waze. Seuls les écrans réellement examinés sont cités.</p>
+      </div>
+      <div class="note">
+        <p><b>Limites.</b> Mobbin ne référence pas d'application civique française (DansMaRue, FixMyStreet, Signal Conso) : les apps analysées sont surtout américaines ou internationales, et leurs codes ont été adaptés au contexte d'un service public territorial. Les captures ne sont pas intégrées au rapport, à cause de la politique réseau de l'environnement de travail ; chaque référence renvoie à l'écran sur Mobbin.</p>
+      </div>
+    </section>
+
+    <footer>
+      <span>95 Alerte · Benchmark UX / UI · Document de travail préparé pour le prototype mobile (phase A).</span>
+      <span>Références projet : docs/PRD.md · docs/DESIGN_SYSTEM.md · docs/task.md</span>
+    </footer>
+  </main>
+</div>
