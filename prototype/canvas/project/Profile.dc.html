@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Profil</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+<link rel="stylesheet" href="/_blob/79083ea7a8d50397cf9d20db824b6129">
 </head>
 <body>
 <x-dc>
@@ -16,32 +16,57 @@ body{margin:0}
 </helmet>
 <div class="a95 {{theme}}" style="width: 390px; height: 844px">
   <div class="screen95 scroll95">
-    <div class="screen-title"><h1>Profil</h1><p>Jean D. · <span style="color: var(--alert-positive)">✓ Identité vérifiée</span></p></div>
+    <div class="screen-title"><h1>Profil</h1></div>
     <div class="screen-pad">
-      <p class="section-label">Affichage</p>
-      <div class="seg" role="group" aria-label="Thème">
-        <button type="button" aria-pressed="{{t.light}}" onClick="{{setLight}}"><span class="ph ph-sm i i-sun" aria-hidden="true"></span>Clair</button>
-        <button type="button" aria-pressed="{{t.system}}" onClick="{{setSystem}}"><span class="ph ph-sm i i-circle-half" aria-hidden="true"></span>Système</button>
-        <button type="button" aria-pressed="{{t.dark}}" onClick="{{setDark}}"><span class="ph ph-sm i i-moon" aria-hidden="true"></span>Sombre</button>
-      </div>
-      <div class="seg" role="group" aria-label="Taille du texte">
-        <sc-for list="{{scales}}" as="sc" hint-placeholder-count="4">
-          <button type="button" aria-pressed="{{sc.on}}" onClick="{{sc.pick}}">{{sc.label}}</button>
-        </sc-for>
-      </div>
-      <div class="list">
-        <div class="list-item" style="display: block; padding: 0 var(--s-4)">
-          <label class="switch" for="pref-contrast">Contraste élevé<input id="pref-contrast" type="checkbox" checked="{{contrast}}" onChange="{{toggleContrast}}"><span></span></label>
-        </div>
-        <div class="list-item" style="display: block; padding: 0 var(--s-4)">
-          <label class="switch" for="pref-motion">Réduire les animations<input id="pref-motion" type="checkbox" checked="{{motion}}" onChange="{{toggleMotion}}"><span></span></label>
+      <div class="identity">
+        <span class="avatar" aria-hidden="true">JD</span>
+        <div>
+          <b>Jean Dupont</b>
+          <small>Vos alertes identifiées affichent « Jean D. »</small>
+          <span class="verified"><span class="ph i i-seal-check-fill" aria-hidden="true"></span>Identité vérifiée</span>
         </div>
       </div>
-      <p class="section-label">Prototype</p>
-      <div class="list">
-        <a class="list-item" href="Components.dc.html"><span class="ph i i-squares-four" aria-hidden="true"></span><span>Bibliothèque de composants</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></a>
-        <div class="list-item"><span class="ph i i-gear" aria-hidden="true"></span><span>Paramètres complets</span><span class="val">Phase 9</span></div>
-      </div>
+      <section class="list-section">
+        <h2 class="section-label">Affichage</h2>
+        <div class="list">
+          <div class="list-block">
+            <span class="lb-label">Thème</span>
+            <div class="seg is-block" role="group" aria-label="Thème">
+              <button type="button" aria-pressed="{{t.light}}" onClick="{{setLight}}"><span class="ph ph-sm i i-sun" aria-hidden="true"></span>Clair</button>
+              <button type="button" aria-pressed="{{t.system}}" onClick="{{setSystem}}"><span class="ph ph-sm i i-circle-half" aria-hidden="true"></span>Auto</button>
+              <button type="button" aria-pressed="{{t.dark}}" onClick="{{setDark}}"><span class="ph ph-sm i i-moon" aria-hidden="true"></span>Sombre</button>
+            </div>
+          </div>
+          <div class="list-block">
+            <span class="lb-label">Taille du texte</span>
+            <div class="seg is-block" role="group" aria-label="Taille du texte">
+              <sc-for list="{{scales}}" as="sc" hint-placeholder-count="4">
+                <button type="button" aria-pressed="{{sc.on}}" onClick="{{sc.pick}}">{{sc.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div class="list-block switch-row">
+            <label class="switch" for="pref-contrast">Contraste élevé<input id="pref-contrast" type="checkbox" checked="{{contrast}}" onChange="{{toggleContrast}}"><span></span></label>
+          </div>
+          <div class="list-block switch-row">
+            <label class="switch" for="pref-motion">Réduire les animations<input id="pref-motion" type="checkbox" checked="{{motion}}" onChange="{{toggleMotion}}"><span></span></label>
+          </div>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-label">Compte</h2>
+        <div class="list">
+          <div class="list-item"><span class="ph i i-bell" aria-hidden="true"></span><span>Notifications</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></div>
+          <div class="list-item"><span class="ph i i-lock-simple" aria-hidden="true"></span><span>Confidentialité et données</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></div>
+          <div class="list-item"><span class="ph i i-question" aria-hidden="true"></span><span>Aide et contact</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></div>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-label">Prototype</h2>
+        <div class="list">
+          <a class="list-item" href="Components.dc.html"><span class="ph i i-squares-four" aria-hidden="true"></span><span>Bibliothèque de composants</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></a>
+        </div>
+      </section>
     </div>
   </div>
   <nav class="tabbar" aria-label="Navigation principale">

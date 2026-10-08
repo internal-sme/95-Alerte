@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Bibliothèque de composants</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+<link rel="stylesheet" href="/_blob/79083ea7a8d50397cf9d20db824b6129">
 </head>
 <body>
 <x-dc>
@@ -151,13 +151,7 @@ body{margin:0}
 
     <section class="lib-section">
       <p class="section-label">Alert Card · Vote · Expiration</p>
-      <div class="alert-card fam-incident">
-        <div class="ac-top"><span class="badge badge-type"><span class="ph i i-fire-fill" aria-hidden="true"></span>Incendie</span><span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>23 h</span></div>
-        <h4>Fumée importante visible rue Carnot</h4>
-        <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Pontoise · 400 m · il y a 12 min</div>
-        <div class="photo" aria-hidden="true"><span class="ph i i-image"></span></div>
-        <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>24</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>3</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>8</span></div>
-      </div>
+      <dc-import name="AlertCard" hint-size="100%,124px"></dc-import>
       <div class="vote" role="group" aria-label="Votre avis sur ce signalement">
         <button class="up" type="button" aria-pressed="{{vote.up}}" onClick="{{voteUp}}"><span class="ph i {{vote.upIcon}}" aria-hidden="true"></span>Confirmer <span class="n">{{vote.upCount}}</span></button>
         <button class="down" type="button" aria-pressed="{{vote.down}}" onClick="{{voteDown}}"><span class="ph i {{vote.downIcon}}" aria-hidden="true"></span>Contester <span class="n">{{vote.downCount}}</span></button>

@@ -19,18 +19,19 @@
     "AlertsEmpty.dc.html": {"x": 470, "y": 2400, "w": 390, "h": 844, "title": "État · Zone sans alerte", "is_interactive": true},
     "Sheet.dc.html": {"x": 940, "y": 2400, "w": 390, "h": 844, "title": "Bottom sheet + toast", "is_interactive": true},
     "Modal.dc.html": {"x": 1410, "y": 2400, "w": 390, "h": 844, "title": "Confirmation de suppression", "is_interactive": true},
-    "Components.dc.html": {"x": 1880, "y": 2400, "w": 390, "h": 2760, "title": "Bibliothèque de composants", "is_interactive": true}
+    "Components.dc.html": {"x": 1880, "y": 2400, "w": 390, "h": 2760, "title": "Bibliothèque de composants", "is_interactive": true},
+    "AlertCard.dc.html": {"x": 2350, "y": 2400, "w": 358, "h": 140, "title": "Composant · Alert Card"}
   },
   "order": [
     "Main.dc.html", "Alerts.dc.html", "Report.dc.html", "Activity.dc.html", "Profile.dc.html",
     "Main-dark.dc.html", "Alerts-dark.dc.html", "Report-dark.dc.html", "Activity-dark.dc.html", "Profile-dark.dc.html",
-    "Offline.dc.html", "AlertsEmpty.dc.html", "Sheet.dc.html", "Modal.dc.html", "Components.dc.html"
+    "Offline.dc.html", "AlertsEmpty.dc.html", "Sheet.dc.html", "Modal.dc.html", "Components.dc.html", "AlertCard.dc.html"
   ],
   "notes": {
     "rowLight": {"x": 0, "y": -300, "text": "95 Alerte · clair", "kind": "title1", "maxW": 2270},
     "rowDark": {"x": 0, "y": 900, "text": "95 Alerte · sombre", "kind": "title1", "maxW": 2270},
-    "rowStates": {"x": 0, "y": 2100, "text": "États et composants", "kind": "title1", "maxW": 2270},
-    "howTo": {"x": 2390, "y": 0, "w": 340, "maxH": 360, "fill": "blue", "text": "Prototype · phase 0 (fondations)\n\nAppuyez sur Play sur un écran pour lancer le prototype cliquable : la barre d'onglets, le + Signaler, le panneau de la carte et les réglages du Profil fonctionnent.\n\nVersion React complète (mode démo, vote, horloge simulée) : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw\n\nDonnées fictives, communes réelles du Val-d'Oise."}
+    "rowStates": {"x": 0, "y": 2100, "text": "États et composants", "kind": "title1", "maxW": 2708},
+    "howTo": {"x": 2390, "y": 0, "w": 340, "maxH": 420, "fill": "blue", "text": "Prototype · refonte v2 (patterns du benchmark)\n\nAppuyez sur Play sur un écran pour lancer le prototype cliquable. Sur la carte : touchez un marqueur pour l'aperçu de l'alerte, la poignée pour ouvrir la liste, les filtres Toutes / Positives / Négatives agissent sur la carte et la liste.\n\nVersion React complète (mode démo, vote, horloge simulée) : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw\n\nDonnées fictives, communes réelles du Val-d'Oise."}
   },
   "designSystems": []
 }

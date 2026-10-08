@@ -43,8 +43,11 @@
   --shadow-3:0 -8px 28px rgba(15,23,42,.16);
   /* Cibles tactiles */
   --tap:48px;
+  /* Carte */
+  --map-land:#EEF2F6; --map-urban:#E3E8EF; --map-forest:#DCEBDF; --map-water:#BFDDF0; --map-water-text:#0369A1; --map-road:#FFFFFF; --map-road-case:#D5DCE5;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --map-land:#0F1829; --map-urban:#152036; --map-forest:#12291F; --map-water:#1C3A55; --map-water-text:#7CC4EE; --map-road:#2A3753; --map-road-case:#0B1220;
   --bg:#0B1220; --surface:#111A2E; --surface-2:#1A2540; --border:#273452;
   --text:#F1F5F9; --text-muted:#A3B1C6; --primary:#7AA2FF; --on-primary:#0B1220; --focus-ring:#93B4FF;
   --alert-incident:#F87171; --alert-vigilance:#FB923C; --alert-positive:#4ADE80; --alert-info:#38BDF8;
@@ -59,6 +62,7 @@
   --shadow-1:none; --shadow-2:0 4px 12px rgba(0,0,0,.4); --shadow-3:0 -8px 28px rgba(0,0,0,.5);
   color-scheme:dark}}
 :root[data-theme="dark"]{
+  --map-land:#0F1829; --map-urban:#152036; --map-forest:#12291F; --map-water:#1C3A55; --map-water-text:#7CC4EE; --map-road:#2A3753; --map-road-case:#0B1220;
   --bg:#0B1220; --surface:#111A2E; --surface-2:#1A2540; --border:#273452;
   --text:#F1F5F9; --text-muted:#A3B1C6; --primary:#7AA2FF; --on-primary:#0B1220; --focus-ring:#93B4FF;
   --alert-incident:#F87171; --alert-vigilance:#FB923C; --alert-positive:#4ADE80; --alert-info:#38BDF8;
@@ -114,6 +118,8 @@ textarea.input{min-height:96px;resize:vertical}
 .seg{display:inline-flex;padding:4px;border-radius:var(--r-full);background:var(--surface-2);gap:4px}
 .seg button{min-height:40px;padding:0 var(--s-4);border:0;border-radius:var(--r-full);background:transparent;color:var(--text-muted);font:600 var(--fs-sm)/1 var(--font);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--text);box-shadow:var(--shadow-1)}
+.seg.is-block{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);width:100%}
+.seg.is-block button{justify-content:center;padding:0 var(--s-2)}
 
 .radio-card{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s-3);align-items:center;padding:var(--s-4);border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--surface);cursor:pointer}
 .radio-card input{position:absolute;opacity:0;pointer-events:none}
@@ -181,8 +187,7 @@ textarea.input{min-height:96px;resize:vertical}
 .tab{display:grid;justify-items:center;gap:2px;min-height:var(--tap);border:0;background:none;color:var(--text-muted);font:500 11px/14px var(--font);cursor:pointer;padding-top:6px}
 .tab .ph{width:24px;height:24px}
 .tab[aria-current="page"]{color:var(--primary)}
-.tab-report{position:relative;top:-14px}
-.tab-report .fab{width:56px;height:56px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;box-shadow:var(--shadow-2);border:4px solid var(--surface)}
+.tab-report .fab{width:56px;height:56px;margin-top:-32px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;box-shadow:var(--shadow-2);border:4px solid var(--surface)}
 .tab-report .fab .ph{width:26px;height:26px}
 .tab-report{color:var(--text)}
 
@@ -220,15 +225,20 @@ textarea.input{min-height:96px;resize:vertical}
 .cluster.c-s{width:32px;height:32px}.cluster.c-m{width:40px;height:40px}.cluster.c-l{width:48px;height:48px}
 .me{position:relative;width:18px;height:18px;border-radius:50%;background:var(--focus-ring);border:3px solid var(--surface);box-shadow:0 0 0 14px color-mix(in srgb,var(--focus-ring) 18%,transparent)}
 
-.alert-card{display:grid;gap:var(--s-2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-4);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none}
-.alert-card .ac-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.alert-card .ac-top .exp{margin-left:auto;display:inline-flex;gap:4px;align-items:center;color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font);font-variant-numeric:tabular-nums}
+.alert-card{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:var(--s-3);align-items:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4) var(--s-3) var(--s-3);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none;text-align:left;font:inherit;width:100%}
+.alert-card > .marker{margin-top:2px}
+.alert-card .ac-main{display:grid;gap:4px;min-width:0}
+.alert-card .ac-eyebrow{display:flex;flex-wrap:wrap;gap:0 6px;align-items:baseline;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--text-muted)}
+.alert-card .ac-eyebrow b{color:var(--fam);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
 .alert-card h4{margin:0;font:600 var(--fs-h3)/var(--lh-h3) var(--font);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.alert-card .meta{display:flex;gap:6px;align-items:center;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
-.alert-card .photo{aspect-ratio:16/9;border-radius:var(--r-sm);max-width:100%;background:linear-gradient(135deg,var(--fam-soft),var(--surface-2));display:grid;place-items:center;color:var(--fam)}
-.alert-card .photo .ph{width:40px;height:40px;opacity:.7}
-.alert-card .stats{display:flex;gap:var(--s-4);color:var(--text-muted);font:500 var(--fs-sm)/1 var(--font);font-variant-numeric:tabular-nums}
-.alert-card .stats span{display:inline-flex;gap:4px;align-items:center}
+.alert-card .meta{display:flex;gap:4px;align-items:center;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font);min-width:0}
+.alert-card .meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alert-card .ac-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2);margin-top:4px}
+.alert-card .stats{display:flex;gap:var(--s-3);color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font);font-variant-numeric:tabular-nums}
+.alert-card .stats span{display:inline-flex;gap:3px;align-items:center}
+.alert-card .stats .ph{width:14px;height:14px}
+.alert-card .ac-thumb{width:64px;height:64px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--fam-soft),var(--surface-2));display:grid;place-items:center;color:var(--fam)}
+.alert-card .ac-thumb .ph{width:24px;height:24px;opacity:.75}
 .alert-card .svc{display:flex;gap:6px;align-items:center;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--primary)}
 
 .vote{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2)}
@@ -284,6 +294,60 @@ textarea.input{min-height:96px;resize:vertical}
 .expiry.soon .lbl{color:var(--alert-vigilance)} .expiry.soon .bar i{background:var(--alert-vigilance)}
 .expiry.over .lbl{color:var(--text-muted)} .expiry.over .bar i{background:var(--neutral)}
 
+.radio-card.fam-incident .rc-icon,.radio-card.fam-positive .rc-icon,.radio-card.fam-vigilance .rc-icon,.radio-card.fam-info .rc-icon{background:var(--fam-soft);color:var(--fam)}
+.radio-card.is-large{grid-template-columns:auto 1fr auto;padding:var(--s-4);min-height:88px}
+.radio-card.is-large .rc-icon{width:52px;height:52px}
+.identity{display:grid;grid-template-columns:56px 1fr;gap:var(--s-3);align-items:center;padding:var(--s-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)}
+.identity .avatar{width:56px;height:56px;font-size:var(--fs-h2)}
+.identity b{display:block;font:600 var(--fs-h2)/var(--lh-h2) var(--font)}
+.identity small{display:block;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.verified{display:inline-flex;align-items:center;gap:4px;margin-top:4px;color:var(--alert-positive);font:600 var(--fs-caption)/1 var(--font)}
+.verified .ph{width:16px;height:16px}
+
+/* Gabarits d'écran (prototype et canevas) */
+.screen-title{padding:var(--s-4) var(--s-4) 0;display:grid;gap:2px}
+.screen-title.row{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--s-3)}
+.screen-title h1{margin:0;font:700 var(--fs-h1)/var(--lh-h1) var(--font)}
+.screen-title p{margin:0;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.screen-pad{padding:var(--s-4);display:grid;gap:var(--s-4);align-content:start}
+.list-section{display:grid;gap:var(--s-3)}
+.section-label{margin:var(--s-2) 0 0;font:600 var(--fs-caption)/var(--lh-caption) var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.list-block{display:grid;gap:var(--s-2);padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--border)}
+.list-block:last-child{border-bottom:0}
+.list-block.switch-row{padding-block:0}
+.lb-label{font:600 var(--fs-sm)/var(--lh-sm) var(--font);color:var(--text)}
+.question{margin:var(--s-2) 0 0;font:700 var(--fs-h1)/var(--lh-h1) var(--font)}
+.screen-footer{flex:none;padding:var(--s-3) var(--s-4) var(--s-4);background:var(--bg);border-top:1px solid var(--border)}
+.icon-btn.flat{box-shadow:none;background:transparent}
+.summary{display:grid;gap:var(--s-3)}
+.summary-head{display:flex;align-items:center;gap:var(--s-2);margin:-6px -8px -4px 0}
+.summary-head .icon-btn{margin-left:auto}
+.summary-title{margin:0;font:700 var(--fs-h2)/var(--lh-h2) var(--font)}
+.summary-meta{margin:0;display:flex;gap:6px;align-items:center;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.map-top{position:absolute;top:var(--s-3);left:var(--s-3);right:var(--s-3);display:flex;gap:var(--s-2);align-items:center;z-index:6}
+.map-top .search{flex:1;display:flex;align-items:center;gap:var(--s-2);min-height:var(--tap);padding:0 var(--s-4);border-radius:var(--r-full);background:var(--surface);box-shadow:var(--shadow-2);color:var(--text-muted);font:400 var(--fs-sm)/1 var(--font);border:0;text-align:left;cursor:pointer}
+.map-pill{position:absolute;top:72px;left:0;right:0;display:flex;justify-content:center;z-index:6;pointer-events:none}
+.map-pill .pill{pointer-events:auto}
+.map-locate{position:absolute;right:var(--s-3);z-index:6}
+.report-hint{position:absolute;left:50%;bottom:calc(var(--tabbar-h,76px) + 6px);transform:translateX(-50%);z-index:31;border:0;background:none;padding:0;cursor:pointer}
+.report-hint .tooltip{white-space:nowrap}
+
+/* Carte (fond illustré, marqueurs positionnés, position de l'utilisateur) */
+.map95{position:absolute;inset:0;overflow:hidden;background:var(--map-land)}
+.map95 svg.map-art{position:absolute;left:0;top:0;width:390px;height:768px}
+.map95 .land{fill:var(--map-land)}
+.map95 .urban{fill:var(--map-urban)}
+.map95 .forest{fill:var(--map-forest)}
+.map95 .water{fill:none;stroke:var(--map-water);stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+.map95 .road-case{fill:none;stroke:var(--map-road-case);stroke-width:9;stroke-linecap:round}
+.map95 .road{fill:none;stroke:var(--map-road);stroke-width:6;stroke-linecap:round}
+.map95 .road.minor{stroke-width:3}
+.map95 .road-case.minor{stroke-width:5}
+.map95 .label{fill:var(--text-muted);font:600 11px/1 var(--font);letter-spacing:.06em;text-transform:uppercase}
+.map95 .label.water-label{fill:var(--map-water-text);font-style:italic;text-transform:none;letter-spacing:0;font-weight:500}
+.map-pin{position:absolute;transform:translate(-50%,-50%);z-index:3}
+.map-pin.is-cluster{z-index:4}
+.map95 .me{position:absolute;transform:translate(-50%,-50%);z-index:2}
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2)}
 .cat-tile{display:grid;justify-items:center;gap:var(--s-2);padding:var(--s-4) var(--s-2);border-radius:var(--r-md);background:var(--surface-2);border:1.5px solid transparent;color:var(--text);font:600 var(--fs-sm)/var(--lh-sm) var(--font);cursor:pointer;text-align:center}
 .cat-tile[aria-pressed="true"]{border-color:var(--primary);background:var(--primary-soft)}
@@ -685,26 +749,37 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
       </div></div>
 
       <h3 class="ds-sub">Alert Card</h3>
+      <p class="ds-note">Icône de famille à gauche, catégorie et ancienneté en sur-titre, titre sur 2 lignes, lieu et distance, puis confirmations, contestations, commentaires et statut. Vignette photo à droite si l'alerte en a une.</p>
       <div class="ds-grid">
-        <a class="alert-card fam-incident" href="#specifiques" aria-label="Incendie, fumée importante rue Carnot, Pontoise, il y a 12 minutes">
-          <div class="ac-top"><span class="badge badge-type"><svg class="ph"><use href="#ph-fire-fill"/></svg>Incendie</span><span class="badge badge-status st-sent"><svg class="ph"><use href="#ph-paper-plane-tilt"/></svg>Transmise</span><span class="exp"><svg class="ph ph-sm"><use href="#ph-timer"/></svg>23 h</span></div>
-          <h4>Fumée importante visible rue Carnot</h4>
-          <div class="meta"><svg class="ph ph-sm"><use href="#ph-map-pin"/></svg>Pontoise · 1,2 km · il y a 12 min</div>
-          <div class="photo"><svg class="ph"><use href="#ph-image"/></svg></div>
-          <div class="stats"><span><svg class="ph ph-sm"><use href="#ph-arrow-fat-up"/></svg>24</span><span><svg class="ph ph-sm"><use href="#ph-arrow-fat-down"/></svg>3</span><span><svg class="ph ph-sm"><use href="#ph-chat-circle"/></svg>8</span></div>
+        <a class="alert-card fam-incident" href="#specifiques" aria-label="Incendie, Fumée importante visible rue Carnot, Pontoise · 400 m, il y a 12 min">
+          <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"/></svg><svg class="ph" aria-hidden="true"><use href="#ph-fire-fill"/></svg></span>
+          <span class="ac-main">
+            <span class="ac-eyebrow"><b>Incendie</b><span>il y a 12 min</span></span>
+            <h4>Fumée importante visible rue Carnot</h4>
+            <span class="meta"><svg class="ph ph-sm" aria-hidden="true"><use href="#ph-map-pin"/></svg><span>Pontoise · 400 m</span></span>
+            <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>24</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>3</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>8</span></span><span class="badge badge-status st-sent"><svg class="ph"><use href="#ph-paper-plane-tilt"/></svg>Transmise</span></span>
+          </span>
+          <span class="ac-thumb" aria-hidden="true"><svg class="ph"><use href="#ph-image"/></svg></span>
         </a>
-        <a class="alert-card fam-positive" href="#specifiques" aria-label="Initiative citoyenne, nettoyage participatif du parc, Cergy, il y a 1 heure">
-          <div class="ac-top"><span class="badge badge-type"><svg class="ph"><use href="#ph-leaf-fill"/></svg>Initiative citoyenne</span><span class="exp"><svg class="ph ph-sm"><use href="#ph-timer"/></svg>22 h</span></div>
-          <h4>Nettoyage participatif du parc François-Mitterrand</h4>
-          <div class="meta"><svg class="ph ph-sm"><use href="#ph-map-pin"/></svg>Cergy · 3,4 km · il y a 1 h</div>
-          <div class="stats"><span><svg class="ph ph-sm"><use href="#ph-arrow-fat-up"/></svg>43</span><span><svg class="ph ph-sm"><use href="#ph-arrow-fat-down"/></svg>2</span><span><svg class="ph ph-sm"><use href="#ph-chat-circle"/></svg>12</span></div>
+        <a class="alert-card fam-positive" href="#specifiques" aria-label="Action environnementale, Nettoyage participatif du parc François-Mitterrand, Cergy · 3,4 km, il y a 1 h">
+          <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"/></svg><svg class="ph" aria-hidden="true"><use href="#ph-leaf-fill"/></svg></span>
+          <span class="ac-main">
+            <span class="ac-eyebrow"><b>Action environnementale</b><span>il y a 1 h</span></span>
+            <h4>Nettoyage participatif du parc François-Mitterrand</h4>
+            <span class="meta"><svg class="ph ph-sm" aria-hidden="true"><use href="#ph-map-pin"/></svg><span>Cergy · 3,4 km</span></span>
+            <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>43</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>2</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>12</span></span></span>
+          </span>
+          <span class="ac-thumb" aria-hidden="true"><svg class="ph"><use href="#ph-image"/></svg></span>
         </a>
-        <a class="alert-card fam-vigilance" href="#specifiques" aria-label="Dépôt sauvage, déchets abandonnés, Argenteuil, traité">
-          <div class="ac-top"><span class="badge badge-type"><svg class="ph"><use href="#ph-trash-fill"/></svg>Dépôt sauvage</span><span class="badge badge-status st-done"><svg class="ph"><use href="#ph-check-circle-fill"/></svg>Traitée</span></div>
-          <h4>Déchets abandonnés au pied des conteneurs</h4>
-          <div class="meta"><svg class="ph ph-sm"><use href="#ph-map-pin"/></svg>Argenteuil · Val-Notre-Dame · il y a 5 h</div>
-          <div class="svc"><svg class="ph ph-sm"><use href="#ph-buildings"/></svg>Service Propreté · Ville d'Argenteuil</div>
-          <div class="stats"><span><svg class="ph ph-sm"><use href="#ph-arrow-fat-up"/></svg>31</span><span><svg class="ph ph-sm"><use href="#ph-arrow-fat-down"/></svg>1</span><span><svg class="ph ph-sm"><use href="#ph-chat-circle"/></svg>7</span></div>
+        <a class="alert-card fam-vigilance" href="#specifiques" aria-label="Propreté, Déchets abandonnés au pied des conteneurs, Argenteuil · 15,8 km, il y a 5 h">
+          <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 3 34 32H2Z" stroke-linejoin="round"/></svg><svg class="ph" style="top:4px" aria-hidden="true"><use href="#ph-trash-fill"/></svg></span>
+          <span class="ac-main">
+            <span class="ac-eyebrow"><b>Propreté</b><span>il y a 5 h</span></span>
+            <h4>Déchets abandonnés au pied des conteneurs</h4>
+            <span class="meta"><svg class="ph ph-sm" aria-hidden="true"><use href="#ph-map-pin"/></svg><span>Argenteuil · 15,8 km</span></span>
+            <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>31</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>1</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>7</span></span><span class="badge badge-status st-done"><svg class="ph"><use href="#ph-check-circle-fill"/></svg>Traitée</span></span>
+          </span>
+          <span></span>
         </a>
       </div>
 

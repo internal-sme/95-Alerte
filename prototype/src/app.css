@@ -30,7 +30,7 @@ button{font-family:inherit}
 .statusbar .ph{width:17px;height:17px}
 .screen-area{position:relative;flex:1;min-height:0;overflow:hidden}
 .screen{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;background:var(--bg)}
-.screen-pad{padding:var(--s-4);display:grid;gap:var(--s-4);align-content:start}
+
 .stack-layer{position:absolute;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;animation:slide-in .22s ease-out}
 .stack-layer.is-modal{animation:rise-in .25s ease-out}
 .app-overlay{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column}
@@ -40,21 +40,17 @@ button{font-family:inherit}
 .screen-header{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);border-bottom:1px solid var(--border)}
 .screen-header h1{margin:0;text-align:center;font:600 var(--fs-h2)/var(--lh-h2) var(--font);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .screen-header .icon-btn{box-shadow:none;background:transparent}
-.screen-title{padding:var(--s-4) var(--s-4) 0;display:grid;gap:4px}
-.screen-title h1{margin:0;font:700 var(--fs-h1)/var(--lh-h1) var(--font)}
-.screen-title p{margin:0;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
-.section-label{margin:var(--s-2) 0 0;font:600 var(--fs-caption)/var(--lh-caption) var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+
+
+
+
 
 .tabbar{flex:none;position:relative;z-index:30}
 
 /* ---- Carte de remplacement (phase 3 la remplace) ---- */
-.map-placeholder{position:absolute;inset:0;background:
-  linear-gradient(115deg,transparent 46%,var(--border) 46% 47.5%,transparent 47.5%),
-  linear-gradient(25deg,transparent 60%,var(--border) 60% 61%,transparent 61%),
-  linear-gradient(170deg,transparent 30%,var(--border) 30% 31%,transparent 31%),
-  radial-gradient(circle at 75% 70%,color-mix(in srgb,var(--alert-positive) 10%,transparent) 0 16%,transparent 17%),var(--surface-2)}
-.map-top{position:absolute;top:var(--s-3);left:var(--s-3);right:var(--s-3);display:flex;gap:var(--s-2);align-items:center;z-index:4}
-.map-top .search{flex:1;display:flex;align-items:center;gap:var(--s-2);min-height:var(--tap);padding:0 var(--s-4);border-radius:var(--r-full);background:var(--surface);box-shadow:var(--shadow-2);color:var(--text-muted);font:400 var(--fs-sm)/1 var(--font);border:0;text-align:left;cursor:pointer}
+
+
+
 
 /* ---- Bottom sheet (hôte) ---- */
 .bs-scrim{position:absolute;inset:0;background:var(--scrim);z-index:24;animation:fade .2s}
@@ -65,7 +61,7 @@ button{font-family:inherit}
 .bs-handle:focus-visible{outline:2px solid var(--focus-ring);outline-offset:-4px;border-radius:var(--r-lg)}
 .bs-head{flex:none;display:flex;align-items:center;gap:var(--s-2);padding:0 var(--s-4) var(--s-2)}
 .bs-head h2{margin:0;flex:1;font:600 var(--fs-h3)/var(--lh-h3) var(--font)}
-.bs-body{flex:1;min-height:0;overflow-y:auto;padding:0 var(--s-4) var(--s-4);display:grid;gap:var(--s-3);align-content:start}
+.bs-body{flex:1;min-height:0;overflow-y:auto;padding:0 var(--s-4) calc(var(--s-4) + 28px);display:grid;gap:var(--s-3);align-content:start}
 @keyframes fade{from{opacity:0}}
 
 /* ---- Modale ---- */

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Signaler</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+<link rel="stylesheet" href="/_blob/79083ea7a8d50397cf9d20db824b6129">
 </head>
 <body>
 <x-dc>
@@ -16,7 +16,7 @@ body{margin:0}
 </helmet>
 <div class="a95 {{theme}}" style="width: 390px; height: 844px">
   <header class="screen-header">
-    <a class="icon-btn" href="{{back}}" aria-label="Retour"><span class="ph i i-caret-left" aria-hidden="true"></span></a>
+    <a class="icon-btn" href="{{back}}" aria-label="Fermer"><span class="ph i i-x" aria-hidden="true"></span></a>
     <h1>Signaler</h1>
     <span></span>
   </header>
@@ -26,21 +26,43 @@ body{margin:0}
         <div class="lbl"><span>Étape 1 sur 7</span><span>Type</span></div>
         <div class="track"><i style="width: 14%"></i></div>
       </div>
-      <div class="empty">
-        <span class="empty-ill"><span class="ph i i-plus" aria-hidden="true" style="width: 32px; height: 32px"></span></span>
-        <h4>Création d'une alerte</h4>
-        <p>Le parcours en 7 étapes (type, catégorie, lieu, description, photo, identité, prévisualisation) arrive en phase 6.</p>
-        <span class="placeholder-phase"><span class="ph ph-sm i i-path" aria-hidden="true"></span>Arrive en phase 6</span>
-      </div>
+      <h2 class="question">Que souhaitez-vous signaler ?</h2>
+      <label class="radio-card is-large fam-positive">
+        <input type="radio" name="report-type" value="positive" checked="{{t.positive}}" onChange="{{pickPositive}}">
+        <span class="rc-icon"><span class="ph ph-lg i i-star-fill" aria-hidden="true"></span></span>
+        <span><b>Un événement positif</b><small>Initiative, solidarité, culture, sport, vie de quartier…</small></span>
+        <span class="rc-dot"></span>
+      </label>
+      <label class="radio-card is-large fam-incident">
+        <input type="radio" name="report-type" value="negative" checked="{{t.negative}}" onChange="{{pickNegative}}">
+        <span class="rc-icon"><span class="ph ph-lg i i-warning-fill" aria-hidden="true"></span></span>
+        <span><b>Un événement négatif</b><small>Incident, danger, dégradation, propreté, nuisance…</small></span>
+        <span class="rc-dot"></span>
+      </label>
+      <div class="banner banner-emergency" role="note"><span class="ph i i-siren-fill" aria-hidden="true"></span><span>En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés.</span></div>
     </div>
+  </div>
+  <div class="screen-footer">
+    <button class="btn btn-primary btn-block" type="button" disabled="{{noType}}">Continuer</button>
   </div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { type: null };
+  }
   renderVals() {
     const s = this.props.dark === true ? '-dark' : '';
-    return { theme: s ? 't-dark' : 't-light', back: 'Main' + s + '.dc.html' };
+    return {
+      theme: s ? 't-dark' : 't-light',
+      back: 'Main' + s + '.dc.html',
+      t: { positive: this.state.type === 'positive', negative: this.state.type === 'negative' },
+      pickPositive: () => this.setState({ type: 'positive' }),
+      pickNegative: () => this.setState({ type: 'negative' }),
+      noType: !this.state.type
+    };
   }
 }
 </script>

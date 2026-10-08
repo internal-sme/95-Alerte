@@ -143,6 +143,12 @@ const ALERT_SEED = [
   ["a28", "eclairage", "Lampadaire clignotant (doublon)", "Supprimé par l'auteur : doublon d'une alerte existante.", "ermont", "Centre", "Avenue de la Gare", 600, "me", 0, 0, 0, false, "envoye", "supprimee"],
 ];
 
+/* Positions précises des alertes visibles sur la carte d'accueil (secteur Pontoise / Cergy) */
+const ALERT_POSITIONS = {
+  a1: [49.04463, 2.10392], a19: [49.04628, 2.08986], a25: [49.06211, 2.11174], a6: [49.04463, 2.12174],
+  a26: [49.03435, 2.13361], a2: [49.03846, 2.06174], a22: [49.03538, 2.06955], a4: [49.02531, 2.07486], a17: [49.06211, 2.06486],
+};
+
 function seededJitter(id, amp) {
   let h = 0;
   for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
@@ -155,10 +161,11 @@ function buildAlert(row) {
   const [id, categoryId, title, description, communeId, quartier, street, ageMin, authorId, up, down, comments, hasPhoto, transmission, status, duplicateGroup] = row;
   const commune = COMMUNE_BY_ID[communeId];
   const [dLat, dLng] = seededJitter(id, 0.012);
+  const fixed = ALERT_POSITIONS[id];
   const createdAt = BOOT_TIME - ageMin * MIN;
   return {
     id, categoryId, title, description, communeId, quartier, street,
-    lat: commune.lat + dLat, lng: commune.lng + dLng,
+    lat: fixed ? fixed[0] : commune.lat + dLat, lng: fixed ? fixed[1] : commune.lng + dLng,
     createdAt, expiresAt: createdAt + ALERT_TTL,
     authorId: authorId || `u${(id.length % 9) + 1}`, // l'auteur reste connu du système (CDC §9)
     anonymous: !authorId,
@@ -297,14 +304,14 @@ function cx(...parts) {
    STORE — état unique (useReducer)
    ===================================================================== */
 const PREFS_KEY = "95alerte:prefs";
-const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false };
+const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false };
 const DEFAULT_DEMO = { offline: false, permissionDenied: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 function initialState() {
   return {
     prefs: { ...DEFAULT_PREFS, ...storage.get(PREFS_KEY, {}) },
     demo: { ...DEFAULT_DEMO },
-    session: { user: USERS.me, identity: "verifiee", position: { lat: 49.0508, lng: 2.1008, source: "manual", communeId: "pontoise" } },
+    session: { user: USERS.me, identity: "verifiee", position: { lat: 49.05388, lng: 2.09924, source: "manual", communeId: "pontoise" } },
     alerts: SEED_ALERTS,
     votes: { a4: 1, a8: 1 },
     follows: { a1: true },
@@ -445,9 +452,9 @@ function Chip({ selected, icon, children, onClick }) {
   );
 }
 
-function SegmentedControl({ options, value, onChange, label }) {
+function SegmentedControl({ options, value, onChange, label, block }) {
   return (
-    <div className="seg" role="group" aria-label={label}>
+    <div className={cx("seg", block && "is-block")} role="group" aria-label={label}>
       {options.map((o) => (
         <button key={o.value} type="button" aria-pressed={o.value === value} onClick={() => onChange(o.value)}>
           {o.icon ? <Icon name={o.icon} className="ph-sm" /> : null}
@@ -476,10 +483,10 @@ function Field({ id, label, help, error, counter, max, textarea, ...rest }) {
   );
 }
 
-function RadioCard({ name, value, checked, onChange, icon, iconTone = "primary", title, description }) {
-  const tone = iconTone === "muted" ? { background: "var(--surface-2)", color: "var(--text-muted)" } : { background: "var(--primary-soft)", color: "var(--primary)" };
+function RadioCard({ name, value, checked, onChange, icon, iconTone = "primary", family, large, title, description }) {
+  const tone = family ? undefined : iconTone === "muted" ? { background: "var(--surface-2)", color: "var(--text-muted)" } : { background: "var(--primary-soft)", color: "var(--primary)" };
   return (
-    <label className="radio-card">
+    <label className={cx("radio-card", family && `fam-${family}`, large && "is-large")}>
       <input type="radio" name={name} value={value} checked={checked} onChange={() => onChange(value)} />
       <span className="rc-icon" style={tone}><Icon name={icon} className="ph-lg" /></span>
       <span><b>{title}</b><small>{description}</small></span>
@@ -630,7 +637,7 @@ function ExpirationCounter({ alert, compact }) {
   );
 }
 
-function AlertCard({ alert, onOpen }) {
+function AlertCard({ alert, onOpen, showStatus }) {
   const { state } = useStore();
   const now = useNow();
   const cat = CATEGORY_BY_ID[alert.categoryId];
@@ -638,23 +645,30 @@ function AlertCard({ alert, onOpen }) {
   const dist = pos ? fmtDistance(haversineKm(pos, alert)) : null;
   const commune = COMMUNE_BY_ID[alert.communeId].name;
   const life = alertLifecycle(alert, now);
-  const transmissionBadge = ["en_traitement", "traite", "cloture"].includes(alert.transmission) ? alert.transmission : alert.transmission === "transmis" || alert.transmission === "pris_en_compte" ? "transmis" : null;
-  const aria = `${cat.label}. ${alert.title}. ${commune}${dist ? `, ${dist}` : ""}, ${fmtRelative(now - alert.createdAt)}.`;
+  let status = null;
+  if (life === "proche") status = <StatusBadge status="proche" label={`Expire dans ${fmtRemaining(alert.expiresAt - now)}`} />;
+  else if (life === "expiree" || life === "supprimee" || life === "moderee") status = <StatusBadge status={life} />;
+  else if (["en_traitement", "traite", "cloture"].includes(alert.transmission)) status = <StatusBadge status={alert.transmission} />;
+  else if (cat.type === "negative" || showStatus) status = <StatusBadge status="transmis" />;
+  const ago = fmtRelative(now - alert.createdAt);
+  const aria = `${cat.label}. ${alert.title}. ${commune}${dist ? `, ${dist}` : ""}, ${ago}. ${alert.votesUp} confirmations, ${alert.commentsCount} commentaires.`;
   return (
-    <button type="button" className={cx("alert-card", `fam-${cat.family}`)} onClick={onOpen} aria-label={aria} style={{ textAlign: "left", cursor: "pointer", font: "inherit" }}>
-      <div className="ac-top">
-        <TypeBadge category={cat} />
-        {life === "proche" ? <StatusBadge status="proche" label={`Expire dans ${fmtRemaining(alert.expiresAt - now)}`} /> : transmissionBadge ? <StatusBadge status={transmissionBadge} /> : null}
-        {life === "active" ? <ExpirationCounter alert={alert} compact /> : null}
-      </div>
-      <h4>{alert.title}</h4>
-      <div className="meta"><Icon name="map-pin" className="ph-sm" />{commune}{dist ? ` · ${dist}` : ""} · {fmtRelative(now - alert.createdAt)}</div>
-      {alert.hasPhoto ? <div className="photo" aria-hidden="true"><Icon name="image" /></div> : null}
-      <div className="stats" aria-hidden="true">
-        <span><Icon name="arrow-fat-up" className="ph-sm" />{alert.votesUp}</span>
-        <span><Icon name="arrow-fat-down" className="ph-sm" />{alert.votesDown}</span>
-        <span><Icon name="chat-circle" className="ph-sm" />{alert.commentsCount}</span>
-      </div>
+    <button type="button" className={cx("alert-card", `fam-${cat.family}`)} onClick={onOpen} aria-label={aria}>
+      <Marker family={cat.family} icon={cat.icon} />
+      <span className="ac-main" aria-hidden="true">
+        <span className="ac-eyebrow"><b>{cat.label}</b><span>{ago}</span></span>
+        <h4>{alert.title}</h4>
+        <span className="meta"><Icon name="map-pin" className="ph-sm" /><span>{commune}{dist ? ` · ${dist}` : ""}</span></span>
+        <span className="ac-foot">
+          <span className="stats">
+            <span><Icon name="arrow-fat-up" />{alert.votesUp}</span>
+            <span><Icon name="arrow-fat-down" />{alert.votesDown}</span>
+            <span><Icon name="chat-circle" />{alert.commentsCount}</span>
+          </span>
+          {status}
+        </span>
+      </span>
+      {alert.hasPhoto ? <span className="ac-thumb" aria-hidden="true"><Icon name="image" /></span> : <span />}
     </button>
   );
 }
@@ -733,13 +747,13 @@ const TABS = [
 
 function TabBar() {
   const { state } = useStore();
-  const { setTab, push } = useActions();
+  const { setTab, push, setPref } = useActions();
   return (
     <nav className="tabbar" aria-label="Navigation principale">
       {TABS.map((t) => {
         if (t.id === "report") {
           return (
-            <button key={t.id} type="button" className="tab tab-report" onClick={() => push("report")} aria-label="Signaler un événement">
+            <button key={t.id} type="button" className="tab tab-report" onClick={() => { setPref("reportHintSeen", true); push("report"); }} aria-label="Signaler un événement">
               <span className="fab"><Icon name="plus" /></span>Signaler
             </button>
           );
@@ -755,11 +769,11 @@ function TabBar() {
   );
 }
 
-function ScreenHeader({ title, onBack, action }) {
+function ScreenHeader({ title, onBack, action, close }) {
   const { pop } = useActions();
   return (
     <header className="screen-header">
-      <IconButton icon="caret-left" label="Retour" onClick={onBack || pop} />
+      <IconButton icon={close ? "x" : "caret-left"} label={close ? "Fermer" : "Retour"} onClick={onBack || pop} />
       <h1>{title}</h1>
       {action || <span />}
     </header>
@@ -768,12 +782,12 @@ function ScreenHeader({ title, onBack, action }) {
 
 const SNAP_HEIGHTS = { peek: 132, half: 0.5, full: 0.92 };
 
-function BottomSheet({ snap = "half", onSnap, onClose, title, modal, children, dismissible = true }) {
+function BottomSheet({ snap = "half", onSnap, onClose, title, modal, children, dismissible = true, peek = SNAP_HEIGHTS.peek, headerAction }) {
   const ref = useRef(null);
   const drag = useRef(null);
   const [dragH, setDragH] = useState(null);
   const parentH = () => ref.current?.parentElement?.clientHeight || 700;
-  const heightFor = (s) => (SNAP_HEIGHTS[s] < 1 ? SNAP_HEIGHTS[s] * parentH() : SNAP_HEIGHTS[s]);
+  const heightFor = (s) => (s === "peek" ? peek : SNAP_HEIGHTS[s] * parentH());
   const order = ["peek", "half", "full"];
 
   useEffect(() => {
@@ -819,9 +833,10 @@ function BottomSheet({ snap = "half", onSnap, onClose, title, modal, children, d
           onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onKeyDown={onHandleKey}>
           <span />
         </button>
-        {title || (modal && dismissible) ? (
+        {title || headerAction || (modal && dismissible) ? (
           <div className="bs-head">
             {title ? <h2>{title}</h2> : <span style={{ flex: 1 }} />}
+            {headerAction}
             {modal && dismissible ? <IconButton icon="x" label="Fermer" onClick={onClose} style={{ boxShadow: "none", width: 40, height: 40 }} /> : null}
           </div>
         ) : null}
@@ -881,60 +896,205 @@ function ToastHost({ hasTabbar }) {
 /* =====================================================================
    ÉCRANS — phase 0 : écrans d'onglets provisoires + bibliothèque de composants
    ===================================================================== */
-function PhaseTag({ phase }) {
-  return <span className="placeholder-phase"><Icon name="path" className="ph-sm" />Arrive en phase {phase}</span>;
+/* ---- Carte d'accueil : fond illustré du secteur Pontoise / Cergy (phase 3 : carte interactive complète) ---- */
+const MAP_VIEW = { lat: 49.0508, lng: 2.1008, x: 195, y: 270, kx: 3200, ky: 4864 };
+const NEAR_KM = 5;
+
+function projectToMap(p) {
+  return { x: MAP_VIEW.x + (p.lng - MAP_VIEW.lng) * MAP_VIEW.kx, y: MAP_VIEW.y - (p.lat - MAP_VIEW.lat) * MAP_VIEW.ky };
+}
+
+/* Doublons (CDC §81) : un seul marqueur par événement, celui qui a le plus de confirmations */
+function dedupeEvents(alerts) {
+  const best = {};
+  alerts.forEach((a) => {
+    if (!a.duplicateGroup) return;
+    const cur = best[a.duplicateGroup];
+    if (!cur || a.votesUp > cur.votesUp) best[a.duplicateGroup] = a;
+  });
+  return alerts.filter((a) => !a.duplicateGroup || best[a.duplicateGroup] === a);
+}
+
+/* Regroupement simple : marqueurs à moins de 30 px l'un de l'autre → un cluster */
+function clusterPins(alerts) {
+  const pts = alerts.map((a) => ({ a, ...projectToMap(a) })).filter((p) => p.x > 20 && p.x < 370 && p.y > 96 && p.y < 590);
+  const used = new Set();
+  const pins = [];
+  pts.forEach((p) => {
+    if (used.has(p.a.id)) return;
+    const group = pts.filter((q) => !used.has(q.a.id) && Math.hypot(q.x - p.x, q.y - p.y) < 30);
+    group.forEach((q) => used.add(q.a.id));
+    pins.push({
+      key: group.map((q) => q.a.id).join("-"),
+      alerts: group.map((q) => q.a),
+      x: group.reduce((s, q) => s + q.x, 0) / group.length,
+      y: group.reduce((s, q) => s + q.y, 0) / group.length,
+    });
+  });
+  return pins;
+}
+
+const MAP_ART = (
+  <svg className="map-art" viewBox="0 0 390 768" aria-hidden="true">
+    <rect className="land" width="390" height="768" />
+    <path className="forest" d="M282 0H390V150C362 168 318 160 298 128C280 98 270 40 282 0Z" />
+    <path className="forest" d="M0 470C38 452 84 470 92 512C100 556 64 592 22 600L0 602Z" />
+    <path className="forest" d="M330 420C356 398 390 404 390 404V540C360 552 330 534 322 504C316 478 314 440 330 420Z" />
+    <path className="urban" d="M150 230C176 206 238 200 262 226C286 252 280 300 252 320C224 340 176 336 156 312C136 288 128 252 150 230Z" />
+    <path className="urban" d="M236 288C262 276 316 290 322 322C328 356 300 376 268 372C240 368 222 344 222 318C222 302 226 294 236 288Z" />
+    <path className="urban" d="M20 300C46 280 110 290 134 318C156 346 150 404 120 420C90 436 40 424 22 396C4 368 0 318 20 300Z" />
+    <path className="urban" d="M40 190C64 176 112 184 124 206C134 226 120 250 94 256C66 262 40 250 32 230C26 214 28 198 40 190Z" />
+    <path className="water" d="M396 120C352 156 304 198 268 230C246 250 232 274 214 292C192 314 160 324 136 336C106 352 80 388 76 428C72 470 96 500 132 512C172 526 206 548 222 590C236 628 232 690 240 772" />
+    <path className="road-case minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200" />
+    <path className="road-case minor" d="M196 290C170 312 132 334 84 344" />
+    <path className="road-case" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478" />
+    <path className="road-case" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380" />
+    <path className="road minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200" />
+    <path className="road minor" d="M196 290C170 312 132 334 84 344" />
+    <path className="road" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478" />
+    <path className="road" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380" />
+    <text className="label" x="262" y="250" textAnchor="middle">Pontoise</text>
+    <text className="label" x="290" y="392" textAnchor="middle">Saint-Ouen-l'Aumône</text>
+    <text className="label" x="60" y="446" textAnchor="middle">Cergy</text>
+    <text className="label" x="80" y="176" textAnchor="middle">Osny</text>
+    <text className="label water-label" x="344" y="198" textAnchor="middle">L'Oise</text>
+  </svg>
+);
+
+function AlertSummary({ alert, onClose }) {
+  const { state } = useStore();
+  const { toast } = useActions();
+  const now = useNow();
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const dist = fmtDistance(haversineKm(state.session.position, alert));
+  const duplicates = alert.duplicateGroup ? state.alerts.filter((a) => a.duplicateGroup === alert.duplicateGroup && a.status === "active").length : 1;
+  return (
+    <div className={cx("summary", `fam-${cat.family}`)}>
+      <div className="summary-head"><TypeBadge category={cat} /><span className="demo-note">{fmtRelative(now - alert.createdAt)}</span><IconButton icon="x" label="Fermer l'aperçu" className="flat" onClick={onClose} /></div>
+      <h3 className="summary-title">{alert.title}</h3>
+      <p className="summary-meta"><Icon name="map-pin" className="ph-sm" />{displayPlace(alert)} · {dist}</p>
+      {duplicates > 1 ? <Banner tone="info" icon="copy">{duplicates} signalements semblent concerner le même événement.</Banner> : null}
+      <VoteBar alert={alert} />
+      <Button block onClick={() => toast("La fiche alerte complète arrive bientôt.")}>Voir le détail</Button>
+    </div>
+  );
 }
 
 function MapScreen() {
   const { state } = useStore();
-  const { openSheet, snapSheet, closeSheet, push, toast } = useActions();
+  const { toast } = useActions();
   const alerts = useVisibleAlerts();
+  const [filter, setFilter] = useState("all");
+  const [snap, setSnap] = useState("peek");
+  const [selectedId, setSelectedId] = useState(null);
+  const pos = state.session.position;
   const unread = state.notifications.filter((n) => !n.read).length;
-  const positives = alerts.filter((a) => CATEGORY_BY_ID[a.categoryId].type === "positive").length;
+  const filtered = alerts.filter((a) => filter === "all" || CATEGORY_BY_ID[a.categoryId].type === filter);
+  const pins = useMemo(() => clusterPins(dedupeEvents(filtered)), [filtered]);
+  const near = filtered
+    .map((a) => ({ a, km: haversineKm(pos, a) }))
+    .filter((x) => x.km <= NEAR_KM)
+    .sort((x, y) => x.km - y.km)
+    .map((x) => x.a);
+  const selected = selectedId ? alerts.find((a) => a.id === selectedId) : null;
+  const me = projectToMap(pos);
+  const PEEK = 156;
+
+  const openAlert = (id) => { setSelectedId(id); setSnap("half"); };
+  const closeSummary = () => { setSelectedId(null); setSnap("peek"); };
+
   return (
     <div className="screen" style={{ overflow: "hidden" }}>
-      <div className="map-placeholder" aria-hidden="true" />
-      <div className="map-top">
-        <button type="button" className="search" onClick={() => toast("La recherche arrive en phase 4.")}><Icon name="magnifying-glass" />Rechercher une ville, une rue…</button>
-        <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive en phase 8.")} />
+      <div className="map95" aria-label="Carte des alertes autour de Pontoise">
+        {MAP_ART}
+        {state.demo.permissionDenied ? null : <span className="me" style={{ left: me.x, top: me.y }} role="img" aria-label="Vous êtes ici" />}
+        {pins.map((p) => {
+          if (p.alerts.length > 1) {
+            return <ClusterMarker key={p.key} count={p.alerts.length} style={{ position: "absolute", left: p.x, top: p.y, transform: "translate(-50%,-50%)", zIndex: 4 }} onClick={() => toast(`${p.alerts.length} alertes regroupées : le zoom arrive avec la carte interactive.`)} />;
+          }
+          const a = p.alerts[0];
+          const cat = CATEGORY_BY_ID[a.categoryId];
+          return (
+            <span key={p.key} className="map-pin" style={{ left: p.x, top: p.y }}>
+              <Marker family={cat.family} icon={cat.icon} selected={selectedId === a.id} critical={cat.priority === "critique"} label={`${cat.label} : ${a.title}`} onClick={() => openAlert(a.id)} />
+            </span>
+          );
+        })}
       </div>
-      <BottomSheet snap={state.sheet?.id === "map-home" ? state.sheet.snap : "peek"} onSnap={(s) => openSheet("map-home", {}, s)} onClose={closeSheet} dismissible={false} title={`${alerts.length} alertes autour de vous`}>
-        <p className="demo-note" style={{ margin: 0 }}>{positives} positives · {alerts.length - positives} négatives · données fictives</p>
-        <PhaseTag phase={3} />
-        <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>La carte interactive (marqueurs, regroupements, ma position) remplacera ce fond. Le panneau, lui, est déjà le composant définitif : faites-le glisser.</p>
-        {alerts.slice(0, 3).map((a) => <AlertCard key={a.id} alert={a} onOpen={() => toast("La fiche alerte arrive en phase 5.")} />)}
-      </BottomSheet>
+      <div className="map-top">
+        <button type="button" className="search" onClick={() => toast("La recherche arrive bientôt.")}><Icon name="magnifying-glass" />Rechercher une ville, une rue…</button>
+        <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive bientôt.")} />
+      </div>
+      <div className="map-pill"><Pill onClick={() => { setSelectedId(null); setSnap("half"); }}>3 nouvelles alertes</Pill></div>
+      <IconButton icon="crosshair" label="Recentrer sur ma position" className="map-locate" style={{ bottom: PEEK + 12 }} onClick={() => toast(state.demo.permissionDenied ? "Localisation désactivée : position choisie manuellement (Pontoise)." : "Carte centrée sur votre position.")} />
+
+      {selected ? (
+        <BottomSheet snap={snap === "peek" ? "half" : snap} peek={PEEK} onSnap={setSnap} onClose={closeSummary}>
+          <AlertSummary alert={selected} onClose={closeSummary} />
+        </BottomSheet>
+      ) : (
+        <BottomSheet snap={snap} peek={PEEK} onSnap={setSnap} dismissible={false}
+          title={near.length ? `${near.length} alerte${near.length > 1 ? "s" : ""} autour de vous` : "Aucune alerte autour de vous"}>
+          <SegmentedControl block label="Type d'alertes" value={filter} onChange={setFilter} options={[{ value: "all", label: "Toutes" }, { value: "positive", label: "Positives" }, { value: "negative", label: "Négatives" }]} />
+          {near.length === 0 ? (
+            <EmptyState title="Aucune alerte dans cette zone.">Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
+          ) : near.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => openAlert(a.id)} />)}
+        </BottomSheet>
+      )}
     </div>
   );
 }
 
 function AlertsScreen() {
-  const alerts = useVisibleAlerts();
+  const { state } = useStore();
   const { toast } = useActions();
+  const alerts = useVisibleAlerts();
   const [filter, setFilter] = useState("all");
-  const list = alerts
-    .filter((a) => filter === "all" || CATEGORY_BY_ID[a.categoryId].type === filter)
-    .sort((a, b) => b.createdAt - a.createdAt);
+  const pos = state.session.position;
+  const list = alerts.filter((a) => filter === "all" || CATEGORY_BY_ID[a.categoryId].type === filter);
+  const near = list.filter((a) => haversineKm(pos, a) <= NEAR_KM).sort((a, b) => haversineKm(pos, a) - haversineKm(pos, b));
+  const rest = list.filter((a) => haversineKm(pos, a) > NEAR_KM).sort((a, b) => b.createdAt - a.createdAt).slice(0, 10);
+  const open = () => toast("La fiche alerte complète arrive bientôt.");
   return (
     <div className="screen">
-      <div className="screen-title"><h1>Alertes</h1><p>Aperçu des données fictives · la liste complète arrive en phase 4</p></div>
+      <div className="screen-title row">
+        <div><h1>Alertes</h1><p>{alerts.length} alertes actives dans le Val-d'Oise</p></div>
+        <IconButton icon="sliders-horizontal" label="Filtres" className="flat" onClick={() => toast("Les filtres détaillés arrivent bientôt.")} />
+      </div>
       <div className="screen-pad">
-        <SegmentedControl label="Type d'alertes" value={filter} onChange={setFilter} options={[{ value: "all", label: "Toutes" }, { value: "positive", label: "Positives" }, { value: "negative", label: "Négatives" }]} />
+        <SegmentedControl block label="Type d'alertes" value={filter} onChange={setFilter} options={[{ value: "all", label: "Toutes" }, { value: "positive", label: "Positives" }, { value: "negative", label: "Négatives" }]} />
         {list.length === 0 ? (
-          <EmptyState title="Aucune alerte dans cette zone.">Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
-        ) : list.slice(0, 12).map((a) => <AlertCard key={a.id} alert={a} onOpen={() => toast("La fiche alerte arrive en phase 5.")} />)}
+          <EmptyState title="Aucune alerte dans cette zone." action={<Button variant="secondary" onClick={() => toast("Zone élargie à tout le Val-d'Oise.")}>Élargir la zone</Button>}>Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
+        ) : (
+          <Fragment>
+            {near.length ? <section className="list-section"><h2 className="section-label">À moins de {NEAR_KM} km</h2>{near.map((a) => <AlertCard key={a.id} alert={a} onOpen={open} />)}</section> : null}
+            {rest.length ? <section className="list-section"><h2 className="section-label">Ailleurs dans le Val-d'Oise</h2>{rest.map((a) => <AlertCard key={a.id} alert={a} onOpen={open} />)}</section> : null}
+          </Fragment>
+        )}
       </div>
     </div>
   );
 }
 
 function ActivityScreen() {
-  const { push } = useActions();
+  const { state } = useStore();
+  const { toast, push } = useActions();
+  const [tab, setTab] = useState("mine");
+  const mine = state.alerts.filter((a) => a.authorId === ME_ID && a.status !== "supprimee").sort((a, b) => b.createdAt - a.createdAt);
+  const followed = state.alerts.filter((a) => state.follows[a.id]);
+  const open = () => toast("Le suivi détaillé arrive bientôt.");
   return (
     <div className="screen">
-      <div className="screen-title"><h1>Activité</h1><p>Mes alertes, mes commentaires, mes interactions</p></div>
+      <div className="screen-title"><h1>Activité</h1><p>Vos signalements et leur suivi par les services</p></div>
       <div className="screen-pad">
-        <EmptyState icon="pulse" title="Votre activité arrive bientôt" action={<PhaseTag phase={8} />}>Vous retrouverez ici vos alertes, leur suivi par les services et vos interactions.</EmptyState>
+        <SegmentedControl block label="Activité" value={tab} onChange={setTab} options={[{ value: "mine", label: "Mes alertes" }, { value: "comments", label: "Commentaires" }, { value: "followed", label: "Suivies" }]} />
+        {tab === "mine" ? (
+          mine.length ? mine.map((a) => <AlertCard key={a.id} alert={a} showStatus onOpen={open} />)
+            : <EmptyState icon="plus" title="Vous n'avez encore publié aucune alerte." action={<Button onClick={() => push("report")}>Signaler un événement</Button>} />
+        ) : tab === "comments" ? (
+          <EmptyState icon="chat-circle" title="Aucun commentaire pour le moment.">Vos commentaires et les réponses reçues apparaîtront ici.</EmptyState>
+        ) : followed.length ? followed.map((a) => <AlertCard key={a.id} alert={a} onOpen={open} />)
+          : <EmptyState icon="bookmark-simple" title="Aucune alerte suivie.">Suivez une alerte pour être prévenu de son traitement.</EmptyState>}
       </div>
     </div>
   );
@@ -942,37 +1102,64 @@ function ActivityScreen() {
 
 function ProfileScreen() {
   const { state } = useStore();
-  const { push, setPref } = useActions();
+  const { push, setPref, toast } = useActions();
   const user = state.session.user;
+  const soon = () => toast("Disponible bientôt.");
   return (
     <div className="screen">
-      <div className="screen-title"><h1>Profil</h1><p>{publicName(user)} · <span style={{ color: "var(--alert-positive)" }}>✓ Identité vérifiée</span></p></div>
+      <div className="screen-title"><h1>Profil</h1></div>
       <div className="screen-pad">
-        <p className="section-label">Affichage</p>
-        <SegmentedControl label="Thème" value={state.prefs.theme} onChange={(v) => setPref("theme", v)} options={[{ value: "light", label: "Clair", icon: "sun" }, { value: "system", label: "Système", icon: "circle-half" }, { value: "dark", label: "Sombre", icon: "moon" }]} />
-        <SegmentedControl label="Taille du texte" value={state.prefs.textScale} onChange={(v) => setPref("textScale", v)} options={[100, 130, 160, 200].map((v) => ({ value: v, label: `${v} %` }))} />
-        <div className="list">
-          <div className="list-item" style={{ display: "block", padding: "0 var(--s-4)" }}><Switch id="pref-contrast" label="Contraste élevé" checked={state.prefs.highContrast} onChange={(v) => setPref("highContrast", v)} /></div>
-          <div className="list-item" style={{ display: "block", padding: "0 var(--s-4)" }}><Switch id="pref-motion" label="Réduire les animations" checked={state.prefs.reduceMotion} onChange={(v) => setPref("reduceMotion", v)} /></div>
+        <div className="identity">
+          <span className="avatar" aria-hidden="true">{user.firstName[0]}{user.lastName[0]}</span>
+          <div>
+            <b>{user.firstName} {user.lastName}</b>
+            <small>Vos alertes identifiées affichent « {publicName(user)} »</small>
+            <span className="verified"><Icon name="seal-check-fill" />Identité vérifiée</span>
+          </div>
         </div>
-        <p className="section-label">Prototype</p>
-        <div className="list">
-          <ListItem icon="squares-four" label="Bibliothèque de composants" onClick={() => push("components")} />
-          <ListItem icon="gear" label="Paramètres complets" value="Phase 9" chevron={false} />
-        </div>
+        <section className="list-section">
+          <h2 className="section-label">Affichage</h2>
+          <div className="list">
+            <div className="list-block"><span className="lb-label">Thème</span><SegmentedControl block label="Thème" value={state.prefs.theme} onChange={(v) => setPref("theme", v)} options={[{ value: "light", label: "Clair", icon: "sun" }, { value: "system", label: "Auto", icon: "circle-half" }, { value: "dark", label: "Sombre", icon: "moon" }]} /></div>
+            <div className="list-block"><span className="lb-label">Taille du texte</span><SegmentedControl block label="Taille du texte" value={state.prefs.textScale} onChange={(v) => setPref("textScale", v)} options={[100, 130, 160, 200].map((v) => ({ value: v, label: `${v} %` }))} /></div>
+            <div className="list-block switch-row"><Switch id="pref-contrast" label="Contraste élevé" checked={state.prefs.highContrast} onChange={(v) => setPref("highContrast", v)} /></div>
+            <div className="list-block switch-row"><Switch id="pref-motion" label="Réduire les animations" checked={state.prefs.reduceMotion} onChange={(v) => setPref("reduceMotion", v)} /></div>
+          </div>
+        </section>
+        <section className="list-section">
+          <h2 className="section-label">Compte</h2>
+          <div className="list">
+            <ListItem icon="bell" label="Notifications" onClick={soon} />
+            <ListItem icon="lock-simple" label="Confidentialité et données" onClick={soon} />
+            <ListItem icon="question" label="Aide et contact" onClick={soon} />
+          </div>
+        </section>
+        <section className="list-section">
+          <h2 className="section-label">Prototype</h2>
+          <div className="list"><ListItem icon="squares-four" label="Bibliothèque de composants" onClick={() => push("components")} /></div>
+        </section>
       </div>
     </div>
   );
 }
 
 function ReportScreen() {
-  const { pop } = useActions();
+  const { pop, toast } = useActions();
+  const [type, setType] = useState(null);
   return (
     <div className="screen">
-      <ScreenHeader title="Signaler" onBack={pop} />
-      <div className="screen-pad">
+      <ScreenHeader title="Signaler" close onBack={pop} />
+      <div className="screen-pad" style={{ flex: 1 }}>
         <Stepper step={1} total={7} label="Type" />
-        <EmptyState icon="plus" title="Création d'une alerte" action={<PhaseTag phase={6} />}>Le parcours en 7 étapes (type, catégorie, lieu, description, photo, identité, prévisualisation) arrive en phase 6.</EmptyState>
+        <h2 className="question">Que souhaitez-vous signaler ?</h2>
+        <RadioCard large name="report-type" value="positive" family="positive" icon="star-fill" checked={type === "positive"} onChange={setType}
+          title="Un événement positif" description="Initiative, solidarité, culture, sport, vie de quartier…" />
+        <RadioCard large name="report-type" value="negative" family="incident" icon="warning-fill" checked={type === "negative"} onChange={setType}
+          title="Un événement négatif" description="Incident, danger, dégradation, propreté, nuisance…" />
+        <Banner tone="emergency">En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés.</Banner>
+      </div>
+      <div className="screen-footer">
+        <Button block disabled={!type} onClick={() => toast("La suite du parcours (catégorie, lieu, photo…) arrive bientôt.")}>Continuer</Button>
       </div>
     </div>
   );
@@ -1198,6 +1385,11 @@ function App() {
                   </BottomSheet>
                 ) : null}
               </main>
+              {!hideTabbar && !state.prefs.reportHintSeen && !state.nav.stack.length ? (
+                <button type="button" className="report-hint" onClick={() => dispatch({ type: "SET_PREF", key: "reportHintSeen", value: true })} aria-label="Signalez un événement ici. Fermer l'aide">
+                  <span className="tooltip">Signalez un événement ici</span>
+                </button>
+              ) : null}
               {hideTabbar ? null : <TabBar />}
               <ToastHost hasTabbar={!hideTabbar} />
               {state.modal ? <ConfirmModal modal={state.modal} onClose={() => dispatch({ type: "CLOSE_MODAL" })} /> : null}

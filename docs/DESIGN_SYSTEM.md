@@ -172,17 +172,19 @@ Toute icône seule (sans texte) porte un `aria-label`.
 
 ### 7.2 Spécifiques à 95 Alerte (§74, §75)
 
-**Alert Card**
+**Alert Card** (refonte v2, d'après le benchmark : Waze, Nextdoor)
 ```
-┌─────────────────────────────────────┐
-│ [◆ Incendie]  [● Active]     ⏱ 17 h │  ← badge type/catégorie + statut + expiration
-│ Fumée importante rue Carnot         │  ← H3, 2 lignes max
-│ 📍 Pontoise · 1,2 km · il y a 12 min │  ← Body-sm muted
-│ [ photo 16:9 optionnelle ]          │
-│ ⬆ 24   ⬇ 3   💬 8                    │
-└─────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│ ◆  INCENDIE · il y a 12 min      ┌─────┐ │  ← icône de famille (forme + couleur) · sur-titre catégorie
+│    Fumée importante visible      │ img │ │  ← titre H3, 2 lignes max · vignette 64 px si photo
+│    rue Carnot                    └─────┘ │
+│    📍 Pontoise · 1,1 km                  │  ← lieu + distance
+│    ⬆ 24  ⬇ 3  💬 8         [➜ Transmise] │  ← confirmations visibles dès l'aperçu + statut
+└──────────────────────────────────────────┘
 ```
-Toute la carte est cliquable ; le libellé accessible résume type, titre, lieu et ancienneté.
+Le statut s'affiche pour les alertes négatives (Transmise, En traitement, Traitée), pour « Expire dans … » et dans « Mes alertes ». Pas de compteur d'expiration dans la liste (il est dans la fiche). Toute la carte est cliquable ; son libellé accessible résume catégorie, titre, lieu, ancienneté et confirmations.
+
+**Carte d'accueil** : fond illustré clair et désaturé (`--map-*`), quartiers, Oise, routes et libellés ; un seul marqueur par événement (les doublons sont fusionnés) ; regroupements bleus à moins de 30 px ; point « Vous êtes ici » ; pilule « n nouvelles alertes » ; bouton de recentrage au-dessus du panneau. Le panneau du bas (hauteur réduite : titre + filtres) liste les alertes à moins de 5 km ; toucher un marqueur ouvre l'aperçu de l'alerte (vote + « Voir le détail »).
 
 **Alert Marker** : forme de la famille (§2.2), 36 px, icône blanche de la catégorie au centre, contour blanc de 2 px. Sélectionné = 44 px + halo. Priorité **critique** = halo pulsé (statique si animations réduites) + mini-libellé « Urgent ».
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Bottom sheet + toast</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+<link rel="stylesheet" href="/_blob/79083ea7a8d50397cf9d20db824b6129">
 </head>
 <body>
 <x-dc>
@@ -22,7 +22,7 @@ body{margin:0}
   </header>
   <div class="screen95">
     <div class="screen-pad">
-      <p class="section-label">Feedback</p>
+      <h2 class="section-label">Feedback</h2>
       <div class="lib-row">
         <button class="btn btn-secondary" type="button" onClick="{{showToast}}">Toast succès</button>
         <button class="btn btn-secondary" type="button" onClick="{{openSheet}}">Ouvrir le panneau</button>
@@ -35,23 +35,13 @@ body{margin:0}
         <button class="bs-handle" type="button" aria-label="Agrandir ou réduire le panneau" onClick="{{toggleSize}}"><span></span></button>
         <div class="bs-head">
           <h2>Exemple de bottom sheet</h2>
-          <button class="icon-btn" type="button" aria-label="Fermer" onClick="{{closeSheet}}" style="box-shadow: none; width: 40px; height: 40px"><span class="ph i i-x" aria-hidden="true"></span></button>
+          <button class="icon-btn flat" type="button" aria-label="Fermer" onClick="{{closeSheet}}" style="width: 40px; height: 40px"><span class="ph i i-x" aria-hidden="true"></span></button>
         </div>
         <div class="bs-body">
-          <p style="margin: 0; color: var(--text-muted); font-size: var(--fs-sm); line-height: var(--lh-sm)">Touchez la poignée pour agrandir le panneau. La croix ou le fond grisé le ferment.</p>
-          <div class="alert-card fam-positive">
-            <div class="ac-top"><span class="badge badge-type"><span class="ph i i-leaf-fill" aria-hidden="true"></span>Action environnementale</span><span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>23 h</span></div>
-            <h4>Nettoyage participatif du parc François-Mitterrand</h4>
-            <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Cergy · 3,4 km · il y a 1 h</div>
-            <div class="photo" aria-hidden="true"><span class="ph i i-image"></span></div>
-            <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>43</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>2</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>12</span></div>
-          </div>
-          <div class="alert-card fam-vigilance">
-            <div class="ac-top"><span class="badge badge-type"><span class="ph i i-lightbulb-fill" aria-hidden="true"></span>Éclairage</span><span class="badge badge-status st-done"><span class="ph i i-check-circle-fill" aria-hidden="true"></span>Traitée</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>21 h</span></div>
-            <h4>Trois lampadaires éteints avenue de la Gare</h4>
-            <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Ermont · 11,2 km · il y a 2 h</div>
-            <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>12</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>0</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>2</span></div>
-          </div>
+          <p class="demo-note">Touchez la poignée pour agrandir le panneau. La croix ou le fond grisé le ferment.</p>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+            <dc-import name="AlertCard" row="{{r}}" hint-size="100%,124px"></dc-import>
+          </sc-for>
         </div>
       </section>
     </sc-if>
@@ -71,6 +61,10 @@ body{margin:0}
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+var ROWS = [
+  ['a4', 'Action environnementale', 'positive', 'leaf', 'positive', 'Nettoyage participatif du parc François-Mitterrand', 'Cergy', 3.64, 60, '', 43, 2, 12, true],
+  ['a5', 'Éclairage', 'vigilance', 'lightbulb', 'negative', 'Trois lampadaires éteints avenue de la Gare', 'Ermont', 13.56, 140, 'traite', 12, 0, 2, false]
+];
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -81,6 +75,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     return {
+      rows: ROWS,
       open: this.state.open,
       sheetH: this.state.full ? '640px' : '420px',
       toast: this.state.toast,

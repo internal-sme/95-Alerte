@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Composant · Alert Card</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/79083ea7a8d50397cf9d20db824b6129">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0;font-family:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif}
+</style>
+</helmet>
+<div class="alert-card {{c.famCls}}" style="width: 100%">
+  <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="{{c.shape}}" stroke-linejoin="round"></path></svg><span class="ph i {{c.iconCls}}" aria-hidden="true" style="{{c.iconStyle}}"></span></span>
+  <span class="ac-main">
+    <span class="ac-eyebrow"><b>{{c.cat}}</b><span>{{c.ago}}</span></span>
+    <h4>{{c.title}}</h4>
+    <span class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span><span>{{c.place}}</span></span>
+    <span class="ac-foot">
+      <span class="stats">
+        <span><span class="ph i i-arrow-fat-up" aria-hidden="true"></span>{{c.up}}</span>
+        <span><span class="ph i i-arrow-fat-down" aria-hidden="true"></span>{{c.down}}</span>
+        <span><span class="ph i i-chat-circle" aria-hidden="true"></span>{{c.com}}</span>
+      </span>
+      <sc-if value="{{c.hasStatus}}" hint-placeholder-val="{{true}}"><span class="badge badge-status {{c.stCls}}"><span class="ph i {{c.stIcon}}" aria-hidden="true"></span>{{c.stLabel}}</span></sc-if>
+    </span>
+  </span>
+  <sc-if value="{{c.photo}}" hint-placeholder-val="{{true}}"><span class="ac-thumb" aria-hidden="true"><span class="ph i i-image"></span></span></sc-if>
+  <sc-if value="{{c.noPhoto}}" hint-placeholder-val="{{false}}"><span></span></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"row":{"editor":null},"showStatus":{"editor":null},"$preview":{"width":358,"height":140}}'>
+var SHAPES = {
+  incident: 'M18 2.5 33.5 18 18 33.5 2.5 18Z',
+  vigilance: 'M18 3 34 32H2Z',
+  positive: 'M18 2.5a15.5 15.5 0 1 0 0.01 0Z',
+  info: 'M11 3h14a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H11a8 8 0 0 1-8-8V11a8 8 0 0 1 8-8Z'
+};
+var STATUS = {
+  transmis: ['st-sent', 'i-paper-plane-tilt', 'Transmise'],
+  en_traitement: ['st-progress', 'i-arrows-clockwise', 'En traitement'],
+  traite: ['st-done', 'i-check-circle-fill', 'Traitée'],
+  expiree: ['st-expired', 'i-clock', 'Expirée'],
+  proche: ['st-soon', 'i-timer', '']
+};
+var SAMPLE = ['a1', 'Incendie', 'incident', 'fire', 'negative', 'Fumée importante visible rue Carnot', 'Pontoise', 1.08, 12, 'transmis', 24, 3, 8, true];
+function fmtDist(km) {
+  if (km < 1) return Math.max(50, Math.round(km * 1000 / 50) * 50) + ' m';
+  return km.toFixed(1).replace('.', ',') + ' km';
+}
+function fmtAgo(m) {
+  if (m < 60) return 'il y a ' + m + ' min';
+  var h = Math.floor(m / 60);
+  return h < 24 ? 'il y a ' + h + ' h' : 'il y a ' + Math.floor(h / 24) + ' j';
+}
+class Component extends DCLogic {
+  renderVals() {
+    var r = this.props.row || SAMPLE;
+    var st = r[9] || '';
+    var label = '';
+    if (st.indexOf('proche:') === 0) { label = st.slice(7); st = 'proche'; }
+    if (!st && this.props.showStatus) st = 'transmis';
+    var meta = STATUS[st];
+    return {
+      c: {
+        famCls: 'fam-' + r[2], shape: SHAPES[r[2]], iconCls: 'i-' + r[3] + '-fill', iconStyle: r[2] === 'vigilance' ? 'top: 4px' : '',
+        cat: r[1], ago: fmtAgo(r[8]), title: r[5], place: r[6] + ' · ' + fmtDist(r[7]),
+        up: r[10], down: r[11], com: r[12], photo: !!r[13], noPhoto: !r[13],
+        hasStatus: !!meta, stCls: meta ? meta[0] : '', stIcon: meta ? meta[1] : '', stLabel: meta ? (label || meta[2]) : ''
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

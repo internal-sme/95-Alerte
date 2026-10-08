@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Accueil · Carte</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+<link rel="stylesheet" href="/_blob/79083ea7a8d50397cf9d20db824b6129">
 </head>
 <body>
 <x-dc>
@@ -16,40 +16,92 @@ body{margin:0}
 </helmet>
 <div class="a95 {{theme}}" style="width: 390px; height: 844px">
   <div class="screen95">
-    <div class="map-placeholder"></div>
+    <div class="map95" aria-label="Carte des alertes autour de Pontoise">
+      <svg class="map-art" viewBox="0 0 390 768" aria-hidden="true">
+        <rect class="land" width="390" height="768"></rect>
+        <path class="forest" d="M282 0H390V150C362 168 318 160 298 128C280 98 270 40 282 0Z"></path>
+        <path class="forest" d="M0 470C38 452 84 470 92 512C100 556 64 592 22 600L0 602Z"></path>
+        <path class="forest" d="M330 420C356 398 390 404 390 404V540C360 552 330 534 322 504C316 478 314 440 330 420Z"></path>
+        <path class="urban" d="M150 230C176 206 238 200 262 226C286 252 280 300 252 320C224 340 176 336 156 312C136 288 128 252 150 230Z"></path>
+        <path class="urban" d="M236 288C262 276 316 290 322 322C328 356 300 376 268 372C240 368 222 344 222 318C222 302 226 294 236 288Z"></path>
+        <path class="urban" d="M20 300C46 280 110 290 134 318C156 346 150 404 120 420C90 436 40 424 22 396C4 368 0 318 20 300Z"></path>
+        <path class="urban" d="M40 190C64 176 112 184 124 206C134 226 120 250 94 256C66 262 40 250 32 230C26 214 28 198 40 190Z"></path>
+        <path class="water" d="M396 120C352 156 304 198 268 230C246 250 232 274 214 292C192 314 160 324 136 336C106 352 80 388 76 428C72 470 96 500 132 512C172 526 206 548 222 590C236 628 232 690 240 772"></path>
+        <path class="road-case minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200"></path>
+        <path class="road-case minor" d="M196 290C170 312 132 334 84 344"></path>
+        <path class="road-case" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478"></path>
+        <path class="road-case" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380"></path>
+        <path class="road minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200"></path>
+        <path class="road minor" d="M196 290C170 312 132 334 84 344"></path>
+        <path class="road" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478"></path>
+        <path class="road" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380"></path>
+        <text class="label" x="262" y="250" text-anchor="middle">Pontoise</text>
+        <text class="label" x="290" y="392" text-anchor="middle">Saint-Ouen-l'Aumône</text>
+        <text class="label" x="60" y="446" text-anchor="middle">Cergy</text>
+        <text class="label" x="80" y="176" text-anchor="middle">Osny</text>
+        <text class="label water-label" x="344" y="198" text-anchor="middle">L'Oise</text>
+      </svg>
+      <span class="me" style="left: 190px; top: 255px" role="img" aria-label="Vous êtes ici"></span>
+      <sc-for list="{{pins}}" as="p" hint-placeholder-count="6">
+        <span class="map-pin" style="left: {{p.x}}px; top: {{p.y}}px">
+          <button type="button" class="marker {{p.cls}}" aria-label="{{p.label}}" onClick="{{p.open}}" style="border: 0; background: none; padding: 0; cursor: pointer">
+            <svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="{{p.shape}}" stroke-linejoin="round"></path></svg>
+            <span class="ph i {{p.icon}}" aria-hidden="true" style="{{p.iconStyle}}"></span>
+            <sc-if value="{{p.crit}}" hint-placeholder-val="{{false}}"><span class="marker-label">Urgent</span></sc-if>
+          </button>
+        </span>
+      </sc-for>
+      <sc-if value="{{showCluster}}" hint-placeholder-val="{{true}}">
+        <button type="button" class="cluster c-s" style="position: absolute; left: 82px; top: 338px; transform: translate(-50%, -50%); z-index: 4" aria-label="2 alertes regroupées">2</button>
+      </sc-if>
+    </div>
     <div class="map-top">
       <button class="search" type="button"><span class="ph i i-magnifying-glass" aria-hidden="true"></span>Rechercher une ville, une rue…</button>
       <button class="icon-btn" type="button" aria-label="Notifications, 2 non lues"><span class="ph i i-bell" aria-hidden="true"></span><span class="badge-count" aria-hidden="true">2</span></button>
     </div>
-    <section class="bs" style="height: {{sheetH}}" aria-label="25 alertes autour de vous">
-      <button class="bs-handle" type="button" aria-label="Agrandir ou réduire le panneau" onClick="{{toggleSheet}}"><span></span></button>
-      <div class="bs-head"><h2>25 alertes autour de vous</h2></div>
-      <div class="bs-body">
-        <p class="demo-note">8 positives · 17 négatives · données fictives</p>
-        <span class="placeholder-phase"><span class="ph ph-sm i i-path" aria-hidden="true"></span>Arrive en phase 3</span>
-        <p style="margin: 0; color: var(--text-muted); font-size: var(--fs-sm); line-height: var(--lh-sm)">La carte interactive (marqueurs, regroupements, ma position) remplacera ce fond. Le panneau, lui, est déjà le composant définitif : touchez la poignée.</p>
-        <div class="alert-card fam-incident">
-          <div class="ac-top"><span class="badge badge-type"><span class="ph i i-fire-fill" aria-hidden="true"></span>Incendie</span><span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>23 h</span></div>
-          <h4>Fumée importante visible rue Carnot</h4>
-          <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Pontoise · 400 m · il y a 12 min</div>
-          <div class="photo" aria-hidden="true"><span class="ph i i-image"></span></div>
-          <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>24</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>3</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>8</span></div>
+    <div class="map-pill"><button class="pill" type="button" onClick="{{openList}}"><span class="dot-new" aria-hidden="true"></span>3 nouvelles alertes</button></div>
+    <button class="icon-btn map-locate" type="button" aria-label="Recentrer sur ma position" style="bottom: 168px"><span class="ph i i-crosshair" aria-hidden="true"></span></button>
+
+    <sc-if value="{{noSel}}" hint-placeholder-val="{{true}}">
+      <section class="bs" style="height: {{sheetH}}" aria-label="Alertes autour de vous">
+        <button class="bs-handle" type="button" aria-label="Agrandir ou réduire le panneau" onClick="{{toggleSheet}}"><span></span></button>
+        <div class="bs-head"><h2>{{count}} alertes autour de vous</h2></div>
+        <div class="bs-body">
+          <div class="seg is-block" role="group" aria-label="Type d'alertes">
+            <button type="button" aria-pressed="{{f.all}}" onClick="{{showAll}}">Toutes</button>
+            <button type="button" aria-pressed="{{f.positive}}" onClick="{{showPositive}}">Positives</button>
+            <button type="button" aria-pressed="{{f.negative}}" onClick="{{showNegative}}">Négatives</button>
+          </div>
+          <sc-for list="{{near}}" as="r" hint-placeholder-count="3">
+            <dc-import name="AlertCard" row="{{r}}" hint-size="100%,124px"></dc-import>
+          </sc-for>
         </div>
-        <div class="alert-card fam-incident">
-          <div class="ac-top"><span class="badge badge-type"><span class="ph i i-car-fill" aria-hidden="true"></span>Accident</span><span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>23 h</span></div>
-          <h4>Collision entre deux véhicules au rond-point</h4>
-          <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Cergy · 3,1 km · il y a 35 min</div>
-          <div class="photo" aria-hidden="true"><span class="ph i i-image"></span></div>
-          <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>15</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>1</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>4</span></div>
+      </section>
+    </sc-if>
+    <sc-if value="{{hasSel}}" hint-placeholder-val="{{false}}">
+      <section class="bs {{sel.famCls}}" style="height: 384px" aria-label="Alerte sélectionnée">
+        <button class="bs-handle" type="button" aria-label="Panneau"><span></span></button>
+        <div class="bs-body">
+          <div class="summary">
+            <div class="summary-head">
+              <span class="badge badge-type"><span class="ph i {{sel.icon}}" aria-hidden="true"></span>{{sel.cat}}</span>
+              <span class="demo-note">{{sel.ago}}</span>
+              <button class="icon-btn flat" type="button" aria-label="Fermer l'aperçu" onClick="{{closeSel}}"><span class="ph i i-x" aria-hidden="true"></span></button>
+            </div>
+            <h3 class="summary-title">{{sel.title}}</h3>
+            <p class="summary-meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>{{sel.place}}</p>
+            <sc-if value="{{sel.dup}}" hint-placeholder-val="{{false}}">
+              <div class="banner banner-info" role="status"><span class="ph i i-copy" aria-hidden="true"></span><span>2 signalements semblent concerner le même événement.</span></div>
+            </sc-if>
+            <div class="vote" role="group" aria-label="Votre avis sur ce signalement">
+              <button class="up" type="button" aria-pressed="{{sel.voteUp}}" onClick="{{sel.up}}"><span class="ph i {{sel.upIcon}}" aria-hidden="true"></span>Confirmer <span class="n">{{sel.upCount}}</span></button>
+              <button class="down" type="button" aria-pressed="{{sel.voteDown}}" onClick="{{sel.down}}"><span class="ph i {{sel.downIcon}}" aria-hidden="true"></span>Contester <span class="n">{{sel.downCount}}</span></button>
+            </div>
+            <button class="btn btn-primary btn-block" type="button">Voir le détail</button>
+          </div>
         </div>
-        <div class="alert-card fam-vigilance">
-          <div class="ac-top"><span class="badge badge-type"><span class="ph i i-trash-fill" aria-hidden="true"></span>Propreté</span><span class="badge badge-status st-done"><span class="ph i i-check-circle-fill" aria-hidden="true"></span>Traitée</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>19 h</span></div>
-          <h4>Déchets abandonnés au pied des conteneurs</h4>
-          <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Argenteuil · 15,8 km · il y a 5 h</div>
-          <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>31</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>1</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>7</span></div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </sc-if>
   </div>
   <nav class="tabbar" aria-label="Navigation principale">
     <a class="tab" href="{{l.map}}" aria-current="page"><span class="ph i i-map-trifold-fill" aria-hidden="true"></span>Carte</a>
@@ -61,18 +113,84 @@ body{margin:0}
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+var NEAR = [
+  ['a1', 'Incendie', 'incident', 'fire', 'negative', 'Fumée importante visible rue Carnot', 'Pontoise', 1.08, 12, 'transmis', 24, 3, 8, true],
+  ['a19', 'Incendie', 'incident', 'fire', 'negative', 'Fumée noire au-dessus de la gare', 'Pontoise', 1.09, 9, 'transmis', 11, 0, 3, false],
+  ['a25', 'Voirie', 'vigilance', 'traffic-cone', 'negative', 'Banc public cassé square Marcel-Pagnol', 'Pontoise', 1.29, 240, 'transmis', 7, 0, 1, true],
+  ['a6', 'Voirie', 'vigilance', 'traffic-cone', 'negative', 'Nid-de-poule dangereux sur la chaussée', "Saint-Ouen-l'Aumône", 1.94, 95, 'en_traitement', 22, 0, 3, true],
+  ['a17', 'Information utile', 'info', 'megaphone', 'positive', 'Distribution gratuite de composteurs samedi matin', 'Osny', 2.67, 330, '', 18, 0, 2, false],
+  ['a22', 'Voirie', 'vigilance', 'traffic-cone', 'negative', 'Feu tricolore en panne au carrefour', 'Cergy', 2.99, 1410, 'proche:Expire dans 30 min', 21, 1, 6, false],
+  ['a2', 'Accident', 'incident', 'car', 'negative', 'Collision entre deux véhicules au rond-point', 'Cergy', 3.23, 35, 'transmis', 15, 1, 4, true],
+  ['a26', 'Autre problème', 'vigilance', 'dots-three', 'negative', 'Chien errant blessé près du canal', "Saint-Ouen-l'Aumône", 3.32, 45, 'transmis', 10, 0, 4, true],
+  ['a4', 'Action environnementale', 'positive', 'leaf', 'positive', 'Nettoyage participatif du parc François-Mitterrand', 'Cergy', 3.64, 60, '', 43, 2, 12, true]
+];
+var PINS = [
+  { id: 'a1', x: 205, y: 300, place: 'Rue Carnot, Pontoise · 1,1 km', crit: true, dup: true },
+  { id: 'a25', x: 230, y: 215, place: 'Square Marcel-Pagnol, Pontoise · 1,3 km' },
+  { id: 'a6', x: 262, y: 300, place: "Chaussée Jules-César, Saint-Ouen-l'Aumône · 1,9 km" },
+  { id: 'a26', x: 300, y: 350, place: "Épluches, Saint-Ouen-l'Aumône · 3,3 km" },
+  { id: 'a17', x: 80, y: 215, place: 'Centre, Osny · 2,7 km' },
+  { id: 'a4', x: 112, y: 394, place: 'Axe Majeur, Cergy · 3,6 km' }
+];
+var SHAPES = {
+  incident: 'M18 2.5 33.5 18 18 33.5 2.5 18Z',
+  vigilance: 'M18 3 34 32H2Z',
+  positive: 'M18 2.5a15.5 15.5 0 1 0 0.01 0Z',
+  info: 'M11 3h14a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H11a8 8 0 0 1-8-8V11a8 8 0 0 1 8-8Z'
+};
+function rowOf(id) { return NEAR.filter(function (r) { return r[0] === id; })[0]; }
+function agoOf(m) { return m < 60 ? 'il y a ' + m + ' min' : 'il y a ' + Math.floor(m / 60) + ' h'; }
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { half: false };
+    this.state = { half: false, filter: 'all', sel: null, votes: { a4: 1 } };
   }
   renderVals() {
     const s = this.props.dark === true ? '-dark' : '';
+    const st = this.state;
+    const keep = (r) => st.filter === 'all' || r[4] === st.filter;
+    const near = NEAR.filter(keep);
+    const pins = PINS.filter((p) => keep(rowOf(p.id))).map((p) => {
+      const r = rowOf(p.id);
+      return {
+        x: p.x, y: p.y, crit: !!p.crit, label: r[1] + ' : ' + r[5],
+        cls: 'fam-' + r[2] + (st.sel === p.id ? ' is-selected' : '') + (p.crit ? ' is-critical' : ''),
+        shape: SHAPES[r[2]], icon: 'i-' + r[3] + '-fill', iconStyle: r[2] === 'vigilance' ? 'top: 4px' : '',
+        open: () => this.setState({ sel: p.id })
+      };
+    });
+    let sel = null;
+    if (st.sel) {
+      const p = PINS.filter((q) => q.id === st.sel)[0];
+      const r = rowOf(st.sel);
+      const v = st.votes[st.sel] || 0;
+      const setVote = (val) => this.setState({ votes: Object.assign({}, st.votes, { [st.sel]: v === val ? 0 : val }) });
+      sel = {
+        famCls: 'fam-' + r[2], icon: 'i-' + r[3] + '-fill', cat: r[1], ago: agoOf(r[8]), title: r[5], place: p.place, dup: !!p.dup,
+        voteUp: v === 1, voteDown: v === -1,
+        upCount: r[10] + (v === 1 ? 1 : 0) - (st.sel === 'a4' ? 1 : 0), downCount: r[11] + (v === -1 ? 1 : 0),
+        upIcon: v === 1 ? 'i-arrow-fat-up-fill' : 'i-arrow-fat-up', downIcon: v === -1 ? 'i-arrow-fat-down-fill' : 'i-arrow-fat-down',
+        up: () => setVote(1), down: () => setVote(-1)
+      };
+    }
     return {
       theme: s ? 't-dark' : 't-light',
       l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
-      sheetH: this.state.half ? '440px' : '132px',
-      toggleSheet: () => this.setState({ half: !this.state.half })
+      pins: pins,
+      showCluster: st.filter !== 'positive',
+      near: near,
+      count: near.length,
+      f: { all: st.filter === 'all', positive: st.filter === 'positive', negative: st.filter === 'negative' },
+      showAll: () => this.setState({ filter: 'all' }),
+      showPositive: () => this.setState({ filter: 'positive' }),
+      showNegative: () => this.setState({ filter: 'negative' }),
+      sheetH: st.half ? '384px' : '156px',
+      toggleSheet: () => this.setState({ half: !st.half }),
+      openList: () => this.setState({ half: true, sel: null }),
+      noSel: !sel,
+      hasSel: !!sel,
+      sel: sel || {},
+      closeSel: () => this.setState({ sel: null })
     };
   }
 }
