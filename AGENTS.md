@@ -37,6 +37,14 @@ Une phase n'est terminée que lorsque **les deux versions** sont à jour et publ
 1. **Prototype React** : `prototype/src/` → `python3 tools/build_prototype.py` → `prototype/index.html`, publié sur https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw.
 2. **Canevas de preview** (type Design) : une planche `.dc.html` par nouvel écran ou état, en clair et en sombre, reliées entre elles pour le bouton Play, **sans cadre de téléphone** (les planches ne peuvent pas savoir si elles sont affichées sur le canevas ou en Play). Sources dans `prototype/canvas/`, publié sur https://claude.ai/artifact/Sd2XN1KjGF8LzZ1rtBfvm4 (voir `prototype/canvas/README.md`).
 
+## Branches et pull requests — une branche par phase
+
+- `master` : version de référence (anciennement `main`). `develop` : intégration des phases validées (créée depuis `master`).
+- **Chaque phase a sa propre branche**, créée depuis `develop` à jour : `phase/<numéro>-<nom-court>` (ex. `phase/1-splash-connexion`). Tout le travail de la phase (React, canevas, docs, `task.md`) y est commité et poussé.
+- **Ne pas ouvrir la pull request de soi-même.** Quand la phase est terminée et publiée (les deux versions), présenter le résultat puis **demander explicitement à l'utilisateur s'il valide la phase**.
+- **Seulement après sa validation**, créer la pull request `phase/<n>-…` → `develop`, avec dans la description : le résumé de la phase, les liens du prototype React et du canevas, les tâches cochées de `task.md` et les points restant ouverts.
+- La phase suivante démarre d'une nouvelle branche créée depuis `develop` (une fois la PR précédente fusionnée, ou depuis la branche de la phase précédente si l'utilisateur le demande).
+
 ## Code Guidelines (prototype)
 
 - Livrable : un seul fichier `prototype/index.html`, **généré** par `python3 tools/build_prototype.py` à partir de `prototype/src/` (`app.jsx`, `app.css`, `phosphor-sprite.svg`) et du CSS de `docs/design-system/index.html`. On modifie `prototype/src/`, jamais `index.html` à la main. Scripts : React 18.3.1 + ReactDOM depuis `cdnjs.cloudflare.com`, Babel `@babel/standalone@7.26.4` depuis `cdn.jsdelivr.net/npm/`, toujours avec des **versions exactes**. Icônes Phosphor intégrées en **sprite SVG** dans la page (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1`) : les artefacts bloquent les feuilles de style jsDelivr. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.

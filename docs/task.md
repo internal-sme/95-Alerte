@@ -20,6 +20,7 @@
 | P9 | Toute action laisse une trace : toast non bloquant, écran dédié pour la publication, confirmation pour les actions sensibles | Google Maps, Nextdoor |
 | P10 | Lisible sans couleur, sans son, à 200 % : forme + icône + texte | Bumble, Apple Maps |
 
+> **Une branche par phase** (AGENTS.md) : `phase/<n>-<nom>` depuis `develop` ; PR vers `develop` seulement après validation de la phase par l'utilisateur.
 > **Deux versions à chaque phase** (AGENTS.md) : le prototype React **et** le canevas de preview (planches claires et sombres, liées pour Play, sans cadre de téléphone). Une phase n'est terminée que lorsque les deux sont publiées.
 
 **Légende** : `[ ]` à faire · `[~]` en cours · `[x]` fait
@@ -364,3 +365,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-08 | 0 | Essai d'un cadre iPhone sur les planches, abandonné : le canevas ne permet pas de l'afficher uniquement en Play. Règle : chaque phase livre le prototype React **et** le canevas. |
 | 2026-10-08 | 0 | **Refonte v2** d'après le benchmark : carte d'accueil illustrée (marqueurs, regroupement, doublons fusionnés, aperçu d'alerte avec vote), cartes d'alerte compactes, Alertes en sections (≤ 5 km / reste du Val-d'Oise), Signaler étape 1 (positif / négatif), Activité (mes alertes), Profil (carte d'identité, réglages groupés). Mentions « phase X » retirées des écrans. Bouton Signaler aligné. React et canevas mis à jour. |
 | 2026-10-08 | 0 | Carte d'alerte : photo de nouveau en grand format (16:9, pleine largeur), votes et statut en dessous. React, canevas et Design System mis à jour. |
+| 2026-10-08 | 0 | Branches : `main` renommée `master`, `develop` créée depuis `master`, phase 0 sur `phase/0-fondations`, PR vers `develop`. |
