@@ -20,6 +20,8 @@
 | P9 | Toute action laisse une trace : toast non bloquant, écran dédié pour la publication, confirmation pour les actions sensibles | Google Maps, Nextdoor |
 | P10 | Lisible sans couleur, sans son, à 200 % : forme + icône + texte | Bumble, Apple Maps |
 
+> **Deux versions à chaque phase** (AGENTS.md) : le prototype React **et** le canevas de preview (planches claires et sombres, liées pour Play, sans cadre de téléphone). Une phase n'est terminée que lorsque les deux sont publiées.
+
 **Légende** : `[ ]` à faire · `[~]` en cours · `[x]` fait
 
 ---
@@ -69,6 +71,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [x] **0.11** Panneau **« Mode démo »** discret : réinitialiser, forcer hors connexion, permission refusée, erreur, zone vide, beaucoup d'alertes, accélérer le temps
 - [x] **0.12** `localStorage` encapsulé (`try/catch`) pour le thème, la taille du texte et l'onboarding vu
 - [x] **0.13** Composants transverses issus du benchmark : `CategoryTile`, `Timeline`, `RadioCard` avec aperçu, `Pill` flottante
+- [x] **0.C** Canevas de preview : 15 planches (clair, sombre, états et composants), liées pour Play
 - [x] **0.14** Page de référence du Design System : `docs/design-system/index.html` (tokens, icônes, composants, états)
 
 **Validation** : la page s'ouvre sans erreur console ; les onglets naviguent vers des écrans vides ; le thème sombre fonctionne ; les composants sont visibles sur une page de démonstration interne.
@@ -94,6 +97,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **1.7** Badge de statut d'identité : *non vérifiée* / *en cours* / *✓ vérifiée*
 - [ ] **1.8** États d'erreur : code OTP invalide, email déjà utilisé, échec FranceConnect, hors connexion
 
+- [ ] **1.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+
 **Validation** : S1 (partie connexion) jouable de bout en bout, par FranceConnect et par le parcours de création de compte ; chaque état de vérification est accessible.
 
 ---
@@ -114,6 +119,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **2.4** UI-007 **Autorisation de localisation** : explication de l'usage, « Autoriser », « Choisir manuellement », « Plus tard » ; mention de la précision approximative par défaut
 - [ ] **2.5** États : permission refusée → choix manuel proposé ; localisation indisponible
 - [ ] **2.6** Enchaînement S1 : Splash → Onboarding → Localisation → Connexion → Accueil ; onboarding non rejoué une fois vu
+
+- [ ] **2.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
 **Validation** : S1 complet de bout en bout jusqu'à l'accueil, avec localisation autorisée **et** refusée.
 
@@ -143,6 +150,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **3.10** Les alertes expirées n'apparaissent pas sur la carte active
 - [ ] **3.11** Pilule « n nouvelles alertes », polygone pour les alertes de zone, bulle d'aide sur le + au premier lancement
 
+- [ ] **3.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+
 **Validation** : S2 jouable jusqu'à la bottom sheet ; lisible en mode clair et sombre ; marqueurs distinguables sans la couleur.
 
 ---
@@ -164,6 +173,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **4.5** UI-012 **Recherche** : villes, quartiers, rues, événements, catégories ; suggestions, recherches récentes, « aucun résultat »
 - [ ] **4.6** **Panneau de filtres** (bottom sheet) : type, catégories (dynamiques), période (maintenant / 6 h / aujourd'hui / 24 h / personnalisée), distance (500 m → territoire) ; compteur de résultats, réinitialiser ; filtres partagés entre carte et liste
 - [ ] **4.7** États : skeletons, liste vide (« Aucune alerte dans cette zone… »), recherche sans résultat
+
+- [ ] **4.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
 **Validation** : filtrer « Positives + Culture + 5 km » donne le même résultat sur la carte et dans la liste ; la recherche d'une commune recentre la carte.
 
@@ -192,6 +203,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **5.9** Doublons : bandeau « Ces alertes semblent concerner le même événement. » avec liens
 - [ ] **5.10** États : alerte expirée (grisée), supprimée (« Cette alerte n'est plus disponible »), modérée
 - [ ] **5.11** Sheet d'opt-in aux notifications au premier « Suivre »
+
+- [ ] **5.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
 **Validation** : S2 complet jusqu'au détail ; S5 jusqu'au vote ; un vote changé met à jour les compteurs partout (carte, liste, fiche).
 
@@ -223,6 +236,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **6.10** L'alerte créée apparaît sur la carte, dans la liste et dans « Mes alertes » ; notification « Alerte publiée »
 - [ ] **6.11** Erreurs : « Impossible de publier votre alerte. Vérifiez votre connexion. », publication refusée ; utilisateur non connecté → invitation à se connecter
 
+- [ ] **6.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+
 **Validation** : S3 (positif, identifié) et S4 (incendie, anonyme, transmission au service) jouables de bout en bout en moins de 60 s.
 
 ---
@@ -243,6 +258,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **7.5** Signaler un commentaire (même parcours)
 - [ ] **7.6** Affichage d'un commentaire modéré (« Ce commentaire a été masqué »)
 
+- [ ] **7.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+
 **Validation** : S5, S9 et S10 jouables de bout en bout.
 
 ---
@@ -262,6 +279,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **8.4** **Suivi du traitement** : faire avancer le statut (horloge simulée ou mode démo) Transmise → En cours de traitement → Traitée
 - [ ] **8.5** UI-013 **Centre de notifications** : types (publiée, commentaire, réponse, proche expiration, expirée, modérée, transmise, prise en compte, traitée, alerte à proximité), lu/non lu, tout marquer comme lu, état vide
 - [ ] **8.6** **Push simulé** : bannière en haut de l'écran (« ⚠️ Nouvelle alerte à proximité ») + vibration simulée **et** équivalent visuel ; tap → carte centrée → détail
+
+- [ ] **8.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
 **Validation** : S6, S7 et S8 jouables de bout en bout ; le badge de la cloche se met à jour.
 
@@ -288,6 +307,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **9.9** UI-024 **Suppression du compte** : conséquences, suppression ou anonymisation, double confirmation → retour à l'écran de connexion
 - [ ] **9.10** Curseur de rayon avec cercle sur mini-carte pour les alertes de proximité ; préférences par type d'alerte
 
+- [ ] **9.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+
 **Validation** : changer la taille du texte et le contraste s'applique à toute l'app ; la suppression du compte ramène au parcours de première utilisation.
 
 ---
@@ -312,6 +333,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **10.9** Aucune erreur console ; taille du fichier raisonnable
 - [ ] **10.11** Contrôle « rouge rare » écran par écran et test en niveaux de gris
 - [ ] **10.10** **Publication de l'artefact** pour la preview + lien partagé
+
+- [ ] **10.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
 ### Recette des scénarios
 
@@ -338,3 +361,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-08 | — | Benchmark Mobbin : 10 principes et décisions UX reportés dans chaque phase ; icônes Phosphor intégrées en sprite SVG (CSS jsDelivr bloqué dans les artefacts) ; page Design System `docs/design-system/index.html` créée |
 | 2026-10-08 | 0 | Phase 0 terminée : `prototype/src/` (app.jsx, app.css, sprite) assemblé en `prototype/index.html` ; store, routeur à pile, BottomSheet 3 crans (glisser + clavier), modale, toasts, composants de base et 95 Alerte, écrans d'onglets provisoires, bibliothèque de composants, mode démo. Babel chargé depuis jsDelivr (`@babel/standalone@7.26.4`). |
 | 2026-10-08 | 0 | Canevas de preview (type Design) : 15 planches liées (clair, sombre, états et composants), bouton Play = prototype cliquable. Sources dans `prototype/canvas/`, CSS par `tools/build_canvas_css.py`. |
+| 2026-10-08 | 0 | Essai d'un cadre iPhone sur les planches, abandonné : le canevas ne permet pas de l'afficher uniquement en Play. Règle : chaque phase livre le prototype React **et** le canevas. |
