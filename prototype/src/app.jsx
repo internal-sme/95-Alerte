@@ -1292,6 +1292,31 @@ function AuthHeader({ title, onBack, step }) {
   );
 }
 
+/* Illustration de marque (benchmark onboarding) : pictogramme central entouré des quatre formes
+   de familles d'alertes — le vocabulaire visuel de la carte */
+function Illustration95({ icon, tone }) {
+  return (
+    <div className={cx("ill95", tone && `tone-${tone}`)} aria-hidden="true">
+      <span className="bg" />
+      <svg className="shapes" viewBox="0 0 176 132"><circle className="s-pos" cx="30" cy="30" r="11" /><path className="s-inc" d="M146 14 159 27 146 40 133 27Z" /><path className="s-vig" d="M150 92 163 115H137Z" /><rect className="s-info" x="16" y="88" width="22" height="22" rx="6" /></svg>
+      <span className="core"><Icon name={icon} /></span>
+    </div>
+  );
+}
+
+/* La confidentialité dite là où naît l'inquiétude, sous le champ concerné (Nextdoor) */
+function PrivacyNote({ children, icon = "lock-simple" }) {
+  return <p className="privacy-note"><Icon name={icon} /><span>{children}</span></p>;
+}
+
+function Benefits({ items }) {
+  return (
+    <ul className="benefits">
+      {items.map((b) => <li key={b.title}><span className="bi"><Icon name={b.icon} /></span><span>{b.title}{b.text ? <small>{b.text}</small> : null}</span></li>)}
+    </ul>
+  );
+}
+
 function AuthHero() {
   return (
     <div className="auth-hero" aria-hidden="true">
@@ -1454,11 +1479,12 @@ function SignupInfoScreen() {
   const initial = (form.lastName.trim() || " ")[0];
   return (
     <AuthStep title="Créer un compte" step={1} onBack={() => dispatch({ type: "AUTH_GO", step: "login" })}
-      question="Comment vous appelez-vous ?" lead="Votre nom reste privé. Sur vos alertes identifiées, seuls votre prénom et l'initiale de votre nom peuvent apparaître."
+      question="Bienvenue ! Comment vous appelez-vous ?" lead="4 étapes, environ 2 minutes."
       onSubmit={submit} footer={<Button block type="submit">Continuer</Button>}>
       <Field id="su-first" label="Prénom" autoComplete="given-name" value={form.firstName} error={errors.firstName} onChange={set("firstName")} />
       <Field id="su-last" label="Nom" autoComplete="family-name" value={form.lastName} error={errors.lastName} onChange={set("lastName")} />
       {form.firstName.trim() ? <div className="preview-author"><Icon name="eye" />Vous apparaîtrez comme : <b>{form.firstName.trim()} {initial}.</b></div> : null}
+      <PrivacyNote>Votre nom complet reste privé. Sur vos alertes identifiées, seuls votre prénom et l'initiale de votre nom apparaissent. Vous pourrez aussi publier anonymement.</PrivacyNote>
     </AuthStep>
   );
 }
@@ -1496,9 +1522,10 @@ function SignupPhoneScreen() {
     });
     return (
       <AuthStep title="Créer un compte" step={2} onBack={back}
-        question="Votre numéro de mobile" lead="Nous vous envoyons un code par SMS pour sécuriser votre compte. Il n'est jamais affiché."
+        question="Votre numéro de mobile" lead="Nous vous envoyons un code par SMS."
         onSubmit={send} footer={<Button block type="submit">Recevoir le code</Button>}>
         <Field id="su-phone" label="Téléphone mobile" type="tel" autoComplete="tel" inputMode="tel" value={phone} error={phoneError} onChange={(e) => { setPhone(e.target.value); setPhoneError(null); }} />
+        <PrivacyNote>Votre numéro n'est jamais affiché. Il sert uniquement à sécuriser votre compte.</PrivacyNote>
       </AuthStep>
     );
   }
@@ -1534,9 +1561,10 @@ function SignupEmailScreen() {
     });
     return (
       <AuthStep title="Créer un compte" step={3} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-phone" })}
-        question="Votre adresse e-mail" lead="Elle sert à vous informer du suivi de vos signalements. Elle n'est jamais affichée."
+        question="Votre adresse e-mail" lead="Pour vous informer du suivi de vos signalements."
         onSubmit={send} footer={<Button block type="submit">Continuer</Button>}>
         <Field id="su-email" label="E-mail" type="email" autoComplete="email" value={email} error={error} onChange={(e) => { setEmail(e.target.value); setError(null); }} />
+        <PrivacyNote>Votre adresse n'est jamais affichée ni partagée.</PrivacyNote>
       </AuthStep>
     );
   }
@@ -1544,7 +1572,7 @@ function SignupEmailScreen() {
     <div className="screen auth">
       <AuthHeader title="Créer un compte" step={3} onBack={() => setPhase("address")} />
       <div className="auth-center">
-        <span className="status-hero tone-info"><Icon name="envelope" /></span>
+        <Illustration95 icon="envelope" />
         <h2>Confirmez votre adresse e-mail</h2>
         <p>Nous avons envoyé un lien à <b>{maskEmail(email)}</b>. Ouvrez-le pour confirmer votre adresse.</p>
       </div>
@@ -1572,9 +1600,17 @@ function IdentityDocStep({ onSent, onLater, step, onBack }) {
       <div className="screen-pad">
         <div className="auth-intro">
           <h2 className="question">Vérifiez votre identité</h2>
-          <p className="auth-lead">Une seule fois. Votre document sert uniquement à la vérification : il n'est jamais affiché publiquement.</p>
+          <p className="auth-lead">Une seule fois, environ 1 minute.</p>
         </div>
-        {ID_DOCS.map((d) => <RadioCard key={d.id} name="id-doc" value={d.id} checked={doc === d.id} onChange={setDoc} icon="identification-card" title={d.label} description={d.hint} />)}
+        <Benefits items={[
+          { icon: "seal-check", title: "Badge « Identité vérifiée »", text: "Affiché sur votre profil." },
+          { icon: "megaphone", title: "Signalements traités en priorité", text: "Les services savent qu'ils viennent d'une personne réelle." },
+        ]} />
+        <section className="list-section">
+          <h2 className="section-label">Votre document</h2>
+          {ID_DOCS.map((d) => <RadioCard key={d.id} name="id-doc" value={d.id} checked={doc === d.id} onChange={setDoc} icon="identification-card" title={d.label} description={d.hint} />)}
+        </section>
+        <PrivacyNote icon="eye-slash">Votre document sert uniquement à la vérification. Il n'est jamais affiché publiquement.</PrivacyNote>
       </div>
       <div className="screen-footer stack-footer">
         <Button block icon="camera" loading={sending} onClick={send}>{sending ? "Envoi du document…" : "Prendre le document en photo"}</Button>
@@ -1648,10 +1684,7 @@ function ProfileSetupScreen() {
   const f = state.auth.form;
   const [display, setDisplay] = useState(state.auth.display);
   const name = display === "first" ? f.firstName : `${f.firstName} ${(f.lastName || " ")[0]}.`;
-  const finish = () => {
-    const identity = IDENTITY_FROM_RESULT[state.auth.idResult] || "non_verifiee";
-    dispatch({ type: "LOGIN", method: "inscription", identity, user: { id: ME_ID, firstName: f.firstName, lastName: f.lastName, display }, message: "Votre compte est créé." });
-  };
+  const finish = () => dispatch({ type: "AUTH_SET", patch: { display, step: "done" } });
   return (
     <div className="screen auth">
       <AuthHeader title="Votre profil" onBack={() => dispatch({ type: "AUTH_GO", step: state.auth.idResult === "aucune" ? "signup-id" : "id-status" })} />
@@ -1666,9 +1699,43 @@ function ProfileSetupScreen() {
           <RadioCard name="display" value="first" checked={display === "first"} onChange={setDisplay} icon="user-circle" title={f.firstName} description="Prénom seulement" />
         </section>
         <div className="preview-author"><Icon name="eye" />Vous apparaîtrez comme : <b>{name}</b></div>
-        <p className="help-text"><Icon name="detective" className="ph-sm" />Pour chaque alerte, vous pourrez aussi choisir de publier anonymement. Votre e-mail et votre téléphone ne sont jamais affichés.</p>
+        <PrivacyNote icon="detective">Pour chaque alerte, vous pourrez aussi choisir de publier anonymement. Votre e-mail et votre téléphone ne sont jamais affichés.</PrivacyNote>
       </div>
       <div className="screen-footer"><Button block onClick={finish}>Terminer</Button></div>
+    </div>
+  );
+}
+
+/* Récapitulatif final (Greenlight « Success! », Nextdoor) : ce qui est prêt, ce qui reste, le contenu local */
+function SignupDoneScreen() {
+  const { state, dispatch } = useStore();
+  const alerts = useVisibleAlerts();
+  const f = state.auth.form;
+  const display = state.auth.display;
+  const identity = IDENTITY_FROM_RESULT[state.auth.idResult] || "non_verifiee";
+  const name = display === "first" ? f.firstName : `${f.firstName} ${(f.lastName || " ")[0]}.`;
+  const near = alerts.filter((a) => haversineKm(state.session.position, a) <= NEAR_KM).length;
+  const idLine = {
+    verifiee: { icon: "check-circle-fill", title: "Identité vérifiée", text: "Vos signalements sont traités en priorité." },
+    en_cours: { icon: "timer", title: "Vérification en cours", text: "Nous vous préviendrons du résultat.", pending: true },
+    non_verifiee: { icon: "identification-card", title: "Identité non vérifiée", text: "Vous pourrez la vérifier depuis votre profil.", pending: true },
+  }[identity];
+  const go = () => dispatch({ type: "LOGIN", method: "inscription", identity, user: { id: ME_ID, firstName: f.firstName, lastName: f.lastName, display } });
+  return (
+    <div className="screen auth">
+      <div className="screen-pad auth-done">
+        <div className="auth-center compact" role="status">
+          <Illustration95 icon="hand-waving" tone="positive" />
+          <h2>Bienvenue, {f.firstName} !</h2>
+          <p>Votre compte 95 Alerte est prêt.</p>
+        </div>
+        <ul className="recap">
+          <li><Icon name="check-circle-fill" /><span><b>Compte créé</b><small>Vos alertes identifiées afficheront « {name} ».</small></span></li>
+          <li className={cx(idLine.pending && "pending")}><Icon name={idLine.icon} /><span><b>{idLine.title}</b><small>{idLine.text}</small></span></li>
+          <li className="info"><Icon name="map-pin" /><span><b>{near} alerte{near > 1 ? "s" : ""} à moins de {NEAR_KM} km</b><small>Positives et négatives, mises à jour en direct.</small></span></li>
+        </ul>
+      </div>
+      <div className="screen-footer"><Button block icon="map-trifold" onClick={go}>Voir la carte</Button></div>
     </div>
   );
 }
@@ -1676,7 +1743,7 @@ function ProfileSetupScreen() {
 const AUTH_SCREENS = {
   login: LoginScreen, fc: FranceConnectScreen, "fc-loading": FranceConnectScreen, "fc-error": FranceConnectScreen, signin: SignInScreen,
   "signup-info": SignupInfoScreen, "signup-phone": SignupPhoneScreen, "signup-email": SignupEmailScreen, "signup-id": SignupIdentityScreen,
-  "id-status": IdentityStatusScreen, profile: ProfileSetupScreen,
+  "id-status": IdentityStatusScreen, profile: ProfileSetupScreen, done: SignupDoneScreen,
 };
 
 function AuthFlow() {

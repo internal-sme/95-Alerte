@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Créer un compte · Identité</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/a535f7083c9ec8a541dde5196abe3a1a">
+<link rel="stylesheet" href="/_blob/7a46598493f98dc187c0705e0b5c6d73">
 </head>
 <body>
 <x-dc>
@@ -31,8 +31,14 @@ body{margin:0}
       <div class="screen-pad">
         <div class="auth-intro">
           <h2 class="question">Vérifiez votre identité</h2>
-          <p class="auth-lead">Une seule fois. Votre document sert uniquement à la vérification : il n'est jamais affiché publiquement.</p>
+          <p class="auth-lead">Une seule fois, environ 1 minute.</p>
         </div>
+        <ul class="benefits">
+          <li><span class="bi"><span class="ph i i-seal-check" aria-hidden="true"></span></span><span>Badge « Identité vérifiée »<small>Affiché sur votre profil.</small></span></li>
+          <li><span class="bi"><span class="ph i i-megaphone" aria-hidden="true"></span></span><span>Signalements traités en priorité<small>Les services savent qu'ils viennent d'une personne réelle.</small></span></li>
+        </ul>
+        <section class="list-section">
+        <h2 class="section-label">Votre document</h2>
         <sc-for list="{{docs}}" as="d" hint-placeholder-count="3">
           <label class="radio-card">
             <input type="radio" name="id-doc" value="{{d.id}}" checked="{{d.on}}" onChange="{{d.pick}}">
@@ -41,6 +47,8 @@ body{margin:0}
             <span class="rc-dot"></span>
           </label>
         </sc-for>
+        </section>
+        <p class="privacy-note"><span class="ph i i-eye-slash" aria-hidden="true"></span><span>Votre document sert uniquement à la vérification. Il n'est jamais affiché publiquement.</span></p>
       </div>
     </div>
     <div class="screen-footer stack-footer">

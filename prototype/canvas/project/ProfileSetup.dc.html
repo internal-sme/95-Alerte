@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Votre profil</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/a535f7083c9ec8a541dde5196abe3a1a">
+<link rel="stylesheet" href="/_blob/7a46598493f98dc187c0705e0b5c6d73">
 </head>
 <body>
 <x-dc>
@@ -39,7 +39,7 @@ body{margin:0}
           </sc-for>
         </section>
         <div class="preview-author"><span class="ph i i-eye" aria-hidden="true"></span>Vous apparaîtrez comme : <b>{{name}}</b></div>
-        <p class="help-text"><span class="ph ph-sm i i-detective" aria-hidden="true"></span>Pour chaque alerte, vous pourrez aussi choisir de publier anonymement. Votre e-mail et votre téléphone ne sont jamais affichés.</p>
+        <p class="privacy-note"><span class="ph i i-detective" aria-hidden="true"></span><span>Pour chaque alerte, vous pourrez aussi choisir de publier anonymement. Votre e-mail et votre téléphone ne sont jamais affichés.</span></p>
       </div>
     </div>
     <div class="screen-footer">
@@ -64,7 +64,7 @@ class Component extends DCLogic {
       theme: s ? 't-dark' : 't-light',
       options: opts.map((o) => ({ ...o, on: this.state.display === o.id, pick: () => this.setState({ display: o.id }) })),
       name: this.state.display === 'first' ? 'Jean' : 'Jean D.',
-      l: { back: 'IdentityStatus' + s + '.dc.html', next: 'ProfilePending' + s + '.dc.html' }
+      l: { back: 'IdentityStatus' + s + '.dc.html', next: 'SignupDone' + s + '.dc.html' }
     };
   }
 }

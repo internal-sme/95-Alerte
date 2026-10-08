@@ -155,6 +155,7 @@ Toute icône seule (sans texte) porte un `aria-label`.
 | Composant | Variantes / règles |
 |---|---|
 | **Button** | Primary, Secondary (contour), Ghost, Destructive (`--error`). Hauteur 48 px. États : default, pressed, focus, disabled, loading (spinner + libellé conservé). Un seul bouton Primary par écran. Modificateurs : `btn-block` (pleine largeur, CTA du pied d'écran) et `btn-inline` (Ghost aligné sur le texte, pour une action annexe : « Renvoyer le code », « Mot de passe oublié ? »). Aucun autre style de bouton ou de lien d'action. |
+| **PrivacyNote / Benefits / Illustration95 / Recap** | Issus du benchmark onboarding. `PrivacyNote` (cadenas + texte, fond `--surface-2`) sous chaque champ sensible ; `Benefits` (icône dans un carré `--primary-soft` + titre + précision) avant une demande ; `Illustration95` (pictogramme central entouré des 4 formes de familles) pour les écrans de confirmation ; `Recap` (liste cochée : fait / en attente / info) pour l'écran de fin d'inscription. |
 | **Input / Textarea** | Label toujours visible au-dessus, aide en dessous, compteur de caractères, états focus / erreur (icône + message) / disabled. |
 | **Radio card** | Utilisée pour Positif/Négatif et Profil/Anonyme : grande carte sélectionnable, icône + titre + explication. |
 | **Chip** | Filtres (type, catégorie, période, distance) ; sélectionnée = fond plein + ✓. |

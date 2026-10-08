@@ -271,7 +271,7 @@
    "page": "p1"
   },
   "ReportGuest.dc.html": {
-   "x": 5640,
+   "x": 6110,
    "y": 0,
    "w": 390,
    "h": 844,
@@ -388,7 +388,7 @@
    "page": "p1"
   },
   "ReportGuest-dark.dc.html": {
-   "x": 5640,
+   "x": 6110,
    "y": 1200,
    "w": 390,
    "h": 844,
@@ -593,6 +593,42 @@
    "title": "Profil · sans compte (sombre)",
    "is_interactive": true,
    "page": "p1"
+  },
+  "SignupDone.dc.html": {
+   "x": 5640,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Compte prêt",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupDone-dark.dc.html": {
+   "x": 5640,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Compte prêt (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupDoneUnverified.dc.html": {
+   "x": 5170,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Compte prêt · identité non vérifiée",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupDoneUnverified-dark.dc.html": {
+   "x": 5170,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Compte prêt · identité non vérifiée (sombre)",
+   "is_interactive": true,
+   "page": "p1"
   }
  },
  "order": [
@@ -659,7 +695,11 @@
   "IdManuelle-dark.dc.html",
   "ProfilePending-dark.dc.html",
   "ProfileUnverified-dark.dc.html",
-  "ProfileGuest-dark.dc.html"
+  "ProfileGuest-dark.dc.html",
+  "SignupDone.dc.html",
+  "SignupDone-dark.dc.html",
+  "SignupDoneUnverified.dc.html",
+  "SignupDoneUnverified-dark.dc.html"
  ],
  "notes": {
   "rowLight": {
@@ -700,7 +740,7 @@
    "y": -300,
    "text": "Démarrage et connexion · clair",
    "kind": "title1",
-   "maxW": 6030,
+   "maxW": 6500,
    "page": "p1"
   },
   "p1Dark": {
@@ -708,7 +748,7 @@
    "y": 900,
    "text": "Démarrage et connexion · sombre",
    "kind": "title1",
-   "maxW": 6030,
+   "maxW": 6500,
    "page": "p1"
   },
   "p1States": {
@@ -716,7 +756,7 @@
    "y": 2100,
    "text": "États · clair",
    "kind": "title1",
-   "maxW": 6030,
+   "maxW": 6500,
    "page": "p1"
   },
   "p1StatesDark": {
@@ -724,17 +764,17 @@
    "y": 3300,
    "text": "États · sombre",
    "kind": "title1",
-   "maxW": 6030,
+   "maxW": 6500,
    "page": "p1"
   },
   "p1How": {
-   "x": 6110,
+   "x": 6580,
    "y": 0,
    "w": 340,
    "maxH": 520,
    "fill": "blue",
    "page": "p1",
-   "text": "Phase 1 · démarrage et connexion\n\nPlay sur « Démarrage » : touchez l'écran pour passer à la connexion.\n\nFranceConnect → choix d'un compte → chargement (touchez pour continuer) → carte.\nCréer un compte → nom → numéro → code SMS → e-mail → confirmation → document d'identité → statut → profil → carte. Une question par écran, bouton principal toujours en bas.\nContinuer sans compte → carte.\n\nLes états (erreurs, résultats de vérification, profils) sont des planches à part. Dans la version React, le mode démo les déclenche : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+   "text": "Phase 1 · démarrage et connexion\n\nPlay sur « Démarrage » : touchez l'écran pour passer à la connexion.\n\nFranceConnect → choix d'un compte → chargement (touchez pour continuer) → carte.\nCréer un compte → nom → numéro → code SMS → e-mail → confirmation → document d'identité → statut → profil → compte prêt → carte. Une question par écran, bouton principal toujours en bas.\nContinuer sans compte → carte.\n\nLes états (erreurs, résultats de vérification, profils) sont des planches à part. Dans la version React, le mode démo les déclenche : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
   }
  },
  "designSystems": []

@@ -30,7 +30,7 @@ ICONS = [
     # Utilitaires
     "warning", "check", "check-circle", "x", "caret-right", "caret-left", "caret-down",
     "arrow-right", "camera", "image", "pencil-simple", "eye", "eye-slash", "lock-simple",
-    "gear", "question", "sign-out", "sign-in", "star", "navigation-arrow", "clock", "phone",
+    "gear", "question", "sign-out", "sign-in", "hand-waving", "star", "navigation-arrow", "clock", "phone",
     "envelope", "identification-card", "buildings", "paper-plane-tilt", "users-three",
     "arrows-clockwise", "house", "sun", "moon", "text-aa", "circle-half", "vibrate",
     "trash-simple", "copy",

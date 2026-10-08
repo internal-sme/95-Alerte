@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Créer un compte · E-mail</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/a535f7083c9ec8a541dde5196abe3a1a">
+<link rel="stylesheet" href="/_blob/7a46598493f98dc187c0705e0b5c6d73">
 </head>
 <body>
 <x-dc>
@@ -31,7 +31,7 @@ body{margin:0}
       <div class="screen-pad">
         <div class="auth-intro">
           <h2 class="question">Votre adresse e-mail</h2>
-          <p class="auth-lead">Elle sert à vous informer du suivi de vos signalements. Elle n'est jamais affichée.</p>
+          <p class="auth-lead">Pour vous informer du suivi de vos signalements.</p>
         </div>
         <sc-if value="{{error}}" hint-placeholder-val="{{false}}">
           <div class="field">
@@ -43,6 +43,7 @@ body{margin:0}
         <sc-if value="{{ok}}" hint-placeholder-val="{{true}}">
           <div class="field"><label for="su-email">E-mail</label><input id="su-email" class="input" type="email" autocomplete="email" value="jean.dupont@exemple.fr"></div>
         </sc-if>
+        <p class="privacy-note"><span class="ph i i-lock-simple" aria-hidden="true"></span><span>Votre adresse n'est jamais affichée ni partagée.</span></p>
       </div>
     </div>
     <div class="screen-footer stack-footer">
