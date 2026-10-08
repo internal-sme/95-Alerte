@@ -34,7 +34,7 @@ SCREEN = r"""
 :where(.a95) a{text-decoration:none;color:inherit}
 .screen95{position:relative;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
 .scroll95{flex:1;min-height:0;overflow-y:auto}
-.screen-header{display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);border-bottom:1px solid var(--border);flex:none}
+.screen-header{display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);flex:none}
 .screen-header h1{margin:0;text-align:center;font:600 var(--fs-h2)/var(--lh-h2) var(--font)}
 .screen-header .icon-btn{box-shadow:none;background:transparent}
 .placeholder-phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.2 var(--font);justify-self:start}

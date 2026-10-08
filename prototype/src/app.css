@@ -37,7 +37,7 @@ button{font-family:inherit}
 @keyframes slide-in{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}
 @keyframes rise-in{from{transform:translateY(32px);opacity:.4}to{transform:none;opacity:1}}
 
-.screen-header{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);border-bottom:1px solid var(--border)}
+.screen-header{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg)}
 .screen-header h1{margin:0;text-align:center;font:600 var(--fs-h2)/var(--lh-h2) var(--font);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .screen-header .icon-btn{box-shadow:none;background:transparent}
 
