@@ -62,7 +62,7 @@ Prototype (aucun build) :
 # servir localement pour le tester
 npx serve prototype      # ou : python3 -m http.server -d prototype 8080
 ```
-Les commandes d'installation, de build, de lint et de test de l'application de production seront définies avec la stack (ARCHITECTURE §7).
+Les commandes de l'application de production (pnpm + Turborepo) seront fixées à l'initialisation du monorepo ; stack proposée dans ARCHITECTURE §7.
 
 ## Boundaries — demander avant de
 
