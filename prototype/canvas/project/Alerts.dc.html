@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Alertes</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 scroll95">
+    <div class="screen-title"><h1>Alertes</h1><p>Aperçu des données fictives · la liste complète arrive en phase 4</p></div>
+    <div class="screen-pad">
+      <div class="seg" role="group" aria-label="Type d'alertes">
+        <button type="button" aria-pressed="{{f.all}}" onClick="{{showAll}}">Toutes</button>
+        <button type="button" aria-pressed="{{f.positive}}" onClick="{{showPositive}}">Positives</button>
+        <button type="button" aria-pressed="{{f.negative}}" onClick="{{showNegative}}">Négatives</button>
+      </div>
+      <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+        <div class="alert-card {{c.famCls}}">
+          <div class="ac-top">
+            <span class="badge badge-type"><span class="ph i {{c.iconCls}}" aria-hidden="true"></span>{{c.cat}}</span>
+            <span class="badge badge-status {{c.stCls}}"><span class="ph i {{c.stIcon}}" aria-hidden="true"></span>{{c.stLabel}}</span>
+            <sc-if value="{{c.hasExp}}" hint-placeholder-val="{{true}}"><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>{{c.exp}}</span></sc-if>
+          </div>
+          <h4>{{c.title}}</h4>
+          <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>{{c.meta}}</div>
+          <sc-if value="{{c.photo}}" hint-placeholder-val="{{false}}"><div class="photo" aria-hidden="true"><span class="ph i i-image"></span></div></sc-if>
+          <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>{{c.up}}</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>{{c.down}}</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>{{c.com}}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="{{l.map}}"><span class="ph i i-map-trifold" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="{{l.alerts}}" aria-current="page"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="{{l.report}}" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="{{l.activity}}"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="{{l.profile}}"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+var ALERTS = [
+  ['Incendie', 'incident', 'fire', 'negative', 'Fumée noire au-dessus de la gare', 'Pontoise · 600 m · il y a 9 min', 'sent', '23 h', 11, 0, 3, false],
+  ['Incendie', 'incident', 'fire', 'negative', 'Fumée importante visible rue Carnot', 'Pontoise · 400 m · il y a 12 min', 'sent', '23 h', 24, 3, 8, true],
+  ['Accident', 'incident', 'car', 'negative', 'Scooter renversé, conducteur pris en charge', 'Argenteuil · 15,9 km · il y a 18 min', 'sent', '23 h', 8, 0, 2, false],
+  ['Sécurité', 'incident', 'shield-warning', 'negative', 'Câble électrique arraché au sol', 'Taverny · 9,0 km · il y a 25 min', 'sent', '23 h', 17, 0, 3, true],
+  ['Accident', 'incident', 'car', 'negative', 'Collision entre deux véhicules au rond-point', 'Cergy · 3,1 km · il y a 35 min', 'sent', '23 h', 15, 1, 4, true],
+  ['Autre problème', 'vigilance', 'dots-three', 'negative', 'Chien errant blessé près du canal', "Saint-Ouen-l'Aumône · 1,2 km · il y a 45 min", 'sent', '23 h', 10, 0, 4, true],
+  ['Arbre tombé', 'vigilance', 'tree', 'negative', 'Arbre tombé sur la chaussée', 'Montmorency · 16,4 km · il y a 50 min', 'progress', '23 h', 19, 0, 5, true],
+  ['Action environnementale', 'positive', 'leaf', 'positive', 'Nettoyage participatif du parc François-Mitterrand', 'Cergy · 3,4 km · il y a 1 h', 'sent', '23 h', 43, 2, 12, true],
+  ['Inondation', 'incident', 'drop', 'negative', "Rue inondée après l'orage, voitures bloquées", 'Sarcelles · 20,6 km · il y a 1 h', 'sent', '22 h', 27, 2, 9, true],
+  ['Événement', 'positive', 'calendar-star', 'positive', 'Fête de quartier place des Arts', 'Villiers-le-Bel · 21,1 km · il y a 1 h', 'sent', '22 h', 29, 0, 5, true],
+  ['Voirie', 'vigilance', 'traffic-cone', 'negative', 'Nid-de-poule dangereux sur la chaussée', "Saint-Ouen-l'Aumône · 1,1 km · il y a 1 h", 'progress', '22 h', 22, 0, 3, true],
+  ['Éclairage', 'vigilance', 'lightbulb', 'negative', 'Trois lampadaires éteints avenue de la Gare', 'Ermont · 11,2 km · il y a 2 h', 'done', '21 h', 12, 0, 2, false],
+  ['Événement', 'positive', 'calendar-star', 'positive', 'Inauguration de la nouvelle aire de jeux', 'Roissy-en-France · 30,1 km · il y a 2 h', 'sent', '21 h', 33, 0, 4, true],
+  ['Culture', 'positive', 'mask-happy', 'positive', 'Concert gratuit au théâtre de verdure ce soir', "L'Isle-Adam · 13,6 km · il y a 3 h", 'sent', '21 h', 38, 1, 6, true],
+  ['Information utile', 'info', 'megaphone', 'positive', 'Distribution gratuite de composteurs samedi matin', 'Osny · 2,9 km · il y a 5 h', 'sent', '18 h', 18, 0, 2, false],
+  ['Sport', 'positive', 'soccer-ball', 'positive', 'Tournoi de football inter-quartiers samedi', 'Garges-lès-Gonesse · 22,6 km · il y a 6 h', 'sent', '17 h', 25, 0, 4, false],
+  ['Action environnementale', 'positive', 'leaf', 'positive', 'Plantation de 200 arbres au parc du Château', 'Franconville · 9,3 km · il y a 8 h', 'sent', '15 h', 51, 1, 10, true],
+  ['Solidarité', 'positive', 'hand-heart', 'positive', 'Collecte de vêtements chauds au centre social', 'Goussainville · 26,2 km · il y a 11 h', 'sent', '12 h', 22, 0, 3, false]
+];
+var STATUS = {
+  sent: ['st-sent', 'i-paper-plane-tilt', 'Transmise'],
+  progress: ['st-progress', 'i-arrows-clockwise', 'En traitement'],
+  done: ['st-done', 'i-check-circle-fill', 'Traitée']
+};
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'all' };
+  }
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const filter = this.state.filter;
+    const cards = ALERTS
+      .filter((a) => filter === 'all' || a[3] === filter)
+      .slice(0, 12)
+      .map((a) => ({
+        cat: a[0], famCls: 'fam-' + a[1], iconCls: 'i-' + a[2] + '-fill', title: a[4], meta: a[5],
+        stCls: STATUS[a[6]][0], stIcon: STATUS[a[6]][1], stLabel: STATUS[a[6]][2],
+        hasExp: true, exp: a[7], up: a[8], down: a[9], com: a[10], photo: a[11]
+      }));
+    return {
+      theme: s ? 't-dark' : 't-light',
+      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
+      f: { all: filter === 'all', positive: filter === 'positive', negative: filter === 'negative' },
+      showAll: () => this.setState({ filter: 'all' }),
+      showPositive: () => this.setState({ filter: 'positive' }),
+      showNegative: () => this.setState({ filter: 'negative' }),
+      cards: cards
+    };
+  }
+}
+</script>
+</body>
+</html>

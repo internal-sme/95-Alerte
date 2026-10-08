@@ -337,3 +337,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-08 | — | Création du plan de tâches |
 | 2026-10-08 | — | Benchmark Mobbin : 10 principes et décisions UX reportés dans chaque phase ; icônes Phosphor intégrées en sprite SVG (CSS jsDelivr bloqué dans les artefacts) ; page Design System `docs/design-system/index.html` créée |
 | 2026-10-08 | 0 | Phase 0 terminée : `prototype/src/` (app.jsx, app.css, sprite) assemblé en `prototype/index.html` ; store, routeur à pile, BottomSheet 3 crans (glisser + clavier), modale, toasts, composants de base et 95 Alerte, écrans d'onglets provisoires, bibliothèque de composants, mode démo. Babel chargé depuis jsDelivr (`@babel/standalone@7.26.4`). |
+| 2026-10-08 | 0 | Canevas de preview (type Design) : 15 planches liées (clair, sombre, états et composants), bouton Play = prototype cliquable. Sources dans `prototype/canvas/`, CSS par `tools/build_canvas_css.py`. |

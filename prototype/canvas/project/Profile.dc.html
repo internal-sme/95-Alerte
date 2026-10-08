@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Profil</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 scroll95">
+    <div class="screen-title"><h1>Profil</h1><p>Jean D. · <span style="color: var(--alert-positive)">✓ Identité vérifiée</span></p></div>
+    <div class="screen-pad">
+      <p class="section-label">Affichage</p>
+      <div class="seg" role="group" aria-label="Thème">
+        <button type="button" aria-pressed="{{t.light}}" onClick="{{setLight}}"><span class="ph ph-sm i i-sun" aria-hidden="true"></span>Clair</button>
+        <button type="button" aria-pressed="{{t.system}}" onClick="{{setSystem}}"><span class="ph ph-sm i i-circle-half" aria-hidden="true"></span>Système</button>
+        <button type="button" aria-pressed="{{t.dark}}" onClick="{{setDark}}"><span class="ph ph-sm i i-moon" aria-hidden="true"></span>Sombre</button>
+      </div>
+      <div class="seg" role="group" aria-label="Taille du texte">
+        <sc-for list="{{scales}}" as="sc" hint-placeholder-count="4">
+          <button type="button" aria-pressed="{{sc.on}}" onClick="{{sc.pick}}">{{sc.label}}</button>
+        </sc-for>
+      </div>
+      <div class="list">
+        <div class="list-item" style="display: block; padding: 0 var(--s-4)">
+          <label class="switch" for="pref-contrast">Contraste élevé<input id="pref-contrast" type="checkbox" checked="{{contrast}}" onChange="{{toggleContrast}}"><span></span></label>
+        </div>
+        <div class="list-item" style="display: block; padding: 0 var(--s-4)">
+          <label class="switch" for="pref-motion">Réduire les animations<input id="pref-motion" type="checkbox" checked="{{motion}}" onChange="{{toggleMotion}}"><span></span></label>
+        </div>
+      </div>
+      <p class="section-label">Prototype</p>
+      <div class="list">
+        <a class="list-item" href="Components.dc.html"><span class="ph i i-squares-four" aria-hidden="true"></span><span>Bibliothèque de composants</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></a>
+        <div class="list-item"><span class="ph i i-gear" aria-hidden="true"></span><span>Paramètres complets</span><span class="val">Phase 9</span></div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="{{l.map}}"><span class="ph i i-map-trifold" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="{{l.alerts}}"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="{{l.report}}" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="{{l.activity}}"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="{{l.profile}}" aria-current="page"><span class="ph i i-user-circle-fill" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { theme: null, scale: 100, contrast: false, motion: false };
+  }
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const chosen = this.state.theme || 'system';
+    const dark = chosen === 'dark' || (chosen === 'system' && s !== '');
+    return {
+      theme: (dark ? 't-dark' : 't-light') + (this.state.contrast ? ' t-contrast' : ''),
+      t: { light: chosen === 'light', system: chosen === 'system', dark: chosen === 'dark' },
+      setLight: () => this.setState({ theme: 'light' }),
+      setSystem: () => this.setState({ theme: 'system' }),
+      setDark: () => this.setState({ theme: 'dark' }),
+      scales: [100, 130, 160, 200].map((v) => ({ label: v + ' %', on: this.state.scale === v, pick: () => this.setState({ scale: v }) })),
+      contrast: this.state.contrast,
+      motion: this.state.motion,
+      toggleContrast: () => this.setState({ contrast: !this.state.contrast }),
+      toggleMotion: () => this.setState({ motion: !this.state.motion }),
+      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' }
+    };
+  }
+}
+</script>
+</body>
+</html>

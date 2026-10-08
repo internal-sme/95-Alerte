@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Accueil · Carte</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/800e00f5ed6099e765496e18016ecf99">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95">
+    <div class="map-placeholder"></div>
+    <div class="map-top">
+      <button class="search" type="button"><span class="ph i i-magnifying-glass" aria-hidden="true"></span>Rechercher une ville, une rue…</button>
+      <button class="icon-btn" type="button" aria-label="Notifications, 2 non lues"><span class="ph i i-bell" aria-hidden="true"></span><span class="badge-count" aria-hidden="true">2</span></button>
+    </div>
+    <section class="bs" style="height: {{sheetH}}" aria-label="25 alertes autour de vous">
+      <button class="bs-handle" type="button" aria-label="Agrandir ou réduire le panneau" onClick="{{toggleSheet}}"><span></span></button>
+      <div class="bs-head"><h2>25 alertes autour de vous</h2></div>
+      <div class="bs-body">
+        <p class="demo-note">8 positives · 17 négatives · données fictives</p>
+        <span class="placeholder-phase"><span class="ph ph-sm i i-path" aria-hidden="true"></span>Arrive en phase 3</span>
+        <p style="margin: 0; color: var(--text-muted); font-size: var(--fs-sm); line-height: var(--lh-sm)">La carte interactive (marqueurs, regroupements, ma position) remplacera ce fond. Le panneau, lui, est déjà le composant définitif : touchez la poignée.</p>
+        <div class="alert-card fam-incident">
+          <div class="ac-top"><span class="badge badge-type"><span class="ph i i-fire-fill" aria-hidden="true"></span>Incendie</span><span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>23 h</span></div>
+          <h4>Fumée importante visible rue Carnot</h4>
+          <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Pontoise · 400 m · il y a 12 min</div>
+          <div class="photo" aria-hidden="true"><span class="ph i i-image"></span></div>
+          <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>24</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>3</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>8</span></div>
+        </div>
+        <div class="alert-card fam-incident">
+          <div class="ac-top"><span class="badge badge-type"><span class="ph i i-car-fill" aria-hidden="true"></span>Accident</span><span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>23 h</span></div>
+          <h4>Collision entre deux véhicules au rond-point</h4>
+          <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Cergy · 3,1 km · il y a 35 min</div>
+          <div class="photo" aria-hidden="true"><span class="ph i i-image"></span></div>
+          <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>15</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>1</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>4</span></div>
+        </div>
+        <div class="alert-card fam-vigilance">
+          <div class="ac-top"><span class="badge badge-type"><span class="ph i i-trash-fill" aria-hidden="true"></span>Propreté</span><span class="badge badge-status st-done"><span class="ph i i-check-circle-fill" aria-hidden="true"></span>Traitée</span><span class="exp"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>19 h</span></div>
+          <h4>Déchets abandonnés au pied des conteneurs</h4>
+          <div class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span>Argenteuil · 15,8 km · il y a 5 h</div>
+          <div class="stats"><span><span class="ph ph-sm i i-arrow-fat-up" aria-hidden="true"></span>31</span><span><span class="ph ph-sm i i-arrow-fat-down" aria-hidden="true"></span>1</span><span><span class="ph ph-sm i i-chat-circle" aria-hidden="true"></span>7</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="{{l.map}}" aria-current="page"><span class="ph i i-map-trifold-fill" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="{{l.alerts}}"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="{{l.report}}" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="{{l.activity}}"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="{{l.profile}}"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { half: false };
+  }
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    return {
+      theme: s ? 't-dark' : 't-light',
+      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
+      sheetH: this.state.half ? '440px' : '132px',
+      toggleSheet: () => this.setState({ half: !this.state.half })
+    };
+  }
+}
+</script>
+</body>
+</html>

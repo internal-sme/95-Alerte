@@ -1,0 +1,36 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-10-08T18:34:56Z"},
+  "title": "95 Alerte — Prototype mobile",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "Accueil · Carte", "is_interactive": true},
+    "Alerts.dc.html": {"x": 470, "y": 0, "w": 390, "h": 844, "title": "Alertes", "is_interactive": true},
+    "Report.dc.html": {"x": 940, "y": 0, "w": 390, "h": 844, "title": "Signaler", "is_interactive": true},
+    "Activity.dc.html": {"x": 1410, "y": 0, "w": 390, "h": 844, "title": "Activité", "is_interactive": true},
+    "Profile.dc.html": {"x": 1880, "y": 0, "w": 390, "h": 844, "title": "Profil", "is_interactive": true},
+    "Main-dark.dc.html": {"x": 0, "y": 1200, "w": 390, "h": 844, "title": "Accueil · Carte (sombre)", "is_interactive": true},
+    "Alerts-dark.dc.html": {"x": 470, "y": 1200, "w": 390, "h": 844, "title": "Alertes (sombre)", "is_interactive": true},
+    "Report-dark.dc.html": {"x": 940, "y": 1200, "w": 390, "h": 844, "title": "Signaler (sombre)", "is_interactive": true},
+    "Activity-dark.dc.html": {"x": 1410, "y": 1200, "w": 390, "h": 844, "title": "Activité (sombre)", "is_interactive": true},
+    "Profile-dark.dc.html": {"x": 1880, "y": 1200, "w": 390, "h": 844, "title": "Profil (sombre)", "is_interactive": true},
+    "Offline.dc.html": {"x": 0, "y": 2400, "w": 390, "h": 844, "title": "État · Hors connexion", "is_interactive": true},
+    "AlertsEmpty.dc.html": {"x": 470, "y": 2400, "w": 390, "h": 844, "title": "État · Zone sans alerte", "is_interactive": true},
+    "Sheet.dc.html": {"x": 940, "y": 2400, "w": 390, "h": 844, "title": "Bottom sheet + toast", "is_interactive": true},
+    "Modal.dc.html": {"x": 1410, "y": 2400, "w": 390, "h": 844, "title": "Confirmation de suppression", "is_interactive": true},
+    "Components.dc.html": {"x": 1880, "y": 2400, "w": 390, "h": 2760, "title": "Bibliothèque de composants", "is_interactive": true}
+  },
+  "order": [
+    "Main.dc.html", "Alerts.dc.html", "Report.dc.html", "Activity.dc.html", "Profile.dc.html",
+    "Main-dark.dc.html", "Alerts-dark.dc.html", "Report-dark.dc.html", "Activity-dark.dc.html", "Profile-dark.dc.html",
+    "Offline.dc.html", "AlertsEmpty.dc.html", "Sheet.dc.html", "Modal.dc.html", "Components.dc.html"
+  ],
+  "notes": {
+    "rowLight": {"x": 0, "y": -300, "text": "95 Alerte · clair", "kind": "title1", "maxW": 2270},
+    "rowDark": {"x": 0, "y": 900, "text": "95 Alerte · sombre", "kind": "title1", "maxW": 2270},
+    "rowStates": {"x": 0, "y": 2100, "text": "États et composants", "kind": "title1", "maxW": 2270},
+    "howTo": {"x": 2390, "y": 0, "w": 340, "maxH": 360, "fill": "blue", "text": "Prototype · phase 0 (fondations)\n\nAppuyez sur Play sur un écran pour lancer le prototype cliquable : la barre d'onglets, le + Signaler, le panneau de la carte et les réglages du Profil fonctionnent.\n\nVersion React complète (mode démo, vote, horloge simulée) : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw\n\nDonnées fictives, communes réelles du Val-d'Oise."}
+  },
+  "designSystems": []
+}
