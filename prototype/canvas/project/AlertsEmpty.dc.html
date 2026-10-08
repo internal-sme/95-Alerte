@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>État · Zone sans alerte</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/21dbae15c4eee1a6147c46d5ae003bdf">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 t-light" style="width: 390px; height: 844px">
+  <div class="screen95 scroll95">
+    <div class="screen-title row">
+      <div><h1>Alertes</h1><p>0 alerte active dans cette zone</p></div>
+      <button class="icon-btn flat" type="button" aria-label="Filtres"><span class="ph i i-sliders-horizontal" aria-hidden="true"></span></button>
+    </div>
+    <div class="screen-pad">
+      <div class="seg is-block" role="group" aria-label="Type d'alertes">
+        <button type="button" aria-pressed="true">Toutes</button>
+        <button type="button" aria-pressed="false">Positives</button>
+        <button type="button" aria-pressed="false">Négatives</button>
+      </div>
+      <div class="empty">
+        <span class="empty-ill"><span class="ph i i-map-trifold" aria-hidden="true" style="width: 32px; height: 32px"></span></span>
+        <h4>Aucune alerte dans cette zone.</h4>
+        <p>Revenez plus tard ou élargissez votre zone de recherche.</p>
+        <a class="btn btn-secondary" href="Alerts.dc.html">Élargir la zone</a>
+      </div>
+    </div>
+  </div>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="Main.dc.html"><span class="ph i i-map-trifold" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="Alerts.dc.html" aria-current="page"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="Report.dc.html" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="Activity.dc.html"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="Profile.dc.html"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
