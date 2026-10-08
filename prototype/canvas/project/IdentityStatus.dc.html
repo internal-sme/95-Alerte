@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Statut de la vérification d'identité</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/e6ebe91302b2f34527775e92069e88d9">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 auth">
+    <header class="screen-header">
+      <a class="icon-btn" href="{{l.back}}" aria-label="Retour"><span class="ph i i-caret-left" aria-hidden="true"></span></a>
+      <h1>Créer un compte</h1>
+      <span></span>
+    </header>
+    <div class="auth-stepper">
+      <div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="4" aria-label="Étape 4 sur 4">
+        <div class="lbl"><span>Étape 4 sur 4</span><span>Identité</span></div>
+        <div class="track"><i style="width: 100%"></i></div>
+      </div>
+    </div>
+    <div class="scroll95">
+      <div class="screen-pad">
+        <div class="auth-center compact" role="status">
+          <span class="status-hero {{v.toneClass}}"><span class="ph i {{v.icon}}" aria-hidden="true"></span></span>
+          <h2>{{v.title}}</h2>
+          <p>{{v.text}}</p>
+        </div>
+        <div class="card">
+          <ol class="timeline">
+            <sc-for list="{{steps}}" as="st" hint-placeholder-count="3">
+              <li class="{{st.cls}}">
+                <span class="dot">
+                  <sc-if value="{{st.done}}" hint-placeholder-val="{{false}}"><span class="ph i i-check" aria-hidden="true"></span></sc-if>
+                  <sc-if value="{{st.current}}" hint-placeholder-val="{{false}}"><span class="ph i i-arrows-clockwise" aria-hidden="true"></span></sc-if>
+                </span>
+                <span><b>{{st.label}}</b><sc-if value="{{st.hasDetail}}" hint-placeholder-val="{{false}}"><small>{{st.detail}}</small></sc-if></span>
+              </li>
+            </sc-for>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="screen-footer stack-footer">
+      <sc-if value="{{v.failed}}" hint-placeholder-val="{{false}}">
+        <a class="btn btn-primary btn-block" href="{{l.retry}}"><span class="ph i i-camera" aria-hidden="true"></span>{{v.retryLabel}}</a>
+        <a class="btn btn-ghost btn-block" href="{{l.secondary}}">{{v.secondaryLabel}}</a>
+      </sc-if>
+      <sc-if value="{{v.ok}}" hint-placeholder-val="{{true}}">
+        <a class="btn btn-primary btn-block" href="{{l.next}}">Continuer</a>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"result":{"editor":"enum","options":["en_cours","reussie","echouee","refusee","manuelle"],"default":"en_cours"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const result = this.props.result || 'en_cours';
+    const VIEWS = {
+      en_cours: { tone: 'vigilance', icon: 'i-timer', title: 'Vérification en cours', text: 'Généralement moins de 24 h. Vous pouvez utiliser 95 Alerte en attendant : nous vous préviendrons du résultat.', step: 1 },
+      reussie: { tone: 'positive', icon: 'i-seal-check-fill', title: 'Identité vérifiée', text: 'Merci. Votre compte est vérifié : vos signalements seront traités en priorité par les services.', step: 3 },
+      echouee: { tone: 'error', icon: 'i-warning', title: 'La vérification a échoué', text: "Le service n'a pas pu lire votre document. Faites une nouvelle tentative ou demandez une vérification manuelle.", step: 1, failed: true },
+      refusee: { tone: 'error', icon: 'i-x', title: 'Document refusé', text: "La photo est floue ou le document a expiré. Reprenez une photo nette d'un document en cours de validité.", step: 1, failed: true },
+      manuelle: { tone: 'info', icon: 'i-user-circle', title: 'Vérification manuelle', text: 'Un agent examine votre dossier. Délai indicatif : 48 h. Vous serez notifié du résultat.', step: 1 }
+    };
+    const v = VIEWS[result] || VIEWS.en_cours;
+    const raw = [
+      { label: 'Document envoyé', detail: "Carte d'identité" },
+      { label: v.failed ? 'Vérification interrompue' : result === 'reussie' ? 'Vérification terminée' : 'Vérification',
+        detail: result === 'en_cours' ? 'Délai indicatif : moins de 24 h' : result === 'manuelle' ? 'Délai indicatif : 48 h' : '' },
+      { label: 'Identité vérifiée', detail: '', final: true }
+    ];
+    const steps = raw.map((st, i) => {
+      const done = i < v.step || (i === v.step && st.final === true);
+      const current = i === v.step && st.final !== true;
+      return { ...st, done, current, hasDetail: st.detail !== '', cls: done ? 'done' : current ? 'current' : '' };
+    });
+    return {
+      theme: s ? 't-dark' : 't-light',
+      v: {
+        ...v,
+        toneClass: 'tone-' + v.tone,
+        failed: v.failed === true,
+        ok: v.failed !== true,
+        retryLabel: result === 'refusee' ? 'Reprendre une photo' : 'Nouvelle tentative',
+        secondaryLabel: result === 'echouee' ? 'Demander une vérification manuelle' : 'Continuer sans vérification'
+      },
+      steps,
+      l: {
+        back: 'SignupIdentity' + s + '.dc.html',
+        retry: 'SignupIdentity' + s + '.dc.html',
+        secondary: result === 'echouee' ? 'IdManuelle' + s + '.dc.html' : 'ProfileSetup' + s + '.dc.html',
+        next: 'ProfileSetup' + s + '.dc.html'
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

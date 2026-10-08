@@ -1,37 +1,701 @@
 {
-  "v": 3,
-  "createdOnFiles": {"v": 1, "at": "2026-10-08T18:34:56Z"},
-  "title": "95 Alerte — Prototype mobile",
-  "launch": {"view": "canvas"},
-  "pages": [],
-  "boards": {
-    "Main.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "Accueil · Carte", "is_interactive": true},
-    "Alerts.dc.html": {"x": 470, "y": 0, "w": 390, "h": 844, "title": "Alertes", "is_interactive": true},
-    "Report.dc.html": {"x": 940, "y": 0, "w": 390, "h": 844, "title": "Signaler", "is_interactive": true},
-    "Activity.dc.html": {"x": 1410, "y": 0, "w": 390, "h": 844, "title": "Activité", "is_interactive": true},
-    "Profile.dc.html": {"x": 1880, "y": 0, "w": 390, "h": 844, "title": "Profil", "is_interactive": true},
-    "Main-dark.dc.html": {"x": 0, "y": 1200, "w": 390, "h": 844, "title": "Accueil · Carte (sombre)", "is_interactive": true},
-    "Alerts-dark.dc.html": {"x": 470, "y": 1200, "w": 390, "h": 844, "title": "Alertes (sombre)", "is_interactive": true},
-    "Report-dark.dc.html": {"x": 940, "y": 1200, "w": 390, "h": 844, "title": "Signaler (sombre)", "is_interactive": true},
-    "Activity-dark.dc.html": {"x": 1410, "y": 1200, "w": 390, "h": 844, "title": "Activité (sombre)", "is_interactive": true},
-    "Profile-dark.dc.html": {"x": 1880, "y": 1200, "w": 390, "h": 844, "title": "Profil (sombre)", "is_interactive": true},
-    "Offline.dc.html": {"x": 0, "y": 2400, "w": 390, "h": 844, "title": "État · Hors connexion", "is_interactive": true},
-    "AlertsEmpty.dc.html": {"x": 470, "y": 2400, "w": 390, "h": 844, "title": "État · Zone sans alerte", "is_interactive": true},
-    "Sheet.dc.html": {"x": 940, "y": 2400, "w": 390, "h": 844, "title": "Bottom sheet + toast", "is_interactive": true},
-    "Modal.dc.html": {"x": 1410, "y": 2400, "w": 390, "h": 844, "title": "Confirmation de suppression", "is_interactive": true},
-    "Components.dc.html": {"x": 1880, "y": 2400, "w": 390, "h": 2760, "title": "Bibliothèque de composants", "is_interactive": true},
-    "AlertCard.dc.html": {"x": 2350, "y": 2400, "w": 358, "h": 330, "title": "Composant · Alert Card"}
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-08T18:34:56Z"
+ },
+ "title": "95 Alerte — Prototype mobile",
+ "launch": {
+  "view": "canvas"
+ },
+ "pages": [
+  {
+   "id": "p0",
+   "name": "Phase 0 · Fondations"
   },
-  "order": [
-    "Main.dc.html", "Alerts.dc.html", "Report.dc.html", "Activity.dc.html", "Profile.dc.html",
-    "Main-dark.dc.html", "Alerts-dark.dc.html", "Report-dark.dc.html", "Activity-dark.dc.html", "Profile-dark.dc.html",
-    "Offline.dc.html", "AlertsEmpty.dc.html", "Sheet.dc.html", "Modal.dc.html", "Components.dc.html", "AlertCard.dc.html"
-  ],
-  "notes": {
-    "rowLight": {"x": 0, "y": -300, "text": "95 Alerte · clair", "kind": "title1", "maxW": 2270},
-    "rowDark": {"x": 0, "y": 900, "text": "95 Alerte · sombre", "kind": "title1", "maxW": 2270},
-    "rowStates": {"x": 0, "y": 2100, "text": "États et composants", "kind": "title1", "maxW": 2708},
-    "howTo": {"x": 2390, "y": 0, "w": 340, "maxH": 420, "fill": "blue", "text": "Prototype · refonte v2 (patterns du benchmark)\n\nAppuyez sur Play sur un écran pour lancer le prototype cliquable. Sur la carte : touchez un marqueur pour l'aperçu de l'alerte, la poignée pour ouvrir la liste, les filtres Toutes / Positives / Négatives agissent sur la carte et la liste.\n\nVersion React complète (mode démo, vote, horloge simulée) : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw\n\nDonnées fictives, communes réelles du Val-d'Oise."}
+  {
+   "id": "p1",
+   "name": "Phase 1 · Démarrage et connexion"
+  }
+ ],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Accueil · Carte",
+   "is_interactive": true,
+   "page": "p0"
   },
-  "designSystems": []
+  "Alerts.dc.html": {
+   "x": 470,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Alertes",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Report.dc.html": {
+   "x": 940,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Signaler",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Activity.dc.html": {
+   "x": 1410,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Activité",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Profile.dc.html": {
+   "x": 1880,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Profil",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Main-dark.dc.html": {
+   "x": 0,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Accueil · Carte (sombre)",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Alerts-dark.dc.html": {
+   "x": 470,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Alertes (sombre)",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Report-dark.dc.html": {
+   "x": 940,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Signaler (sombre)",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Activity-dark.dc.html": {
+   "x": 1410,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Activité (sombre)",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Profile-dark.dc.html": {
+   "x": 1880,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Profil (sombre)",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Offline.dc.html": {
+   "x": 0,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "État · Hors connexion",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "AlertsEmpty.dc.html": {
+   "x": 470,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "État · Zone sans alerte",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Sheet.dc.html": {
+   "x": 940,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Bottom sheet + toast",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Modal.dc.html": {
+   "x": 1410,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Confirmation de suppression",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "Components.dc.html": {
+   "x": 1880,
+   "y": 2400,
+   "w": 390,
+   "h": 2760,
+   "title": "Bibliothèque de composants",
+   "is_interactive": true,
+   "page": "p0"
+  },
+  "AlertCard.dc.html": {
+   "x": 2350,
+   "y": 2400,
+   "w": 358,
+   "h": 330,
+   "title": "Composant · Alert Card",
+   "page": "p0"
+  },
+  "Splash.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Démarrage",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "Login.dc.html": {
+   "x": 470,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Connexion",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignIn.dc.html": {
+   "x": 940,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Se connecter",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "FranceConnect.dc.html": {
+   "x": 1410,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "FranceConnect",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupInfo.dc.html": {
+   "x": 1880,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 1 Informations",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupPhone.dc.html": {
+   "x": 2350,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 2 Téléphone",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupEmail.dc.html": {
+   "x": 2820,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 3 E-mail",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupIdentity.dc.html": {
+   "x": 3290,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 4 Identité",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdentityStatus.dc.html": {
+   "x": 3760,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · en cours",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfileSetup.dc.html": {
+   "x": 4230,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Votre profil",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ReportGuest.dc.html": {
+   "x": 4700,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Signaler · sans compte",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "Splash-dark.dc.html": {
+   "x": 0,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Démarrage (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "Login-dark.dc.html": {
+   "x": 470,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Connexion (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignIn-dark.dc.html": {
+   "x": 940,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Se connecter (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "FranceConnect-dark.dc.html": {
+   "x": 1410,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "FranceConnect (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupInfo-dark.dc.html": {
+   "x": 1880,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 1 Informations (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupPhone-dark.dc.html": {
+   "x": 2350,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 2 Téléphone (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupEmail-dark.dc.html": {
+   "x": 2820,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 3 E-mail (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupIdentity-dark.dc.html": {
+   "x": 3290,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · 4 Identité (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdentityStatus-dark.dc.html": {
+   "x": 3760,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · en cours (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfileSetup-dark.dc.html": {
+   "x": 4230,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Votre profil (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ReportGuest-dark.dc.html": {
+   "x": 4700,
+   "y": 1200,
+   "w": 390,
+   "h": 844,
+   "title": "Signaler · sans compte (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "FcLoading.dc.html": {
+   "x": 0,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "FranceConnect · chargement",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "FcError.dc.html": {
+   "x": 470,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "FranceConnect · erreur",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupInfoError.dc.html": {
+   "x": 940,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · e-mail déjà utilisé",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "OtpError.dc.html": {
+   "x": 1410,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · code incorrect",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdReussie.dc.html": {
+   "x": 1880,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · vérifiée",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdEchouee.dc.html": {
+   "x": 2350,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · échec",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdRefusee.dc.html": {
+   "x": 2820,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · document refusé",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdManuelle.dc.html": {
+   "x": 3290,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · vérification manuelle",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfilePending.dc.html": {
+   "x": 3760,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Profil · vérification en cours",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfileUnverified.dc.html": {
+   "x": 4230,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Profil · non vérifié",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfileGuest.dc.html": {
+   "x": 4700,
+   "y": 2400,
+   "w": 390,
+   "h": 844,
+   "title": "Profil · sans compte",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "FcLoading-dark.dc.html": {
+   "x": 0,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "FranceConnect · chargement (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "FcError-dark.dc.html": {
+   "x": 470,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "FranceConnect · erreur (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "SignupInfoError-dark.dc.html": {
+   "x": 940,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · e-mail déjà utilisé (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "OtpError-dark.dc.html": {
+   "x": 1410,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Inscription · code incorrect (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdReussie-dark.dc.html": {
+   "x": 1880,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · vérifiée (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdEchouee-dark.dc.html": {
+   "x": 2350,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · échec (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdRefusee-dark.dc.html": {
+   "x": 2820,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · document refusé (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "IdManuelle-dark.dc.html": {
+   "x": 3290,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Identité · vérification manuelle (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfilePending-dark.dc.html": {
+   "x": 3760,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Profil · vérification en cours (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfileUnverified-dark.dc.html": {
+   "x": 4230,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Profil · non vérifié (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  },
+  "ProfileGuest-dark.dc.html": {
+   "x": 4700,
+   "y": 3600,
+   "w": 390,
+   "h": 844,
+   "title": "Profil · sans compte (sombre)",
+   "is_interactive": true,
+   "page": "p1"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Alerts.dc.html",
+  "Report.dc.html",
+  "Activity.dc.html",
+  "Profile.dc.html",
+  "Main-dark.dc.html",
+  "Alerts-dark.dc.html",
+  "Report-dark.dc.html",
+  "Activity-dark.dc.html",
+  "Profile-dark.dc.html",
+  "Offline.dc.html",
+  "AlertsEmpty.dc.html",
+  "Sheet.dc.html",
+  "Modal.dc.html",
+  "Components.dc.html",
+  "AlertCard.dc.html",
+  "Splash.dc.html",
+  "Login.dc.html",
+  "SignIn.dc.html",
+  "FranceConnect.dc.html",
+  "SignupInfo.dc.html",
+  "SignupPhone.dc.html",
+  "SignupEmail.dc.html",
+  "SignupIdentity.dc.html",
+  "IdentityStatus.dc.html",
+  "ProfileSetup.dc.html",
+  "ReportGuest.dc.html",
+  "Splash-dark.dc.html",
+  "Login-dark.dc.html",
+  "SignIn-dark.dc.html",
+  "FranceConnect-dark.dc.html",
+  "SignupInfo-dark.dc.html",
+  "SignupPhone-dark.dc.html",
+  "SignupEmail-dark.dc.html",
+  "SignupIdentity-dark.dc.html",
+  "IdentityStatus-dark.dc.html",
+  "ProfileSetup-dark.dc.html",
+  "ReportGuest-dark.dc.html",
+  "FcLoading.dc.html",
+  "FcError.dc.html",
+  "SignupInfoError.dc.html",
+  "OtpError.dc.html",
+  "IdReussie.dc.html",
+  "IdEchouee.dc.html",
+  "IdRefusee.dc.html",
+  "IdManuelle.dc.html",
+  "ProfilePending.dc.html",
+  "ProfileUnverified.dc.html",
+  "ProfileGuest.dc.html",
+  "FcLoading-dark.dc.html",
+  "FcError-dark.dc.html",
+  "SignupInfoError-dark.dc.html",
+  "OtpError-dark.dc.html",
+  "IdReussie-dark.dc.html",
+  "IdEchouee-dark.dc.html",
+  "IdRefusee-dark.dc.html",
+  "IdManuelle-dark.dc.html",
+  "ProfilePending-dark.dc.html",
+  "ProfileUnverified-dark.dc.html",
+  "ProfileGuest-dark.dc.html"
+ ],
+ "notes": {
+  "rowLight": {
+   "x": 0,
+   "y": -300,
+   "text": "95 Alerte · clair",
+   "kind": "title1",
+   "maxW": 2270,
+   "page": "p0"
+  },
+  "rowDark": {
+   "x": 0,
+   "y": 900,
+   "text": "95 Alerte · sombre",
+   "kind": "title1",
+   "maxW": 2270,
+   "page": "p0"
+  },
+  "rowStates": {
+   "x": 0,
+   "y": 2100,
+   "text": "États et composants",
+   "kind": "title1",
+   "maxW": 2708,
+   "page": "p0"
+  },
+  "howTo": {
+   "x": 2390,
+   "y": 0,
+   "w": 340,
+   "maxH": 420,
+   "fill": "blue",
+   "text": "Prototype · refonte v2 (patterns du benchmark)\nPhase 1 (connexion) : page « Phase 1 », Play depuis « Démarrage ».\n\nAppuyez sur Play sur un écran pour lancer le prototype cliquable. Sur la carte : touchez un marqueur pour l'aperçu de l'alerte, la poignée pour ouvrir la liste, les filtres Toutes / Positives / Négatives agissent sur la carte et la liste.\n\nVersion React complète (mode démo, vote, horloge simulée) : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw\n\nDonnées fictives, communes réelles du Val-d'Oise.",
+   "page": "p0"
+  },
+  "p1Light": {
+   "x": 0,
+   "y": -300,
+   "text": "Démarrage et connexion · clair",
+   "kind": "title1",
+   "maxW": 5090,
+   "page": "p1"
+  },
+  "p1Dark": {
+   "x": 0,
+   "y": 900,
+   "text": "Démarrage et connexion · sombre",
+   "kind": "title1",
+   "maxW": 5090,
+   "page": "p1"
+  },
+  "p1States": {
+   "x": 0,
+   "y": 2100,
+   "text": "États · clair",
+   "kind": "title1",
+   "maxW": 5090,
+   "page": "p1"
+  },
+  "p1StatesDark": {
+   "x": 0,
+   "y": 3300,
+   "text": "États · sombre",
+   "kind": "title1",
+   "maxW": 5090,
+   "page": "p1"
+  },
+  "p1How": {
+   "x": 5170,
+   "y": 0,
+   "w": 340,
+   "maxH": 520,
+   "fill": "blue",
+   "page": "p1",
+   "text": "Phase 1 · démarrage et connexion\n\nPlay sur « Démarrage » : touchez l'écran pour passer à la connexion.\n\nFranceConnect → choix d'un compte → chargement (touchez pour continuer) → carte.\nCréer un compte → informations → code SMS → e-mail → document d'identité → statut → profil → carte.\nContinuer sans compte → carte.\n\nLes états (erreurs, résultats de vérification, profils) sont des planches à part. Dans la version React, le mode démo les déclenche : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+  }
+ },
+ "designSystems": []
 }

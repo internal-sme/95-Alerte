@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>FranceConnect</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/e6ebe91302b2f34527775e92069e88d9">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 auth">
+    <header class="screen-header">
+      <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+        <span></span>
+      </sc-if>
+      <sc-if value="{{hasBack}}" hint-placeholder-val="{{true}}">
+        <a class="icon-btn" href="{{l.login}}" aria-label="Retour"><span class="ph i i-caret-left" aria-hidden="true"></span></a>
+      </sc-if>
+      <h1>FranceConnect</h1>
+      <span></span>
+    </header>
+
+    <sc-if value="{{isChoose}}" hint-placeholder-val="{{true}}">
+      <div class="scroll95">
+        <div class="screen-pad">
+          <div class="banner banner-info" role="status"><span class="ph i i-info" aria-hidden="true"></span><span>Écran simulé pour le prototype : aucune donnée réelle n'est échangée.</span></div>
+          <div class="auth-intro">
+            <h2 class="question">Choisissez un compte pour vous connecter</h2>
+            <p class="auth-lead">Vous reviendrez automatiquement sur 95 Alerte, avec votre identité vérifiée.</p>
+          </div>
+          <div class="list">
+            <sc-for list="{{providers}}" as="p" hint-placeholder-count="4">
+              <a class="list-item" href="{{l.loading}}"><span class="ph i {{p.icon}}" aria-hidden="true"></span><span>{{p.label}}</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+      <a class="auth-center" href="{{l.main}}" role="status" aria-label="Connexion sécurisée en cours. Touchez pour continuer.">
+        <span class="status-hero tone-info"><span class="spinner" aria-hidden="true"></span></span>
+        <h2>Connexion sécurisée en cours…</h2>
+        <p>Récupération de votre identité vérifiée.</p>
+      </a>
+    </sc-if>
+
+    <sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+      <div class="auth-center" role="alert">
+        <span class="status-hero tone-error"><span class="ph i i-warning" aria-hidden="true"></span></span>
+        <h2>La connexion avec FranceConnect a échoué.</h2>
+        <p>Le service n'a pas répondu. Réessayez dans un instant ou créez un compte 95 Alerte.</p>
+      </div>
+      <div class="screen-footer stack-footer">
+        <a class="btn btn-primary btn-block" href="{{l.fc}}">Réessayer</a>
+        <a class="btn btn-ghost btn-block" href="{{l.signup}}">Créer un compte</a>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"state":{"editor":"enum","options":["choose","loading","error"],"default":"choose"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const st = this.props.state || 'choose';
+    return {
+      theme: s ? 't-dark' : 't-light',
+      isChoose: st === 'choose',
+      isLoading: st === 'loading',
+      isError: st === 'error',
+      hasBack: st !== 'loading',
+      providers: [
+        { label: 'Compte fiscal', icon: 'i-buildings' },
+        { label: 'Compte assurance santé', icon: 'i-hand-heart' },
+        { label: 'Identité numérique', icon: 'i-identification-card' },
+        { label: 'Compte retraite', icon: 'i-user-circle' }
+      ],
+      l: {
+        login: 'Login' + s + '.dc.html', loading: 'FcLoading' + s + '.dc.html', main: 'Main' + s + '.dc.html',
+        fc: 'FranceConnect' + s + '.dc.html', signup: 'SignupInfo' + s + '.dc.html'
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

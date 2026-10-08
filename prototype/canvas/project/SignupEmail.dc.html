@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Créer un compte · E-mail</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/e6ebe91302b2f34527775e92069e88d9">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 auth">
+    <header class="screen-header">
+      <a class="icon-btn" href="{{l.back}}" aria-label="Retour"><span class="ph i i-caret-left" aria-hidden="true"></span></a>
+      <h1>Créer un compte</h1>
+      <span></span>
+    </header>
+    <div class="auth-stepper">
+      <div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="3" aria-label="Étape 3 sur 4">
+        <div class="lbl"><span>Étape 3 sur 4</span><span>E-mail</span></div>
+        <div class="track"><i style="width: 75%"></i></div>
+      </div>
+    </div>
+    <div class="auth-center">
+      <span class="status-hero tone-info"><span class="ph i i-envelope" aria-hidden="true"></span></span>
+      <h2>Confirmez votre adresse e-mail</h2>
+      <p>Nous avons envoyé un lien à <b>j•••@exemple.fr</b>. Ouvrez-le pour confirmer votre adresse.</p>
+      <span class="link-btn" style="display: inline-grid; place-items: center">Renvoyer l'e-mail</span>
+    </div>
+    <div class="screen-footer">
+      <a class="btn btn-primary btn-block" href="{{l.next}}">J'ai confirmé mon adresse</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    return { theme: s ? 't-dark' : 't-light', l: { back: 'SignupPhone' + s + '.dc.html', next: 'SignupIdentity' + s + '.dc.html' } };
+  }
+}
+</script>
+</body>
+</html>

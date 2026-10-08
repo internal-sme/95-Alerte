@@ -56,6 +56,13 @@ SCREEN = r"""
 .lib-row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center}
 .lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
 .alert-card{font:inherit;text-align:left;width:100%}
+/* Démarrage et connexion : contenu défilant + pied d'actions fixe */
+.screen95.auth .scroll95{display:flex;flex-direction:column}
+.screen95.auth .scroll95 > .screen-pad{flex:1 0 auto}
+.screen95 > .screen-footer{flex:none}
+a.btn,a.link-btn,a.list-item{text-decoration:none}
+a.link-btn{display:inline-grid;place-items:center;text-decoration:underline}
+.tap-through{display:flex;flex-direction:column;flex:1;color:inherit}
 /* Icônes Phosphor en masques : <span class="ph i i-fire" aria-hidden="true"></span> */
 .i{display:inline-block;background-color:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
 """

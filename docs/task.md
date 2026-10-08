@@ -32,7 +32,7 @@
 | Phase | Contenu | Écrans / réf. | Statut |
 |---|---|---|---|
 | 0 | Fondations techniques et composants de base | — | ✅ Terminée |
-| 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ⬜ À faire |
+| 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ⬜ À faire |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ⬜ À faire |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ⬜ À faire |
@@ -89,16 +89,16 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - Vérification d'identité affichée avec le composant `Timeline` + délai indicatif (« généralement moins de 24 h ») (Bumble)
 - Aperçu du nom public dès la création du profil : « Vous apparaîtrez comme Jean D. » (Waze)
 
-- [ ] **1.1** UI-001 **Splash** : logo 95 Alerte, chargement court (< 1,5 s), version de l'app
-- [ ] **1.2** UI-008 **Connexion** : « Continuer avec FranceConnect » (bouton principal + texte expliquant la sécurisation de l'identité), « Créer un compte », « J'ai déjà un compte », « Continuer sans compte » (consultation)
-- [ ] **1.3** **FranceConnect simulé** : écran intermédiaire de choix du fournisseur d'identité → chargement → retour connecté avec identité vérifiée
-- [ ] **1.4** **Création de compte** (stepper) : informations personnelles → vérification du téléphone (code OTP à 6 chiffres) → vérification de l'email → vérification d'identité → compte vérifié
-- [ ] **1.5** UI-009 **Vérification d'identité** : états *en cours*, *réussie*, *échouée*, *document refusé*, *nouvelle tentative*, *vérification manuelle*
-- [ ] **1.6** UI-010 **Création du profil** : prénom, nom, nom public affiché (« Jean D. »), aperçu de ce qui sera visible publiquement
-- [ ] **1.7** Badge de statut d'identité : *non vérifiée* / *en cours* / *✓ vérifiée*
-- [ ] **1.8** États d'erreur : code OTP invalide, email déjà utilisé, échec FranceConnect, hors connexion
+- [x] **1.1** UI-001 **Splash** : logo 95 Alerte, chargement court (< 1,5 s), version de l'app
+- [x] **1.2** UI-008 **Connexion** : « Continuer avec FranceConnect » (bouton principal + texte expliquant la sécurisation de l'identité), « Créer un compte », « J'ai déjà un compte », « Continuer sans compte » (consultation)
+- [x] **1.3** **FranceConnect simulé** : écran intermédiaire de choix du fournisseur d'identité → chargement → retour connecté avec identité vérifiée
+- [x] **1.4** **Création de compte** (stepper) : informations personnelles → vérification du téléphone (code OTP à 6 chiffres) → vérification de l'email → vérification d'identité → compte vérifié
+- [x] **1.5** UI-009 **Vérification d'identité** : états *en cours*, *réussie*, *échouée*, *document refusé*, *nouvelle tentative*, *vérification manuelle*
+- [x] **1.6** UI-010 **Création du profil** : prénom, nom, nom public affiché (« Jean D. »), aperçu de ce qui sera visible publiquement
+- [x] **1.7** Badge de statut d'identité : *non vérifiée* / *en cours* / *✓ vérifiée*
+- [x] **1.8** États d'erreur : code OTP invalide, email déjà utilisé, échec FranceConnect, hors connexion
 
-- [ ] **1.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+- [x] **1.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
 **Validation** : S1 (partie connexion) jouable de bout en bout, par FranceConnect et par le parcours de création de compte ; chaque état de vérification est accessible.
 
@@ -366,3 +366,5 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-08 | 0 | **Refonte v2** d'après le benchmark : carte d'accueil illustrée (marqueurs, regroupement, doublons fusionnés, aperçu d'alerte avec vote), cartes d'alerte compactes, Alertes en sections (≤ 5 km / reste du Val-d'Oise), Signaler étape 1 (positif / négatif), Activité (mes alertes), Profil (carte d'identité, réglages groupés). Mentions « phase X » retirées des écrans. Bouton Signaler aligné. React et canevas mis à jour. |
 | 2026-10-08 | 0 | Carte d'alerte : photo de nouveau en grand format (16:9, pleine largeur), votes et statut en dessous. React, canevas et Design System mis à jour. |
 | 2026-10-08 | 0 | Branches : `main` renommée `master`, `develop` créée depuis `master`, phase 0 sur `phase/0-fondations`, PR vers `develop`. |
+| 2026-10-08 | 1 | Phase 1 terminée sur `phase/1-splash-connexion`. Splash (1,3 s) → connexion (FranceConnect en action principale, créer un compte, j'ai déjà un compte, continuer sans compte). FranceConnect simulé (choix du compte → chargement → connecté, identité vérifiée ; échec via le mode démo « Erreur réseau »). Inscription en 4 étapes (informations, code SMS, e-mail, identité) puis création du profil avec aperçu du nom public. Vérification d'identité : en cours, réussie, échouée (→ nouvelle tentative ou vérification manuelle), document refusé, manuelle ; résultat réglable dans le mode démo. Badge d'identité sur le profil, « Vérifier mon identité » si non vérifiée, déconnexion avec confirmation. Mode invité : consultation libre ; signaler, voter et Activité demandent un compte. Erreurs : e-mail déjà utilisé (`deja@exemple.fr`), code invalide (`000000`), échec FranceConnect, hors connexion. Toasts placés sous l'en-tête sur les écrans sans barre d'onglets pour ne pas masquer les boutons. |
+| 2026-10-08 | 1 | Canevas : page « Phase 1 · Démarrage et connexion » (44 planches : parcours et états, clair et sombre), Play depuis « Démarrage ». Planche Profil déclinée (vérifié, en cours, non vérifié, sans compte) avec « Se déconnecter ». Feuille de style du canevas re-téléversée. |

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Profil</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/21dbae15c4eee1a6147c46d5ae003bdf">
+<link rel="stylesheet" href="/_blob/e6ebe91302b2f34527775e92069e88d9">
 </head>
 <body>
 <x-dc>
@@ -18,14 +18,26 @@ body{margin:0}
   <div class="screen95 scroll95">
     <div class="screen-title"><h1>Profil</h1></div>
     <div class="screen-pad">
-      <div class="identity">
-        <span class="avatar" aria-hidden="true">JD</span>
-        <div>
-          <b>Jean Dupont</b>
-          <small>Vos alertes identifiées affichent « Jean D. »</small>
-          <span class="verified"><span class="ph i i-seal-check-fill" aria-hidden="true"></span>Identité vérifiée</span>
+      <sc-if value="{{signedIn}}" hint-placeholder-val="{{true}}">
+        <div class="identity">
+          <span class="avatar" aria-hidden="true">JD</span>
+          <div>
+            <b>Jean Dupont</b>
+            <small>Vos alertes identifiées affichent « Jean D. »</small>
+            <span class="badge badge-status {{badge.cls}}"><span class="ph i {{badge.icon}}" aria-hidden="true"></span>{{badge.label}}</span>
+          </div>
+          <sc-if value="{{canVerify}}" hint-placeholder-val="{{false}}">
+            <a class="btn btn-secondary btn-block identity-action" href="{{l.verify}}"><span class="ph i i-identification-card" aria-hidden="true"></span>Vérifier mon identité</a>
+          </sc-if>
         </div>
-      </div>
+      </sc-if>
+      <sc-if value="{{guest}}" hint-placeholder-val="{{false}}">
+        <div class="identity">
+          <span class="avatar anon" aria-hidden="true"><span class="ph i i-user-circle" aria-hidden="true"></span></span>
+          <div><b>Vous n'êtes pas connecté</b><small>Connectez-vous pour signaler, voter et suivre vos alertes.</small></div>
+          <a class="btn btn-primary btn-block identity-action" href="{{l.login}}">Se connecter ou créer un compte</a>
+        </div>
+      </sc-if>
       <section class="list-section">
         <h2 class="section-label">Affichage</h2>
         <div class="list">
@@ -67,6 +79,11 @@ body{margin:0}
           <a class="list-item" href="Components.dc.html"><span class="ph i i-squares-four" aria-hidden="true"></span><span>Bibliothèque de composants</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></a>
         </div>
       </section>
+      <sc-if value="{{signedIn}}" hint-placeholder-val="{{true}}">
+        <div class="list">
+          <a class="list-item" href="{{l.login}}"><span class="ph i i-sign-out" aria-hidden="true"></span><span>Se déconnecter</span><span class="val"></span></a>
+        </div>
+      </sc-if>
     </div>
   </div>
   <nav class="tabbar" aria-label="Navigation principale">
@@ -78,7 +95,7 @@ body{margin:0}
   </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"identity":{"editor":"enum","options":["verifiee","en_cours","non_verifiee","guest"],"default":"verifiee"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -88,7 +105,19 @@ class Component extends DCLogic {
     const s = this.props.dark === true ? '-dark' : '';
     const chosen = this.state.theme || 'system';
     const dark = chosen === 'dark' || (chosen === 'system' && s !== '');
+    const identity = this.props.identity || 'verifiee';
+    const BADGES = {
+      verifiee: { cls: 'st-done', icon: 'i-seal-check-fill', label: 'Identité vérifiée' },
+      en_cours: { cls: 'st-soon', icon: 'i-timer', label: 'Vérification en cours' },
+      non_verifiee: { cls: 'st-draft', icon: 'i-identification-card', label: 'Identité non vérifiée' }
+    };
+    const guest = identity === 'guest';
+    const self = { verifiee: 'Profile', en_cours: 'ProfilePending', non_verifiee: 'ProfileUnverified', guest: 'ProfileGuest' }[identity] || 'Profile';
     return {
+      signedIn: !guest,
+      guest,
+      badge: BADGES[identity] || BADGES.verifiee,
+      canVerify: identity === 'non_verifiee',
       theme: (dark ? 't-dark' : 't-light') + (this.state.contrast ? ' t-contrast' : ''),
       t: { light: chosen === 'light', system: chosen === 'system', dark: chosen === 'dark' },
       setLight: () => this.setState({ theme: 'light' }),
@@ -99,7 +128,7 @@ class Component extends DCLogic {
       motion: this.state.motion,
       toggleContrast: () => this.setState({ contrast: !this.state.contrast }),
       toggleMotion: () => this.setState({ motion: !this.state.motion }),
-      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' }
+      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: (guest ? 'ReportGuest' : 'Report') + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: self + s + '.dc.html', verify: 'SignupIdentity' + s + '.dc.html', login: 'Login' + s + '.dc.html' }
     };
   }
 }
