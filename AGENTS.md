@@ -15,6 +15,7 @@ Lire, dans cet ordre :
 1. `docs/PRD.md` — périmètre, fonctionnalités, règles métier, écrans, scénarios, textes de référence
 2. `docs/DESIGN_SYSTEM.md` — tokens, composants, états, accessibilité
 3. `docs/ARCHITECTURE.md` — modèle de données, cycle de vie, architecture du prototype
+4. `docs/task.md` — **plan de développement du prototype, phase par phase** : travailler sur la phase en cours uniquement, cocher les tâches terminées, mettre à jour le statut de la phase et le journal
 
 Puis inspecter les composants existants du prototype **avant d'en créer un nouveau**.
 

@@ -287,14 +287,6 @@ Pour que l'app soit exploitable avant la phase 2 :
 - transmission aux services par **email** ;
 - modération minimale par un **script ou un écran d'administration protégé** très simple, jusqu'à la livraison du back-office.
 
-### 7.7 Points à valider
-
-1. Hébergeur (Scaleway ou OVHcloud) et besoin éventuel de SecNumCloud.
-2. Prestataire de vérification d'identité.
-3. Habilitation FranceConnect : délai et statut du porteur du projet.
-4. Prestataire email / SMS.
-5. Mode de transmission attendu par les premiers services partenaires (email seul, ou API).
-
 ---
 
 ## 8. Scalabilité et qualité (§70)
