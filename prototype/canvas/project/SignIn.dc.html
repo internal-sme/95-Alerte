@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Se connecter</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/e6ebe91302b2f34527775e92069e88d9">
+<link rel="stylesheet" href="/_blob/a535f7083c9ec8a541dde5196abe3a1a">
 </head>
 <body>
 <x-dc>
@@ -23,11 +23,17 @@ body{margin:0}
     </header>
     <div class="scroll95">
       <div class="screen-pad">
+        <div class="auth-intro">
+          <h2 class="question">Content de vous revoir</h2>
+          <p class="auth-lead">Connectez-vous avec l'adresse e-mail de votre compte 95 Alerte.</p>
+        </div>
         <div class="field"><label for="signin-email">E-mail</label><input id="signin-email" class="input" type="email" autocomplete="email" value="jean.dupont@exemple.fr"></div>
         <div class="field"><label for="signin-password">Mot de passe</label><input id="signin-password" class="input" type="password" autocomplete="current-password" value="motdepasse"></div>
-        <span class="link-btn left" style="display: inline-grid; place-items: center">Mot de passe oublié ?</span>
-        <a class="btn btn-primary btn-block" href="{{l.next}}">Se connecter</a>
+        <button type="button" class="btn btn-ghost btn-inline">Mot de passe oublié ?</button>
       </div>
+    </div>
+    <div class="screen-footer stack-footer">
+      <a class="btn btn-primary btn-block" href="{{l.next}}">Se connecter</a>
     </div>
   </div>
 </div>

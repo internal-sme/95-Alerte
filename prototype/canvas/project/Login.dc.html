@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Connexion</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/e6ebe91302b2f34527775e92069e88d9">
+<link rel="stylesheet" href="/_blob/a535f7083c9ec8a541dde5196abe3a1a">
 </head>
 <body>
 <x-dc>
@@ -39,7 +39,7 @@ body{margin:0}
           </svg>
         </div>
         <span class="map-pin" style="left: 120px; top: 108px"><span class="marker fam-positive"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"></circle></svg><span class="ph i i-hand-heart-fill" aria-hidden="true"></span></span></span>
-        <span class="map-pin" style="left: 222px; top: 70px"><span class="marker fam-incident"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"></path></svg><span class="ph i i-fire-fill" aria-hidden="true"></span></span></span>
+        <span class="map-pin" style="left: 196px; top: 42px"><span class="marker fam-incident"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"></path></svg><span class="ph i i-fire-fill" aria-hidden="true"></span></span></span>
         <span class="map-pin" style="left: 290px; top: 132px"><span class="marker fam-vigilance"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 3 34 32H2Z" stroke-linejoin="round"></path></svg><span class="ph i i-lightbulb-fill" aria-hidden="true" style="top: 4px"></span></span></span>
         <span class="map-pin" style="left: 64px; top: 52px"><span class="marker fam-info"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="8"></rect></svg><span class="ph i i-megaphone-fill" aria-hidden="true"></span></span></span>
       </div>
@@ -55,8 +55,11 @@ body{margin:0}
           <a class="btn btn-secondary btn-block" href="{{l.signup}}">Créer un compte</a>
           <a class="btn btn-ghost btn-block" href="{{l.signin}}">J'ai déjà un compte</a>
         </div>
-        <a class="link-btn" href="{{l.guest}}">Continuer sans compte</a>
-        <p class="legal">Sans compte, vous pouvez consulter les alertes. Un compte est demandé pour signaler, voter et commenter. En continuant, vous acceptez les conditions d'utilisation et la politique de confidentialité.</p>
+        <div class="auth-guest">
+          <p class="legal">Sans compte, vous pouvez consulter les alertes. Un compte est demandé pour signaler, voter et commenter.</p>
+          <a class="btn btn-ghost btn-block" href="{{l.guest}}"><span class="ph i i-map-trifold" aria-hidden="true"></span>Continuer sans compte</a>
+          <p class="legal">En continuant, vous acceptez les conditions d'utilisation et la politique de confidentialité.</p>
+        </div>
       </div>
     </div>
   </div>

@@ -37,6 +37,13 @@ Une phase n'est terminée que lorsque **les deux versions** sont à jour et publ
 1. **Prototype React** : `prototype/src/` → `python3 tools/build_prototype.py` → `prototype/index.html`, publié sur https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw.
 2. **Canevas de preview** (type Design) : une planche `.dc.html` par nouvel écran ou état, en clair et en sombre, reliées entre elles pour le bouton Play, **sans cadre de téléphone** (les planches ne peuvent pas savoir si elles sont affichées sur le canevas ou en Play). Sources dans `prototype/canvas/`, publié sur https://claude.ai/artifact/Sd2XN1KjGF8LzZ1rtBfvm4 (voir `prototype/canvas/README.md`).
 
+## Conception des écrans — à chaque phase
+
+- **Générer les écrans à partir du rapport de benchmark et des fichiers du projet** : `docs/benchmark/benchmark-mobbin.html` (10 principes, direction artistique « vigilance lumineuse », plan par phase : patterns, sources, critère de validation) **et** `docs/PRD.md`, `docs/DESIGN_SYSTEM.md`, `docs/design-system/index.html`, `docs/task.md` (décisions UX de la phase). Aucun écran sans relire la section de sa phase dans le rapport.
+- **Revue de direction artistique avant de présenter la phase** (captures en clair et en sombre, 390 × 844, 375 × 812 et 430 × 932) : cohérence avec les écrans existants, espacements uniquement en tokens (`--s-*`), hiérarchie typographique, rouge rare, aucun texte coupé ou masqué (toast, FAB, pied d'écran).
+- **Boutons : uniquement ceux du Design System** — `btn-primary` (un seul par écran), `btn-secondary`, `btn-ghost`, `btn-destructive`, avec `btn-block` (CTA de pied d'écran) ou `btn-inline` (action annexe). Pas de lien stylé en bouton ni de style ad hoc. Dans le canevas, un `<a class="btn …">` doit garder les couleurs du bouton.
+- Formulaires (connexion, inscription, signalement) : une question par écran, CTA principal toujours au même endroit, dans le pied d'écran.
+
 ## Branches et pull requests — une branche par phase
 
 - `master` : version de référence (anciennement `main`). `develop` : intégration des phases validées (créée depuis `master`).

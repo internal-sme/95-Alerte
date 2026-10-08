@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Créer un compte · Téléphone</title>
+<title>Créer un compte · Confirmation de l'e-mail</title>
 <script src="./support.js"></script>
 <link rel="stylesheet" href="/_blob/a535f7083c9ec8a541dde5196abe3a1a">
 </head>
@@ -22,22 +22,19 @@ body{margin:0}
       <span></span>
     </header>
     <div class="auth-stepper">
-      <div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="2" aria-label="Étape 2 sur 4">
-        <div class="lbl"><span>Étape 2 sur 4</span><span>Téléphone</span></div>
-        <div class="track"><i style="width: 50%"></i></div>
+      <div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="3" aria-label="Étape 3 sur 4">
+        <div class="lbl"><span>Étape 3 sur 4</span><span>E-mail</span></div>
+        <div class="track"><i style="width: 75%"></i></div>
       </div>
     </div>
-    <div class="scroll95">
-      <div class="screen-pad">
-        <div class="auth-intro">
-          <h2 class="question">Votre numéro de mobile</h2>
-          <p class="auth-lead">Nous vous envoyons un code par SMS pour sécuriser votre compte. Il n'est jamais affiché.</p>
-        </div>
-        <div class="field"><label for="su-phone">Téléphone mobile</label><input id="su-phone" class="input" type="tel" autocomplete="tel" value="06 12 34 56 42"></div>
-      </div>
+    <div class="auth-center">
+      <span class="status-hero tone-info"><span class="ph i i-envelope" aria-hidden="true"></span></span>
+      <h2>Confirmez votre adresse e-mail</h2>
+      <p>Nous avons envoyé un lien à <b>j•••@exemple.fr</b>. Ouvrez-le pour confirmer votre adresse.</p>
     </div>
     <div class="screen-footer stack-footer">
-      <a class="btn btn-primary btn-block" href="{{l.next}}">Recevoir le code</a>
+      <a class="btn btn-primary btn-block" href="{{l.next}}">J'ai confirmé mon adresse</a>
+      <button type="button" class="btn btn-ghost btn-block">Renvoyer l'e-mail</button>
     </div>
   </div>
 </div>
@@ -46,7 +43,7 @@ body{margin:0}
 class Component extends DCLogic {
   renderVals() {
     const s = this.props.dark === true ? '-dark' : '';
-    return { theme: s ? 't-dark' : 't-light', l: { back: 'SignupInfo' + s + '.dc.html', next: 'SignupCode' + s + '.dc.html' } };
+    return { theme: s ? 't-dark' : 't-light', l: { back: 'SignupEmail' + s + '.dc.html', next: 'SignupIdentity' + s + '.dc.html' } };
   }
 }
 </script>

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Créer un compte · E-mail</title>
+<title>Créer un compte · Code SMS</title>
 <script src="./support.js"></script>
 <link rel="stylesheet" href="/_blob/a535f7083c9ec8a541dde5196abe3a1a">
 </head>
@@ -22,31 +22,30 @@ body{margin:0}
       <span></span>
     </header>
     <div class="auth-stepper">
-      <div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="3" aria-label="Étape 3 sur 4">
-        <div class="lbl"><span>Étape 3 sur 4</span><span>E-mail</span></div>
-        <div class="track"><i style="width: 75%"></i></div>
+      <div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="2" aria-label="Étape 2 sur 4">
+        <div class="lbl"><span>Étape 2 sur 4</span><span>Téléphone</span></div>
+        <div class="track"><i style="width: 50%"></i></div>
       </div>
     </div>
     <div class="scroll95">
       <div class="screen-pad">
         <div class="auth-intro">
-          <h2 class="question">Votre adresse e-mail</h2>
-          <p class="auth-lead">Elle sert à vous informer du suivi de vos signalements. Elle n'est jamais affichée.</p>
+          <h2 class="question">Saisissez le code reçu</h2>
+          <p class="auth-lead">Envoyé par SMS au 06 •• •• •• 42.</p>
+        </div>
+        <div class="otp {{otpClass}}" role="img" aria-label="Code de vérification à 6 chiffres : {{code}}">
+          <sc-for list="{{digits}}" as="d" hint-placeholder-count="6">
+            <span aria-hidden="true">{{d}}</span>
+          </sc-for>
         </div>
         <sc-if value="{{error}}" hint-placeholder-val="{{false}}">
-          <div class="field">
-            <label for="su-email">E-mail</label>
-            <input id="su-email" class="input" type="email" autocomplete="email" value="deja@exemple.fr" aria-invalid="true" aria-describedby="su-email-err">
-            <span class="err" id="su-email-err"><span class="ph ph-sm i i-warning-fill" aria-hidden="true"></span>Cet e-mail est déjà utilisé. Connectez-vous ou utilisez une autre adresse.</span>
-          </div>
+          <span class="err" role="alert"><span class="ph ph-sm i i-warning-fill" aria-hidden="true"></span>Code incorrect. Vérifiez le SMS ou demandez un nouveau code.</span>
         </sc-if>
-        <sc-if value="{{ok}}" hint-placeholder-val="{{true}}">
-          <div class="field"><label for="su-email">E-mail</label><input id="su-email" class="input" type="email" autocomplete="email" value="jean.dupont@exemple.fr"></div>
-        </sc-if>
+        <button type="button" class="btn btn-ghost btn-inline"><span class="ph i i-arrows-clockwise" aria-hidden="true"></span>Renvoyer le code</button>
       </div>
     </div>
     <div class="screen-footer stack-footer">
-      <a class="btn btn-primary btn-block" href="{{l.next}}">Continuer</a>
+      <a class="btn btn-primary btn-block" href="{{l.next}}">Vérifier</a>
     </div>
   </div>
 </div>
@@ -56,11 +55,14 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.props.dark === true ? '-dark' : '';
     const error = this.props.error === true;
+    const code = error ? '000000' : '482913';
     return {
       theme: s ? 't-dark' : 't-light',
       error,
-      ok: !error,
-      l: { back: 'SignupCode' + s + '.dc.html', next: (error ? 'SignupEmail' : 'SignupEmailSent') + s + '.dc.html' }
+      code,
+      otpClass: error ? 'is-error' : '',
+      digits: code.split(''),
+      l: { back: 'SignupPhone' + s + '.dc.html', next: (error ? 'SignupCode' : 'SignupEmail') + s + '.dc.html' }
     };
   }
 }

@@ -1160,7 +1160,7 @@ function ProfileScreen() {
           <div className="identity">
             <span className="avatar anon" aria-hidden="true"><Icon name="user-circle" /></span>
             <div><b>Vous n'êtes pas connecté</b><small>Connectez-vous pour signaler, voter et suivre vos alertes.</small></div>
-            <Button block className="identity-action" onClick={() => dispatch({ type: "LOGOUT" })}>Se connecter ou créer un compte</Button>
+            <Button block className="identity-action" icon="sign-in" onClick={() => dispatch({ type: "LOGOUT" })}>Se connecter</Button>
           </div>
         )}
         <section className="list-section">
@@ -1224,7 +1224,7 @@ function ReportScreen() {
 /* =====================================================================
    PHASE 1 — Démarrage et connexion (UI-001, UI-008 → UI-010 ; CDC §6, §8, §9, §43)
    ===================================================================== */
-const SIGNUP_STEPS = ["Informations", "Téléphone", "E-mail", "Identité"];
+const SIGNUP_STEPS = ["Nom", "Téléphone", "E-mail", "Identité"];
 const ID_DOCS = [
   { id: "cni", label: "Carte d'identité", hint: "Recto et verso" },
   { id: "passeport", label: "Passeport", hint: "Page avec la photo" },
@@ -1297,7 +1297,7 @@ function AuthHero() {
     <div className="auth-hero" aria-hidden="true">
       <div className="map95">{MAP_ART}</div>
       <span className="map-pin" style={{ left: 120, top: 108 }}><Marker family="positive" icon="hand-heart" /></span>
-      <span className="map-pin" style={{ left: 222, top: 70 }}><Marker family="incident" icon="fire" /></span>
+      <span className="map-pin" style={{ left: 196, top: 42 }}><Marker family="incident" icon="fire" /></span>
       <span className="map-pin" style={{ left: 290, top: 132 }}><Marker family="vigilance" icon="lightbulb" /></span>
       <span className="map-pin" style={{ left: 64, top: 52 }}><Marker family="info" icon="megaphone" /></span>
     </div>
@@ -1323,8 +1323,11 @@ function LoginScreen() {
           <Button block variant="secondary" onClick={() => go("signup-info")}>Créer un compte</Button>
           <Button block variant="ghost" onClick={() => go("signin")}>J'ai déjà un compte</Button>
         </div>
-        <button type="button" className="link-btn" onClick={() => dispatch({ type: "GUEST" })}>Continuer sans compte</button>
-        <p className="legal">Sans compte, vous pouvez consulter les alertes. Un compte est demandé pour signaler, voter et commenter. En continuant, vous acceptez les conditions d'utilisation et la politique de confidentialité.</p>
+        <div className="auth-guest">
+          <p className="legal">Sans compte, vous pouvez consulter les alertes. Un compte est demandé pour signaler, voter et commenter.</p>
+          <Button block variant="ghost" icon="map-trifold" onClick={() => dispatch({ type: "GUEST" })}>Continuer sans compte</Button>
+          <p className="legal">En continuant, vous acceptez les conditions d'utilisation et la politique de confidentialité.</p>
+        </div>
       </div>
     </div>
   );
@@ -1394,6 +1397,24 @@ function FranceConnectScreen() {
   );
 }
 
+/* Gabarit commun des étapes de connexion et d'inscription (benchmark P1 : une question par écran,
+   un seul CTA principal, toujours au même endroit, dans le pied d'écran) */
+function AuthStep({ title, step, onBack, question, lead, onSubmit, footer, children }) {
+  return (
+    <form className="screen auth" noValidate onSubmit={(e) => { e.preventDefault(); onSubmit?.(); }}>
+      <AuthHeader title={title} step={step} onBack={onBack} />
+      <div className="screen-pad">
+        <div className="auth-intro">
+          <h2 className="question">{question}</h2>
+          {lead ? <p className="auth-lead">{lead}</p> : null}
+        </div>
+        {children}
+      </div>
+      <div className="screen-footer stack-footer">{footer}</div>
+    </form>
+  );
+}
+
 function SignInScreen() {
   const { state, dispatch } = useStore();
   const { toast } = useActions();
@@ -1406,49 +1427,39 @@ function SignInScreen() {
     dispatch({ type: "LOGIN", method: "compte", identity: "verifiee", message: "Vous êtes connecté." });
   });
   return (
-    <div className="screen auth">
-      <AuthHeader title="Se connecter" onBack={() => dispatch({ type: "AUTH_GO", step: "login" })} />
-      <form className="screen-pad" onSubmit={(e) => { e.preventDefault(); submit(); }}>
-        <Field id="signin-email" label="E-mail" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(null); }} />
-        <Field id="signin-password" label="Mot de passe" type="password" autoComplete="current-password" value={password} error={error} onChange={(e) => { setPassword(e.target.value); setError(null); }} />
-        <button type="button" className="link-btn left" onClick={() => toast("Un lien de réinitialisation vous a été envoyé par e-mail.")}>Mot de passe oublié ?</button>
-        <Button block type="submit">Se connecter</Button>
-      </form>
-    </div>
+    <AuthStep title="Se connecter" onBack={() => dispatch({ type: "AUTH_GO", step: "login" })}
+      question="Content de vous revoir" lead="Connectez-vous avec l'adresse e-mail de votre compte 95 Alerte." onSubmit={submit}
+      footer={<Button block type="submit">Se connecter</Button>}>
+      <Field id="signin-email" label="E-mail" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(null); }} />
+      <Field id="signin-password" label="Mot de passe" type="password" autoComplete="current-password" value={password} error={error} onChange={(e) => { setPassword(e.target.value); setError(null); }} />
+      <Button variant="ghost" className="btn-inline" onClick={() => toast("Un lien de réinitialisation vous a été envoyé par e-mail.")}>Mot de passe oublié ?</Button>
+    </AuthStep>
   );
 }
 
+/* Étape 1 : le nom (un seul sujet par écran) */
 function SignupInfoScreen() {
   const { state, dispatch } = useStore();
-  const online = useOnline();
   const [form, setForm] = useState(state.auth.form);
   const [errors, setErrors] = useState({});
   const set = (k) => (e) => { setForm({ ...form, [k]: e.target.value }); setErrors({ ...errors, [k]: null }); };
-  const submit = online(() => {
+  const submit = () => {
     const err = {};
     if (!form.firstName.trim()) err.firstName = "Indiquez votre prénom.";
     if (!form.lastName.trim()) err.lastName = "Indiquez votre nom.";
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) err.email = "Saisissez une adresse e-mail valide.";
-    else if (form.email.trim().toLowerCase() === "deja@exemple.fr") err.email = "Cet e-mail est déjà utilisé. Connectez-vous ou utilisez une autre adresse.";
-    if (form.phone.replace(/\D/g, "").length !== 10) err.phone = "Saisissez un numéro à 10 chiffres.";
     setErrors(err);
     if (Object.keys(err).length) return;
     dispatch({ type: "AUTH_SET", patch: { form, step: "signup-phone" } });
-  });
+  };
+  const initial = (form.lastName.trim() || " ")[0];
   return (
-    <div className="screen auth">
-      <AuthHeader title="Créer un compte" step={1} onBack={() => dispatch({ type: "AUTH_GO", step: "login" })} />
-      <form className="screen-pad" onSubmit={(e) => { e.preventDefault(); submit(); }} noValidate>
-        <p className="auth-lead">Ces informations restent privées. Seuls votre prénom et l'initiale de votre nom peuvent être affichés.</p>
-        <div className="field-row">
-          <Field id="su-first" label="Prénom" autoComplete="given-name" value={form.firstName} error={errors.firstName} onChange={set("firstName")} />
-          <Field id="su-last" label="Nom" autoComplete="family-name" value={form.lastName} error={errors.lastName} onChange={set("lastName")} />
-        </div>
-        <Field id="su-email" label="E-mail" type="email" autoComplete="email" value={form.email} error={errors.email} onChange={set("email")} />
-        <Field id="su-phone" label="Téléphone mobile" type="tel" autoComplete="tel" value={form.phone} error={errors.phone} help="Un code de vérification vous sera envoyé par SMS." onChange={set("phone")} />
-        <Button block type="submit">Continuer</Button>
-      </form>
-    </div>
+    <AuthStep title="Créer un compte" step={1} onBack={() => dispatch({ type: "AUTH_GO", step: "login" })}
+      question="Comment vous appelez-vous ?" lead="Votre nom reste privé. Sur vos alertes identifiées, seuls votre prénom et l'initiale de votre nom peuvent apparaître."
+      onSubmit={submit} footer={<Button block type="submit">Continuer</Button>}>
+      <Field id="su-first" label="Prénom" autoComplete="given-name" value={form.firstName} error={errors.firstName} onChange={set("firstName")} />
+      <Field id="su-last" label="Nom" autoComplete="family-name" value={form.lastName} error={errors.lastName} onChange={set("lastName")} />
+      {form.firstName.trim() ? <div className="preview-author"><Icon name="eye" />Vous apparaîtrez comme : <b>{form.firstName.trim()} {initial}.</b></div> : null}
+    </AuthStep>
   );
 }
 
@@ -1466,48 +1477,80 @@ function OtpInput({ value, onChange, error, id }) {
   );
 }
 
+/* Étape 2 : le numéro, puis le code reçu par SMS */
 function SignupPhoneScreen() {
   const { state, dispatch } = useStore();
   const { toast } = useActions();
   const online = useOnline();
+  const [phase, setPhase] = useState("number");
+  const [phone, setPhone] = useState(state.auth.form.phone);
+  const [phoneError, setPhoneError] = useState(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState(null);
+  const back = () => dispatch({ type: "AUTH_GO", step: "signup-info" });
+  if (phase === "number") {
+    const send = online(() => {
+      if (phone.replace(/\D/g, "").length !== 10) { setPhoneError("Saisissez un numéro à 10 chiffres."); return; }
+      dispatch({ type: "AUTH_SET", patch: { form: { ...state.auth.form, phone } } });
+      setPhase("code");
+    });
+    return (
+      <AuthStep title="Créer un compte" step={2} onBack={back}
+        question="Votre numéro de mobile" lead="Nous vous envoyons un code par SMS pour sécuriser votre compte. Il n'est jamais affiché."
+        onSubmit={send} footer={<Button block type="submit">Recevoir le code</Button>}>
+        <Field id="su-phone" label="Téléphone mobile" type="tel" autoComplete="tel" inputMode="tel" value={phone} error={phoneError} onChange={(e) => { setPhone(e.target.value); setPhoneError(null); }} />
+      </AuthStep>
+    );
+  }
   const submit = online(() => {
     if (code === "000000") { setError("Code incorrect. Vérifiez le SMS ou demandez un nouveau code."); return; }
     dispatch({ type: "AUTH_GO", step: "signup-email" });
   });
   return (
-    <div className="screen auth">
-      <AuthHeader title="Créer un compte" step={2} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-info" })} />
-      <form className="screen-pad" onSubmit={(e) => { e.preventDefault(); submit(); }}>
-        <div className="auth-intro">
-          <h2 className="question">Vérifiez votre téléphone</h2>
-          <p className="auth-lead">Saisissez le code à 6 chiffres envoyé par SMS au {maskPhone(state.auth.form.phone)}.</p>
-        </div>
-        <OtpInput id="otp" value={code} onChange={(v) => { setCode(v); setError(null); }} error={error} />
-        {error ? <span className="err" id="otp-err" role="alert"><Icon name="warning-fill" className="ph-sm" />{error}</span> : null}
-        <button type="button" className="link-btn left" onClick={() => { setCode(""); toast("Un nouveau code vous a été envoyé."); }}>Renvoyer le code</button>
-        <Button block type="submit" disabled={code.length !== 6}>Vérifier</Button>
-      </form>
-    </div>
+    <AuthStep title="Créer un compte" step={2} onBack={() => { setPhase("number"); setCode(""); setError(null); }}
+      question="Saisissez le code reçu" lead={`Envoyé par SMS au ${maskPhone(phone)}.`}
+      onSubmit={submit} footer={<Button block type="submit" disabled={code.length !== 6}>Vérifier</Button>}>
+      <OtpInput id="otp" value={code} onChange={(v) => { setCode(v); setError(null); }} error={error} />
+      {error ? <span className="err" id="otp-err" role="alert"><Icon name="warning-fill" className="ph-sm" />{error}</span> : null}
+      <Button variant="ghost" className="btn-inline" icon="arrows-clockwise" onClick={() => { setCode(""); setError(null); toast("Un nouveau code vous a été envoyé."); }}>Renvoyer le code</Button>
+    </AuthStep>
   );
 }
 
+/* Étape 3 : l'adresse e-mail, puis la confirmation par lien */
 function SignupEmailScreen() {
   const { state, dispatch } = useStore();
   const { toast } = useActions();
   const online = useOnline();
+  const [phase, setPhase] = useState("address");
+  const [email, setEmail] = useState(state.auth.form.email);
+  const [error, setError] = useState(null);
+  if (phase === "address") {
+    const send = online(() => {
+      if (!/^\S+@\S+\.\S+$/.test(email)) { setError("Saisissez une adresse e-mail valide."); return; }
+      if (email.trim().toLowerCase() === "deja@exemple.fr") { setError("Cet e-mail est déjà utilisé. Connectez-vous ou utilisez une autre adresse."); return; }
+      dispatch({ type: "AUTH_SET", patch: { form: { ...state.auth.form, email } } });
+      setPhase("sent");
+    });
+    return (
+      <AuthStep title="Créer un compte" step={3} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-phone" })}
+        question="Votre adresse e-mail" lead="Elle sert à vous informer du suivi de vos signalements. Elle n'est jamais affichée."
+        onSubmit={send} footer={<Button block type="submit">Continuer</Button>}>
+        <Field id="su-email" label="E-mail" type="email" autoComplete="email" value={email} error={error} onChange={(e) => { setEmail(e.target.value); setError(null); }} />
+      </AuthStep>
+    );
+  }
   return (
     <div className="screen auth">
-      <AuthHeader title="Créer un compte" step={3} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-phone" })} />
+      <AuthHeader title="Créer un compte" step={3} onBack={() => setPhase("address")} />
       <div className="auth-center">
         <span className="status-hero tone-info"><Icon name="envelope" /></span>
         <h2>Confirmez votre adresse e-mail</h2>
-        <p>Nous avons envoyé un lien à <b>{maskEmail(state.auth.form.email)}</b>. Ouvrez-le pour confirmer votre adresse.</p>
-        <button type="button" className="link-btn" onClick={() => toast("Un nouvel e-mail vous a été envoyé.")}>Renvoyer l'e-mail</button>
+        <p>Nous avons envoyé un lien à <b>{maskEmail(email)}</b>. Ouvrez-le pour confirmer votre adresse.</p>
       </div>
-      <div className="screen-footer">
+      <div className="screen-footer stack-footer">
         <Button block onClick={online(() => { toast("Adresse e-mail confirmée."); dispatch({ type: "AUTH_GO", step: "signup-id" }); })}>J'ai confirmé mon adresse</Button>
+        <Button block variant="ghost" onClick={() => toast("Un nouvel e-mail vous a été envoyé.")}>Renvoyer l'e-mail</Button>
       </div>
     </div>
   );
@@ -1664,7 +1707,7 @@ function VerifyIdentityScreen() {
 function GuestGate({ icon, title, text }) {
   const { dispatch } = useStore();
   return (
-    <EmptyState icon={icon} title={title} action={<Button onClick={() => dispatch({ type: "LOGOUT" })}>Se connecter ou créer un compte</Button>}>{text}</EmptyState>
+    <EmptyState icon={icon} title={title} action={<Button icon="sign-in" onClick={() => dispatch({ type: "LOGOUT" })}>Se connecter</Button>}>{text}</EmptyState>
   );
 }
 
