@@ -175,11 +175,13 @@ Toute icône seule (sans texte) porte un `aria-label`.
 **Alert Card** (refonte v2, d'après le benchmark : Waze, Nextdoor)
 ```
 ┌──────────────────────────────────────────┐
-│ ◆  INCENDIE · il y a 12 min      ┌─────┐ │  ← icône de famille (forme + couleur) · sur-titre catégorie
-│    Fumée importante visible      │ img │ │  ← titre H3, 2 lignes max · vignette 64 px si photo
-│    rue Carnot                    └─────┘ │
+│ ◆  INCENDIE · il y a 12 min              │  ← icône de famille (forme + couleur) · sur-titre catégorie
+│    Fumée importante visible rue Carnot   │  ← titre H3, 2 lignes max
 │    📍 Pontoise · 1,1 km                  │  ← lieu + distance
-│    ⬆ 24  ⬇ 3  💬 8         [➜ Transmise] │  ← confirmations visibles dès l'aperçu + statut
+│ ┌──────────────────────────────────────┐ │
+│ │          photo 16:9, pleine largeur  │ │  ← si l'alerte a une photo
+│ └──────────────────────────────────────┘ │
+│ ⬆ 24  ⬇ 3  💬 8              [➜ Transmise] │  ← confirmations visibles dès l'aperçu + statut
 └──────────────────────────────────────────┘
 ```
 Le statut s'affiche pour les alertes négatives (Transmise, En traitement, Traitée), pour « Expire dans … » et dans « Mes alertes ». Pas de compteur d'expiration dans la liste (il est dans la fiche). Toute la carte est cliquable ; son libellé accessible résume catégorie, titre, lieu, ancienneté et confirmations.

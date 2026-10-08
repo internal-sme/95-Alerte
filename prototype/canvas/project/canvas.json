@@ -20,7 +20,7 @@
     "Sheet.dc.html": {"x": 940, "y": 2400, "w": 390, "h": 844, "title": "Bottom sheet + toast", "is_interactive": true},
     "Modal.dc.html": {"x": 1410, "y": 2400, "w": 390, "h": 844, "title": "Confirmation de suppression", "is_interactive": true},
     "Components.dc.html": {"x": 1880, "y": 2400, "w": 390, "h": 2760, "title": "Bibliothèque de composants", "is_interactive": true},
-    "AlertCard.dc.html": {"x": 2350, "y": 2400, "w": 358, "h": 140, "title": "Composant · Alert Card"}
+    "AlertCard.dc.html": {"x": 2350, "y": 2400, "w": 358, "h": 330, "title": "Composant · Alert Card"}
   },
   "order": [
     "Main.dc.html", "Alerts.dc.html", "Report.dc.html", "Activity.dc.html", "Profile.dc.html",

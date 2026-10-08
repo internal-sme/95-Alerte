@@ -222,7 +222,7 @@ textarea.input{min-height:96px;resize:vertical}
 .cluster.c-s{width:32px;height:32px}.cluster.c-m{width:40px;height:40px}.cluster.c-l{width:48px;height:48px}
 .me{position:relative;width:18px;height:18px;border-radius:50%;background:var(--focus-ring);border:3px solid var(--surface);box-shadow:0 0 0 14px color-mix(in srgb,var(--focus-ring) 18%,transparent)}
 
-.alert-card{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:var(--s-3);align-items:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4) var(--s-3) var(--s-3);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none;text-align:left;font:inherit;width:100%}
+.alert-card{display:grid;grid-template-columns:36px minmax(0,1fr);gap:var(--s-3);align-items:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4) var(--s-4) var(--s-3);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none;text-align:left;font:inherit;width:100%}
 .alert-card > .marker{margin-top:2px}
 .alert-card .ac-main{display:grid;gap:4px;min-width:0}
 .alert-card .ac-eyebrow{display:flex;flex-wrap:wrap;gap:0 6px;align-items:baseline;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--text-muted)}
@@ -230,12 +230,12 @@ textarea.input{min-height:96px;resize:vertical}
 .alert-card h4{margin:0;font:600 var(--fs-h3)/var(--lh-h3) var(--font);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .alert-card .meta{display:flex;gap:4px;align-items:center;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font);min-width:0}
 .alert-card .meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.alert-card .ac-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2);margin-top:4px}
+.alert-card .ac-foot{grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2);padding-left:var(--s-1)}
 .alert-card .stats{display:flex;gap:var(--s-3);color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font);font-variant-numeric:tabular-nums}
 .alert-card .stats span{display:inline-flex;gap:3px;align-items:center}
 .alert-card .stats .ph{width:14px;height:14px}
-.alert-card .ac-thumb{width:64px;height:64px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--fam-soft),var(--surface-2));display:grid;place-items:center;color:var(--fam)}
-.alert-card .ac-thumb .ph{width:24px;height:24px;opacity:.75}
+.alert-card .ac-photo{grid-column:1 / -1;aspect-ratio:16/9;width:100%;max-width:100%;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--fam-soft),var(--surface-2));display:grid;place-items:center;color:var(--fam);overflow:hidden}
+.alert-card .ac-photo .ph{width:40px;height:40px;opacity:.7}
 .alert-card .svc{display:flex;gap:6px;align-items:center;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--primary)}
 
 .vote{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2)}
@@ -1128,16 +1128,16 @@ function AlertCard({ alert, onOpen, showStatus }) {
         <span className="ac-eyebrow"><b>{cat.label}</b><span>{ago}</span></span>
         <h4>{alert.title}</h4>
         <span className="meta"><Icon name="map-pin" className="ph-sm" /><span>{commune}{dist ? ` · ${dist}` : ""}</span></span>
-        <span className="ac-foot">
-          <span className="stats">
-            <span><Icon name="arrow-fat-up" />{alert.votesUp}</span>
-            <span><Icon name="arrow-fat-down" />{alert.votesDown}</span>
-            <span><Icon name="chat-circle" />{alert.commentsCount}</span>
-          </span>
-          {status}
-        </span>
       </span>
-      {alert.hasPhoto ? <span className="ac-thumb" aria-hidden="true"><Icon name="image" /></span> : <span />}
+      {alert.hasPhoto ? <span className="ac-photo" aria-hidden="true"><Icon name="image" /></span> : null}
+      <span className="ac-foot" aria-hidden="true">
+        <span className="stats">
+          <span><Icon name="arrow-fat-up" />{alert.votesUp}</span>
+          <span><Icon name="arrow-fat-down" />{alert.votesDown}</span>
+          <span><Icon name="chat-circle" />{alert.commentsCount}</span>
+        </span>
+        {status}
+      </span>
     </button>
   );
 }

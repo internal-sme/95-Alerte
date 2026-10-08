@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Composant · Alert Card</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/79083ea7a8d50397cf9d20db824b6129">
+<link rel="stylesheet" href="/_blob/21dbae15c4eee1a6147c46d5ae003bdf">
 </head>
 <body>
 <x-dc>
@@ -20,20 +20,19 @@ body{margin:0;font-family:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif}
     <span class="ac-eyebrow"><b>{{c.cat}}</b><span>{{c.ago}}</span></span>
     <h4>{{c.title}}</h4>
     <span class="meta"><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span><span>{{c.place}}</span></span>
-    <span class="ac-foot">
-      <span class="stats">
-        <span><span class="ph i i-arrow-fat-up" aria-hidden="true"></span>{{c.up}}</span>
-        <span><span class="ph i i-arrow-fat-down" aria-hidden="true"></span>{{c.down}}</span>
-        <span><span class="ph i i-chat-circle" aria-hidden="true"></span>{{c.com}}</span>
-      </span>
-      <sc-if value="{{c.hasStatus}}" hint-placeholder-val="{{true}}"><span class="badge badge-status {{c.stCls}}"><span class="ph i {{c.stIcon}}" aria-hidden="true"></span>{{c.stLabel}}</span></sc-if>
-    </span>
   </span>
-  <sc-if value="{{c.photo}}" hint-placeholder-val="{{true}}"><span class="ac-thumb" aria-hidden="true"><span class="ph i i-image"></span></span></sc-if>
-  <sc-if value="{{c.noPhoto}}" hint-placeholder-val="{{false}}"><span></span></sc-if>
+  <sc-if value="{{c.photo}}" hint-placeholder-val="{{true}}"><span class="ac-photo" aria-hidden="true"><span class="ph i i-image"></span></span></sc-if>
+  <span class="ac-foot">
+    <span class="stats">
+      <span><span class="ph i i-arrow-fat-up" aria-hidden="true"></span>{{c.up}}</span>
+      <span><span class="ph i i-arrow-fat-down" aria-hidden="true"></span>{{c.down}}</span>
+      <span><span class="ph i i-chat-circle" aria-hidden="true"></span>{{c.com}}</span>
+    </span>
+    <sc-if value="{{c.hasStatus}}" hint-placeholder-val="{{true}}"><span class="badge badge-status {{c.stCls}}"><span class="ph i {{c.stIcon}}" aria-hidden="true"></span>{{c.stLabel}}</span></sc-if>
+  </span>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"row":{"editor":null},"showStatus":{"editor":null},"$preview":{"width":358,"height":140}}'>
+<script type="text/x-dc" data-dc-script data-props='{"row":{"editor":null},"showStatus":{"editor":null},"$preview":{"width":358,"height":330}}'>
 var SHAPES = {
   incident: 'M18 2.5 33.5 18 18 33.5 2.5 18Z',
   vigilance: 'M18 3 34 32H2Z',

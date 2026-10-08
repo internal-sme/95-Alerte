@@ -225,7 +225,7 @@ textarea.input{min-height:96px;resize:vertical}
 .cluster.c-s{width:32px;height:32px}.cluster.c-m{width:40px;height:40px}.cluster.c-l{width:48px;height:48px}
 .me{position:relative;width:18px;height:18px;border-radius:50%;background:var(--focus-ring);border:3px solid var(--surface);box-shadow:0 0 0 14px color-mix(in srgb,var(--focus-ring) 18%,transparent)}
 
-.alert-card{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:var(--s-3);align-items:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4) var(--s-3) var(--s-3);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none;text-align:left;font:inherit;width:100%}
+.alert-card{display:grid;grid-template-columns:36px minmax(0,1fr);gap:var(--s-3);align-items:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4) var(--s-4) var(--s-3);box-shadow:var(--shadow-1);color:var(--text);text-decoration:none;text-align:left;font:inherit;width:100%}
 .alert-card > .marker{margin-top:2px}
 .alert-card .ac-main{display:grid;gap:4px;min-width:0}
 .alert-card .ac-eyebrow{display:flex;flex-wrap:wrap;gap:0 6px;align-items:baseline;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--text-muted)}
@@ -233,12 +233,12 @@ textarea.input{min-height:96px;resize:vertical}
 .alert-card h4{margin:0;font:600 var(--fs-h3)/var(--lh-h3) var(--font);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .alert-card .meta{display:flex;gap:4px;align-items:center;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font);min-width:0}
 .alert-card .meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.alert-card .ac-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2);margin-top:4px}
+.alert-card .ac-foot{grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2);padding-left:var(--s-1)}
 .alert-card .stats{display:flex;gap:var(--s-3);color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font);font-variant-numeric:tabular-nums}
 .alert-card .stats span{display:inline-flex;gap:3px;align-items:center}
 .alert-card .stats .ph{width:14px;height:14px}
-.alert-card .ac-thumb{width:64px;height:64px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--fam-soft),var(--surface-2));display:grid;place-items:center;color:var(--fam)}
-.alert-card .ac-thumb .ph{width:24px;height:24px;opacity:.75}
+.alert-card .ac-photo{grid-column:1 / -1;aspect-ratio:16/9;width:100%;max-width:100%;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--fam-soft),var(--surface-2));display:grid;place-items:center;color:var(--fam);overflow:hidden}
+.alert-card .ac-photo .ph{width:40px;height:40px;opacity:.7}
 .alert-card .svc{display:flex;gap:6px;align-items:center;font:500 var(--fs-caption)/var(--lh-caption) var(--font);color:var(--primary)}
 
 .vote{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2)}
@@ -749,7 +749,7 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
       </div></div>
 
       <h3 class="ds-sub">Alert Card</h3>
-      <p class="ds-note">Icône de famille à gauche, catégorie et ancienneté en sur-titre, titre sur 2 lignes, lieu et distance, puis confirmations, contestations, commentaires et statut. Vignette photo à droite si l'alerte en a une.</p>
+      <p class="ds-note">Icône de famille à gauche, catégorie et ancienneté en sur-titre, titre sur 2 lignes, lieu et distance, puis confirmations, contestations, commentaires et statut. Photo en grand (16:9, pleine largeur) si l'alerte en a une, puis votes et statut.</p>
       <div class="ds-grid">
         <a class="alert-card fam-incident" href="#specifiques" aria-label="Incendie, Fumée importante visible rue Carnot, Pontoise · 400 m, il y a 12 min">
           <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"/></svg><svg class="ph" aria-hidden="true"><use href="#ph-fire-fill"/></svg></span>
@@ -757,9 +757,9 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
             <span class="ac-eyebrow"><b>Incendie</b><span>il y a 12 min</span></span>
             <h4>Fumée importante visible rue Carnot</h4>
             <span class="meta"><svg class="ph ph-sm" aria-hidden="true"><use href="#ph-map-pin"/></svg><span>Pontoise · 400 m</span></span>
-            <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>24</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>3</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>8</span></span><span class="badge badge-status st-sent"><svg class="ph"><use href="#ph-paper-plane-tilt"/></svg>Transmise</span></span>
           </span>
-          <span class="ac-thumb" aria-hidden="true"><svg class="ph"><use href="#ph-image"/></svg></span>
+          <span class="ac-photo" aria-hidden="true"><svg class="ph"><use href="#ph-image"/></svg></span>
+          <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>24</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>3</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>8</span></span><span class="badge badge-status st-sent"><svg class="ph"><use href="#ph-paper-plane-tilt"/></svg>Transmise</span></span>
         </a>
         <a class="alert-card fam-positive" href="#specifiques" aria-label="Action environnementale, Nettoyage participatif du parc François-Mitterrand, Cergy · 3,4 km, il y a 1 h">
           <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"/></svg><svg class="ph" aria-hidden="true"><use href="#ph-leaf-fill"/></svg></span>
@@ -767,9 +767,9 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
             <span class="ac-eyebrow"><b>Action environnementale</b><span>il y a 1 h</span></span>
             <h4>Nettoyage participatif du parc François-Mitterrand</h4>
             <span class="meta"><svg class="ph ph-sm" aria-hidden="true"><use href="#ph-map-pin"/></svg><span>Cergy · 3,4 km</span></span>
-            <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>43</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>2</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>12</span></span></span>
           </span>
-          <span class="ac-thumb" aria-hidden="true"><svg class="ph"><use href="#ph-image"/></svg></span>
+          <span class="ac-photo" aria-hidden="true"><svg class="ph"><use href="#ph-image"/></svg></span>
+          <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>43</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>2</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>12</span></span></span>
         </a>
         <a class="alert-card fam-vigilance" href="#specifiques" aria-label="Propreté, Déchets abandonnés au pied des conteneurs, Argenteuil · 15,8 km, il y a 5 h">
           <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 3 34 32H2Z" stroke-linejoin="round"/></svg><svg class="ph" style="top:4px" aria-hidden="true"><use href="#ph-trash-fill"/></svg></span>
@@ -777,9 +777,8 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
             <span class="ac-eyebrow"><b>Propreté</b><span>il y a 5 h</span></span>
             <h4>Déchets abandonnés au pied des conteneurs</h4>
             <span class="meta"><svg class="ph ph-sm" aria-hidden="true"><use href="#ph-map-pin"/></svg><span>Argenteuil · 15,8 km</span></span>
-            <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>31</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>1</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>7</span></span><span class="badge badge-status st-done"><svg class="ph"><use href="#ph-check-circle-fill"/></svg>Traitée</span></span>
           </span>
-          <span></span>
+          <span class="ac-foot"><span class="stats"><span><svg class="ph"><use href="#ph-arrow-fat-up"/></svg>31</span><span><svg class="ph"><use href="#ph-arrow-fat-down"/></svg>1</span><span><svg class="ph"><use href="#ph-chat-circle"/></svg>7</span></span><span class="badge badge-status st-done"><svg class="ph"><use href="#ph-check-circle-fill"/></svg>Traitée</span></span>
         </a>
       </div>
 

@@ -659,16 +659,16 @@ function AlertCard({ alert, onOpen, showStatus }) {
         <span className="ac-eyebrow"><b>{cat.label}</b><span>{ago}</span></span>
         <h4>{alert.title}</h4>
         <span className="meta"><Icon name="map-pin" className="ph-sm" /><span>{commune}{dist ? ` · ${dist}` : ""}</span></span>
-        <span className="ac-foot">
-          <span className="stats">
-            <span><Icon name="arrow-fat-up" />{alert.votesUp}</span>
-            <span><Icon name="arrow-fat-down" />{alert.votesDown}</span>
-            <span><Icon name="chat-circle" />{alert.commentsCount}</span>
-          </span>
-          {status}
-        </span>
       </span>
-      {alert.hasPhoto ? <span className="ac-thumb" aria-hidden="true"><Icon name="image" /></span> : <span />}
+      {alert.hasPhoto ? <span className="ac-photo" aria-hidden="true"><Icon name="image" /></span> : null}
+      <span className="ac-foot" aria-hidden="true">
+        <span className="stats">
+          <span><Icon name="arrow-fat-up" />{alert.votesUp}</span>
+          <span><Icon name="arrow-fat-down" />{alert.votesDown}</span>
+          <span><Icon name="chat-circle" />{alert.commentsCount}</span>
+        </span>
+        {status}
+      </span>
     </button>
   );
 }
