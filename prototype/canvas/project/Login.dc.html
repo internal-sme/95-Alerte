@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Connexion</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/f808232c804992589b56207037b2c7a1">
+<link rel="stylesheet" href="/_blob/3bb009ba3c79458735a428687710c2b7">
 </head>
 <body>
 <x-dc>
@@ -16,52 +16,18 @@ body{margin:0}
 </helmet>
 <div class="a95 {{theme}}" style="width: 390px; height: 844px">
   <div class="screen95 auth welcome">
-      <div class="auth-hero" aria-hidden="true">
-        <div class="map95">
-          <svg class="map-art" viewBox="0 0 390 768" aria-hidden="true">
-            <rect class="land" width="390" height="768"></rect>
-            <path class="forest" d="M282 0H390V150C362 168 318 160 298 128C280 98 270 40 282 0Z"></path>
-            <path class="forest" d="M0 470C38 452 84 470 92 512C100 556 64 592 22 600L0 602Z"></path>
-            <path class="forest" d="M330 420C356 398 390 404 390 404V540C360 552 330 534 322 504C316 478 314 440 330 420Z"></path>
-            <path class="urban" d="M150 230C176 206 238 200 262 226C286 252 280 300 252 320C224 340 176 336 156 312C136 288 128 252 150 230Z"></path>
-            <path class="urban" d="M236 288C262 276 316 290 322 322C328 356 300 376 268 372C240 368 222 344 222 318C222 302 226 294 236 288Z"></path>
-            <path class="urban" d="M20 300C46 280 110 290 134 318C156 346 150 404 120 420C90 436 40 424 22 396C4 368 0 318 20 300Z"></path>
-            <path class="urban" d="M40 190C64 176 112 184 124 206C134 226 120 250 94 256C66 262 40 250 32 230C26 214 28 198 40 190Z"></path>
-            <path class="water" d="M396 120C352 156 304 198 268 230C246 250 232 274 214 292C192 314 160 324 136 336C106 352 80 388 76 428C72 470 96 500 132 512C172 526 206 548 222 590C236 628 232 690 240 772"></path>
-            <path class="road-case minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200"></path>
-            <path class="road-case minor" d="M196 290C170 312 132 334 84 344"></path>
-            <path class="road-case" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478"></path>
-            <path class="road-case" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380"></path>
-            <path class="road minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200"></path>
-            <path class="road minor" d="M196 290C170 312 132 334 84 344"></path>
-            <path class="road" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478"></path>
-            <text class="label" x="262" y="250" text-anchor="middle">Pontoise</text>
-            <path class="road" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380"></path>
-            <text class="label" x="290" y="392" text-anchor="middle">Saint-Ouen-l'Aumône</text>
-            <text class="label" x="60" y="446" text-anchor="middle">Cergy</text>
-            <text class="label" x="80" y="176" text-anchor="middle">Osny</text>
-            <text class="label water-label" x="344" y="198" text-anchor="middle">L'Oise</text>
-          </svg>
-        </div>
-        <span class="map-pin" style="left: 120px; top: 108px"><span class="marker fam-positive"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"></circle></svg><span class="ph i i-hand-heart-fill" aria-hidden="true"></span></span></span>
-        <span class="map-pin" style="left: 186px; top: 132px"><span class="marker fam-incident"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"></path></svg><span class="ph i i-fire-fill" aria-hidden="true"></span></span></span>
-        <span class="map-pin" style="left: 290px; top: 132px"><span class="marker fam-vigilance"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 3 34 32H2Z" stroke-linejoin="round"></path></svg><span class="ph i i-lightbulb-fill" aria-hidden="true" style="top: 4px"></span></span></span>
-        <span class="map-pin" style="left: 64px; top: 52px"><span class="marker fam-info"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="8"></rect></svg><span class="ph i i-megaphone-fill" aria-hidden="true"></span></span></span>
-      </div>
-      <a class="pill auth-skip" href="{{l.guest}}">Explorer sans compte<span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></a>
-      <div class="welcome-panel">
-        <div class="auth-intro">
-          <span class="welcome-brand"><span class="brand-mark" aria-hidden="true" style="width: 32px; height: 32px; font-size: 13px">95</span>95 Alerte</span>
-          <h1 class="auth-title">Votre territoire, votre vigilance.</h1>
-          <p class="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
-        </div>
-        <div class="auth-actions">
-          <a class="btn btn-primary btn-block" href="{{l.fc}}"><span class="ph i i-identification-card" aria-hidden="true"></span>Continuer avec FranceConnect</a>
-          <a class="btn btn-secondary btn-block" href="{{l.signup}}">Créer un compte</a>
-          <a class="btn btn-ghost btn-block" href="{{l.signin}}">J'ai déjà un compte</a>
-        </div>
-        <p class="legal">FranceConnect vérifie votre identité ; vos alertes peuvent rester anonymes. En continuant, vous acceptez les conditions d'utilisation.</p>
-      </div>
+    <a class="pill auth-skip" href="{{l.guest}}">Explorer sans compte<span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></a>
+    <div class="welcome-center">
+      <span class="brand-mark" aria-hidden="true" style="width: 72px; height: 72px; font-size: 29px">95</span>
+      <h1 class="welcome-title">Votre territoire,<br>votre vigilance.</h1>
+      <p class="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
+    </div>
+    <div class="welcome-panel">
+      <a class="btn btn-primary btn-block" href="{{l.fc}}"><span class="ph i i-identification-card" aria-hidden="true"></span>Continuer avec FranceConnect</a>
+      <a class="btn btn-secondary btn-block" href="{{l.signup}}">Créer un compte</a>
+      <a class="btn btn-ghost btn-block" href="{{l.signin}}">J'ai déjà un compte</a>
+      <p class="legal">FranceConnect vérifie votre identité ; vos alertes peuvent rester anonymes. En continuant, vous acceptez les conditions d'utilisation.</p>
+    </div>
   </div>
 </div>
 </x-dc>

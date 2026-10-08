@@ -1317,39 +1317,24 @@ function Benefits({ items }) {
   );
 }
 
-function AuthHero() {
-  return (
-    <div className="auth-hero" aria-hidden="true">
-      <div className="map95">{MAP_ART}</div>
-      <span className="map-pin" style={{ left: 120, top: 108 }}><Marker family="positive" icon="hand-heart" /></span>
-      <span className="map-pin" style={{ left: 186, top: 132 }}><Marker family="incident" icon="fire" /></span>
-      <span className="map-pin" style={{ left: 290, top: 132 }}><Marker family="vigilance" icon="lightbulb" /></span>
-      <span className="map-pin" style={{ left: 64, top: 52 }}><Marker family="info" icon="megaphone" /></span>
-    </div>
-  );
-}
-
-/* Accueil de connexion (Mobbin : Dot, Kit, Lloyds) : la carte occupe l'écran, un panneau en bas
-   porte un titre court et les actions ; « Explorer sans compte » en pastille sur la carte (Breathwrk). */
+/* Accueil de connexion, d'après Dot (Mobbin) : fond en léger dégradé bleu, marque et titre au centre,
+   actions empilées en bas, mentions en une ligne. « Explorer sans compte » reste accessible en haut. */
 function LoginScreen() {
   const { dispatch } = useStore();
   const online = useOnline();
   const go = (step) => dispatch({ type: "AUTH_GO", step });
   return (
     <div className="screen auth welcome">
-      <AuthHero />
       <button type="button" className="pill auth-skip" onClick={() => dispatch({ type: "GUEST" })}>Explorer sans compte<Icon name="caret-right" className="ph-sm" /></button>
+      <div className="welcome-center">
+        <BrandMark size={72} />
+        <h1 className="welcome-title">Votre territoire,<br />votre vigilance.</h1>
+        <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
+      </div>
       <div className="welcome-panel">
-        <div className="auth-intro">
-          <span className="welcome-brand"><BrandMark size={32} />95 Alerte</span>
-          <h1 className="auth-title">Votre territoire, votre vigilance.</h1>
-          <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
-        </div>
-        <div className="auth-actions">
-          <Button block icon="identification-card" onClick={online(() => go("fc"))}>Continuer avec FranceConnect</Button>
-          <Button block variant="secondary" onClick={() => go("signup-info")}>Créer un compte</Button>
-          <Button block variant="ghost" onClick={() => go("signin")}>J'ai déjà un compte</Button>
-        </div>
+        <Button block icon="identification-card" onClick={online(() => go("fc"))}>Continuer avec FranceConnect</Button>
+        <Button block variant="secondary" onClick={() => go("signup-info")}>Créer un compte</Button>
+        <Button block variant="ghost" onClick={() => go("signin")}>J'ai déjà un compte</Button>
         <p className="legal">FranceConnect vérifie votre identité ; vos alertes peuvent rester anonymes. En continuant, vous acceptez les conditions d'utilisation.</p>
       </div>
     </div>

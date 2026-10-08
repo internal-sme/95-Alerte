@@ -338,9 +338,6 @@ textarea.input{min-height:96px;resize:vertical}
 .splash-center h1{margin:var(--s-2) 0 0;font:700 var(--fs-display)/var(--lh-display) var(--font);letter-spacing:-.02em}
 .splash-center p{margin:0;font:500 var(--fs-body)/var(--lh-body) var(--font);opacity:.85}
 .splash-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s-3);font:500 var(--fs-caption)/1 var(--font);opacity:.8}
-.auth-hero{position:relative;height:208px;flex:none;overflow:hidden;border-bottom:1px solid var(--border)}
-.auth-hero .map95 svg.map-art{top:-170px;left:-10px}
-.auth-hero .map-pin{pointer-events:none}
 .auth-body{gap:var(--s-6)}
 .screen.auth > .screen-pad{flex:1 0 auto}
 .screen.auth .screen-footer{position:sticky;bottom:0;z-index:2}
@@ -349,13 +346,13 @@ textarea.input{min-height:96px;resize:vertical}
 .auth-lead{margin:0;color:var(--text-muted);font:400 var(--fs-body)/var(--lh-body) var(--font)}
 .auth-actions{display:grid;gap:var(--s-3)}
 .auth-guest{display:grid;gap:var(--s-1)}
-/* Écran d'accueil de connexion : carte plein écran + panneau d'actions ancré en bas (même grammaire que la carte d'accueil) */
-.screen.auth.welcome{overflow:hidden;background:var(--map-land)}
-.welcome .auth-hero{flex:1 1 auto;height:auto;min-height:160px;border-bottom:0}
-.welcome-panel{position:relative;z-index:2;flex:none;margin-top:calc(-1 * var(--s-6));display:grid;gap:var(--s-4);padding:var(--s-6) var(--s-4) var(--s-4);background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:var(--shadow-3)}
-.welcome-panel .auth-actions{gap:var(--s-2)}
-.welcome-brand{display:inline-flex;align-items:center;gap:var(--s-2);font:700 var(--fs-body)/1 var(--font);color:var(--text)}
-.welcome-brand .brand-mark{box-shadow:none}
+/* Écran d'accueil de connexion (d'après Dot) : léger dégradé bleu, marque et titre centrés, actions en bas */
+.screen.auth.welcome{background:radial-gradient(120% 60% at 15% 0%,var(--primary-soft) 0%,transparent 70%),linear-gradient(180deg,var(--primary-soft) 0%,var(--bg) 75%)}
+.welcome-center{flex:1 0 auto;display:grid;justify-items:center;align-content:center;gap:var(--s-4);padding:var(--s-12) var(--s-6) var(--s-6);text-align:center}
+.welcome-center .auth-lead{max-width:30ch}
+.welcome-title{margin:var(--s-2) 0 0;font:700 var(--fs-display)/var(--lh-display) var(--font);letter-spacing:-.02em;text-wrap:balance}
+.welcome-panel{flex:none;display:grid;gap:var(--s-2);padding:0 var(--s-4) var(--s-4)}
+.welcome-panel .legal{margin-top:var(--s-2)}
 .auth-skip{position:absolute;top:var(--s-3);right:var(--s-3);z-index:3;min-height:var(--tap)}
 .auth-stepper{padding:var(--s-3) var(--s-4) 0}
 .help-text{margin:0;display:flex;gap:var(--s-2);align-items:flex-start;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
@@ -1868,39 +1865,24 @@ function Benefits({ items }) {
   );
 }
 
-function AuthHero() {
-  return (
-    <div className="auth-hero" aria-hidden="true">
-      <div className="map95">{MAP_ART}</div>
-      <span className="map-pin" style={{ left: 120, top: 108 }}><Marker family="positive" icon="hand-heart" /></span>
-      <span className="map-pin" style={{ left: 186, top: 132 }}><Marker family="incident" icon="fire" /></span>
-      <span className="map-pin" style={{ left: 290, top: 132 }}><Marker family="vigilance" icon="lightbulb" /></span>
-      <span className="map-pin" style={{ left: 64, top: 52 }}><Marker family="info" icon="megaphone" /></span>
-    </div>
-  );
-}
-
-/* Accueil de connexion (Mobbin : Dot, Kit, Lloyds) : la carte occupe l'écran, un panneau en bas
-   porte un titre court et les actions ; « Explorer sans compte » en pastille sur la carte (Breathwrk). */
+/* Accueil de connexion, d'après Dot (Mobbin) : fond en léger dégradé bleu, marque et titre au centre,
+   actions empilées en bas, mentions en une ligne. « Explorer sans compte » reste accessible en haut. */
 function LoginScreen() {
   const { dispatch } = useStore();
   const online = useOnline();
   const go = (step) => dispatch({ type: "AUTH_GO", step });
   return (
     <div className="screen auth welcome">
-      <AuthHero />
       <button type="button" className="pill auth-skip" onClick={() => dispatch({ type: "GUEST" })}>Explorer sans compte<Icon name="caret-right" className="ph-sm" /></button>
+      <div className="welcome-center">
+        <BrandMark size={72} />
+        <h1 className="welcome-title">Votre territoire,<br />votre vigilance.</h1>
+        <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
+      </div>
       <div className="welcome-panel">
-        <div className="auth-intro">
-          <span className="welcome-brand"><BrandMark size={32} />95 Alerte</span>
-          <h1 className="auth-title">Votre territoire, votre vigilance.</h1>
-          <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
-        </div>
-        <div className="auth-actions">
-          <Button block icon="identification-card" onClick={online(() => go("fc"))}>Continuer avec FranceConnect</Button>
-          <Button block variant="secondary" onClick={() => go("signup-info")}>Créer un compte</Button>
-          <Button block variant="ghost" onClick={() => go("signin")}>J'ai déjà un compte</Button>
-        </div>
+        <Button block icon="identification-card" onClick={online(() => go("fc"))}>Continuer avec FranceConnect</Button>
+        <Button block variant="secondary" onClick={() => go("signup-info")}>Créer un compte</Button>
+        <Button block variant="ghost" onClick={() => go("signin")}>J'ai déjà un compte</Button>
         <p className="legal">FranceConnect vérifie votre identité ; vos alertes peuvent rester anonymes. En continuant, vous acceptez les conditions d'utilisation.</p>
       </div>
     </div>
