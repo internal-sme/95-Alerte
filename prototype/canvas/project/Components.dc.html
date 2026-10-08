@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Bibliothèque de composants</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/21dbae15c4eee1a6147c46d5ae003bdf">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 t-light" style="width: 390px; height: 2760px">
+  <header class="screen-header">
+    <a class="icon-btn" href="Profile.dc.html" aria-label="Retour"><span class="ph i i-caret-left" aria-hidden="true"></span></a>
+    <h1>Composants</h1>
+    <span></span>
+  </header>
+  <div class="screen-pad">
+    <p class="demo-note">Bibliothèque interne du prototype : composants de base branchés au store. Référence visuelle complète : docs/design-system/index.html.</p>
+
+    <section class="lib-section">
+      <p class="section-label">Boutons</p>
+      <button class="btn btn-primary" type="button">Publier l'alerte</button>
+      <button class="btn btn-secondary" type="button"><span class="ph i i-map-pin" aria-hidden="true"></span>Choisir sur la carte</button>
+      <div class="lib-row">
+        <button class="btn btn-ghost" type="button">Plus tard</button>
+        <a class="btn btn-destructive" href="Modal.dc.html"><span class="ph i i-trash-simple" aria-hidden="true"></span>Supprimer</a>
+      </div>
+      <button class="btn btn-primary" type="button" aria-busy="true"><span class="spinner" aria-hidden="true"></span>Publication…</button>
+      <button class="btn btn-primary" type="button" disabled>Confirmer cette position</button>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Champs</p>
+      <div class="field">
+        <label for="lib-title">Titre</label>
+        <input id="lib-title" class="input" placeholder="Arbre tombé sur la chaussée" maxlength="80">
+        <span class="help"><span>Court et factuel</span><span>0/80</span></span>
+      </div>
+      <div class="field">
+        <label for="lib-code">Code reçu par SMS</label>
+        <input id="lib-code" class="input" value="48213" aria-invalid="true" aria-describedby="lib-code-err">
+        <span class="err" id="lib-code-err"><span class="ph ph-sm i i-warning-fill" aria-hidden="true"></span>Code incorrect. Vérifiez le SMS ou demandez un nouveau code.</span>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Chips · Segmented control</p>
+      <div class="lib-row">
+        <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+          <button class="chip" type="button" aria-pressed="{{c.on}}" onClick="{{c.toggle}}"><sc-if value="{{c.on}}" hint-placeholder-val="{{false}}"><span class="ph i i-check" aria-hidden="true"></span></sc-if>{{c.label}}</button>
+        </sc-for>
+      </div>
+      <div class="seg" role="group" aria-label="Vue">
+        <button type="button" aria-pressed="{{view.map}}" onClick="{{showMap}}"><span class="ph ph-sm i i-map-trifold" aria-hidden="true"></span>Carte</button>
+        <button type="button" aria-pressed="{{view.list}}" onClick="{{showList}}"><span class="ph ph-sm i i-list-bullets" aria-hidden="true"></span>Liste</button>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">RadioCard + aperçu public</p>
+      <label class="radio-card">
+        <input type="radio" name="lib-pub" value="profile" checked="{{pub.profile}}" onChange="{{pickProfile}}">
+        <span class="rc-icon" style="background: var(--primary-soft); color: var(--primary)"><span class="ph ph-lg i i-user-circle" aria-hidden="true"></span></span>
+        <span><b>Publier avec mon profil</b><small>Les autres verront votre prénom et l'initiale de votre nom.</small></span>
+        <span class="rc-dot"></span>
+      </label>
+      <label class="radio-card">
+        <input type="radio" name="lib-pub" value="anon" checked="{{pub.anon}}" onChange="{{pickAnon}}">
+        <span class="rc-icon" style="background: var(--surface-2); color: var(--text-muted)"><span class="ph ph-lg i i-detective" aria-hidden="true"></span></span>
+        <span><b>Publier anonymement</b><small>Aucune identité visible. La plateforme peut retrouver l'auteur en cas d'abus.</small></span>
+        <span class="rc-dot"></span>
+      </label>
+      <div class="preview-author"><span class="ph i i-eye" aria-hidden="true"></span>Visible publiquement : <b>{{pub.preview}}</b></div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Switch · ListItem</p>
+      <div class="list">
+        <div class="list-item" style="display: block; padding: 0 var(--s-4)">
+          <label class="switch" for="lib-sw">Alertes à proximité<input id="lib-sw" type="checkbox" checked="{{near}}" onChange="{{toggleNear}}"><span></span></label>
+        </div>
+        <div class="list-item"><span class="ph i i-bell" aria-hidden="true"></span><span>Notifications</span><span class="val">Activées<span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></div>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Feedback</p>
+      <div class="toast" role="status"><span class="ph i i-check-circle-fill" aria-hidden="true"></span>Votre alerte a été publiée.</div>
+      <div class="toast is-error" role="alert"><span class="ph i i-warning-fill" aria-hidden="true"></span>Impossible de publier votre alerte. Vérifiez votre connexion.<button type="button" class="toast-action">Réessayer</button></div>
+      <div class="banner banner-offline" role="status"><span class="ph i i-wifi-slash" aria-hidden="true"></span><span><b>Vous êtes actuellement hors connexion.</b>Les fonctionnalités dépendantes du réseau sont désactivées.</span></div>
+      <div class="banner banner-emergency" role="note"><span class="ph i i-siren-fill" aria-hidden="true"></span><span>En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés.</span></div>
+      <div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="3" aria-label="Étape 3 sur 7">
+        <div class="lbl"><span>Étape 3 sur 7</span><span>Localisation</span></div>
+        <div class="track"><i style="width: 43%"></i></div>
+      </div>
+      <div style="display: grid; gap: 8px">
+        <div class="skeleton" style="height: 14px; width: 40%"></div>
+        <div class="skeleton" style="height: 18px; width: 85%"></div>
+        <div class="skeleton" style="height: 90px"></div>
+      </div>
+      <div class="empty">
+        <span class="empty-ill"><span class="ph i i-map-trifold" aria-hidden="true" style="width: 32px; height: 32px"></span></span>
+        <h4>Aucune alerte dans cette zone.</h4>
+        <p>Revenez plus tard ou élargissez votre zone de recherche.</p>
+        <button class="btn btn-secondary" type="button">Élargir à 10 km</button>
+      </div>
+      <div class="lib-row">
+        <button class="pill" type="button"><span class="dot-new" aria-hidden="true"></span>3 nouvelles alertes</button>
+        <span class="tooltip" role="tooltip">Signalez un événement ici</span>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Marqueurs</p>
+      <div class="lib-markers">
+        <span class="marker fam-incident" role="img" aria-label="Incident"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"></path></svg><span class="ph i i-fire-fill" aria-hidden="true"></span></span>
+        <span class="marker fam-vigilance" role="img" aria-label="Vigilance"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 3 34 32H2Z" stroke-linejoin="round"></path></svg><span class="ph i i-lightbulb-fill" aria-hidden="true" style="top: 4px"></span></span>
+        <span class="marker fam-positive" role="img" aria-label="Positif"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"></circle></svg><span class="ph i i-soccer-ball-fill" aria-hidden="true"></span></span>
+        <span class="marker fam-info" role="img" aria-label="Information"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="8"></rect></svg><span class="ph i i-barricade-fill" aria-hidden="true"></span></span>
+        <span class="marker fam-positive is-selected" role="img" aria-label="Sélectionné"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.5"></circle></svg><span class="ph i i-mask-happy-fill" aria-hidden="true"></span></span>
+        <span class="marker fam-incident is-critical" role="img" aria-label="Incident critique"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"></path></svg><span class="ph i i-fire-fill" aria-hidden="true"></span><span class="marker-label">Urgent</span></span>
+        <button class="cluster c-m" type="button" aria-label="12 alertes regroupées, zoomer">12</button>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Badges</p>
+      <div class="lib-row">
+        <span class="badge badge-type fam-incident"><span class="ph i i-fire-fill" aria-hidden="true"></span>Incendie</span>
+        <span class="badge badge-type fam-vigilance"><span class="ph i i-trash-fill" aria-hidden="true"></span>Propreté</span>
+        <span class="badge badge-type fam-positive"><span class="ph i i-hand-heart-fill" aria-hidden="true"></span>Solidarité</span>
+        <span class="badge badge-type fam-info"><span class="ph i i-barricade-fill" aria-hidden="true"></span>Travaux</span>
+      </div>
+      <div class="lib-row">
+        <span class="badge badge-status st-active fam-positive"><span class="ph i i-check-circle-fill" aria-hidden="true"></span>Active</span>
+        <span class="badge badge-status st-soon"><span class="ph i i-timer" aria-hidden="true"></span>Expire bientôt</span>
+        <span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span>
+        <span class="badge badge-status st-progress"><span class="ph i i-arrows-clockwise" aria-hidden="true"></span>En traitement</span>
+        <span class="badge badge-status st-done"><span class="ph i i-check-circle-fill" aria-hidden="true"></span>Traitée</span>
+        <span class="badge badge-status st-expired"><span class="ph i i-clock" aria-hidden="true"></span>Expirée</span>
+        <span class="badge badge-status st-moderated"><span class="ph i i-eye-slash" aria-hidden="true"></span>Contenu modéré</span>
+        <span class="badge badge-status st-rejected"><span class="ph i i-x" aria-hidden="true"></span>Rejetée</span>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Alert Card · Vote · Expiration</p>
+      <dc-import name="AlertCard" hint-size="100%,124px"></dc-import>
+      <div class="vote" role="group" aria-label="Votre avis sur ce signalement">
+        <button class="up" type="button" aria-pressed="{{vote.up}}" onClick="{{voteUp}}"><span class="ph i {{vote.upIcon}}" aria-hidden="true"></span>Confirmer <span class="n">{{vote.upCount}}</span></button>
+        <button class="down" type="button" aria-pressed="{{vote.down}}" onClick="{{voteDown}}"><span class="ph i {{vote.downIcon}}" aria-hidden="true"></span>Contester <span class="n">{{vote.downCount}}</span></button>
+      </div>
+      <div class="expiry"><span class="lbl"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>Visible encore 23 h 48</span><div class="bar" aria-hidden="true"><i style="width: 99%"></i></div></div>
+      <div class="expiry soon"><span class="lbl"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>Expire dans 30 min</span><div class="bar" aria-hidden="true"><i style="width: 2%"></i></div></div>
+      <div class="expiry over"><span class="lbl"><span class="ph ph-sm i i-clock" aria-hidden="true"></span>Cette alerte a expiré.</span><div class="bar" aria-hidden="true"><i style="width: 100%"></i></div></div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Timeline · Service</p>
+      <div class="service"><span class="ph i i-paper-plane-tilt-fill" aria-hidden="true"></span><span><b>Transmis au service compétent</b><small>Service Voirie · Ville de Pontoise</small></span></div>
+      <ol class="timeline">
+        <li class="done"><span class="dot"><span class="ph i i-check" aria-hidden="true"></span></span><span><b>Signalement envoyé</b><small>il y a 4 h</small></span></li>
+        <li class="done"><span class="dot"><span class="ph i i-check" aria-hidden="true"></span></span><span><b>Transmis au service compétent</b><small>Service Voirie · Ville de Pontoise</small></span></li>
+        <li class="current"><span class="dot"><span class="ph i i-arrows-clockwise" aria-hidden="true"></span></span><span><b>Pris en compte</b><small>Délai indicatif : 72 h</small></span></li>
+        <li><span class="dot"></span><span><b>En cours de traitement</b></span></li>
+        <li><span class="dot"></span><span><b>Traité</b></span></li>
+      </ol>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Catégories</p>
+      <div class="cat-grid">
+        <sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+          <button class="cat-tile {{c.famCls}}" type="button" aria-pressed="{{c.on}}" onClick="{{c.pick}}">
+            <span class="marker"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="{{c.shape}}" stroke-linejoin="round"></path></svg><span class="ph i {{c.icon}}" aria-hidden="true" style="{{c.iconStyle}}"></span></span>
+            {{c.label}}
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <p class="section-label">Commentaires</p>
+      <div class="comment">
+        <span class="avatar" aria-hidden="true">SL</span>
+        <div>
+          <div class="who">Sami L. <time>il y a 8 min</time></div>
+          <p>Les pompiers arrivent, on entend les sirènes depuis la place.</p>
+          <div class="acts"><button type="button">Répondre</button><button type="button">Signaler</button></div>
+        </div>
+      </div>
+      <div class="comment reply">
+        <span class="avatar anon" aria-hidden="true"><span class="ph i i-detective"></span></span>
+        <div>
+          <div class="who">Citoyen anonyme <time>il y a 4 min</time></div>
+          <p>Merci pour l'info, je passe par Saint-Martin.</p>
+          <div class="acts"><button type="button">Répondre</button><button type="button">Signaler</button></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":2760}}'>
+var DIAMOND = 'M18 2.5 33.5 18 18 33.5 2.5 18Z';
+var TRIANGLE = 'M18 3 34 32H2Z';
+var CIRCLE = 'M18 2.5a15.5 15.5 0 1 0 0.01 0Z';
+var CATS = [
+  ['incendie', 'Incendie', 'incident', 'fire', DIAMOND],
+  ['accident', 'Accident', 'incident', 'car', DIAMOND],
+  ['proprete', 'Propreté', 'vigilance', 'trash', TRIANGLE],
+  ['eclairage', 'Éclairage', 'vigilance', 'lightbulb', TRIANGLE],
+  ['solidarite', 'Solidarité', 'positive', 'hand-heart', CIRCLE],
+  ['culture', 'Culture', 'positive', 'mask-happy', CIRCLE]
+];
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { chips: { Culture: true }, view: 'map', pub: 'profile', near: true, vote: 1, cat: 'incendie' };
+  }
+  renderVals() {
+    const st = this.state;
+    const up = 42 + (st.vote === 1 ? 1 : 0);
+    const down = 2 + (st.vote === -1 ? 1 : 0);
+    return {
+      chips: ['Culture', 'Sport', 'Propreté', 'Voirie'].map((label) => ({
+        label: label,
+        on: !!st.chips[label],
+        toggle: () => this.setState({ chips: Object.assign({}, st.chips, { [label]: !st.chips[label] }) })
+      })),
+      view: { map: st.view === 'map', list: st.view === 'list' },
+      showMap: () => this.setState({ view: 'map' }),
+      showList: () => this.setState({ view: 'list' }),
+      pub: { profile: st.pub === 'profile', anon: st.pub === 'anon', preview: st.pub === 'profile' ? 'Signalé par Jean D.' : 'Signalement anonyme' },
+      pickProfile: () => this.setState({ pub: 'profile' }),
+      pickAnon: () => this.setState({ pub: 'anon' }),
+      near: st.near,
+      toggleNear: () => this.setState({ near: !st.near }),
+      vote: {
+        up: st.vote === 1, down: st.vote === -1, upCount: up, downCount: down,
+        upIcon: st.vote === 1 ? 'i-arrow-fat-up-fill' : 'i-arrow-fat-up',
+        downIcon: st.vote === -1 ? 'i-arrow-fat-down-fill' : 'i-arrow-fat-down'
+      },
+      voteUp: () => this.setState({ vote: st.vote === 1 ? 0 : 1 }),
+      voteDown: () => this.setState({ vote: st.vote === -1 ? 0 : -1 }),
+      cats: CATS.map((c) => ({
+        label: c[1], famCls: 'fam-' + c[2], icon: 'i-' + c[3] + '-fill', shape: c[4],
+        iconStyle: c[2] === 'vigilance' ? 'top: 4px' : '',
+        on: st.cat === c[0],
+        pick: () => this.setState({ cat: c[0] })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Bottom sheet + toast</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/21dbae15c4eee1a6147c46d5ae003bdf">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 t-light" style="width: 390px; height: 844px">
+  <header class="screen-header">
+    <a class="icon-btn" href="Profile.dc.html" aria-label="Retour"><span class="ph i i-caret-left" aria-hidden="true"></span></a>
+    <h1>Composants</h1>
+    <span></span>
+  </header>
+  <div class="screen95">
+    <div class="screen-pad">
+      <h2 class="section-label">Feedback</h2>
+      <div class="lib-row">
+        <button class="btn btn-secondary" type="button" onClick="{{showToast}}">Toast succès</button>
+        <button class="btn btn-secondary" type="button" onClick="{{openSheet}}">Ouvrir le panneau</button>
+      </div>
+      <div class="banner banner-emergency" role="note"><span class="ph i i-siren-fill" aria-hidden="true"></span><span>En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés.</span></div>
+    </div>
+    <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+      <div class="bs-scrim" onClick="{{closeSheet}}"></div>
+      <section class="bs" style="height: {{sheetH}}" role="dialog" aria-label="Exemple de bottom sheet">
+        <button class="bs-handle" type="button" aria-label="Agrandir ou réduire le panneau" onClick="{{toggleSize}}"><span></span></button>
+        <div class="bs-head">
+          <h2>Exemple de bottom sheet</h2>
+          <button class="icon-btn flat" type="button" aria-label="Fermer" onClick="{{closeSheet}}" style="width: 40px; height: 40px"><span class="ph i i-x" aria-hidden="true"></span></button>
+        </div>
+        <div class="bs-body">
+          <p class="demo-note">Touchez la poignée pour agrandir le panneau. La croix ou le fond grisé le ferment.</p>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+            <dc-import name="AlertCard" row="{{r}}" hint-size="100%,124px"></dc-import>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+  </div>
+  <sc-if value="{{toast}}" hint-placeholder-val="{{true}}">
+    <div class="toast-host" aria-live="polite">
+      <div class="toast" role="status"><span class="ph i i-check-circle-fill" aria-hidden="true"></span>Votre alerte a été publiée.</div>
+    </div>
+  </sc-if>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="Main.dc.html"><span class="ph i i-map-trifold" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="Alerts.dc.html"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="Report.dc.html" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="Activity.dc.html"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="Profile.dc.html" aria-current="page"><span class="ph i i-user-circle-fill" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+var ROWS = [
+  ['a4', 'Action environnementale', 'positive', 'leaf', 'positive', 'Nettoyage participatif du parc François-Mitterrand', 'Cergy', 3.64, 60, '', 43, 2, 12, true],
+  ['a5', 'Éclairage', 'vigilance', 'lightbulb', 'negative', 'Trois lampadaires éteints avenue de la Gare', 'Ermont', 13.56, 140, 'traite', 12, 0, 2, false]
+];
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { open: true, full: false, toast: true };
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  renderVals() {
+    return {
+      rows: ROWS,
+      open: this.state.open,
+      sheetH: this.state.full ? '640px' : '420px',
+      toast: this.state.toast,
+      openSheet: () => this.setState({ open: true, full: false }),
+      closeSheet: () => this.setState({ open: false }),
+      toggleSize: () => this.setState({ full: !this.state.full }),
+      showToast: () => {
+        clearTimeout(this.timer);
+        this.setState({ toast: true });
+        this.timer = setTimeout(() => this.setState({ toast: false }), 4000);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

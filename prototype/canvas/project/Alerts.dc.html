@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Alertes</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/21dbae15c4eee1a6147c46d5ae003bdf">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 scroll95">
+    <div class="screen-title row">
+      <div><h1>Alertes</h1><p>25 alertes actives dans le Val-d'Oise</p></div>
+      <button class="icon-btn flat" type="button" aria-label="Filtres"><span class="ph i i-sliders-horizontal" aria-hidden="true"></span></button>
+    </div>
+    <div class="screen-pad">
+      <div class="seg is-block" role="group" aria-label="Type d'alertes">
+        <button type="button" aria-pressed="{{f.all}}" onClick="{{showAll}}">Toutes</button>
+        <button type="button" aria-pressed="{{f.positive}}" onClick="{{showPositive}}">Positives</button>
+        <button type="button" aria-pressed="{{f.negative}}" onClick="{{showNegative}}">Négatives</button>
+      </div>
+      <section class="list-section">
+        <h2 class="section-label">À moins de 5 km</h2>
+        <sc-for list="{{near}}" as="r" hint-placeholder-count="3">
+          <dc-import name="AlertCard" row="{{r}}" hint-size="100%,124px"></dc-import>
+        </sc-for>
+      </section>
+      <section class="list-section">
+        <h2 class="section-label">Ailleurs dans le Val-d'Oise</h2>
+        <sc-for list="{{rest}}" as="r" hint-placeholder-count="3">
+          <dc-import name="AlertCard" row="{{r}}" hint-size="100%,124px"></dc-import>
+        </sc-for>
+      </section>
+    </div>
+  </div>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="{{l.map}}"><span class="ph i i-map-trifold" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="{{l.alerts}}" aria-current="page"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="{{l.report}}" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="{{l.activity}}"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="{{l.profile}}"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+var ALERTS = [
+  ['a1', 'Incendie', 'incident', 'fire', 'negative', 'Fumée importante visible rue Carnot', 'Pontoise', 1.08, 12, 'transmis', 24, 3, 8, true],
+  ['a2', 'Accident', 'incident', 'car', 'negative', 'Collision entre deux véhicules au rond-point', 'Cergy', 3.23, 35, 'transmis', 15, 1, 4, true],
+  ['a3', 'Propreté', 'vigilance', 'trash', 'negative', 'Déchets abandonnés au pied des conteneurs', 'Argenteuil', 16.17, 300, 'traite', 31, 1, 7, true],
+  ['a4', 'Action environnementale', 'positive', 'leaf', 'positive', 'Nettoyage participatif du parc François-Mitterrand', 'Cergy', 3.64, 60, '', 43, 2, 12, true],
+  ['a5', 'Éclairage', 'vigilance', 'lightbulb', 'negative', 'Trois lampadaires éteints avenue de la Gare', 'Ermont', 13.56, 140, 'traite', 12, 0, 2, false],
+  ['a6', 'Voirie', 'vigilance', 'traffic-cone', 'negative', 'Nid-de-poule dangereux sur la chaussée', "Saint-Ouen-l'Aumône", 1.94, 95, 'en_traitement', 22, 0, 3, true],
+  ['a7', 'Culture', 'positive', 'mask-happy', 'positive', 'Concert gratuit au théâtre de verdure ce soir', "L'Isle-Adam", 10.33, 180, '', 38, 1, 6, true],
+  ['a8', 'Arbre tombé', 'vigilance', 'tree', 'negative', 'Arbre tombé sur la chaussée', 'Montmorency', 17.66, 50, 'en_traitement', 19, 0, 5, true],
+  ['a9', 'Inondation', 'incident', 'drop', 'negative', "Rue inondée après l'orage, voitures bloquées", 'Sarcelles', 21.17, 75, 'transmis', 27, 2, 9, true],
+  ['a10', 'Sport', 'positive', 'soccer-ball', 'positive', 'Tournoi de football inter-quartiers samedi', 'Garges-lès-Gonesse', 23.19, 400, '', 25, 0, 4, false],
+  ['a11', 'Nuisance', 'vigilance', 'speaker-high', 'negative', 'Musique très forte depuis 2 h du matin', 'Enghien-les-Bains', 17.45, 260, 'transmis', 6, 4, 2, false],
+  ['a12', 'Sécurité', 'incident', 'shield-warning', 'negative', 'Câble électrique arraché au sol', 'Taverny', 8.99, 25, 'transmis', 17, 0, 3, true],
+  ['a13', 'Action environnementale', 'positive', 'leaf', 'positive', 'Plantation de 200 arbres au parc du Château', 'Franconville', 11.47, 500, '', 51, 1, 10, true],
+  ['a14', 'Travaux', 'info', 'barricade', 'negative', "Travaux de voirie : circulation alternée jusqu'à vendredi", 'Herblay-sur-Seine', 8.08, 220, 'transmis', 9, 0, 1, false],
+  ['a15', 'Propreté', 'vigilance', 'trash', 'negative', 'Dépôt de gravats en bordure de forêt', 'Taverny', 8.99, 610, 'en_traitement', 12, 1, 2, true],
+  ['a16', 'Événement', 'positive', 'calendar-star', 'positive', 'Fête de quartier place des Arts', 'Villiers-le-Bel', 21.39, 90, '', 29, 0, 5, true],
+  ['a17', 'Information utile', 'info', 'megaphone', 'positive', 'Distribution gratuite de composteurs samedi matin', 'Osny', 2.67, 330, '', 18, 0, 2, false],
+  ['a18', 'Accident', 'incident', 'car', 'negative', 'Scooter renversé, conducteur pris en charge', 'Argenteuil', 15.49, 18, 'transmis', 8, 0, 2, false],
+  ['a19', 'Incendie', 'incident', 'fire', 'negative', 'Fumée noire au-dessus de la gare', 'Pontoise', 1.09, 9, 'transmis', 11, 0, 3, false],
+  ['a20', 'Solidarité', 'positive', 'hand-heart', 'positive', 'Collecte de vêtements chauds au centre social', 'Goussainville', 26.38, 700, '', 22, 0, 3, false],
+  ['a21', 'Éclairage', 'vigilance', 'lightbulb', 'negative', 'Passage souterrain plongé dans le noir', 'Gonesse', 26.13, 1400, 'proche:Expire dans 40 min', 14, 0, 2, false],
+  ['a22', 'Voirie', 'vigilance', 'traffic-cone', 'negative', 'Feu tricolore en panne au carrefour', 'Cergy', 2.99, 1410, 'proche:Expire dans 30 min', 21, 1, 6, false],
+  ['a25', 'Voirie', 'vigilance', 'traffic-cone', 'negative', 'Banc public cassé square Marcel-Pagnol', 'Pontoise', 1.29, 240, 'transmis', 7, 0, 1, true],
+  ['a26', 'Autre problème', 'vigilance', 'dots-three', 'negative', 'Chien errant blessé près du canal', "Saint-Ouen-l'Aumône", 3.32, 45, 'transmis', 10, 0, 4, true],
+  ['a27', 'Événement', 'positive', 'calendar-star', 'positive', 'Inauguration de la nouvelle aire de jeux', 'Roissy-en-France', 30.5, 150, '', 33, 0, 4, true]
+];
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'all' };
+  }
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const filter = this.state.filter;
+    const list = ALERTS.filter((r) => filter === 'all' || r[4] === filter);
+    const near = list.filter((r) => r[7] <= 5).sort((a, b) => a[7] - b[7]);
+    const rest = list.filter((r) => r[7] > 5).sort((a, b) => a[8] - b[8]).slice(0, 10);
+    return {
+      theme: s ? 't-dark' : 't-light',
+      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
+      f: { all: filter === 'all', positive: filter === 'positive', negative: filter === 'negative' },
+      showAll: () => this.setState({ filter: 'all' }),
+      showPositive: () => this.setState({ filter: 'positive' }),
+      showNegative: () => this.setState({ filter: 'negative' }),
+      near: near,
+      rest: rest
+    };
+  }
+}
+</script>
+</body>
+</html>

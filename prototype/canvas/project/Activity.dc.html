@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Activité</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/21dbae15c4eee1a6147c46d5ae003bdf">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 scroll95">
+    <div class="screen-title"><h1>Activité</h1><p>Vos signalements et leur suivi par les services</p></div>
+    <div class="screen-pad">
+      <div class="seg is-block" role="group" aria-label="Activité">
+        <button type="button" aria-pressed="{{v.mine}}" onClick="{{showMine}}">Mes alertes</button>
+        <button type="button" aria-pressed="{{v.comments}}" onClick="{{showComments}}">Commentaires</button>
+        <button type="button" aria-pressed="{{v.followed}}" onClick="{{showFollowed}}">Suivies</button>
+      </div>
+      <sc-if value="{{v.mine}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{mine}}" as="r" hint-placeholder-count="3">
+          <dc-import name="AlertCard" row="{{r}}" show-status="{{yes}}" hint-size="100%,124px"></dc-import>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{v.comments}}" hint-placeholder-val="{{false}}">
+        <div class="empty">
+          <span class="empty-ill"><span class="ph i i-chat-circle" aria-hidden="true" style="width: 32px; height: 32px"></span></span>
+          <h4>Aucun commentaire pour le moment.</h4>
+          <p>Vos commentaires et les réponses reçues apparaîtront ici.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{v.followed}}" hint-placeholder-val="{{false}}">
+        <dc-import name="AlertCard" row="{{followed}}" hint-size="100%,124px"></dc-import>
+      </sc-if>
+    </div>
+  </div>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="{{l.map}}"><span class="ph i i-map-trifold" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="{{l.alerts}}"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="{{l.report}}" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="{{l.activity}}" aria-current="page"><span class="ph i i-pulse-fill" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="{{l.profile}}"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+var MINE = [
+  ['a5', 'Éclairage', 'vigilance', 'lightbulb', 'negative', 'Trois lampadaires éteints avenue de la Gare', 'Ermont', 13.56, 140, 'traite', 12, 0, 2, false],
+  ['a25', 'Voirie', 'vigilance', 'traffic-cone', 'negative', 'Banc public cassé square Marcel-Pagnol', 'Pontoise', 1.29, 240, 'transmis', 7, 0, 1, true],
+  ['a23', 'Propreté', 'vigilance', 'trash', 'negative', 'Encombrants sur le trottoir', 'Ermont', 13.1, 1700, 'expiree', 9, 0, 1, true]
+];
+var FOLLOWED = ['a1', 'Incendie', 'incident', 'fire', 'negative', 'Fumée importante visible rue Carnot', 'Pontoise', 1.08, 12, 'transmis', 24, 3, 8, true];
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'mine' };
+  }
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const view = this.state.view;
+    return {
+      theme: s ? 't-dark' : 't-light',
+      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
+      v: { mine: view === 'mine', comments: view === 'comments', followed: view === 'followed' },
+      showMine: () => this.setState({ view: 'mine' }),
+      showComments: () => this.setState({ view: 'comments' }),
+      showFollowed: () => this.setState({ view: 'followed' }),
+      mine: MINE,
+      followed: FOLLOWED,
+      yes: true
+    };
+  }
+}
+</script>
+</body>
+</html>
