@@ -68,6 +68,16 @@ SCREEN = r"""
 .lib-row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center}
 .lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
 .alert-card{font:inherit;text-align:left;width:100%}
+/* Cadre iPhone (planches et mode Play) */
+.iphone{position:relative;width:414px;height:868px;padding:12px;border-radius:62px;background:#0B0F19;box-sizing:border-box;box-shadow:inset 0 0 0 2px #2A3345}
+.iphone > .a95{width:390px;height:844px;border-radius:50px}
+.iphone .island{position:absolute;top:23px;left:50%;transform:translateX(-50%);width:122px;height:35px;border-radius:20px;background:#000;z-index:100}
+.statusbar{height:50px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 30px 0 44px;font:600 16px/1 var(--font);font-variant-numeric:tabular-nums;color:var(--text);position:relative;z-index:60}
+.statusbar .sb-icons{display:flex;gap:6px;align-items:center}
+.statusbar .ph{width:18px;height:18px}
+.a95 .home{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:100;pointer-events:none}
+.iphone .tabbar{padding-bottom:24px}
+.iphone .toast-host{bottom:104px}
 /* Icônes Phosphor en masques : <span class="ph i i-fire" aria-hidden="true"></span> */
 .i{display:inline-block;background-color:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
 """
