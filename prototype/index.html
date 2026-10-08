@@ -368,9 +368,9 @@ textarea.input{min-height:96px;resize:vertical}
 .status-hero .spinner{width:32px;height:32px;border-width:3.5px;color:var(--primary)}
 .otp{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--s-2)}
 .otp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;cursor:text}
-.otp span{height:56px;display:grid;place-items:center;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font:600 22px/1 var(--font);font-variant-numeric:tabular-nums;color:var(--text)}
-.otp span.is-active{border-color:var(--focus-ring);box-shadow:0 0 0 3px var(--primary-soft)}
-.otp.is-error span{border-color:var(--error)}
+.otp .d{height:56px;display:grid;place-items:center;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font:600 22px/1 var(--font);font-variant-numeric:tabular-nums;color:var(--text)}
+.otp .d.is-active{border-color:var(--focus-ring);box-shadow:0 0 0 3px var(--primary-soft)}
+.otp.is-error .d{border-color:var(--error)}
 .err{display:flex;gap:6px;align-items:center;color:var(--error);font:500 var(--fs-caption)/var(--lh-caption) var(--font)}
 .field-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s-3)}
 .stack-footer{display:grid;gap:var(--s-2)}
@@ -2041,7 +2041,7 @@ function OtpInput({ value, onChange, error, id }) {
         aria-describedby={error ? `${id}-err` : undefined} aria-label="Code de vérification à 6 chiffres"
         onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
         onChange={(e) => onChange(e.target.value.replace(/\D/g, "").slice(0, 6))} />
-      {digits.map((d, i) => <span key={i} aria-hidden="true" className={cx(focused && i === Math.min(value.length, 5) && "is-active")}>{d.trim()}</span>)}
+      {digits.map((d, i) => <span key={i} aria-hidden="true" className={cx("d", focused && i === Math.min(value.length, 5) && "is-active")}>{d.trim()}</span>)}
     </div>
   );
 }

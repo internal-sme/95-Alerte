@@ -1498,7 +1498,7 @@ function OtpInput({ value, onChange, error, id }) {
         aria-describedby={error ? `${id}-err` : undefined} aria-label="Code de vérification à 6 chiffres"
         onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
         onChange={(e) => onChange(e.target.value.replace(/\D/g, "").slice(0, 6))} />
-      {digits.map((d, i) => <span key={i} aria-hidden="true" className={cx(focused && i === Math.min(value.length, 5) && "is-active")}>{d.trim()}</span>)}
+      {digits.map((d, i) => <span key={i} aria-hidden="true" className={cx("d", focused && i === Math.min(value.length, 5) && "is-active")}>{d.trim()}</span>)}
     </div>
   );
 }

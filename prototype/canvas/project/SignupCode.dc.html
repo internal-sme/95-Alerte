@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Créer un compte · Code SMS</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/7a46598493f98dc187c0705e0b5c6d73">
+<link rel="stylesheet" href="/_blob/d123534fb8beaf25cdad999ec704235a">
 </head>
 <body>
 <x-dc>
@@ -35,7 +35,7 @@ body{margin:0}
         </div>
         <div class="otp {{otpClass}}" role="img" aria-label="Code de vérification à 6 chiffres : {{code}}">
           <sc-for list="{{digits}}" as="d" hint-placeholder-count="6">
-            <span aria-hidden="true">{{d}}</span>
+            <span class="d" aria-hidden="true">{{d}}</span>
           </sc-for>
         </div>
         <sc-if value="{{error}}" hint-placeholder-val="{{false}}">
