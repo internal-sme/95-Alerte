@@ -15,7 +15,8 @@ Lire, dans cet ordre :
 1. `docs/PRD.md` — périmètre, fonctionnalités, règles métier, écrans, scénarios, textes de référence
 2. `docs/DESIGN_SYSTEM.md` — tokens, composants, états, accessibilité
 3. `docs/ARCHITECTURE.md` — modèle de données, cycle de vie, architecture du prototype
-4. `docs/task.md` — **plan de développement du prototype, phase par phase** : travailler sur la phase en cours uniquement, cocher les tâches terminées, mettre à jour le statut de la phase et le journal
+4. `docs/design-system/index.html` — **référence visuelle** des tokens, icônes et composants (source du CSS du prototype)
+5. `docs/task.md` — **plan de développement du prototype, phase par phase** : travailler sur la phase en cours uniquement, cocher les tâches terminées, mettre à jour le statut de la phase et le journal
 
 Puis inspecter les composants existants du prototype **avant d'en créer un nouveau**.
 
@@ -32,7 +33,8 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 
 ## Code Guidelines (prototype)
 
-- Un seul fichier `prototype/index.html`. Scripts depuis `cdnjs.cloudflare.com` (React 18.3.1, Babel standalone 7.x), plus Phosphor Icons depuis `cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1`, toujours avec des **versions exactes**. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
+- Un seul fichier `prototype/index.html`. Scripts depuis `cdnjs.cloudflare.com` (React 18.3.1, Babel standalone 7.x), toujours avec des **versions exactes**. Icônes Phosphor intégrées en **sprite SVG** dans la page (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1`) : les artefacts bloquent les feuilles de style jsDelivr. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
+- Le CSS des tokens et des composants vient de `docs/design-system/index.html` : le reprendre tel quel, et y ajouter tout nouveau composant avant de l'utiliser.
 - Composants fonctionnels React, petits et réutilisables ; noms en anglais PascalCase (`AlertCard`, `VoteBar`), textes UI en français.
 - Un store unique (`useReducer`) ; pas de duplication d'état.
 - Données fictives regroupées dans une section `data`, avec des noms de communes réels du Val-d'Oise et des **personnes fictives**.
@@ -42,7 +44,7 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 ## Design Rules
 
 - Tokens, typographie, espacements, rayons : **uniquement** ceux de `DESIGN_SYSTEM.md` (variables CSS sur `:root`, mode sombre inclus).
-- **Utilise Phosphor Icons pour la maquette** (`@phosphor-icons/web@2.1.1`), avec les correspondances d'icônes de `DESIGN_SYSTEM.md` §5. Pas d'emoji ni d'autre bibliothèque d'icônes dans l'interface.
+- **Utilise Phosphor Icons pour la maquette** (sprite SVG issu de `@phosphor-icons/core@2.1.1`, usage `<svg class="ph"><use href="#ph-fire"/></svg>`), avec les correspondances d'icônes de `DESIGN_SYSTEM.md` §5. Pas d'emoji ni d'autre bibliothèque d'icônes dans l'interface.
 - **Jamais la couleur seule** : marqueurs = forme + icône + couleur ; statuts = icône + texte + couleur.
 - Zones tactiles ≥ 48 px, focus visible, `aria-label` sur les icônes seules, `aria-live` pour les toasts.
 - Respecter `prefers-reduced-motion` et les réglages d'accessibilité internes (taille du texte, contraste, animations).

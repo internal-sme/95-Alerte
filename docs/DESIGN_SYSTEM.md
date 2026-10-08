@@ -107,7 +107,8 @@ Pas de texte informatif sous 12 px. Les nombres (compteurs, votes, durées) util
 
 **Utilise Phosphor Icons pour la maquette.**
 
-- Bibliothèque : [Phosphor Icons](https://phosphoricons.com), paquet `@phosphor-icons/web@2.1.1`, chargé depuis `cdn.jsdelivr.net/npm/`. Usage : `<i class="ph ph-fire"></i>`.
+- Bibliothèque : [Phosphor Icons](https://phosphoricons.com), paquet `@phosphor-icons/core@2.1.1`, intégré en **sprite SVG** dans la page par `tools/build_phosphor_sprite.py` (les artefacts bloquent les feuilles de style externes). Usage : `<svg class="ph"><use href="#ph-fire"/></svg>`, variante pleine `#ph-fire-fill`. Les noms `ph-…` du tableau restent valables.
+- Référence visuelle de toutes les icônes et de tous les composants : `docs/design-system/index.html`.
 - Graisse **Regular** par défaut (grille 24 px). **Fill** pour les états sélectionnés (onglet actif, vote choisi) et pour les icônes blanches des marqueurs. **Bold** pour les petites tailles (≤ 16 px).
 - **Chaque catégorie a une icône dédiée**, réutilisée dans les marqueurs, cartes, badges, filtres et notifications.
 

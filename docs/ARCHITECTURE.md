@@ -143,7 +143,7 @@ Objectif : un **prototype interactif haute fidélité** de l'app citoyenne couvr
 | Format | **Un fichier HTML unique** publié en artefact (`prototype/index.html`) |
 | UI | React 18.3.1 + ReactDOM via `cdnjs.cloudflare.com`, JSX transpilé par Babel standalone 7.x (cdnjs) |
 | Styles | CSS inline avec les variables de `DESIGN_SYSTEM.md` (clair/sombre via `prefers-color-scheme` et `data-theme`) |
-| Icônes | **Phosphor Icons** (`@phosphor-icons/web@2.1.1` via `cdn.jsdelivr.net/npm/`), correspondances dans `DESIGN_SYSTEM.md` §5 |
+| Icônes | **Phosphor Icons** en sprite SVG intégré (`@phosphor-icons/core@2.1.1`, généré par `tools/build_phosphor_sprite.py`), correspondances dans `DESIGN_SYSTEM.md` §5 |
 | Carte | **Carte simulée en SVG** du territoire (contour du Val-d'Oise, communes principales, quartiers fictifs), avec pan/zoom, 4 niveaux, clustering calculé côté client, hors-zone grisé. Aucune tuile externe. |
 | Données | Jeux de données **fictifs en mémoire** : communes (Cergy, Pontoise, Argenteuil, Sarcelles, Garges-lès-Gonesse, Montmorency, Enghien-les-Bains, L'Isle-Adam…), catégories, ~30 alertes positives et négatives, commentaires, votes, services et règles de routage |
 | Intégrations | **Simulées** : FranceConnect (écran + délai), vérification d'identité (états), géolocalisation (position fictive ou API navigateur si autorisée), upload (progression simulée), push (notifications in-app), transmission (timeline animée) |

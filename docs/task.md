@@ -2,7 +2,23 @@
 
 > **Fichier de référence pour développer le prototype.** On avance phase par phase, dans l'ordre. Une phase est terminée quand toutes ses tâches sont cochées **et** que ses critères de validation sont vérifiés.
 > Objectif : un **prototype interactif pour une preview**, en un seul fichier `prototype/index.html` publié en artefact. Pas de back-end : données fictives, intégrations simulées.
-> Références : `PRD.md` (F-xx, S1–S10, §10.3 textes), `DESIGN_SYSTEM.md`, `ARCHITECTURE.md` §6, `AGENTS.md`.
+> Références : `PRD.md` (F-xx, S1–S10, §10.3 textes), `DESIGN_SYSTEM.md`, `ARCHITECTURE.md` §6, `AGENTS.md`, **`docs/design-system/index.html`** (référence visuelle des tokens et composants), **`docs/benchmark/benchmark-mobbin.html`** (benchmark et plan de conception).
+> Chaque phase contient un bloc **Décisions UX (benchmark)** : ce sont des choix arrêtés, à appliquer tels quels. La source entre parenthèses renvoie à la fiche du benchmark.
+
+### 10 principes de conception (issus du benchmark)
+
+| # | Principe | Source |
+|---|---|---|
+| P1 | La carte ne disparaît jamais en premier : tout détail commence en bottom sheet (peek → moitié → plein) | Nextdoor, Waze |
+| P2 | Signaler en 3 taps minimum, 7 étapes maximum ; description et photo facultatives pour un incident | Google Maps, Waze |
+| P3 | Dire ce qui sera public **avant** l'envoi (aperçu exact « Jean D. » / « Citoyen anonyme ») | Waze, YouTube Studio |
+| P4 | Le vote confirme, il ne flatte pas : « Confirmer / Contester » + compteur visible dès l'aperçu | Waze |
+| P5 | Après l'envoi, montrer la suite : service nommé + timeline avec les étapes futures en gris | Bird, Bumble |
+| P6 | Le rouge est rare : rouge plein réservé aux incidents critiques et à l'urgence (≤ 1 élément rouge par écran hors alerte critique) | contre-exemple Citizen |
+| P7 | Le positif a la même place que le négatif (taille, saturation, place dans les filtres) | Waze |
+| P8 | Demander au bon moment : localisation à l'onboarding (avec amorce), notifications au premier suivi ou à la première publication | Greenlight, Transit |
+| P9 | Toute action laisse une trace : toast non bloquant, écran dédié pour la publication, confirmation pour les actions sensibles | Google Maps, Nextdoor |
+| P10 | Lisible sans couleur, sans son, à 200 % : forme + icône + texte | Bumble, Apple Maps |
 
 **Légende** : `[ ]` à faire · `[~]` en cours · `[x]` fait
 
@@ -32,7 +48,15 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 **But** : poser le squelette sur lequel tous les écrans s'appuient.
 
-- [ ] **0.1** Créer `prototype/index.html` : React 18.3.1 + ReactDOM + Babel standalone (cdnjs), Phosphor Icons `@phosphor-icons/web@2.1.1` (jsDelivr), police Inter (Google Fonts)
+**Décisions UX (benchmark)**
+- `BottomSheet` à 3 crans (peek ≈ 120 px / 50 % / plein écran), poignée + glissement + clavier : c'est le pivot de l'app (Nextdoor, Waze)
+- `Toast` non bloquant en bas, au-dessus de la tab bar, annoncé par `aria-live` (Google Maps, Nextdoor)
+- `CategoryTile` : tuile pâle + icône Phosphor dans la forme de sa famille + libellé court (Google Maps)
+- `Timeline` générique (points pleins/vides + trait), réutilisée pour les mises à jour, le traitement et la vérification d'identité (Bumble)
+- Tab bar avec **+ Signaler** central surélevé, en bleu marque, jamais en rouge (Citizen, adapté)
+- CSS des tokens et composants **repris de `docs/design-system/index.html`** (source visuelle unique)
+
+- [ ] **0.1** Créer `prototype/index.html` : React 18.3.1 + ReactDOM + Babel standalone (cdnjs), police Inter (Google Fonts), **sprite SVG Phosphor intégré** (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1` : les artefacts bloquent les feuilles de style jsDelivr)
 - [ ] **0.2** Tokens CSS sur `:root` (couleurs, familles d'alertes, statuts, typo, espacements, rayons, ombres) + mode sombre (`prefers-color-scheme` et `data-theme`) — DS §2–§4
 - [ ] **0.3** Cadre téléphone 390 × 844 sur desktop, plein écran sur mobile ; zone sûre (encoche, barre d'accueil)
 - [ ] **0.4** Store unique (`useReducer`) : session, préférences, alertes, votes, commentaires, suivis, notifications
@@ -44,6 +68,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **0.10** `TabBar` : Carte · Alertes · **+ Signaler** (central, surélevé) · Activité · Profil
 - [ ] **0.11** Panneau **« Mode démo »** discret : réinitialiser, forcer hors connexion, permission refusée, erreur, zone vide, beaucoup d'alertes, accélérer le temps
 - [ ] **0.12** `localStorage` encapsulé (`try/catch`) pour le thème, la taille du texte et l'onboarding vu
+- [ ] **0.13** Composants transverses issus du benchmark : `CategoryTile`, `Timeline`, `RadioCard` avec aperçu, `Pill` flottante
+- [x] **0.14** Page de référence du Design System : `docs/design-system/index.html` (tokens, icônes, composants, états)
 
 **Validation** : la page s'ouvre sans erreur console ; les onglets naviguent vers des écrans vides ; le thème sombre fonctionne ; les composants sont visibles sur une page de démonstration interne.
 
@@ -52,6 +78,12 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 ## Phase 1 — Splash screen + Connexion
 
 **But** : premier contact et accès au compte (F-01, F-02 ; CDC §6, §8, §9, §43).
+
+**Décisions UX (benchmark)**
+- Écran de connexion avec **un seul CTA principal** (Continuer avec FranceConnect) ; « Créer un compte » en secondaire ; « Continuer sans compte » en lien
+- Création de compte en stepper « Étape 2 sur 4 », un champ principal par écran (Greenlight)
+- Vérification d'identité affichée avec le composant `Timeline` + délai indicatif (« généralement moins de 24 h ») (Bumble)
+- Aperçu du nom public dès la création du profil : « Vous apparaîtrez comme Jean D. » (Waze)
 
 - [ ] **1.1** UI-001 **Splash** : logo 95 Alerte, chargement court (< 1,5 s), version de l'app
 - [ ] **1.2** UI-008 **Connexion** : « Continuer avec FranceConnect » (bouton principal + texte expliquant la sécurisation de l'identité), « Créer un compte », « J'ai déjà un compte », « Continuer sans compte » (consultation)
@@ -70,6 +102,12 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 **But** : comprendre le concept en quelques secondes et paramétrer la zone (F-01 ; CDC §7, §16, §77).
 
+**Décisions UX (benchmark)**
+- 4 écrans : illustration en aplats (bleu, vert, orange) + titre + 2 lignes max ; pagination par points ; « Passer » toujours visible (Uber, inDrive)
+- L'écran 3 (« Une bonne nouvelle ? ») est le plus chaleureux, pour ancrer la place du positif (Waze)
+- **Amorce de localisation** avant la demande système : bénéfice, précision approximative par défaut, « Choisir manuellement », « Plus tard » (Greenlight, lululemon)
+- **Pas de demande de notifications** dans l'onboarding (reportée, cf. phases 5 et 6) (Transit)
+
 - [ ] **2.1** UI-002 **Présentation** rapide de 95 Alerte
 - [ ] **2.2** UI-003→005 **Onboarding en 4 écrans** : « Que se passe-t-il autour de vous ? » · « Un problème ? Signalez-le. » · « Une bonne nouvelle ? Partagez-la aussi. » · « Votre territoire, votre vigilance. » + CTA **Commencer** ; pagination par points, « Passer », balayage
 - [ ] **2.3** UI-006 **Choix du territoire** : recherche ou liste de communes du Val-d'Oise ; commune hors zone → « 95 Alerte n'est pas encore disponible dans cette zone. »
@@ -85,6 +123,14 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 **But** : l'écran le plus important — « Que se passe-t-il autour de moi ? » (F-03 ; CDC §10–§16, §71, §75).
 
+**Décisions UX (benchmark)**
+- Carte claire et désaturée ; marqueurs en formes de famille ; clusters bleus numérotés (Waze)
+- Bottom sheet en position **peek** par défaut : « 12 alertes autour de vous » + chips Toutes / Positives / Négatives (Nextdoor)
+- **Pilule flottante** « 3 nouvelles alertes » qui recentre la carte au tap (Citizen)
+- Tap sur un marqueur → sheet de résumé avec **compteur de confirmations** visible (Waze)
+- Alertes de zone (inondation, travaux) dessinées en **polygone translucide** (Nextdoor)
+- **Bulle d'aide** sur le + au premier lancement : « Signalez un événement » (Citizen)
+
 - [ ] **3.1** **Carte SVG** du Val-d'Oise : contour départemental, communes, quartiers fictifs, zone hors couverture grisée
 - [ ] **3.2** Pan et zoom (gestes + boutons) avec **4 niveaux** : département → intercommunalité → commune → quartier ; libellés selon le niveau
 - [ ] **3.3** **Marqueurs** par famille (losange incident, triangle vigilance, cercle positif, carré information) + icône Phosphor de la catégorie ; marqueur sélectionné agrandi ; halo « Urgent » pour les alertes critiques
@@ -95,6 +141,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **3.8** Bascule **[ Carte ] [ Liste ]** conservée entre les visites
 - [ ] **3.9** États : chargement initial (skeleton), marqueurs progressifs, « Aucun événement dans cette zone. », « Impossible de charger la carte. », beaucoup d'alertes
 - [ ] **3.10** Les alertes expirées n'apparaissent pas sur la carte active
+- [ ] **3.11** Pilule « n nouvelles alertes », polygone pour les alertes de zone, bulle d'aide sur le + au premier lancement
 
 **Validation** : S2 jouable jusqu'à la bottom sheet ; lisible en mode clair et sombre ; marqueurs distinguables sans la couleur.
 
@@ -103,6 +150,12 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 ## Phase 4 — Liste, recherche et filtres
 
 **But** : alternative à la carte et accès ciblé (F-04, F-05, F-06 ; CDC §15, §17, §45–§48, §87, §88).
+
+**Décisions UX (benchmark)**
+- `AlertCard` : icône de famille, titre, « Cergy · 1,2 km · il y a 12 min », badge de statut, ⬆ ⬇ 💬 (Nextdoor)
+- Sections « À proximité », « Récentes », « Positives » (Flighty « For you / Major issues »)
+- Filtres en sheet : **grille de catégories cochables** (Grab), chips période et distance, bouton « Voir 18 alertes » qui annonce le nombre de résultats
+- « Autour de moi » = liste triée par distance (Waze « Reports ahead »)
 
 - [ ] **4.1** Composant **AlertCard** : badges type/catégorie et statut, titre, lieu, distance, ancienneté, photo optionnelle, ⬆ ⬇ 💬, compteur d'expiration
 - [ ] **4.2** ALERT-01 **Liste** avec onglets **Toutes / Positives / Négatives**
@@ -120,6 +173,14 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 **But** : comprendre une alerte et réagir (F-08, F-09, F-13 ; CDC §26, §30, §31, §36, §49, §79, §80).
 
+**Décisions UX (benchmark)**
+- Ordre de lecture : média → type et titre → lieu et distance → compteur d'expiration → description → votes → service et timeline → commentaires (Citizen, apaisé)
+- Votes « Confirmer / Contester » pleine largeur, état sélectionné rempli, `aria-pressed` (Waze)
+- Timeline de traitement + délai indicatif si le service le fournit (Bumble)
+- Premier « Suivre » → **sheet d'opt-in aux notifications** (« Pour tout changement / Seulement le traitement / Non merci ») (Transit)
+- Menu ⋯ en sheet, chaque action avec une ligne d'explication (Nextdoor)
+- Écran **Situation urgente ?** : numéros 112 / 18 / 17 / 15 affichés en clair, **un seul** bouton rouge (DoorDash, Waymo) — numéros à valider (PRD §13)
+
 - [ ] **5.1** ALERT-03 **En-tête** : type, catégorie, titre, date, lieu au niveau de précision autorisé, mini-carte
 - [ ] **5.2** **Compteur d'expiration** : « Visible encore 17 h 32 » + barre ; « Expire dans 45 min » ; état expiré
 - [ ] **5.3** Contenu : description, galerie photo/vidéo (plein écran, texte alternatif)
@@ -130,6 +191,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **5.8** Rappel d'urgence sur les catégories critiques + écran **Information d'urgence** (« 95 Alerte n'est pas un remplacement des services d'urgence »)
 - [ ] **5.9** Doublons : bandeau « Ces alertes semblent concerner le même événement. » avec liens
 - [ ] **5.10** États : alerte expirée (grisée), supprimée (« Cette alerte n'est plus disponible »), modérée
+- [ ] **5.11** Sheet d'opt-in aux notifications au premier « Suivre »
 
 **Validation** : S2 complet jusqu'au détail ; S5 jusqu'au vote ; un vote changé met à jour les compteurs partout (carte, liste, fiche).
 
@@ -138,6 +200,16 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 ## Phase 6 — Création d'une alerte
 
 **But** : signaler vite et bien (F-07 ; CDC §19–§25, §35, §67, §68).
+
+**Décisions UX (benchmark)**
+- Ouverture en sheet plein écran depuis le + ; barre de progression fine en haut (Bird)
+- Type : deux grandes RadioCards Positif / Négatif **de même poids visuel** (P7)
+- Catégorie : **grille 2 colonnes** de `CategoryTile` + « Ne signalez que si vous êtes en sécurité » pour les catégories critiques (Google Maps)
+- Lieu : **épingle centrale fixe**, la carte bouge, adresse en direct, bulle « Vérifiez que la position est correcte », bouton « Confirmer cette position » inactif hors Val-d'Oise ; épingle bleue tant que la catégorie n'est pas choisie (Snoonu, Shopee, Glovo)
+- Médias : **consigne dans la caméra** (« Photographiez le problème ou le lieu »), vignettes ✕ / ↻ avec progression (Bird)
+- Identité : deux RadioCards avec « ce que les autres verront » + aperçu exact de l'auteur public ; changement confirmé (YouTube Studio, Whering)
+- Publication : écran dédié « Alerte publiée » → animation de routage vers « Service Propreté · Ville de Cergy » → retour à la carte centrée sur l'alerte, avec toast (Google Maps, Bird)
+- Première publication → proposition d'activer les notifications de suivi (Transit)
 
 - [ ] **6.1** Stepper « Étape n sur 7 » avec barre de progression, retour arrière, quitter avec confirmation (brouillon)
 - [ ] **6.2** **Type** : « Que souhaitez-vous signaler ? » — Un événement positif / Un événement négatif (RadioCards)
@@ -159,6 +231,11 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 **But** : interagir et garder un espace sain (F-10, F-11 ; CDC §32–§34, §83, §84).
 
+**Décisions UX (benchmark)**
+- Composer collé en bas (texte + photo), réponses indentées d'un seul niveau (Nextdoor)
+- Signaler : liste de motifs avec une phrase d'aide sous le titre, puis écran « Merci » + lien vers les règles de la communauté (Clubhouse)
+- Toasts « Commentaire publié » / « Commentaire supprimé » (Nextdoor)
+
 - [ ] **7.1** ALERT-04 **Liste de commentaires** : auteur public ou anonyme, date relative, texte, réponses indentées d'un niveau, pagination « Voir plus »
 - [ ] **7.2** **Ajouter un commentaire** / répondre : champ en bas, publication → confirmation ; état vide « Aucun commentaire pour le moment. Soyez le premier à réagir. »
 - [ ] **7.3** Supprimer son propre commentaire (confirmation)
@@ -173,6 +250,11 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 ## Phase 8 — Activité + notifications
 
 **But** : retrouver ses contributions et suivre leur traitement (F-13, F-14, F-15 ; CDC §38–§41, §90).
+
+**Décisions UX (benchmark)**
+- Mes alertes : chips de statut ; chaque carte affiche la **dernière étape de la timeline** (Bumble, Pinterest)
+- Centre de notifications **groupé par date** (Aujourd'hui, Hier…), point non lu, action directe « Voir l'alerte » (Cleo, Tabby)
+- Push simulé en bannière en haut de l'écran + équivalent visuel de la vibration (P10)
 
 - [ ] **8.1** PROFILE-01 **Mes alertes** avec filtres : actives, en cours, traitées, expirées, supprimées ; état vide « Vous n'avez encore publié aucune alerte. » + CTA
 - [ ] **8.2** **Supprimer mon alerte** : `⋯` → « Supprimer cette alerte ? Elle ne sera plus visible par les utilisateurs. » → Annuler / Supprimer → toast
@@ -189,6 +271,12 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 **But** : maîtrise du compte, de la vie privée et de l'accessibilité (F-16, F-17 ; CDC §42, §44, §91–§94).
 
+**Décisions UX (benchmark)**
+- Alertes de proximité : **curseur de rayon avec cercle sur une mini-carte**, puis catégories cochables (Citizen)
+- Préférences par type d'alerte : « Afficher sur la carte » / « Me notifier » (Waze)
+- Confidentialité : une ligne par permission, avec explication et état « Autoriser › » / « ✓ Autorisé » (Sesame)
+- Accessibilité : aperçu en direct de la taille du texte
+
 - [ ] **9.1** UI-014 **Profil** : nom public, statut d'identité, accès à l'activité, liens vers la navigation secondaire
 - [ ] **9.2** UI-015 **Paramètres** : Compte · Notifications · Confidentialité · Accessibilité · Sécurité
 - [ ] **9.3** **Notifications** : push, alertes locales (activées/désactivées, **distance**, **catégories**), commentaires, réponses, suivi
@@ -198,6 +286,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **9.7** UI-019 **Centre d'aide** (10 rubriques du CDC §91, en accordéon) + UI-020 **Contact support** (formulaire)
 - [ ] **9.8** UI-021→023 **Mentions légales, CGU, Politique de confidentialité** (texte d'exemple)
 - [ ] **9.9** UI-024 **Suppression du compte** : conséquences, suppression ou anonymisation, double confirmation → retour à l'écran de connexion
+- [ ] **9.10** Curseur de rayon avec cercle sur mini-carte pour les alertes de proximité ; préférences par type d'alerte
 
 **Validation** : changer la taille du texte et le contraste s'applique à toute l'app ; la suppression du compte ramène au parcours de première utilisation.
 
@@ -206,6 +295,11 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 ## Phase 10 — États transverses, finitions, recette
 
 **But** : un prototype robuste et présentable (CDC §65, §69, §72, §63, §64).
+
+**Décisions UX (benchmark)**
+- États vides utiles, avec chiffre et action : « 0 alerte depuis 24 h · Élargir la zone » (Citizen)
+- Hors connexion : bannière persistante, actions grisées avec explication
+- Contrôle du **rouge rare** (P6) et test en niveaux de gris : aucune information ne doit se perdre (P10)
 
 - [ ] **10.1** UI-025 **Erreur générale**, UI-026 **Hors connexion** (bannière + écran), UI-027 **Maintenance**, UI-028 **403**, UI-029 **404**
 - [ ] **10.2** Vérifier le tableau d'états du CDC §65 écran par écran : vide, chargement, erreur, hors connexion, permission refusée, non connecté
@@ -216,6 +310,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [ ] **10.7** Polissage : transitions, micro-interactions (vote, publication), cohérence des textes (PRD §10.3)
 - [ ] **10.8** **Recette des scénarios S1 → S10** (cocher ci-dessous)
 - [ ] **10.9** Aucune erreur console ; taille du fichier raisonnable
+- [ ] **10.11** Contrôle « rouge rare » écran par écran et test en niveaux de gris
 - [ ] **10.10** **Publication de l'artefact** pour la preview + lien partagé
 
 ### Recette des scénarios
@@ -240,3 +335,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | Date | Phase | Avancement / décisions |
 |---|---|---|
 | 2026-10-08 | — | Création du plan de tâches |
+| 2026-10-08 | — | Benchmark Mobbin : 10 principes et décisions UX reportés dans chaque phase ; icônes Phosphor intégrées en sprite SVG (CSS jsDelivr bloqué dans les artefacts) ; page Design System `docs/design-system/index.html` créée |
