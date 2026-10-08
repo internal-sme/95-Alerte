@@ -31,7 +31,7 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 
 ## Code Guidelines (prototype)
 
-- Un seul fichier `prototype/index.html`. Scripts uniquement depuis `cdnjs.cloudflare.com`, avec des **versions exactes** (React 18.3.1, Babel standalone 7.x). Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
+- Un seul fichier `prototype/index.html`. Scripts depuis `cdnjs.cloudflare.com` (React 18.3.1, Babel standalone 7.x), plus Phosphor Icons depuis `cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1`, toujours avec des **versions exactes**. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
 - Composants fonctionnels React, petits et réutilisables ; noms en anglais PascalCase (`AlertCard`, `VoteBar`), textes UI en français.
 - Un store unique (`useReducer`) ; pas de duplication d'état.
 - Données fictives regroupées dans une section `data`, avec des noms de communes réels du Val-d'Oise et des **personnes fictives**.
@@ -41,6 +41,7 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 ## Design Rules
 
 - Tokens, typographie, espacements, rayons : **uniquement** ceux de `DESIGN_SYSTEM.md` (variables CSS sur `:root`, mode sombre inclus).
+- **Utilise Phosphor Icons pour la maquette** (`@phosphor-icons/web@2.1.1`), avec les correspondances d'icônes de `DESIGN_SYSTEM.md` §5. Pas d'emoji ni d'autre bibliothèque d'icônes dans l'interface.
 - **Jamais la couleur seule** : marqueurs = forme + icône + couleur ; statuts = icône + texte + couleur.
 - Zones tactiles ≥ 48 px, focus visible, `aria-label` sur les icônes seules, `aria-live` pour les toasts.
 - Respecter `prefers-reduced-motion` et les réglages d'accessibilité internes (taille du texte, contraste, animations).

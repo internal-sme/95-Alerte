@@ -105,18 +105,34 @@ Pas de texte informatif sous 12 px. Les nombres (compteurs, votes, durées) util
 
 ## 5. Icônes
 
-- Jeu d'icônes linéaire, trait 2 px, grille 24 px, en SVG inline.
+**Utilise Phosphor Icons pour la maquette.**
+
+- Bibliothèque : [Phosphor Icons](https://phosphoricons.com), paquet `@phosphor-icons/web@2.1.1`, chargé depuis `cdn.jsdelivr.net/npm/`. Usage : `<i class="ph ph-fire"></i>`.
+- Graisse **Regular** par défaut (grille 24 px). **Fill** pour les états sélectionnés (onglet actif, vote choisi) et pour les icônes blanches des marqueurs. **Bold** pour les petites tailles (≤ 16 px).
 - **Chaque catégorie a une icône dédiée**, réutilisée dans les marqueurs, cartes, badges, filtres et notifications.
 
-| Catégorie | Icône | Catégorie | Icône |
+| Catégorie | Phosphor | Catégorie | Phosphor |
 |---|---|---|---|
-| Incendie | flamme | Solidarité | mains / cœur |
-| Accident | voiture impact | Culture | masque / musique |
-| Voirie | cône / route | Sport | ballon |
-| Sécurité | bouclier | Événement | calendrier / étoile |
-| Environnement | feuille | Travaux | pelle / barrière |
-| Propreté | poubelle | Éclairage | ampoule |
-| Nuisance | haut-parleur | Autre | point de suspension |
+| Incendie | `ph-fire` | Solidarité | `ph-hand-heart` |
+| Accident | `ph-car` | Culture | `ph-mask-happy` |
+| Voirie | `ph-traffic-cone` | Sport | `ph-soccer-ball` |
+| Sécurité | `ph-shield-warning` | Événement | `ph-calendar-star` |
+| Environnement | `ph-leaf` | Travaux | `ph-barricade` |
+| Propreté | `ph-trash` | Éclairage | `ph-lightbulb` |
+| Nuisance | `ph-speaker-high` | Autre | `ph-dots-three` |
+
+| Interface | Phosphor | Interface | Phosphor |
+|---|---|---|---|
+| Carte | `ph-map-trifold` | Notifications | `ph-bell` |
+| Alertes | `ph-list-bullets` | Recherche | `ph-magnifying-glass` |
+| Signaler | `ph-plus` | Filtres | `ph-sliders-horizontal` |
+| Activité | `ph-pulse` | Ma position | `ph-crosshair` |
+| Profil | `ph-user-circle` | Lieu | `ph-map-pin` |
+| Vote ⬆ / ⬇ | `ph-arrow-fat-up` / `ph-arrow-fat-down` | Commentaires | `ph-chat-circle` |
+| Signaler un contenu | `ph-flag` | Partager | `ph-share-network` |
+| Suivre | `ph-bookmark-simple` | Expiration | `ph-timer` |
+| Identité vérifiée | `ph-seal-check` | Anonyme | `ph-detective` |
+| Urgence | `ph-siren` | Hors connexion | `ph-wifi-slash` |
 
 Toute icône seule (sans texte) porte un `aria-label`.
 
