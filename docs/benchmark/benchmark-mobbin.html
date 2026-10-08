@@ -86,8 +86,13 @@ section{display:grid;gap:24px;scroll-margin-top:24px}
 .avoid{background:var(--vigil-soft)}
 .take b,.avoid b{display:block;font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
 .take b{color:var(--positive)} .avoid b{color:var(--vigil)}
-.refs{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.84rem}
-.refs span{color:var(--muted)}
+.strip{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x mandatory;margin-inline:-4px}
+.shot{flex:0 0 150px;margin:0;display:grid;gap:8px;align-content:start;scroll-snap-align:start}
+.shot a{display:block;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface-2);transition:transform .15s}
+.shot a:hover{transform:translateY(-2px)}
+.shot img{display:block;width:100%;height:auto;aspect-ratio:299/678}
+.shot figcaption{font-size:.8rem;line-height:1.35;color:var(--muted)}
+.gallery-note{font-size:.84rem;color:var(--muted)}
 
 /* Matrice */
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
@@ -191,9 +196,9 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
       <h1>Ce que les meilleures apps d'alerte nous apprennent</h1>
       <p class="lede">Analyse, à partir de Mobbin, des applications de signalement, de sécurité et de voisinage les plus pertinentes pour 95 Alerte. Pour chacune : ses points forts en patterns de design, en expérience utilisateur et en direction artistique, puis ce qu'on reprend et ce qu'on évite. Le rapport se termine par un plan de conception aligné sur les 11 phases de <span class="mono">docs/task.md</span>.</p>
       <div class="facts">
-        <span><b>12</b> applications retenues</span>
-        <span><b>~90</b> écrans et parcours examinés</span>
-        <span><b>10</b> recherches Mobbin (iOS)</span>
+        <span><b>30</b> applications citées</span>
+        <span><b>49</b> écrans mobiles montrés</span>
+        <span><b>13</b> recherches Mobbin (iOS)</span>
         <span><b>10</b> principes de conception</span>
       </div>
     </header>
@@ -238,7 +243,7 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
     <!-- APPLICATIONS -->
     <section id="apps" aria-labelledby="t-apps">
       <h2 id="t-apps">Applications analysées</h2>
-      <p class="lede">Classées par proximité avec 95 Alerte. Les liens ouvrent les écrans sur Mobbin (compte Mobbin requis).</p>
+      <p class="lede">Classées par proximité avec 95 Alerte. Sous chaque fiche, des écrans iOS réels issus de Mobbin : faites défiler horizontalement, touchez un écran pour l'ouvrir en haute définition sur Mobbin (compte requis).</p>
 
       <div class="apps">
 
@@ -272,12 +277,12 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>La mention claire de ce qui sera public avant l'envoi. Le compteur de confirmation dans l'aperçu de l'alerte. La liste triée par distance. Les préférences de notification par catégorie.</p>
             <p class="avoid"><b>On évite</b>Les illustrations « personnages » pour les incidents graves : elles banalisent un incendie. On réserve un ton plus chaleureux aux événements positifs.</p>
           </div>
-          <div class="refs"><span>Écrans :</span>
-            <a href="https://mobbin.com/screens/c58c2829-399b-4ea9-9afc-df4fce23d252">Update the map</a>
-            <a href="https://mobbin.com/screens/65009195-ecf5-43a3-9f69-626da89b7c6c">Alerte sur carte</a>
-            <a href="https://mobbin.com/screens/d1c748fd-ab3d-4241-b8ae-83728aa3c29b">Fermeture sur carte</a>
-            <a href="https://mobbin.com/screens/38ec59c1-b198-46e8-b823-342850ee7986">Reports ahead</a>
-            <a href="https://mobbin.com/screens/a62752d5-9870-429b-a964-cf04f5ca36e8">Réglages par type</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/c58c2829-399b-4ea9-9afc-df4fce23d252" target="_blank" rel="noopener"><img src="screens/waze-update-the-map.webp" alt="Grille « Update the map »" width="299" height="678" loading="lazy"></a><figcaption>Grille « Update the map »</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/65009195-ecf5-43a3-9f69-626da89b7c6c" target="_blank" rel="noopener"><img src="screens/waze-alerte-carte.webp" alt="Alerte sur la carte + confirmation (👍 33)" width="299" height="678" loading="lazy"></a><figcaption>Alerte sur la carte + confirmation (👍 33)</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/d1c748fd-ab3d-4241-b8ae-83728aa3c29b" target="_blank" rel="noopener"><img src="screens/waze-fermeture.webp" alt="Fermeture : flèches sur la carte" width="299" height="678" loading="lazy"></a><figcaption>Fermeture : flèches sur la carte</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/38ec59c1-b198-46e8-b823-342850ee7986" target="_blank" rel="noopener"><img src="screens/waze-reports-ahead.webp" alt="Liste triée par distance" width="299" height="678" loading="lazy"></a><figcaption>Liste triée par distance</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/a62752d5-9870-429b-a964-cf04f5ca36e8" target="_blank" rel="noopener"><img src="screens/waze-reglages.webp" alt="Réglages par type de signalement" width="299" height="678" loading="lazy"></a><figcaption>Réglages par type de signalement</figcaption></figure>
           </div>
         </article>
 
@@ -311,12 +316,12 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>Le duo carte + sheet + chips pour l'écran Alertes. Le badge de statut (Traité) sur la carte d'alerte. Les actions ⋯ expliquées. Le polygone pour les alertes de zone (inondation, travaux).</p>
             <p class="avoid"><b>On évite</b>Les mises à jour en texte brut collé (« [Update 7/18…] ») : on les structure en timeline.</p>
           </div>
-          <div class="refs"><span>Écrans :</span>
-            <a href="https://mobbin.com/screens/630a319b-deeb-4fdc-a05c-978a1e1701b6">Alerts in Boston</a>
-            <a href="https://mobbin.com/screens/fffdd381-a09f-460e-838d-049314184180">Détail d'une panne</a>
-            <a href="https://mobbin.com/screens/b45d5e41-8b12-4adf-bf00-fd5bded281bd">Commentaires</a>
-            <a href="https://mobbin.com/screens/4c338342-1ca9-4357-8a4a-290fa1b8e1ce">Menu ⋯</a>
-            <a href="https://mobbin.com/screens/5380096e-48ba-40b2-8485-07d3e7e2d1ed">Toast signalement</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/630a319b-deeb-4fdc-a05c-978a1e1701b6" target="_blank" rel="noopener"><img src="screens/nextdoor-alertes.webp" alt="Carte + sheet + chips de filtres" width="299" height="678" loading="lazy"></a><figcaption>Carte + sheet + chips de filtres</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/fffdd381-a09f-460e-838d-049314184180" target="_blank" rel="noopener"><img src="screens/nextdoor-zone.webp" alt="Zone touchée en polygone, statut Résolu" width="299" height="678" loading="lazy"></a><figcaption>Zone touchée en polygone, statut Résolu</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/b45d5e41-8b12-4adf-bf00-fd5bded281bd" target="_blank" rel="noopener"><img src="screens/nextdoor-commentaires.webp" alt="Commentaires + composer" width="299" height="678" loading="lazy"></a><figcaption>Commentaires + composer</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/4c338342-1ca9-4357-8a4a-290fa1b8e1ce" target="_blank" rel="noopener"><img src="screens/nextdoor-menu.webp" alt="Menu ⋯ aux actions expliquées" width="299" height="678" loading="lazy"></a><figcaption>Menu ⋯ aux actions expliquées</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/5380096e-48ba-40b2-8485-07d3e7e2d1ed" target="_blank" rel="noopener"><img src="screens/nextdoor-toast.webp" alt="Toast « Report submitted. »" width="299" height="678" loading="lazy"></a><figcaption>Toast « Report submitted. »</figcaption></figure>
           </div>
         </article>
 
@@ -350,11 +355,12 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>Le curseur de rayon avec un cercle sur la carte (réglage des alertes de proximité). La timeline du détail. La pilule « nouvelles alertes » sur la carte. Le FAB avec une bulle d'aide la première fois.</p>
             <p class="avoid"><b>On évite</b>Le dark mode imposé, le rouge partout, les emoji, le sensationnalisme. C'est l'opposé de la règle « vigilance, pas dénonciation » du CDC.</p>
           </div>
-          <div class="refs"><span>Écrans :</span>
-            <a href="https://mobbin.com/screens/ff63cabc-c1ed-47c4-bb38-09ed02352c62">Carte + FAB</a>
-            <a href="https://mobbin.com/screens/ff2be75d-e8b3-49d6-8bb1-6e7b235ca276">Détail incident</a>
-            <a href="https://mobbin.com/screens/e1f57136-7750-4cbd-b390-51552b7b3f98">Rayon d'alerte</a>
-            <a href="https://mobbin.com/screens/edcc097c-31ce-477d-bebd-7a8c3854a075">Safety Center</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/ff63cabc-c1ed-47c4-bb38-09ed02352c62" target="_blank" rel="noopener"><img src="screens/citizen-carte.webp" alt="Carte, FAB + bulle d&#x27;aide, Key Alerts" width="299" height="678" loading="lazy"></a><figcaption>Carte, FAB + bulle d&#x27;aide, Key Alerts</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/ff2be75d-e8b3-49d6-8bb1-6e7b235ca276" target="_blank" rel="noopener"><img src="screens/citizen-detail.webp" alt="Détail : distance, résumé, timeline" width="299" height="678" loading="lazy"></a><figcaption>Détail : distance, résumé, timeline</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/8af19906-2b0f-4a60-b75b-8d517c2b6bed" target="_blank" rel="noopener"><img src="screens/citizen-timeline.webp" alt="Timeline des mises à jour" width="299" height="678" loading="lazy"></a><figcaption>Timeline des mises à jour</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/e1f57136-7750-4cbd-b390-51552b7b3f98" target="_blank" rel="noopener"><img src="screens/citizen-rayon.webp" alt="Rayon d&#x27;alerte : curseur + cercle" width="299" height="678" loading="lazy"></a><figcaption>Rayon d&#x27;alerte : curseur + cercle</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/edcc097c-31ce-477d-bebd-7a8c3854a075" target="_blank" rel="noopener"><img src="screens/citizen-safety-center.webp" alt="Centre de sécurité en grille" width="299" height="678" loading="lazy"></a><figcaption>Centre de sécurité en grille</figcaption></figure>
           </div>
         </article>
 
@@ -386,11 +392,11 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>La grille de catégories en tuiles teintées pour l'étape « Catégorie ». La phrase de prudence. Le retour sur la carte avec l'alerte visible juste après la publication.</p>
             <p class="avoid"><b>On évite</b>Le jaune comme couleur de danger : contraste insuffisant sur fond clair. On garde l'orange foncé du Design System.</p>
           </div>
-          <div class="refs"><span>Écrans :</span>
-            <a href="https://mobbin.com/screens/7e3b6798-0461-449e-88e1-d7ccb909acef">Add a report</a>
-            <a href="https://mobbin.com/flows/43be898e-75de-4464-a7c2-621404aa0b27">Parcours Google Maps</a>
-            <a href="https://mobbin.com/flows/b2ae1786-5fc7-44e2-a9b7-47c599e0b6fd">Parcours Apple Maps</a>
-            <a href="https://mobbin.com/screens/9df9a1c4-c9c0-4a2f-8526-870df87e5987">Oui / Non / Je ne sais pas</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/7e3b6798-0461-449e-88e1-d7ccb909acef" target="_blank" rel="noopener"><img src="screens/google-add-report.webp" alt="Google : grille « Add a report »" width="299" height="678" loading="lazy"></a><figcaption>Google : grille « Add a report »</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/43be898e-75de-4464-a7c2-621404aa0b27" target="_blank" rel="noopener"><img src="screens/google-confirmation.webp" alt="Google : confirmation + « 1 reported »" width="299" height="678" loading="lazy"></a><figcaption>Google : confirmation + « 1 reported »</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/b2ae1786-5fc7-44e2-a9b7-47c599e0b6fd" target="_blank" rel="noopener"><img src="screens/apple-report.webp" alt="Apple : 3 types, ronds colorés" width="299" height="678" loading="lazy"></a><figcaption>Apple : 3 types, ronds colorés</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/b2ae1786-5fc7-44e2-a9b7-47c599e0b6fd" target="_blank" rel="noopener"><img src="screens/apple-toast.webp" alt="Apple : « Hazard Reported · Just now »" width="299" height="678" loading="lazy"></a><figcaption>Apple : « Hazard Reported · Just now »</figcaption></figure>
           </div>
         </article>
 
@@ -421,8 +427,10 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>La consigne dans la caméra. La progression visible. Le message final qui nomme la suite (« transmis au service Propreté de Cergy »).</p>
             <p class="avoid"><b>On évite</b>Les capitales pour du texte long et la modale bloquante : chez nous, l'écran de confirmation est un écran à part entière.</p>
           </div>
-          <div class="refs"><span>Parcours :</span>
-            <a href="https://mobbin.com/flows/4bb0fda2-0003-46b3-b0e0-9ab39d7a7721">Reporting an issue (10 écrans)</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/4bb0fda2-0003-46b3-b0e0-9ab39d7a7721" target="_blank" rel="noopener"><img src="screens/bird-camera.webp" alt="Caméra avec consigne" width="299" height="678" loading="lazy"></a><figcaption>Caméra avec consigne</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/4bb0fda2-0003-46b3-b0e0-9ab39d7a7721" target="_blank" rel="noopener"><img src="screens/bird-formulaire.webp" alt="Étapes + choix en pilules" width="299" height="678" loading="lazy"></a><figcaption>Étapes + choix en pilules</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/4bb0fda2-0003-46b3-b0e0-9ab39d7a7721" target="_blank" rel="noopener"><img src="screens/bird-merci.webp" alt="Merci + ce qui va se passer" width="299" height="678" loading="lazy"></a><figcaption>Merci + ce qui va se passer</figcaption></figure>
           </div>
         </article>
 
@@ -453,10 +461,11 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>Le composant Alert Timeline (Envoyé → Transmis → Pris en compte → En traitement → Traité). Le délai indicatif quand le service le fournit. L'écran « Merci » de fin de signalement de contenu.</p>
             <p class="avoid"><b>On évite</b>« No action taken » sans explication : on dit toujours pourquoi un statut n'avance pas.</p>
           </div>
-          <div class="refs"><span>Écrans :</span>
-            <a href="https://mobbin.com/screens/09426d05-9e3c-4a74-b206-da7d04e07ba4">Bumble · Your report</a>
-            <a href="https://mobbin.com/screens/4925b368-3f36-46ea-be5b-69b312d5ec4c">Pinterest · Reports center</a>
-            <a href="https://mobbin.com/flows/5de4e383-75ee-49ef-9073-1a5b11881c89">Clubhouse · Report</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/09426d05-9e3c-4a74-b206-da7d04e07ba4" target="_blank" rel="noopener"><img src="screens/bumble-suivi.webp" alt="Bumble : timeline + délai 72 h" width="299" height="678" loading="lazy"></a><figcaption>Bumble : timeline + délai 72 h</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/4925b368-3f36-46ea-be5b-69b312d5ec4c" target="_blank" rel="noopener"><img src="screens/pinterest-statut.webp" alt="Pinterest : statut du signalement" width="299" height="678" loading="lazy"></a><figcaption>Pinterest : statut du signalement</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/5de4e383-75ee-49ef-9073-1a5b11881c89" target="_blank" rel="noopener"><img src="screens/clubhouse-motifs.webp" alt="Clubhouse : motifs expliqués" width="299" height="678" loading="lazy"></a><figcaption>Clubhouse : motifs expliqués</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/5de4e383-75ee-49ef-9073-1a5b11881c89" target="_blank" rel="noopener"><img src="screens/clubhouse-merci.webp" alt="Clubhouse : merci + liens utiles" width="299" height="678" loading="lazy"></a><figcaption>Clubhouse : merci + liens utiles</figcaption></figure>
           </div>
         </article>
 
@@ -486,11 +495,11 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>L'écran « Situation urgente ? » : un seul bouton rouge, les numéros (112, 18, 17, 15) affichés en clair, et un rappel que 95 Alerte ne remplace pas les secours.</p>
             <p class="avoid"><b>On évite</b>Afficher un bouton d'appel d'urgence sur chaque alerte : cela ferait passer l'app pour un service de secours (CDC §49).</p>
           </div>
-          <div class="refs"><span>Écrans :</span>
-            <a href="https://mobbin.com/screens/a641d7d3-f4b6-4f15-8488-8ab3bf6c786c">inDrive</a>
-            <a href="https://mobbin.com/screens/a62fd4a9-d424-4838-8ac9-ef2af81a4e5f">Careem</a>
-            <a href="https://mobbin.com/screens/5f829794-614d-4369-babc-c961c9923e70">DoorDash</a>
-            <a href="https://mobbin.com/screens/c7c8fad4-d718-41cb-ba54-cecbdb553c05">Waymo</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/a641d7d3-f4b6-4f15-8488-8ab3bf6c786c" target="_blank" rel="noopener"><img src="screens/indrive-safety.webp" alt="inDrive : « Call 911 » isolé" width="299" height="678" loading="lazy"></a><figcaption>inDrive : « Call 911 » isolé</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/a62fd4a9-d424-4838-8ac9-ef2af81a4e5f" target="_blank" rel="noopener"><img src="screens/careem-safety.webp" alt="Careem : centre de sécurité" width="299" height="678" loading="lazy"></a><figcaption>Careem : centre de sécurité</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/5f829794-614d-4369-babc-c961c9923e70" target="_blank" rel="noopener"><img src="screens/doordash-swipe.webp" alt="DoorDash : « Swipe for 911 »" width="299" height="678" loading="lazy"></a><figcaption>DoorDash : « Swipe for 911 »</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/c7c8fad4-d718-41cb-ba54-cecbdb553c05" target="_blank" rel="noopener"><img src="screens/waymo-help.webp" alt="Waymo : urgence en ligne dédiée" width="299" height="678" loading="lazy"></a><figcaption>Waymo : urgence en ligne dédiée</figcaption></figure>
           </div>
         </article>
 
@@ -522,11 +531,12 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>L'amorce avant la demande système (UI-007). La page Confidentialité façon Sesame. La sheet Transit au moment de « Suivre cette alerte » pour proposer les notifications.</p>
             <p class="avoid"><b>On évite</b>Demander localisation et notifications au même moment, au premier lancement.</p>
           </div>
-          <div class="refs"><span>Parcours :</span>
-            <a href="https://mobbin.com/flows/a6ce754b-866e-430b-bb8d-6199102da393">Greenlight</a>
-            <a href="https://mobbin.com/flows/68559489-94dd-47cd-b157-c17687bef70f">lululemon</a>
-            <a href="https://mobbin.com/flows/02f763a9-8d56-4f33-8a76-43d8ee56d09e">Sesame</a>
-            <a href="https://mobbin.com/screens/c4feb70b-1924-4248-b4c2-d568ffa68a21">Transit</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/6acf9f9a-8190-4252-b78e-461e6ee94cf5" target="_blank" rel="noopener"><img src="screens/greenlight-amorce.webp" alt="Greenlight : amorce illustrée" width="299" height="678" loading="lazy"></a><figcaption>Greenlight : amorce illustrée</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/a6ce754b-866e-430b-bb8d-6199102da393" target="_blank" rel="noopener"><img src="screens/greenlight-systeme.webp" alt="Greenlight : demande système, étape 2/3" width="299" height="678" loading="lazy"></a><figcaption>Greenlight : demande système, étape 2/3</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/68559489-94dd-47cd-b157-c17687bef70f" target="_blank" rel="noopener"><img src="screens/lululemon-notifs.webp" alt="lululemon : bénéfices + « Not now »" width="299" height="678" loading="lazy"></a><figcaption>lululemon : bénéfices + « Not now »</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/flows/02f763a9-8d56-4f33-8a76-43d8ee56d09e" target="_blank" rel="noopener"><img src="screens/sesame-permissions.webp" alt="Sesame : permissions expliquées" width="299" height="678" loading="lazy"></a><figcaption>Sesame : permissions expliquées</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/c4feb70b-1924-4248-b4c2-d568ffa68a21" target="_blank" rel="noopener"><img src="screens/transit-optin.webp" alt="Transit : opt-in contextuel" width="299" height="678" loading="lazy"></a><figcaption>Transit : opt-in contextuel</figcaption></figure>
           </div>
         </article>
 
@@ -558,11 +568,112 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <p class="take"><b>On reprend</b>Le centre de notifications groupé par date avec une action directe (« Voir l'alerte »). Le panneau de filtres en grille d'icônes. Les sections « Mes alertes suivies » puis « À proximité ».</p>
             <p class="avoid"><b>On évite</b>Mélanger les notifications promotionnelles et les alertes : 95 Alerte n'a que des notifications de service.</p>
           </div>
-          <div class="refs"><span>Écrans :</span>
-            <a href="https://mobbin.com/screens/a4d7c5bf-fd3f-4f4b-855c-1030f40182e5">Cleo</a>
-            <a href="https://mobbin.com/screens/6d39e50e-d8b5-43e0-b78a-7f96fcc12007">Tabby</a>
-            <a href="https://mobbin.com/screens/c8562675-9d02-4d85-b54e-5776d6bea80f">Grab</a>
-            <a href="https://mobbin.com/screens/f13e04dd-3a91-4c8e-b409-72256f8ee7f9">Flighty</a>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/a4d7c5bf-fd3f-4f4b-855c-1030f40182e5" target="_blank" rel="noopener"><img src="screens/cleo-notifs.webp" alt="Cleo : groupées par date + action" width="299" height="678" loading="lazy"></a><figcaption>Cleo : groupées par date + action</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/6d39e50e-d8b5-43e0-b78a-7f96fcc12007" target="_blank" rel="noopener"><img src="screens/tabby-notifs.webp" alt="Tabby : chips + point non lu" width="299" height="678" loading="lazy"></a><figcaption>Tabby : chips + point non lu</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/c8562675-9d02-4d85-b54e-5776d6bea80f" target="_blank" rel="noopener"><img src="screens/grab-calques.webp" alt="Grab : calques de carte cochables" width="299" height="678" loading="lazy"></a><figcaption>Grab : calques de carte cochables</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/f13e04dd-3a91-4c8e-b409-72256f8ee7f9" target="_blank" rel="noopener"><img src="screens/flighty-sheet.webp" alt="Flighty : For you / Major issues" width="299" height="678" loading="lazy"></a><figcaption>Flighty : For you / Major issues</figcaption></figure>
+          </div>
+        </article>
+
+        <!-- LIEU -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Snoonu, Shopee, Grab, Glovo</h3>
+            <div class="tags"><span class="tag n">Choix du lieu</span><span class="tag">Carte</span></div>
+          </div>
+          <p class="app-sum">Le geste « placer une épingle » est mûr dans les apps de livraison et de VTC. C'est exactement l'étape Localisation de notre signalement.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Épingle fixe au centre, c'est la carte qui bouge</li>
+              <li>Adresse affichée en direct sous la carte (Snoonu) ou en bulle sur l'épingle (Grab)</li>
+              <li>Bouton « Ma position » flottant, champ de recherche d'adresse</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Shopee demande explicitement de vérifier : « Your address is here · Please confirm your map location is correct »</li>
+              <li>Glovo donne une consigne précise et garde le bouton inactif tant que l'épingle n'a pas bougé</li>
+              <li>Un seul CTA pleine largeur : « Confirm location »</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Épingle à la couleur de la marque, très contrastée</li>
+              <li>Sheet blanche en bas, carte en haut sur 2/3 de l'écran</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>Épingle centrale + carte mobile + adresse en direct + « Confirmer cette position » (CDC §21). La consigne en bulle façon Shopee. Le refus clair si le point est hors du Val-d'Oise.</p>
+            <p class="avoid"><b>On évite</b>Une épingle dans la couleur « incident » : elle doit rester neutre (bleu marque) tant que la catégorie n'est pas choisie.</p>
+          </div>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/d845c798-2a8d-4815-b0a2-63c2a620f38a" target="_blank" rel="noopener"><img src="screens/snoonu-lieu.webp" alt="Snoonu : épingle + adresse + Confirmer" width="299" height="678" loading="lazy"></a><figcaption>Snoonu : épingle + adresse + Confirmer</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/e820f627-cd4d-4820-ad50-1642bf75df8d" target="_blank" rel="noopener"><img src="screens/shopee-lieu.webp" alt="Shopee : « Your address is here »" width="299" height="678" loading="lazy"></a><figcaption>Shopee : « Your address is here »</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/705fc8f7-eb23-43a6-9f2d-4d9169fdebc0" target="_blank" rel="noopener"><img src="screens/grab-lieu.webp" alt="Grab : étiquette de rue sur l&#x27;épingle" width="299" height="678" loading="lazy"></a><figcaption>Grab : étiquette de rue sur l&#x27;épingle</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/ef91407d-ba53-42fe-acd9-a4d90d25b96d" target="_blank" rel="noopener"><img src="screens/glovo-lieu.webp" alt="Glovo : consigne + bouton inactif" width="299" height="678" loading="lazy"></a><figcaption>Glovo : consigne + bouton inactif</figcaption></figure>
+          </div>
+        </article>
+
+        <!-- VISIBILITÉ -->
+        <article class="app">
+          <div class="app-head">
+            <h3>YouTube Studio, Tripadvisor, Whering</h3>
+            <div class="tags"><span class="tag p">Anonymat / visibilité</span><span class="tag">Confirmation</span></div>
+          </div>
+          <p class="app-sum">Aucune app d'alerte de Mobbin ne propose de publier en anonyme. On s'inspire donc des écrans de visibilité de publication, très clairs, pour notre choix « Publier avec mon profil / anonymement ».</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>YouTube Studio : boutons radio, chaque option suivie d'une phrase « qui peut voir »</li>
+              <li>Tripadvisor : interrupteurs avec explication, bouton « Apply »</li>
+              <li>Whering : sheet de confirmation qui détaille les conséquences avant de passer en public</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>L'utilisateur lit la conséquence de son choix, pas un jargon technique</li>
+              <li>Le changement sensible est confirmé, et réversible (« You can change your mind at any time »)</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Écrans dépouillés, titre clair, beaucoup d'espace</li>
+              <li>Aucune couleur forte : le choix est neutre</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>Deux RadioCards avec une phrase « ce que les autres verront » + l'aperçu de l'auteur (« Jean D. » / « Citoyen anonyme »). La mention que la plateforme reste capable de tracer l'auteur, dite simplement (CDC §9).</p>
+            <p class="avoid"><b>On évite</b>Un interrupteur seul : trop facile à basculer par erreur pour un choix qui touche à la vie privée.</p>
+          </div>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/363d2bb8-77df-47af-b501-3cf34f8364eb" target="_blank" rel="noopener"><img src="screens/youtube-visibilite.webp" alt="YouTube Studio : 3 niveaux expliqués" width="299" height="678" loading="lazy"></a><figcaption>YouTube Studio : 3 niveaux expliqués</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/83250885-12cd-447f-a486-6fa88b6a1887" target="_blank" rel="noopener"><img src="screens/tripadvisor-visibilite.webp" alt="Tripadvisor : « Who can view »" width="299" height="678" loading="lazy"></a><figcaption>Tripadvisor : « Who can view »</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/30e78d60-25e3-43b7-9942-2e216cf99897" target="_blank" rel="noopener"><img src="screens/whering-confirmation.webp" alt="Whering : confirmation avant public" width="299" height="678" loading="lazy"></a><figcaption>Whering : confirmation avant public</figcaption></figure>
+          </div>
+        </article>
+
+        <!-- ONBOARDING -->
+        <article class="app">
+          <div class="app-head">
+            <h3>Uber, inDrive, Badoo</h3>
+            <div class="tags"><span class="tag p">Onboarding</span><span class="tag">Illustration</span></div>
+          </div>
+          <p class="app-sum">Des onboardings consacrés à la sécurité, qui rassurent sans dramatiser : utiles pour nos 4 écrans de présentation.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul>
+              <li>Illustration en haut, titre fort, 2 lignes de texte, pagination par points</li>
+              <li>inDrive : barre de progression type « stories » en haut</li>
+              <li>Badoo : liste de 3 engagements avec icônes</li>
+            </ul></div>
+            <div><h4>Expérience</h4><ul>
+              <li>Un message par écran, lisible en 3 secondes</li>
+              <li>« Skip » toujours présent (Uber)</li>
+            </ul></div>
+            <div><h4>Direction artistique</h4><ul>
+              <li>Illustrations plates, 2 ou 3 couleurs, personnages divers</li>
+              <li>Ton positif même sur un sujet de sécurité</li>
+            </ul></div>
+          </div>
+          <div class="verdict">
+            <p class="take"><b>On reprend</b>La structure illustration + titre + 2 lignes, la pagination par points et « Passer ». Une illustration de quartier du Val-d'Oise par écran, en aplats bleu, vert et orange.</p>
+            <p class="avoid"><b>On évite</b>Les fonds pleins saturés (Badoo, Plenty of Fish) : contraste fragile en mode sombre.</p>
+          </div>
+          <div class="strip" role="list">
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/f850dfe4-1570-485d-b97c-e3d45ea1b7f9" target="_blank" rel="noopener"><img src="screens/uber-onboarding.webp" alt="Uber : illustration + bénéfice + Skip" width="299" height="678" loading="lazy"></a><figcaption>Uber : illustration + bénéfice + Skip</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/fa51b8b2-88f1-49bb-94e2-5110e7ab9868" target="_blank" rel="noopener"><img src="screens/indrive-onboarding.webp" alt="inDrive : pictogramme simple, story" width="299" height="678" loading="lazy"></a><figcaption>inDrive : pictogramme simple, story</figcaption></figure>
+          <figure class="shot" role="listitem"><a href="https://mobbin.com/screens/a9b631a7-62e8-4556-88a7-15ad40aa48b7" target="_blank" rel="noopener"><img src="screens/badoo-onboarding.webp" alt="Badoo : liste d&#x27;engagements" width="299" height="678" loading="lazy"></a><figcaption>Badoo : liste d&#x27;engagements</figcaption></figure>
           </div>
         </article>
       </div>
@@ -593,6 +704,9 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
             <tr><td>Rayon d'alerte : curseur + cercle sur carte</td><td>Citizen</td><td>—</td><td>Paramètres notifications</td><td class="mono">9</td></tr>
             <tr><td>Amorce illustrée avant la demande système</td><td>Greenlight</td><td>lululemon</td><td>UI-007</td><td class="mono">2</td></tr>
             <tr><td>Permissions expliquées ligne par ligne</td><td>Sesame</td><td>—</td><td>UI-016 Confidentialité</td><td class="mono">9</td></tr>
+            <tr><td>Épingle centrale + adresse en direct + Confirmer</td><td>Snoonu</td><td>Shopee, Grab, Glovo</td><td>ALERT-02 étape Lieu</td><td class="mono">6</td></tr>
+            <tr><td>Choix de visibilité expliqué + confirmation</td><td>YouTube Studio</td><td>Tripadvisor, Whering</td><td>ALERT-02 étape Identité</td><td class="mono">6</td></tr>
+            <tr><td>Onboarding illustré, un message par écran</td><td>Uber</td><td>inDrive, Badoo</td><td>UI-002 → 005</td><td class="mono">2</td></tr>
             <tr><td>Opt-in contextuel aux notifications</td><td>Transit</td><td>—</td><td>Suivre une alerte</td><td class="mono">5</td></tr>
             <tr><td>Urgence isolée, bouton rouge unique</td><td>DoorDash</td><td>inDrive, Careem, Waymo</td><td>Écran Urgence</td><td class="mono">5</td></tr>
           </tbody>
@@ -743,7 +857,7 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
               <li>Choix du territoire : recherche + liste de communes, refus hors zone expliqué</li>
               <li><b>Pas</b> de demande de notifications ici (reportée au premier suivi)</li>
             </ul></div>
-            <div><h4>Sources</h4><ul><li>Greenlight, lululemon, Sesame</li></ul></div>
+            <div><h4>Sources</h4><ul><li>Greenlight, lululemon, Sesame, Uber, inDrive</li></ul></div>
           </div><p class="done"><b>Validé si</b> le parcours S1 fonctionne avec la localisation refusée sans aucune impasse.</p></div>
         </details>
 
@@ -797,12 +911,12 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
               <li>Ouverture en sheet plein écran depuis le + ; barre de progression fine en haut</li>
               <li>Étape Type : deux grandes RadioCards Positif / Négatif, de même poids visuel</li>
               <li>Étape Catégorie : <b>grille 2 colonnes</b> de tuiles (Google Maps) + rappel « Ne signalez que si vous êtes en sécurité » pour les catégories critiques</li>
-              <li>Étape Lieu : épingle centrale fixe sur une carte qu'on déplace, adresse mise à jour en direct</li>
+              <li>Étape Lieu : épingle centrale fixe sur une carte qu'on déplace, adresse mise à jour en direct, bulle « Vérifiez que la position est correcte » (Snoonu, Shopee)</li>
               <li>Étape Médias : consigne dans la caméra (Bird), vignettes avec ✕ / ↻ et progression</li>
-              <li>Étape Identité : aperçu exact du nom public (Waze)</li>
+              <li>Étape Identité : deux RadioCards avec « qui verra quoi » et aperçu exact du nom public (YouTube Studio, Waze)</li>
               <li>Confirmation : écran dédié « Alerte publiée », animation de routage vers « Service Propreté · Ville de Cergy », puis retour à la carte centrée sur l'alerte</li>
             </ul></div>
-            <div><h4>Sources</h4><ul><li>Google Maps, Waze, Bird, Apple Maps</li></ul></div>
+            <div><h4>Sources</h4><ul><li>Google Maps, Waze, Bird, Apple Maps, Snoonu, Shopee, YouTube Studio</li></ul></div>
           </div><p class="done"><b>Validé si</b> S4 (incendie, anonyme) se fait en moins de 30 secondes sans description longue.</p></div>
         </details>
 
@@ -862,10 +976,10 @@ footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padd
     <section id="methode" aria-labelledby="t-meth">
       <h2 id="t-meth">Méthode et limites</h2>
       <div class="note">
-        <p>Recherches Mobbin (iOS) le 8 octobre 2026 : carte d'incidents avec bottom sheet ; parcours de signalement ; détail d'incident avec timeline ; détail d'alerte Nextdoor ; permissions ; listes d'alertes et notifications ; flux d'alertes Citizen ; grille de signalement Google Maps ; votes ; carte Waze. Seuls les écrans réellement examinés sont cités.</p>
+        <p>Recherches Mobbin (iOS) le 8 octobre 2026 : carte d'incidents avec bottom sheet ; parcours de signalement ; détail d'incident avec timeline ; détail d'alerte Nextdoor ; permissions ; listes d'alertes et notifications ; flux d'alertes Citizen ; grille de signalement Google Maps ; votes ; carte Waze ; choix d'un lieu par épingle ; visibilité publique d'une publication ; onboarding sécurité. Seuls les écrans réellement examinés sont cités.</p>
       </div>
       <div class="note">
-        <p><b>Limites.</b> Mobbin ne référence pas d'application civique française (DansMaRue, FixMyStreet, Signal Conso) : les apps analysées sont surtout américaines ou internationales, et leurs codes ont été adaptés au contexte d'un service public territorial. Les captures ne sont pas intégrées au rapport, à cause de la politique réseau de l'environnement de travail ; chaque référence renvoie à l'écran sur Mobbin.</p>
+        <p><b>Limites.</b> Mobbin ne référence pas d'application civique française (DansMaRue, FixMyStreet, Signal Conso) : les apps analysées sont surtout américaines ou internationales, et leurs codes ont été adaptés au contexte d'un service public territorial. Les 49 écrans montrés sont les aperçus renvoyés par le MCP Mobbin (environ 300 px de large, avec la mention « curated by Mobbin ») ; la version haute définition s'ouvre sur Mobbin en touchant l'écran. Aucune app d'alerte de Mobbin ne propose la publication anonyme : ce point s'appuie sur des écrans de visibilité d'autres domaines.</p>
       </div>
     </section>
 
