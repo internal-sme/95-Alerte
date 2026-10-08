@@ -31,6 +31,12 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 - Ne jamais présenter l'app comme un service de secours : afficher le rappel d'urgence pour les catégories critiques.
 - En cas de conflit entre documents ou de décision manquante importante (voir PRD §13), **demander** avant de faire une hypothèse majeure. Pour une hypothèse mineure, la signaler dans un commentaire.
 
+## Livrables à chaque phase — deux versions, toujours
+
+Une phase n'est terminée que lorsque **les deux versions** sont à jour et publiées :
+1. **Prototype React** : `prototype/src/` → `python3 tools/build_prototype.py` → `prototype/index.html`, publié sur https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw.
+2. **Canevas de preview** (type Design) : une planche `.dc.html` par nouvel écran ou état, en clair et en sombre, reliées entre elles pour le bouton Play, **sans cadre de téléphone** (les planches ne peuvent pas savoir si elles sont affichées sur le canevas ou en Play). Sources dans `prototype/canvas/`, publié sur https://claude.ai/artifact/Sd2XN1KjGF8LzZ1rtBfvm4 (voir `prototype/canvas/README.md`).
+
 ## Code Guidelines (prototype)
 
 - Livrable : un seul fichier `prototype/index.html`, **généré** par `python3 tools/build_prototype.py` à partir de `prototype/src/` (`app.jsx`, `app.css`, `phosphor-sprite.svg`) et du CSS de `docs/design-system/index.html`. On modifie `prototype/src/`, jamais `index.html` à la main. Scripts : React 18.3.1 + ReactDOM depuis `cdnjs.cloudflare.com`, Babel `@babel/standalone@7.26.4` depuis `cdn.jsdelivr.net/npm/`, toujours avec des **versions exactes**. Icônes Phosphor intégrées en **sprite SVG** dans la page (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1`) : les artefacts bloquent les feuilles de style jsDelivr. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
