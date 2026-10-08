@@ -70,7 +70,8 @@ button{font-family:inherit}
 
 /* ---- Toasts ---- */
 .toast-host{position:absolute;left:var(--s-3);right:var(--s-3);bottom:calc(var(--tabbar-h) + var(--s-3));z-index:50;display:grid;gap:var(--s-2);pointer-events:none}
-.toast-host.no-tabbar{bottom:var(--s-4)}
+/* Sans barre d'onglets, l'écran a souvent un pied d'actions : le toast passe sous l'en-tête pour ne pas le masquer. */
+.toast-host.no-tabbar{bottom:auto;top:calc(56px + var(--s-2))}
 .toast-host .toast{pointer-events:auto;animation:rise-in .2s ease-out}
 .global-banner{position:relative;z-index:35;margin:0;border-radius:0}
 

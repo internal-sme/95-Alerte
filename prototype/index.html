@@ -329,6 +329,55 @@ textarea.input{min-height:96px;resize:vertical}
 .report-hint{position:absolute;left:50%;bottom:calc(var(--tabbar-h,76px) + 6px);transform:translateX(-50%);z-index:31;border:0;background:none;padding:0;cursor:pointer}
 .report-hint .tooltip{white-space:nowrap}
 
+/* Démarrage et connexion (phase 1) */
+.brand-mark{display:inline-grid;place-items:center;flex:none;border-radius:28%;background:var(--primary);color:var(--on-primary);font-family:var(--font);font-weight:800;letter-spacing:-.03em;box-shadow:var(--shadow-2)}
+.splash{position:absolute;inset:0;display:grid;grid-template-rows:1fr auto;background:var(--primary);color:var(--on-primary);padding:var(--s-8) var(--s-6)}
+.splash .brand-mark{background:var(--on-primary);color:var(--primary)}
+.splash-center{display:grid;justify-items:center;align-content:center;gap:var(--s-3);text-align:center}
+.splash-center h1{margin:var(--s-2) 0 0;font:700 var(--fs-display)/var(--lh-display) var(--font);letter-spacing:-.02em}
+.splash-center p{margin:0;font:500 var(--fs-body)/var(--lh-body) var(--font);opacity:.85}
+.splash-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s-3);font:500 var(--fs-caption)/1 var(--font);opacity:.8}
+.auth-hero{position:relative;height:208px;flex:none;overflow:hidden;border-bottom:1px solid var(--border)}
+.auth-hero .map95 svg.map-art{top:-170px;left:-10px}
+.auth-hero .map-pin{pointer-events:none}
+.auth-body{gap:var(--s-6)}
+.screen.auth > .screen-pad{flex:1 0 auto}
+.screen.auth .screen-footer{position:sticky;bottom:0;z-index:2}
+.auth-intro{display:grid;gap:var(--s-2)}
+.auth-title{margin:0;font:700 var(--fs-display)/var(--lh-display) var(--font);letter-spacing:-.02em;text-wrap:balance}
+.auth-lead{margin:0;color:var(--text-muted);font:400 var(--fs-body)/var(--lh-body) var(--font)}
+.auth-actions{display:grid;gap:var(--s-3)}
+.auth-stepper{padding:var(--s-3) var(--s-4) 0}
+.help-text{margin:0;display:flex;gap:var(--s-2);align-items:flex-start;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
+.help-text .ph{margin-top:2px;color:var(--alert-positive)}
+.or{display:flex;align-items:center;gap:var(--s-3);color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font);text-transform:uppercase;letter-spacing:.06em}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--border)}
+.link-btn{justify-self:center;min-height:var(--tap);padding:0 var(--s-2);border:0;background:none;color:var(--primary);font:600 var(--fs-body)/1 var(--font);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.link-btn.left{justify-self:start;padding-left:0}
+.link-btn:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:4px}
+.legal{margin:0;text-align:center;color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
+.auth-center{flex:1;display:grid;justify-items:center;align-content:center;gap:var(--s-3);padding:var(--s-6);text-align:center}
+.auth-center.compact{flex:none;padding:var(--s-4) var(--s-2) 0}
+.auth-center h2{margin:var(--s-2) 0 0;font:700 var(--fs-h1)/var(--lh-h1) var(--font);text-wrap:balance}
+.auth-center p{margin:0;max-width:32ch;color:var(--text-muted);font:400 var(--fs-body)/var(--lh-body) var(--font)}
+.status-hero{width:80px;height:80px;border-radius:50%;display:grid;place-items:center}
+.status-hero .ph{width:40px;height:40px}
+.status-hero.tone-info{background:var(--primary-soft);color:var(--primary)}
+.status-hero.tone-positive{background:var(--alert-positive-soft);color:var(--alert-positive)}
+.status-hero.tone-vigilance{background:var(--alert-vigilance-soft);color:var(--alert-vigilance)}
+.status-hero.tone-error{background:var(--alert-incident-soft);color:var(--alert-incident)}
+.status-hero .spinner{width:32px;height:32px;border-width:3.5px;color:var(--primary)}
+.otp{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--s-2)}
+.otp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;cursor:text}
+.otp span{height:56px;display:grid;place-items:center;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font:600 22px/1 var(--font);font-variant-numeric:tabular-nums;color:var(--text)}
+.otp span.is-active{border-color:var(--focus-ring);box-shadow:0 0 0 3px var(--primary-soft)}
+.otp.is-error span{border-color:var(--error)}
+.err{display:flex;gap:6px;align-items:center;color:var(--error);font:500 var(--fs-caption)/var(--lh-caption) var(--font)}
+.field-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s-3)}
+.stack-footer{display:grid;gap:var(--s-2)}
+.identity .identity-action{grid-column:1 / -1}
+.identity .badge{margin-top:6px}
+
 /* Carte (fond illustré, marqueurs positionnés, position de l'utilisateur) */
 .map95{position:absolute;inset:0;overflow:hidden;background:var(--map-land)}
 .map95 svg.map-art{position:absolute;left:0;top:0;width:390px;height:768px}
@@ -434,7 +483,8 @@ button{font-family:inherit}
 
 /* ---- Toasts ---- */
 .toast-host{position:absolute;left:var(--s-3);right:var(--s-3);bottom:calc(var(--tabbar-h) + var(--s-3));z-index:50;display:grid;gap:var(--s-2);pointer-events:none}
-.toast-host.no-tabbar{bottom:var(--s-4)}
+/* Sans barre d'onglets, l'écran a souvent un pied d'actions : le toast passe sous l'en-tête pour ne pas le masquer. */
+.toast-host.no-tabbar{bottom:auto;top:calc(56px + var(--s-2))}
 .toast-host .toast{pointer-events:auto;animation:rise-in .2s ease-out}
 .global-banner{position:relative;z-index:35;margin:0;border-radius:0}
 
@@ -730,6 +780,7 @@ function fmtDistance(km) {
 }
 
 function publicName(user) {
+  if (user.display === "first") return user.firstName;
   return `${user.firstName} ${user.lastName[0]}.`;
 }
 
@@ -776,11 +827,22 @@ const PREFS_KEY = "95alerte:prefs";
 const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false };
 const DEFAULT_DEMO = { offline: false, permissionDenied: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
+function initialAuth() {
+  return {
+    step: "login",
+    form: { firstName: "Jean", lastName: "Dupont", email: "jean.dupont@exemple.fr", phone: "06 12 34 56 42" },
+    docType: "cni",
+    idResult: "en_cours",
+    display: "initial",
+  };
+}
+
 function initialState() {
   return {
     prefs: { ...DEFAULT_PREFS, ...storage.get(PREFS_KEY, {}) },
     demo: { ...DEFAULT_DEMO },
-    session: { user: USERS.me, identity: "verifiee", position: { lat: 49.05388, lng: 2.09924, source: "manual", communeId: "pontoise" } },
+    session: { status: "splash", user: null, identity: "non_verifiee", method: null, position: { lat: 49.05388, lng: 2.09924, source: "manual", communeId: "pontoise" } },
+    auth: initialAuth(),
     alerts: SEED_ALERTS,
     votes: { a4: 1, a8: 1 },
     follows: { a1: true },
@@ -836,8 +898,29 @@ function reducer(state, action) {
       });
       return { ...state, alerts, votes: { ...state.votes, [action.alertId]: next } };
     }
+    case "SPLASH_DONE":
+      return { ...state, session: { ...state.session, status: "auth" }, auth: { ...state.auth, step: "login" } };
+    case "AUTH_GO":
+      return { ...state, auth: { ...state.auth, step: action.step } };
+    case "AUTH_SET":
+      return { ...state, auth: { ...state.auth, ...action.patch } };
+    case "LOGIN": {
+      const user = action.user || USERS.me;
+      const toasts = action.message ? [...state.toasts, { id: ++toastSeq, text: action.message, tone: "success" }] : state.toasts;
+      return { ...state, session: { ...state.session, status: "in", user, identity: action.identity, method: action.method }, auth: initialAuth(), nav: { tab: "map", stack: [] }, sheet: null, toasts };
+    }
+    case "GUEST":
+      return { ...state, session: { ...state.session, status: "in", user: null, identity: "non_verifiee", method: "invite" }, nav: { tab: "map", stack: [] } };
+    case "LOGOUT":
+      return { ...state, session: { ...state.session, status: "auth", user: null, identity: "non_verifiee", method: null }, auth: initialAuth(), nav: { tab: "map", stack: [] }, sheet: null, modal: null };
+    case "RESTART":
+      return { ...state, session: { ...state.session, status: "splash", user: null, method: null }, auth: initialAuth(), nav: { tab: "map", stack: [] }, sheet: null, modal: null };
+    case "SET_IDENTITY": {
+      const identity = action.identity === "result" ? ({ reussie: "verifiee", en_cours: "en_cours", manuelle: "en_cours" }[state.auth.idResult] || state.session.identity) : action.identity;
+      return { ...state, session: { ...state.session, identity } };
+    }
     case "RESET":
-      return { ...initialState(), prefs: state.prefs };
+      return { ...initialState(), prefs: state.prefs, session: state.session };
     default:
       return state;
   }
@@ -1148,6 +1231,7 @@ function VoteBar({ alert, compact }) {
   const current = state.votes[alert.id] || 0;
   const onVote = (v) => {
     if (state.demo.offline) { toast("Vote impossible hors connexion.", { tone: "error" }); return; }
+    if (!state.session.user) { toast("Connectez-vous pour confirmer ou contester une alerte."); return; }
     vote(alert.id, v);
   };
   return (
@@ -1549,7 +1633,7 @@ function ActivityScreen() {
   const { state } = useStore();
   const { toast, push } = useActions();
   const [tab, setTab] = useState("mine");
-  const mine = state.alerts.filter((a) => a.authorId === ME_ID && a.status !== "supprimee").sort((a, b) => b.createdAt - a.createdAt);
+  const mine = state.session.user ? state.alerts.filter((a) => a.authorId === ME_ID && a.status !== "supprimee").sort((a, b) => b.createdAt - a.createdAt) : [];
   const followed = state.alerts.filter((a) => state.follows[a.id]);
   const open = () => toast("Le suivi détaillé arrive bientôt.");
   return (
@@ -1557,7 +1641,9 @@ function ActivityScreen() {
       <div className="screen-title"><h1>Activité</h1><p>Vos signalements et leur suivi par les services</p></div>
       <div className="screen-pad">
         <SegmentedControl block label="Activité" value={tab} onChange={setTab} options={[{ value: "mine", label: "Mes alertes" }, { value: "comments", label: "Commentaires" }, { value: "followed", label: "Suivies" }]} />
-        {tab === "mine" ? (
+        {!state.session.user ? (
+          <GuestGate icon="pulse" title="Retrouvez ici votre activité" text="Connectez-vous pour suivre vos alertes, vos commentaires et les alertes que vous suivez." />
+        ) : tab === "mine" ? (
           mine.length ? mine.map((a) => <AlertCard key={a.id} alert={a} showStatus onOpen={open} />)
             : <EmptyState icon="plus" title="Vous n'avez encore publié aucune alerte." action={<Button onClick={() => push("report")}>Signaler un événement</Button>} />
         ) : tab === "comments" ? (
@@ -1570,22 +1656,32 @@ function ActivityScreen() {
 }
 
 function ProfileScreen() {
-  const { state } = useStore();
-  const { push, setPref, toast } = useActions();
+  const { state, dispatch } = useStore();
+  const { push, setPref, toast, confirm } = useActions();
   const user = state.session.user;
   const soon = () => toast("Disponible bientôt.");
+  const logout = () => confirm({ title: "Se déconnecter ?", body: "Vous pourrez toujours consulter les alertes sans compte.", confirmLabel: "Se déconnecter", onConfirm: () => dispatch({ type: "LOGOUT" }) });
   return (
     <div className="screen">
       <div className="screen-title"><h1>Profil</h1></div>
       <div className="screen-pad">
-        <div className="identity">
-          <span className="avatar" aria-hidden="true">{user.firstName[0]}{user.lastName[0]}</span>
-          <div>
-            <b>{user.firstName} {user.lastName}</b>
-            <small>Vos alertes identifiées affichent « {publicName(user)} »</small>
-            <span className="verified"><Icon name="seal-check-fill" />Identité vérifiée</span>
+        {user ? (
+          <div className="identity">
+            <span className="avatar" aria-hidden="true">{user.firstName[0]}{user.lastName[0]}</span>
+            <div>
+              <b>{user.firstName} {user.lastName}</b>
+              <small>Vos alertes identifiées affichent « {publicName(user)} »</small>
+              <IdentityBadge status={state.session.identity} />
+            </div>
+            {state.session.identity === "non_verifiee" ? <Button variant="secondary" block className="identity-action" icon="identification-card" onClick={() => { dispatch({ type: "AUTH_SET", patch: { idResult: "en_cours" } }); push("verify-identity"); }}>Vérifier mon identité</Button> : null}
           </div>
-        </div>
+        ) : (
+          <div className="identity">
+            <span className="avatar anon" aria-hidden="true"><Icon name="user-circle" /></span>
+            <div><b>Vous n'êtes pas connecté</b><small>Connectez-vous pour signaler, voter et suivre vos alertes.</small></div>
+            <Button block className="identity-action" onClick={() => dispatch({ type: "LOGOUT" })}>Se connecter ou créer un compte</Button>
+          </div>
+        )}
         <section className="list-section">
           <h2 className="section-label">Affichage</h2>
           <div className="list">
@@ -1607,14 +1703,24 @@ function ProfileScreen() {
           <h2 className="section-label">Prototype</h2>
           <div className="list"><ListItem icon="squares-four" label="Bibliothèque de composants" onClick={() => push("components")} /></div>
         </section>
+        {user ? <div className="list"><ListItem icon="sign-out" label="Se déconnecter" chevron={false} onClick={logout} /></div> : null}
       </div>
     </div>
   );
 }
 
 function ReportScreen() {
+  const { state } = useStore();
   const { pop, toast } = useActions();
   const [type, setType] = useState(null);
+  if (!state.session.user) {
+    return (
+      <div className="screen">
+        <ScreenHeader title="Signaler" close onBack={pop} />
+        <div className="screen-pad"><GuestGate icon="plus" title="Connectez-vous pour signaler" text="Un compte permet de transmettre votre signalement au bon service et d'en suivre le traitement. Vous pourrez publier anonymement." /></div>
+      </div>
+    );
+  }
   return (
     <div className="screen">
       <ScreenHeader title="Signaler" close onBack={pop} />
@@ -1631,6 +1737,453 @@ function ReportScreen() {
         <Button block disabled={!type} onClick={() => toast("La suite du parcours (catégorie, lieu, photo…) arrive bientôt.")}>Continuer</Button>
       </div>
     </div>
+  );
+}
+
+/* =====================================================================
+   PHASE 1 — Démarrage et connexion (UI-001, UI-008 → UI-010 ; CDC §6, §8, §9, §43)
+   ===================================================================== */
+const SIGNUP_STEPS = ["Informations", "Téléphone", "E-mail", "Identité"];
+const ID_DOCS = [
+  { id: "cni", label: "Carte d'identité", hint: "Recto et verso" },
+  { id: "passeport", label: "Passeport", hint: "Page avec la photo" },
+  { id: "sejour", label: "Titre de séjour", hint: "Recto et verso" },
+];
+const IDENTITY_FROM_RESULT = { reussie: "verifiee", en_cours: "en_cours", manuelle: "en_cours", echouee: "non_verifiee", refusee: "non_verifiee" };
+
+function maskPhone(p) {
+  const d = (p || "").replace(/\D/g, "");
+  return d.length >= 4 ? `${d.slice(0, 2)} •• •• •• ${d.slice(-2)}` : "votre numéro";
+}
+function maskEmail(e) {
+  const [u, dom] = (e || "").split("@");
+  return u && dom ? `${u[0]}•••@${dom}` : "votre adresse";
+}
+
+function BrandMark({ size = 64 }) {
+  return <span className="brand-mark" style={{ width: size, height: size, fontSize: size * 0.4 }} aria-hidden="true">95</span>;
+}
+
+function IdentityBadge({ status }) {
+  if (status === "verifiee") return <span className="badge badge-status st-done"><Icon name="seal-check-fill" />Identité vérifiée</span>;
+  if (status === "en_cours") return <span className="badge badge-status st-soon"><Icon name="timer" />Vérification en cours</span>;
+  return <span className="badge badge-status st-draft"><Icon name="identification-card" />Identité non vérifiée</span>;
+}
+
+/* Garde-fou réseau : les actions de connexion ont besoin du réseau (CDC §69) */
+function useOnline() {
+  const { state } = useStore();
+  const { toast } = useActions();
+  return (fn) => (...args) => {
+    if (state.demo.offline) { toast("Connexion impossible hors connexion. Vérifiez votre réseau.", { tone: "error" }); return; }
+    fn(...args);
+  };
+}
+
+function SplashScreen() {
+  const { dispatch } = useStore();
+  useEffect(() => {
+    const id = setTimeout(() => dispatch({ type: "SPLASH_DONE" }), 1300);
+    return () => clearTimeout(id);
+  }, [dispatch]);
+  return (
+    <div className="splash" role="status" aria-label="Chargement de 95 Alerte">
+      <div className="splash-center">
+        <BrandMark size={88} />
+        <h1>95 Alerte</h1>
+        <p>Votre territoire, votre vigilance.</p>
+      </div>
+      <div className="splash-foot"><Spinner /><span>Version 0.1 · prototype</span></div>
+    </div>
+  );
+}
+
+function AuthHeader({ title, onBack, step }) {
+  return (
+    <Fragment>
+      <header className="screen-header">
+        {onBack ? <IconButton icon="caret-left" label="Retour" onClick={onBack} /> : <span />}
+        <h1>{title}</h1>
+        <span />
+      </header>
+      {step ? <div className="auth-stepper"><Stepper step={step} total={SIGNUP_STEPS.length} label={SIGNUP_STEPS[step - 1]} /></div> : null}
+    </Fragment>
+  );
+}
+
+function AuthHero() {
+  return (
+    <div className="auth-hero" aria-hidden="true">
+      <div className="map95">{MAP_ART}</div>
+      <span className="map-pin" style={{ left: 120, top: 108 }}><Marker family="positive" icon="hand-heart" /></span>
+      <span className="map-pin" style={{ left: 222, top: 70 }}><Marker family="incident" icon="fire" /></span>
+      <span className="map-pin" style={{ left: 290, top: 132 }}><Marker family="vigilance" icon="lightbulb" /></span>
+      <span className="map-pin" style={{ left: 64, top: 52 }}><Marker family="info" icon="megaphone" /></span>
+    </div>
+  );
+}
+
+function LoginScreen() {
+  const { dispatch } = useStore();
+  const online = useOnline();
+  const go = (step) => dispatch({ type: "AUTH_GO", step });
+  return (
+    <div className="screen auth">
+      <AuthHero />
+      <div className="screen-pad auth-body">
+        <div className="auth-intro">
+          <h1 className="auth-title">Bienvenue sur 95 Alerte</h1>
+          <p className="auth-lead">Voyez ce qui se passe autour de vous, signalez un problème ou partagez une bonne nouvelle du Val-d'Oise.</p>
+        </div>
+        <div className="auth-actions">
+          <Button block icon="identification-card" onClick={online(() => go("fc"))}>Continuer avec FranceConnect</Button>
+          <p className="help-text"><Icon name="seal-check" className="ph-sm" />FranceConnect vérifie votre identité avec un compte de service public que vous avez déjà. Vos alertes peuvent rester anonymes.</p>
+          <div className="or" aria-hidden="true"><span>ou</span></div>
+          <Button block variant="secondary" onClick={() => go("signup-info")}>Créer un compte</Button>
+          <Button block variant="ghost" onClick={() => go("signin")}>J'ai déjà un compte</Button>
+        </div>
+        <button type="button" className="link-btn" onClick={() => dispatch({ type: "GUEST" })}>Continuer sans compte</button>
+        <p className="legal">Sans compte, vous pouvez consulter les alertes. Un compte est demandé pour signaler, voter et commenter. En continuant, vous acceptez les conditions d'utilisation et la politique de confidentialité.</p>
+      </div>
+    </div>
+  );
+}
+
+const FC_PROVIDERS = [
+  { id: "fiscal", label: "Compte fiscal", icon: "buildings" },
+  { id: "sante", label: "Compte assurance santé", icon: "hand-heart" },
+  { id: "numerique", label: "Identité numérique", icon: "identification-card" },
+  { id: "retraite", label: "Compte retraite", icon: "user-circle" },
+];
+
+function FranceConnectScreen() {
+  const { state, dispatch } = useStore();
+  const step = state.auth.step;
+  useEffect(() => {
+    if (step !== "fc-loading") return undefined;
+    const id = setTimeout(() => {
+      if (state.demo.networkError) dispatch({ type: "AUTH_GO", step: "fc-error" });
+      else dispatch({ type: "LOGIN", method: "franceconnect", identity: "verifiee", message: "Connecté avec FranceConnect · identité vérifiée" });
+    }, 1500);
+    return () => clearTimeout(id);
+  }, [step, state.demo.networkError, dispatch]);
+
+  if (step === "fc-loading") {
+    return (
+      <div className="screen auth">
+        <AuthHeader title="FranceConnect" />
+        <div className="auth-center" role="status">
+          <span className="status-hero tone-info"><Spinner /></span>
+          <h2>Connexion sécurisée en cours…</h2>
+          <p>Récupération de votre identité vérifiée.</p>
+        </div>
+      </div>
+    );
+  }
+  if (step === "fc-error") {
+    return (
+      <div className="screen auth">
+        <AuthHeader title="FranceConnect" onBack={() => dispatch({ type: "AUTH_GO", step: "login" })} />
+        <div className="auth-center" role="alert">
+          <span className="status-hero tone-error"><Icon name="warning" /></span>
+          <h2>La connexion avec FranceConnect a échoué.</h2>
+          <p>Le service n'a pas répondu. Réessayez dans un instant ou créez un compte 95 Alerte.</p>
+        </div>
+        <div className="screen-footer stack-footer">
+          <Button block onClick={() => dispatch({ type: "AUTH_GO", step: "fc" })}>Réessayer</Button>
+          <Button block variant="ghost" onClick={() => dispatch({ type: "AUTH_GO", step: "signup-info" })}>Créer un compte</Button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="screen auth">
+      <AuthHeader title="FranceConnect" onBack={() => dispatch({ type: "AUTH_GO", step: "login" })} />
+      <div className="screen-pad">
+        <Banner tone="info" icon="info">Écran simulé pour le prototype : aucune donnée réelle n'est échangée.</Banner>
+        <div className="auth-intro">
+          <h2 className="question">Choisissez un compte pour vous connecter</h2>
+          <p className="auth-lead">Vous reviendrez automatiquement sur 95 Alerte, avec votre identité vérifiée.</p>
+        </div>
+        <div className="list">
+          {FC_PROVIDERS.map((p) => <ListItem key={p.id} icon={p.icon} label={p.label} onClick={() => dispatch({ type: "AUTH_GO", step: "fc-loading" })} />)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SignInScreen() {
+  const { state, dispatch } = useStore();
+  const { toast } = useActions();
+  const online = useOnline();
+  const [email, setEmail] = useState(state.auth.form.email);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const submit = online(() => {
+    if (!email.includes("@") || password.length < 4) { setError("Vérifiez votre e-mail et votre mot de passe (4 caractères minimum)."); return; }
+    dispatch({ type: "LOGIN", method: "compte", identity: "verifiee", message: "Vous êtes connecté." });
+  });
+  return (
+    <div className="screen auth">
+      <AuthHeader title="Se connecter" onBack={() => dispatch({ type: "AUTH_GO", step: "login" })} />
+      <form className="screen-pad" onSubmit={(e) => { e.preventDefault(); submit(); }}>
+        <Field id="signin-email" label="E-mail" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(null); }} />
+        <Field id="signin-password" label="Mot de passe" type="password" autoComplete="current-password" value={password} error={error} onChange={(e) => { setPassword(e.target.value); setError(null); }} />
+        <button type="button" className="link-btn left" onClick={() => toast("Un lien de réinitialisation vous a été envoyé par e-mail.")}>Mot de passe oublié ?</button>
+        <Button block type="submit">Se connecter</Button>
+      </form>
+    </div>
+  );
+}
+
+function SignupInfoScreen() {
+  const { state, dispatch } = useStore();
+  const online = useOnline();
+  const [form, setForm] = useState(state.auth.form);
+  const [errors, setErrors] = useState({});
+  const set = (k) => (e) => { setForm({ ...form, [k]: e.target.value }); setErrors({ ...errors, [k]: null }); };
+  const submit = online(() => {
+    const err = {};
+    if (!form.firstName.trim()) err.firstName = "Indiquez votre prénom.";
+    if (!form.lastName.trim()) err.lastName = "Indiquez votre nom.";
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) err.email = "Saisissez une adresse e-mail valide.";
+    else if (form.email.trim().toLowerCase() === "deja@exemple.fr") err.email = "Cet e-mail est déjà utilisé. Connectez-vous ou utilisez une autre adresse.";
+    if (form.phone.replace(/\D/g, "").length !== 10) err.phone = "Saisissez un numéro à 10 chiffres.";
+    setErrors(err);
+    if (Object.keys(err).length) return;
+    dispatch({ type: "AUTH_SET", patch: { form, step: "signup-phone" } });
+  });
+  return (
+    <div className="screen auth">
+      <AuthHeader title="Créer un compte" step={1} onBack={() => dispatch({ type: "AUTH_GO", step: "login" })} />
+      <form className="screen-pad" onSubmit={(e) => { e.preventDefault(); submit(); }} noValidate>
+        <p className="auth-lead">Ces informations restent privées. Seuls votre prénom et l'initiale de votre nom peuvent être affichés.</p>
+        <div className="field-row">
+          <Field id="su-first" label="Prénom" autoComplete="given-name" value={form.firstName} error={errors.firstName} onChange={set("firstName")} />
+          <Field id="su-last" label="Nom" autoComplete="family-name" value={form.lastName} error={errors.lastName} onChange={set("lastName")} />
+        </div>
+        <Field id="su-email" label="E-mail" type="email" autoComplete="email" value={form.email} error={errors.email} onChange={set("email")} />
+        <Field id="su-phone" label="Téléphone mobile" type="tel" autoComplete="tel" value={form.phone} error={errors.phone} help="Un code de vérification vous sera envoyé par SMS." onChange={set("phone")} />
+        <Button block type="submit">Continuer</Button>
+      </form>
+    </div>
+  );
+}
+
+function OtpInput({ value, onChange, error, id }) {
+  const [focused, setFocused] = useState(false);
+  const digits = value.padEnd(6, " ").split("");
+  return (
+    <div className={cx("otp", error && "is-error")}>
+      <input id={id} inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={value} aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-err` : undefined} aria-label="Code de vérification à 6 chiffres"
+        onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+        onChange={(e) => onChange(e.target.value.replace(/\D/g, "").slice(0, 6))} />
+      {digits.map((d, i) => <span key={i} aria-hidden="true" className={cx(focused && i === Math.min(value.length, 5) && "is-active")}>{d.trim()}</span>)}
+    </div>
+  );
+}
+
+function SignupPhoneScreen() {
+  const { state, dispatch } = useStore();
+  const { toast } = useActions();
+  const online = useOnline();
+  const [code, setCode] = useState("");
+  const [error, setError] = useState(null);
+  const submit = online(() => {
+    if (code === "000000") { setError("Code incorrect. Vérifiez le SMS ou demandez un nouveau code."); return; }
+    dispatch({ type: "AUTH_GO", step: "signup-email" });
+  });
+  return (
+    <div className="screen auth">
+      <AuthHeader title="Créer un compte" step={2} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-info" })} />
+      <form className="screen-pad" onSubmit={(e) => { e.preventDefault(); submit(); }}>
+        <div className="auth-intro">
+          <h2 className="question">Vérifiez votre téléphone</h2>
+          <p className="auth-lead">Saisissez le code à 6 chiffres envoyé par SMS au {maskPhone(state.auth.form.phone)}.</p>
+        </div>
+        <OtpInput id="otp" value={code} onChange={(v) => { setCode(v); setError(null); }} error={error} />
+        {error ? <span className="err" id="otp-err" role="alert"><Icon name="warning-fill" className="ph-sm" />{error}</span> : null}
+        <button type="button" className="link-btn left" onClick={() => { setCode(""); toast("Un nouveau code vous a été envoyé."); }}>Renvoyer le code</button>
+        <Button block type="submit" disabled={code.length !== 6}>Vérifier</Button>
+      </form>
+    </div>
+  );
+}
+
+function SignupEmailScreen() {
+  const { state, dispatch } = useStore();
+  const { toast } = useActions();
+  const online = useOnline();
+  return (
+    <div className="screen auth">
+      <AuthHeader title="Créer un compte" step={3} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-phone" })} />
+      <div className="auth-center">
+        <span className="status-hero tone-info"><Icon name="envelope" /></span>
+        <h2>Confirmez votre adresse e-mail</h2>
+        <p>Nous avons envoyé un lien à <b>{maskEmail(state.auth.form.email)}</b>. Ouvrez-le pour confirmer votre adresse.</p>
+        <button type="button" className="link-btn" onClick={() => toast("Un nouvel e-mail vous a été envoyé.")}>Renvoyer l'e-mail</button>
+      </div>
+      <div className="screen-footer">
+        <Button block onClick={online(() => { toast("Adresse e-mail confirmée."); dispatch({ type: "AUTH_GO", step: "signup-id" }); })}>J'ai confirmé mon adresse</Button>
+      </div>
+    </div>
+  );
+}
+
+/* Vérification d'identité : choix du document puis statut (utilisé à l'inscription et depuis le profil) */
+function IdentityDocStep({ onSent, onLater, step, onBack }) {
+  const { state, dispatch } = useStore();
+  const online = useOnline();
+  const [doc, setDoc] = useState(state.auth.docType);
+  const [sending, setSending] = useState(false);
+  const send = online(() => {
+    setSending(true);
+    setTimeout(() => { setSending(false); dispatch({ type: "AUTH_SET", patch: { docType: doc } }); onSent(); }, 900);
+  });
+  return (
+    <div className="screen auth">
+      <AuthHeader title={step ? "Créer un compte" : "Vérifier mon identité"} step={step} onBack={onBack} />
+      <div className="screen-pad">
+        <div className="auth-intro">
+          <h2 className="question">Vérifiez votre identité</h2>
+          <p className="auth-lead">Une seule fois. Votre document sert uniquement à la vérification : il n'est jamais affiché publiquement.</p>
+        </div>
+        {ID_DOCS.map((d) => <RadioCard key={d.id} name="id-doc" value={d.id} checked={doc === d.id} onChange={setDoc} icon="identification-card" title={d.label} description={d.hint} />)}
+      </div>
+      <div className="screen-footer stack-footer">
+        <Button block icon="camera" loading={sending} onClick={send}>{sending ? "Envoi du document…" : "Prendre le document en photo"}</Button>
+        {onLater ? <Button block variant="ghost" onClick={onLater}>Plus tard</Button> : null}
+      </div>
+    </div>
+  );
+}
+
+const ID_RESULT_VIEW = {
+  en_cours: { tone: "vigilance", icon: "timer", title: "Vérification en cours", text: "Généralement moins de 24 h. Vous pouvez utiliser 95 Alerte en attendant : nous vous préviendrons du résultat.", step: 1 },
+  reussie: { tone: "positive", icon: "seal-check-fill", title: "Identité vérifiée", text: "Merci. Votre compte est vérifié : vos signalements seront traités en priorité par les services.", step: 3 },
+  echouee: { tone: "error", icon: "warning", title: "La vérification a échoué", text: "Le service n'a pas pu lire votre document. Faites une nouvelle tentative ou demandez une vérification manuelle.", step: 1, failed: true },
+  refusee: { tone: "error", icon: "x", title: "Document refusé", text: "La photo est floue ou le document a expiré. Reprenez une photo nette d'un document en cours de validité.", step: 1, failed: true },
+  manuelle: { tone: "info", icon: "user-circle", title: "Vérification manuelle", text: "Un agent examine votre dossier. Délai indicatif : 48 h. Vous serez notifié du résultat.", step: 1 },
+};
+
+function IdentityStatusView({ onContinue, onRetry }) {
+  const { state, dispatch } = useStore();
+  const result = state.auth.idResult;
+  const v = ID_RESULT_VIEW[result];
+  const doc = ID_DOCS.find((d) => d.id === state.auth.docType);
+  const steps = [
+    { id: "sent", label: "Document envoyé", detail: doc ? doc.label : null },
+    { id: "check", label: v.failed ? "Vérification interrompue" : result === "reussie" ? "Vérification terminée" : "Vérification", detail: result === "en_cours" ? "Délai indicatif : moins de 24 h" : result === "manuelle" ? "Délai indicatif : 48 h" : null },
+    { id: "done", label: "Identité vérifiée", final: true },
+  ];
+  return (
+    <Fragment>
+      <div className="screen-pad">
+        <div className="auth-center compact" role="status">
+          <span className={cx("status-hero", `tone-${v.tone}`)}><Icon name={v.icon} /></span>
+          <h2>{v.title}</h2>
+          <p>{v.text}</p>
+        </div>
+        <div className="card"><Timeline steps={steps} currentIndex={v.step} /></div>
+      </div>
+      <div className="screen-footer stack-footer">
+        {v.failed ? (
+          <Fragment>
+            <Button block icon="camera" onClick={onRetry}>{result === "refusee" ? "Reprendre une photo" : "Nouvelle tentative"}</Button>
+            {result === "echouee" ? <Button block variant="ghost" onClick={() => dispatch({ type: "AUTH_SET", patch: { idResult: "manuelle" } })}>Demander une vérification manuelle</Button> : <Button block variant="ghost" onClick={onContinue}>Continuer sans vérification</Button>}
+          </Fragment>
+        ) : <Button block onClick={onContinue}>Continuer</Button>}
+      </div>
+    </Fragment>
+  );
+}
+
+function SignupIdentityScreen() {
+  const { dispatch } = useStore();
+  return (
+    <IdentityDocStep step={4} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-email" })}
+      onSent={() => dispatch({ type: "AUTH_GO", step: "id-status" })}
+      onLater={() => dispatch({ type: "AUTH_SET", patch: { idResult: "aucune", step: "profile" } })} />
+  );
+}
+
+function IdentityStatusScreen() {
+  const { dispatch } = useStore();
+  return (
+    <div className="screen auth">
+      <AuthHeader title="Créer un compte" step={4} onBack={() => dispatch({ type: "AUTH_GO", step: "signup-id" })} />
+      <IdentityStatusView onContinue={() => dispatch({ type: "AUTH_GO", step: "profile" })} onRetry={() => dispatch({ type: "AUTH_GO", step: "signup-id" })} />
+    </div>
+  );
+}
+
+function ProfileSetupScreen() {
+  const { state, dispatch } = useStore();
+  const f = state.auth.form;
+  const [display, setDisplay] = useState(state.auth.display);
+  const name = display === "first" ? f.firstName : `${f.firstName} ${(f.lastName || " ")[0]}.`;
+  const finish = () => {
+    const identity = IDENTITY_FROM_RESULT[state.auth.idResult] || "non_verifiee";
+    dispatch({ type: "LOGIN", method: "inscription", identity, user: { id: ME_ID, firstName: f.firstName, lastName: f.lastName, display }, message: "Votre compte est créé." });
+  };
+  return (
+    <div className="screen auth">
+      <AuthHeader title="Votre profil" onBack={() => dispatch({ type: "AUTH_GO", step: state.auth.idResult === "aucune" ? "signup-id" : "id-status" })} />
+      <div className="screen-pad">
+        <div className="identity">
+          <span className="avatar" aria-hidden="true">{f.firstName[0]}{f.lastName[0]}</span>
+          <div><b>{f.firstName} {f.lastName}</b><IdentityBadge status={IDENTITY_FROM_RESULT[state.auth.idResult] || "non_verifiee"} /></div>
+        </div>
+        <section className="list-section">
+          <h2 className="section-label">Nom affiché sur vos alertes identifiées</h2>
+          <RadioCard name="display" value="initial" checked={display === "initial"} onChange={setDisplay} icon="user-circle" title={`${f.firstName} ${(f.lastName || " ")[0]}.`} description="Prénom et initiale du nom (recommandé)" />
+          <RadioCard name="display" value="first" checked={display === "first"} onChange={setDisplay} icon="user-circle" title={f.firstName} description="Prénom seulement" />
+        </section>
+        <div className="preview-author"><Icon name="eye" />Vous apparaîtrez comme : <b>{name}</b></div>
+        <p className="help-text"><Icon name="detective" className="ph-sm" />Pour chaque alerte, vous pourrez aussi choisir de publier anonymement. Votre e-mail et votre téléphone ne sont jamais affichés.</p>
+      </div>
+      <div className="screen-footer"><Button block onClick={finish}>Terminer</Button></div>
+    </div>
+  );
+}
+
+const AUTH_SCREENS = {
+  login: LoginScreen, fc: FranceConnectScreen, "fc-loading": FranceConnectScreen, "fc-error": FranceConnectScreen, signin: SignInScreen,
+  "signup-info": SignupInfoScreen, "signup-phone": SignupPhoneScreen, "signup-email": SignupEmailScreen, "signup-id": SignupIdentityScreen,
+  "id-status": IdentityStatusScreen, profile: ProfileSetupScreen,
+};
+
+function AuthFlow() {
+  const { state } = useStore();
+  const C = AUTH_SCREENS[state.auth.step] || LoginScreen;
+  return <C />;
+}
+
+/* Vérification depuis le profil (compte non vérifié) */
+function VerifyIdentityScreen() {
+  const { dispatch } = useStore();
+  const { pop, toast } = useActions();
+  const [sent, setSent] = useState(false);
+  if (!sent) return <IdentityDocStep onBack={pop} onSent={() => setSent(true)} />;
+  return (
+    <div className="screen auth">
+      <AuthHeader title="Vérifier mon identité" onBack={pop} />
+      <IdentityStatusView onRetry={() => setSent(false)} onContinue={() => {
+        dispatch({ type: "SET_IDENTITY", identity: "result" });
+        pop();
+        toast("Statut d'identité mis à jour.");
+      }} />
+    </div>
+  );
+}
+
+/* Écrans en mode invité */
+function GuestGate({ icon, title, text }) {
+  const { dispatch } = useStore();
+  return (
+    <EmptyState icon={icon} title={title} action={<Button onClick={() => dispatch({ type: "LOGOUT" })}>Se connecter ou créer un compte</Button>}>{text}</EmptyState>
   );
 }
 
@@ -1752,6 +2305,7 @@ const TAB_SCREENS = { map: MapScreen, alerts: AlertsScreen, activity: ActivitySc
 const STACK_SCREENS = {
   report: { component: ReportScreen, modal: true },
   components: { component: ComponentsScreen },
+  "verify-identity": { component: VerifyIdentityScreen, modal: true },
 };
 const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent } };
 
@@ -1759,7 +2313,7 @@ const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: De
    PANNEAU DE DÉMO (hors de l'app)
    ===================================================================== */
 function DemoPanel() {
-  const { state } = useStore();
+  const { state, dispatch } = useStore();
   const { setDemo, setPref, reset, push, toast, confirm } = useActions();
   const [open, setOpen] = useState(false);
   const d = state.demo;
@@ -1779,7 +2333,17 @@ function DemoPanel() {
           <div className="row"><span>Vitesse du temps</span><SegmentedControl label="Vitesse du temps" value={d.timeSpeed} onChange={(v) => setDemo("timeSpeed", v)} options={[{ value: 1, label: "×1" }, { value: 60, label: "×60" }, { value: 600, label: "×600" }]} /></div>
           <div className="row"><span>Thème</span><SegmentedControl label="Thème" value={state.prefs.theme} onChange={(v) => setPref("theme", v)} options={[{ value: "light", label: "Clair" }, { value: "system", label: "Auto" }, { value: "dark", label: "Sombre" }]} /></div>
           <hr />
-          <Button variant="secondary" icon="squares-four" onClick={() => { push("components"); setOpen(false); }}>Bibliothèque de composants</Button>
+          <p className="section-label">Connexion</p>
+          <div className="row"><span>Résultat de la vérification</span></div>
+          <SegmentedControl block label="Résultat de la vérification d'identité" value={state.auth.idResult === "aucune" ? "en_cours" : state.auth.idResult} onChange={(v) => dispatch({ type: "AUTH_SET", patch: { idResult: v } })}
+            options={[{ value: "en_cours", label: "En cours" }, { value: "reussie", label: "OK" }, { value: "echouee", label: "Échec" }, { value: "refusee", label: "Refus" }, { value: "manuelle", label: "Manuel" }]} />
+          <p className="demo-note">Code SMS 000000 = code incorrect · e-mail deja@exemple.fr = déjà utilisé · « Erreur réseau » = échec FranceConnect.</p>
+          <div className="lib-row">
+            <Button variant="secondary" icon="play" onClick={() => { dispatch({ type: "RESTART" }); setOpen(false); }}>Rejouer le démarrage</Button>
+            {state.session.status !== "in" ? <Button variant="ghost" onClick={() => { dispatch({ type: "LOGIN", method: "demo", identity: "verifiee" }); setOpen(false); }}>Passer la connexion</Button> : null}
+          </div>
+          <hr />
+          <Button variant="secondary" icon="squares-four" onClick={() => { if (state.session.status !== "in") dispatch({ type: "LOGIN", method: "demo", identity: "verifiee" }); push("components"); setOpen(false); }}>Bibliothèque de composants</Button>
           <Button variant="ghost" icon="arrow-counter-clockwise" onClick={() => confirm({ title: "Réinitialiser le prototype ?", body: "Les alertes, votes et commentaires reviennent à leur état de départ. Vos préférences d'affichage sont conservées.", confirmLabel: "Réinitialiser", onConfirm: () => { reset(); toast("Prototype réinitialisé."); } })}>Réinitialiser</Button>
         </aside>
       ) : null}
@@ -1841,6 +2405,10 @@ function App() {
                 <span className="sb-icons"><Icon name="cell-signal-full" />{state.demo.offline ? <Icon name="wifi-slash" /> : <Icon name="wifi-high" />}<Icon name="battery-full" /></span>
               </div>
               {state.demo.offline ? <Banner tone="offline" className="global-banner" title="Vous êtes actuellement hors connexion.">Les fonctionnalités dépendantes du réseau sont désactivées.</Banner> : null}
+              {state.session.status !== "in" ? (
+                <main className="screen-area">{state.session.status === "splash" ? <SplashScreen /> : <AuthFlow />}</main>
+              ) : (
+              <Fragment>
               <main className="screen-area">
                 <TabScreen />
                 {state.nav.stack.map((s) => {
@@ -1860,7 +2428,9 @@ function App() {
                 </button>
               ) : null}
               {hideTabbar ? null : <TabBar />}
-              <ToastHost hasTabbar={!hideTabbar} />
+              </Fragment>
+              )}
+              <ToastHost hasTabbar={state.session.status === "in" && !hideTabbar} />
               {state.modal ? <ConfirmModal modal={state.modal} onClose={() => dispatch({ type: "CLOSE_MODAL" })} /> : null}
             </div>
           </div>
