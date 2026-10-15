@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Votre commune</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/56105b4e6b1f49154cdcad13fa33fc56">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 auth">
+    <header class="screen-header">
+      <a class="icon-btn" href="{{l.back}}" aria-label="Retour"><span class="ph i i-caret-left" aria-hidden="true"></span></a>
+      <h1>{{title}}</h1>
+      <span></span>
+    </header>
+    <div class="scroll95">
+      <div class="screen-pad">
+        <div class="field">
+          <div class="search-field"><span class="ph i i-magnifying-glass" aria-hidden="true"></span><input class="input" type="search" placeholder="Rechercher une commune" aria-label="Rechercher une commune du Val-d'Oise" value="{{q}}" style="{{qStyle}}"></div>
+        </div>
+        <sc-if value="{{hasList}}" hint-placeholder-val="{{true}}">
+          <div class="list">
+            <sc-if value="{{showAround}}" hint-placeholder-val="{{true}}">
+              <a class="list-item" href="{{l.pick}}"><span class="ph i i-crosshair" aria-hidden="true"></span><span>Autour de moi · Pontoise</span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></a>
+            </sc-if>
+            <sc-for list="{{items}}" as="c" hint-placeholder-count="10">
+              <a class="list-item" href="{{l.pick}}"><span class="ph i i-map-pin" aria-hidden="true"></span><span>{{c.name}}<small class="li-sub">{{c.sub}}</small></span><span class="val"><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></a>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{isNone}}" hint-placeholder-val="{{false}}">
+          <div class="empty" role="status"><span class="empty-ill"><span class="ph i i-magnifying-glass" aria-hidden="true"></span></span><h4>Aucune commune ne correspond.</h4><p>Vérifiez l'orthographe ou essayez un autre nom.</p></div>
+        </sc-if>
+        <sc-if value="{{isOutside}}" hint-placeholder-val="{{false}}">
+          <div class="empty" role="status"><span class="empty-ill"><span class="ph i i-map-trifold" aria-hidden="true"></span></span><h4>95 Alerte n'est pas encore disponible dans cette zone.</h4><p>Paris est hors du Val-d'Oise. Choisissez une commune du département.</p></div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark": {"editor": "boolean", "default": false}, "state": {"editor": "enum", "options": ["list", "search", "none", "outside"], "default": "list"}, "from": {"editor": "enum", "options": ["onboarding", "map"], "default": "onboarding"}, "$preview": {"width": 390, "height": 844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const ALL = [{"name": "Argenteuil", "sub": "CA Saint Germain Boucles de Seine"}, {"name": "Bezons", "sub": "CA Saint Germain Boucles de Seine"}, {"name": "Cergy", "sub": "CA de Cergy-Pontoise"}, {"name": "Enghien-les-Bains", "sub": "CA Plaine Vallée"}, {"name": "Ermont", "sub": "CA Val Parisis"}, {"name": "Franconville", "sub": "CA Val Parisis"}, {"name": "Garges-lès-Gonesse", "sub": "CA Roissy Pays de France"}, {"name": "Gonesse", "sub": "CA Roissy Pays de France"}, {"name": "Goussainville", "sub": "CA Roissy Pays de France"}, {"name": "Herblay-sur-Seine", "sub": "CA Val Parisis"}, {"name": "L'Isle-Adam", "sub": "CC Vallée de l'Oise et des Trois Forêts"}, {"name": "Magny-en-Vexin", "sub": "CC Vexin Val de Seine"}, {"name": "Montmorency", "sub": "CA Plaine Vallée"}, {"name": "Osny", "sub": "CA de Cergy-Pontoise"}, {"name": "Pontoise", "sub": "CA de Cergy-Pontoise"}, {"name": "Roissy-en-France", "sub": "CA Roissy Pays de France"}, {"name": "Saint-Ouen-l'Aumône", "sub": "CA de Cergy-Pontoise"}, {"name": "Sarcelles", "sub": "CA Roissy Pays de France"}, {"name": "Taverny", "sub": "CA Val Parisis"}, {"name": "Villiers-le-Bel", "sub": "CA Roissy Pays de France"}];
+    const st = this.props.state || 'list';
+    const fromMap = this.props.from === 'map';
+    const q = st === 'search' ? 'sar' : st === 'none' ? 'zzz' : st === 'outside' ? 'paris' : '';
+    const items = st === 'search' ? ALL.filter(function (c) { return c.name.toLowerCase().indexOf('sar') >= 0; }) : ALL;
+    return {
+      theme: s ? 't-dark' : 't-light', q: q,
+      qStyle: q ? 'border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft)' : '',
+      title: fromMap ? 'Changer de commune' : 'Votre commune',
+      hasList: st === 'list' || st === 'search', showAround: st === 'list' && !fromMap, items: items,
+      isNone: st === 'none', isOutside: st === 'outside',
+      l: { back: (fromMap ? 'MainNoPosition' : 'Location') + s + '.dc.html', pick: (fromMap ? 'Main' : 'Login') + s + '.dc.html' }
+    };
+  }
+}
+</script>
+</body>
+</html>

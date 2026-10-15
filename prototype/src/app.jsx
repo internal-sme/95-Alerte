@@ -306,7 +306,7 @@ function cx(...parts) {
    ===================================================================== */
 const PREFS_KEY = "95alerte:prefs";
 const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false };
-const DEFAULT_DEMO = { offline: false, permissionDenied: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
+const DEFAULT_DEMO = { offline: false, permissionDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 function initialAuth() {
   return {
@@ -318,11 +318,15 @@ function initialAuth() {
   };
 }
 
+// Position : « default » tant que l'utilisateur n'a ni autorisé la localisation ni choisi de commune
+const DEFAULT_POSITION = { lat: 49.0508, lng: 2.1008, source: "default", communeId: null, permission: "unknown" };
+
 function initialState() {
   return {
     prefs: { ...DEFAULT_PREFS, ...storage.get(PREFS_KEY, {}) },
     demo: { ...DEFAULT_DEMO },
-    session: { status: "splash", user: null, identity: "non_verifiee", method: null, position: { lat: 49.05388, lng: 2.09924, source: "manual", communeId: "pontoise" } },
+    session: { status: "splash", user: null, identity: "non_verifiee", method: null, position: DEFAULT_POSITION },
+    onb: { step: "slides", slide: 0 },
     auth: initialAuth(),
     alerts: SEED_ALERTS,
     votes: { a4: 1, a8: 1 },
@@ -380,7 +384,26 @@ function reducer(state, action) {
       return { ...state, alerts, votes: { ...state.votes, [action.alertId]: next } };
     }
     case "SPLASH_DONE":
-      return { ...state, session: { ...state.session, status: "auth" }, auth: { ...state.auth, step: "login" } };
+      return state.prefs.onboardingSeen
+        ? { ...state, session: { ...state.session, status: "auth" }, auth: { ...state.auth, step: "login" } }
+        : { ...state, session: { ...state.session, status: "onboarding" }, onb: { step: "slides", slide: 0 } };
+    case "ONB_GO":
+      return { ...state, onb: { step: action.step, slide: action.slide ?? state.onb.slide }, sheet: null };
+    case "LOCATION_RESULT":
+      return { ...state, session: { ...state.session, position: { ...state.session.position, permission: action.permission } } };
+    case "SET_COMMUNE": {
+      const c = COMMUNE_BY_ID[action.communeId];
+      const coords = action.coords || { lat: c.lat, lng: c.lng };
+      return { ...state, session: { ...state.session, position: { ...state.session.position, ...coords, source: action.source, communeId: c.id } } };
+    }
+    case "ONB_FINISH": {
+      let position = { ...state.session.position, permission: action.permission || state.session.position.permission };
+      if (action.communeId) {
+        const c = COMMUNE_BY_ID[action.communeId];
+        position = { ...position, ...(action.coords || { lat: c.lat, lng: c.lng }), source: action.source, communeId: c.id };
+      }
+      return { ...state, prefs: { ...state.prefs, onboardingSeen: true }, session: { ...state.session, status: "auth", position }, auth: { ...state.auth, step: "login" }, sheet: null };
+    }
     case "AUTH_GO":
       return { ...state, auth: { ...state.auth, step: action.step } };
     case "AUTH_SET":
@@ -391,11 +414,11 @@ function reducer(state, action) {
       return { ...state, session: { ...state.session, status: "in", user, identity: action.identity, method: action.method }, auth: initialAuth(), nav: { tab: "map", stack: [] }, sheet: null, toasts };
     }
     case "GUEST":
-      return { ...state, session: { ...state.session, status: "in", user: null, identity: "non_verifiee", method: "invite" }, nav: { tab: "map", stack: [] } };
+      return { ...state, session: { ...state.session, status: "in", user: null, identity: "non_verifiee", method: "invite" }, nav: { tab: "map", stack: [] }, sheet: null };
     case "LOGOUT":
       return { ...state, session: { ...state.session, status: "auth", user: null, identity: "non_verifiee", method: null }, auth: initialAuth(), nav: { tab: "map", stack: [] }, sheet: null, modal: null };
     case "RESTART":
-      return { ...state, session: { ...state.session, status: "splash", user: null, method: null }, auth: initialAuth(), nav: { tab: "map", stack: [] }, sheet: null, modal: null };
+      return { ...state, prefs: action.onboarding ? { ...state.prefs, onboardingSeen: false } : state.prefs, session: { ...state.session, status: "splash", user: null, method: null, position: action.onboarding ? DEFAULT_POSITION : state.session.position }, auth: initialAuth(), nav: { tab: "map", stack: [] }, sheet: null, modal: null };
     case "SET_IDENTITY": {
       const identity = action.identity === "result" ? ({ reussie: "verifiee", en_cours: "en_cours", manuelle: "en_cours" }[state.auth.idResult] || state.session.identity) : action.identity;
       return { ...state, session: { ...state.session, identity } };
@@ -1016,7 +1039,7 @@ function AlertSummary({ alert, onClose }) {
 
 function MapScreen() {
   const { state } = useStore();
-  const { toast } = useActions();
+  const { toast, push } = useActions();
   const alerts = useVisibleAlerts();
   const [filter, setFilter] = useState("all");
   const [snap, setSnap] = useState("peek");
@@ -1038,10 +1061,10 @@ function MapScreen() {
   const closeSummary = () => { setSelectedId(null); setSnap("peek"); };
 
   return (
-    <div className="screen" style={{ overflow: "hidden" }}>
+    <div className="screen map-screen">
       <div className="map95" aria-label="Carte des alertes autour de Pontoise">
         {MAP_ART}
-        {state.demo.permissionDenied ? null : <span className="me" style={{ left: me.x, top: me.y }} role="img" aria-label="Vous êtes ici" />}
+        {state.demo.permissionDenied || pos.source !== "gps" ? null : <span className="me" style={{ left: me.x, top: me.y }} role="img" aria-label="Vous êtes ici" />}
         {pins.map((p) => {
           if (p.alerts.length > 1) {
             return <ClusterMarker key={p.key} count={p.alerts.length} style={{ position: "absolute", left: p.x, top: p.y, transform: "translate(-50%,-50%)", zIndex: 4 }} onClick={() => toast(`${p.alerts.length} alertes regroupées : le zoom arrive avec la carte interactive.`)} />;
@@ -1056,10 +1079,13 @@ function MapScreen() {
         })}
       </div>
       <div className="map-top">
-        <button type="button" className="search" onClick={() => toast("La recherche arrive bientôt.")}><Icon name="magnifying-glass" />Rechercher une ville, une rue…</button>
+        <button type="button" className="search" onClick={() => push("commune")}><Icon name="magnifying-glass" />{pos.communeId ? `${COMMUNE_BY_ID[pos.communeId].name} · changer de commune` : "Rechercher une commune…"}</button>
         <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive bientôt.")} />
       </div>
-      <div className="map-pill"><Pill onClick={() => { setSelectedId(null); setSnap("half"); }}>3 nouvelles alertes</Pill></div>
+      {pos.source === "default" ? (
+        <button type="button" className="map-banner" onClick={() => push("commune")}><Icon name="map-pin" /><span><b>Position non définie</b>Choisissez votre commune pour voir les alertes proches.</span><Icon name="caret-right" className="ph-sm" /></button>
+      ) : null}
+      {pos.source === "default" ? null : <div className="map-pill"><Pill onClick={() => { setSelectedId(null); setSnap("half"); }}>3 nouvelles alertes</Pill></div>}
       <IconButton icon="crosshair" label="Recentrer sur ma position" className="map-locate" style={{ bottom: PEEK + 12 }} onClick={() => toast(state.demo.permissionDenied ? "Localisation désactivée : position choisie manuellement (Pontoise)." : "Carte centrée sur votre position.")} />
 
       {selected ? (
@@ -1327,7 +1353,7 @@ function SplashScreen() {
 
 /* Arrivée sur l'accueil après le démarrage : le logo part de sa position sur le démarrage et se pose
    à sa place (FLIP), le halo s'efface, le titre et les actions apparaissent ensuite. */
-function useSplashHandoff(logoRef, screenRef) {
+function useSplashHandoff(logoRef, screenRef, reveal = ".welcome-title, .welcome-center .auth-lead, .welcome-panel, .auth-skip") {
   useLayoutEffect(() => {
     const from = splashLogoRect;
     splashLogoRect = null;
@@ -1340,9 +1366,9 @@ function useSplashHandoff(logoRef, screenRef) {
     const ease = "cubic-bezier(.2,.8,.2,1)";
     el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }], { duration: 800, easing: ease });
     const screen = screenRef.current;
-    screen.querySelectorAll(".welcome-title, .welcome-center .auth-lead, .welcome-panel, .auth-skip").forEach((n, i) =>
+    screen.querySelectorAll(reveal).forEach((n, i) =>
       n.animate([{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 450, delay: 420 + i * 70, easing: ease, fill: "backwards" }));
-    const halo = screen.querySelector(".welcome .splash-halo");
+    const halo = screen.querySelector(".splash-halo");
     if (halo) halo.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, easing: "ease-out", fill: "forwards" });
   }, []);
 }
@@ -1362,8 +1388,8 @@ function AuthHeader({ title, onBack, step }) {
 
 /* Illustration ponctuelle : icône Phosphor Duotone dans une pastille (même bibliothèque que l'interface,
    pas de dessin maison). Fond jaune de marque doux, ou teinte de la famille pour les tons positif/erreur. */
-function Spot({ icon, tone }) {
-  return <span className={cx("spot", tone && `tone-${tone}`)} aria-hidden="true"><Icon name={`${icon}-duotone`} /></span>;
+function Spot({ icon, tone, size }) {
+  return <span className={cx("spot", tone && `tone-${tone}`, size && `spot-${size}`)} aria-hidden="true"><Icon name={`${icon}-duotone`} /></span>;
 }
 
 /* La confidentialité dite là où naît l'inquiétude, sous le champ concerné (Nextdoor) */
@@ -1387,6 +1413,8 @@ function LoginScreen() {
   const logoRef = useRef(null);
   const screenRef = useRef(null);
   const [intro] = useState(() => splashLogoRect !== null);
+  const { state } = useStore();
+  const commune = state.session.position.communeId ? COMMUNE_BY_ID[state.session.position.communeId] : null;
   useSplashHandoff(logoRef, screenRef);
   const go = (step) => dispatch({ type: "AUTH_GO", step });
   return (
@@ -1396,7 +1424,7 @@ function LoginScreen() {
       <div className="welcome-center">
         <span className="welcome-logo" ref={logoRef}><Logo95 width={120} /></span>
         <h1 className="welcome-title">Votre territoire,<br />votre vigilance.</h1>
-        <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
+        <p className="auth-lead">{commune ? `Les bonnes et les mauvaises nouvelles de ${commune.name} et du Val-d'Oise, en direct.` : "Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct."}</p>
       </div>
       <div className="welcome-panel">
         <Button block icon="identification-card" onClick={online(() => go("fc"))}>Continuer avec FranceConnect</Button>
@@ -1828,6 +1856,246 @@ function GuestGate({ icon, title, text }) {
   );
 }
 
+/* =====================================================================
+   PHASE 2 — Onboarding, territoire, localisation (UI-002 → UI-007 ; CDC §6, §7, §16, §77)
+   Parcours (benchmark onboarding) : présentation en 4 écrans → amorce de localisation →
+   commune détectée ou choisie → connexion. La localisation reste facultative : refus et
+   « Plus tard » mènent toujours à une suite (choix manuel de la commune).
+   ===================================================================== */
+const ONB_SLIDES = [
+  { icon: "map-trifold", title: "Que se passe‑t‑il autour de vous ?", text: "Incidents, travaux, bonnes nouvelles : le Val-d'Oise en direct, sur une carte." },
+  { icon: "megaphone", title: "Un problème ? Signalez-le.", text: "En quelques gestes, votre signalement part au service compétent." },
+  { icon: "hand-heart", tone: "positive", title: "Une bonne nouvelle ? Partagez-la aussi.", text: "Fête de quartier, entraide, nouveau commerce : le positif a toute sa place." },
+  { icon: "shield-check", title: "Votre territoire, votre vigilance.", text: "Confirmez les alertes utiles et suivez leur traitement par les services." },
+];
+// Communes voisines hors Val-d'Oise : état « hors territoire » (PRD §10.3)
+const OUT_OF_ZONE = ["Paris", "Saint-Denis", "Beauvais", "Creil", "Chantilly", "Mantes-la-Jolie", "Rouen", "Versailles", "Senlis", "Gisors"];
+const normalize = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+function PageDots({ count, index }) {
+  return (
+    <span className="dots" role="img" aria-label={`Écran ${index + 1} sur ${count}`}>
+      {Array.from({ length: count }, (_, i) => <i key={i} className={cx(i === index && "on")} />)}
+    </span>
+  );
+}
+
+function OnboardingTop({ onSkip, skipLabel = "Passer", logoRef }) {
+  return (
+    <div className="onb-top">
+      <span ref={logoRef} className="onb-logo"><Logo95 width={44} label="95 Alerte" /></span>
+      {onSkip ? <Button variant="ghost" className="btn-inline onb-skip" onClick={onSkip}>{skipLabel}</Button> : null}
+    </div>
+  );
+}
+
+/* UI-002 → UI-005 : une idée par écran, « Passer » toujours visible, bouton immobile, balayage et clavier */
+function OnboardingSlides() {
+  const { state, dispatch } = useStore();
+  const i = state.onb.slide;
+  const s = ONB_SLIDES[i];
+  const last = i === ONB_SLIDES.length - 1;
+  const logoRef = useRef(null);
+  const screenRef = useRef(null);
+  const startX = useRef(null);
+  useSplashHandoff(logoRef, screenRef, ".onb-skip, .spot, .onb-title, .onb-text, .onb .screen-footer");
+  const go = (n) => { if (n >= 0 && n < ONB_SLIDES.length && n !== i) dispatch({ type: "ONB_GO", step: "slides", slide: n }); };
+  const next = () => (last ? dispatch({ type: "ONB_GO", step: "location" }) : go(i + 1));
+  const onKey = (e) => { if (e.key === "ArrowRight") go(i + 1); if (e.key === "ArrowLeft") go(i - 1); };
+  return (
+    <div className="screen auth onb" ref={screenRef} onKeyDown={onKey}
+      onPointerDown={(e) => { startX.current = e.clientX; }}
+      onPointerUp={(e) => { if (startX.current === null) return; const dx = e.clientX - startX.current; startX.current = null; if (dx < -50) go(i + 1); if (dx > 50) go(i - 1); }}>
+      <OnboardingTop logoRef={logoRef} onSkip={() => dispatch({ type: "ONB_GO", step: "location" })} />
+      <section className="onb-body" aria-roledescription="diapositive" aria-label={`${i + 1} sur ${ONB_SLIDES.length}`}>
+        <Spot icon={s.icon} tone={s.tone} size="xl" />
+        <h1 className="onb-title">{s.title}</h1>
+        <p className="onb-text">{s.text}</p>
+      </section>
+      <div className="screen-footer stack-footer">
+        <PageDots count={ONB_SLIDES.length} index={i} />
+        <Button block onClick={next}>{last ? "Commencer" : "Suivant"}</Button>
+      </div>
+    </div>
+  );
+}
+
+/* Demande système simulée (le prototype ne peut pas appeler la vraie) : réponse réglable dans le mode démo */
+function SystemLocationPrompt({ onAnswer }) {
+  return (
+    <div className="modal-scrim" role="presentation">
+      <div className="modal sys-prompt" role="alertdialog" aria-modal="true" aria-labelledby="sys-title" aria-describedby="sys-body">
+        <Icon name="navigation-arrow-fill" className="sys-icon" />
+        <h2 id="sys-title">Autoriser « 95 Alerte » à utiliser votre position ?</h2>
+        <p id="sys-body">Votre position sert à afficher les alertes proches de vous.</p>
+        <div className="sys-actions">
+          <button type="button" onClick={() => onAnswer("granted")}>Autoriser pendant l'utilisation</button>
+          <button type="button" onClick={() => onAnswer("granted")}>Autoriser une fois</button>
+          <button type="button" onClick={() => onAnswer("denied")}>Ne pas autoriser</button>
+        </div>
+        <p className="sys-note">Simulation de la demande du téléphone</p>
+      </div>
+    </div>
+  );
+}
+
+/* UI-007 : amorce avant la demande système (Tinder, Greenlight), deux voies à égalité (DICE) */
+function LocationPrimer() {
+  const { state, dispatch } = useStore();
+  const [why, setWhy] = useState(false);
+  const [asking, setAsking] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const answer = (perm) => {
+    setAsking(false);
+    const result = state.demo.permissionDenied ? "denied" : perm;
+    if (result === "denied") { dispatch({ type: "LOCATION_RESULT", permission: "denied" }); dispatch({ type: "ONB_GO", step: "denied" }); return; }
+    dispatch({ type: "LOCATION_RESULT", permission: "granted" });
+    setLocating(true);
+    setTimeout(() => {
+      setLocating(false);
+      if (state.demo.gpsUnavailable) dispatch({ type: "ONB_GO", step: "unavailable" });
+      else dispatch({ type: "ONB_GO", step: "detected" });
+    }, 1200);
+  };
+  return (
+    <div className="screen auth onb">
+      <OnboardingTop skipLabel="Plus tard" onSkip={() => dispatch({ type: "ONB_FINISH", permission: "later" })} />
+      <div className="screen-pad">
+        <div className="auth-center compact">
+          <Spot icon="map-pin-area" />
+          <h1 className="onb-title">Voir les alertes près de chez vous ?</h1>
+        </div>
+        <Benefits items={[
+          { icon: "map-pin", title: "Les alertes à moins de 5 km", text: "Positives et négatives, en direct." },
+          { icon: "path", title: "La distance sur chaque alerte", text: "Pour savoir si vous êtes concerné." },
+          { icon: "crosshair", title: "Le lieu déjà rempli quand vous signalez", text: "Vous pourrez toujours le modifier." },
+        ]} />
+        <PrivacyNote>Votre position reste approximative par défaut. Elle n'est jamais affichée publiquement.</PrivacyNote>
+        <Button variant="ghost" className="btn-inline" icon={why ? "caret-down" : "caret-right"} aria-expanded={why} aria-controls="loc-why" onClick={() => setWhy(!why)}>Comment ma position est-elle utilisée ?</Button>
+        {why ? (
+          <ul className="why-list" id="loc-why">
+            <li>Elle sert à trier les alertes par distance et à proposer un lieu quand vous signalez.</li>
+            <li>Sur une alerte publiée, la précision dépend de la catégorie : rue, quartier ou zone.</li>
+            <li>Vous pouvez la désactiver à tout moment dans les réglages du téléphone.</li>
+          </ul>
+        ) : null}
+      </div>
+      <div className="screen-footer stack-footer">
+        <Button block icon="navigation-arrow" loading={locating} onClick={() => setAsking(true)}>{locating ? "Recherche de votre position…" : "Autoriser la localisation"}</Button>
+        <Button block variant="secondary" onClick={() => dispatch({ type: "ONB_GO", step: "commune" })}>Choisir ma commune</Button>
+      </div>
+      {asking ? <SystemLocationPrompt onAnswer={answer} /> : null}
+    </div>
+  );
+}
+
+/* Commune détectée : confirmation sur la carte (Nextdoor « Use this location ») avec un aperçu chiffré */
+function CommuneDetected() {
+  const { state, dispatch } = useStore();
+  const alerts = useVisibleAlerts();
+  const commune = COMMUNE_BY_ID.pontoise;
+  const gps = { lat: 49.05388, lng: 2.09924 };
+  const near = alerts.filter((a) => haversineKm(gps, a) <= NEAR_KM).length;
+  const me = projectToMap(gps);
+  return (
+    <div className="screen auth onb detected">
+      <div className="map95" aria-hidden="true">{MAP_ART}<span className="me" style={{ left: me.x, top: me.y - 120 }} /></div>
+      <div className="detected-panel" role="status">
+        <span className="badge badge-status st-done"><Icon name="crosshair" />Position approximative</span>
+        <h1 className="onb-title">Vous êtes à {commune.name}</h1>
+        <p className="onb-text">{near} alerte{near > 1 ? "s" : ""} active{near > 1 ? "s" : ""} à moins de {NEAR_KM} km.</p>
+        <Button block onClick={() => dispatch({ type: "ONB_FINISH", communeId: commune.id, source: "gps", coords: gps })}>Continuer</Button>
+        <Button block variant="ghost" onClick={() => dispatch({ type: "ONB_GO", step: "commune" })}>Ce n'est pas ma commune</Button>
+      </div>
+    </div>
+  );
+}
+
+/* UI-006 : recherche + liste des communes du Val-d'Oise ; aucun résultat ; hors territoire */
+function CommunePicker({ onPick, onBack, title = "Votre commune" }) {
+  const { state } = useStore();
+  const [q, setQ] = useState("");
+  const nq = normalize(q);
+  const list = [...COMMUNES].sort((a, b) => a.name.localeCompare(b.name, "fr")).filter((c) => !nq || normalize(c.name).includes(nq));
+  const outside = nq && list.length === 0 ? OUT_OF_ZONE.find((n) => normalize(n).includes(nq)) : null;
+  const gpsOk = state.session.position.permission === "granted" && !state.demo.permissionDenied;
+  return (
+    <div className="screen auth">
+      <AuthHeader title={title} onBack={onBack} />
+      <div className="screen-pad">
+        <div className="field">
+          <label htmlFor="commune-q" className="sr-only">Rechercher une commune</label>
+          <div className="search-field"><Icon name="magnifying-glass" /><input id="commune-q" className="input" type="search" placeholder="Rechercher une commune" aria-label="Rechercher une commune du Val-d'Oise" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+        </div>
+        <p className="sr-only" aria-live="polite">{outside ? "Hors territoire" : `${list.length} commune${list.length > 1 ? "s" : ""}`}</p>
+        {outside ? (
+          <EmptyState icon="map-trifold" title="95 Alerte n'est pas encore disponible dans cette zone.">{outside} est hors du Val-d'Oise. Choisissez une commune du département.</EmptyState>
+        ) : list.length === 0 ? (
+          <EmptyState icon="magnifying-glass" title="Aucune commune ne correspond.">Vérifiez l'orthographe ou essayez un autre nom.</EmptyState>
+        ) : (
+          <div className="list">
+            {gpsOk && !nq ? <ListItem icon="crosshair" label="Autour de moi · Pontoise" onClick={() => onPick(COMMUNE_BY_ID.pontoise, "gps")} /> : null}
+            {list.map((c) => <ListItem key={c.id} icon="map-pin" label={<Fragment>{c.name}<small className="li-sub">{INTERCOS[c.interco]}</small></Fragment>} onClick={() => onPick(c, "commune")} />)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function OnboardingCommune() {
+  const { state, dispatch } = useStore();
+  const back = () => dispatch({ type: "ONB_GO", step: state.session.position.permission === "denied" ? "denied" : "location" });
+  return <CommunePicker onBack={back} onPick={(c, source) => dispatch({ type: "ONB_FINISH", communeId: c.id, source })} />;
+}
+
+/* Refus ou position introuvable : jamais bloquant, jamais rouge ; l'alternative passe en action principale */
+function LocationDenied({ unavailable }) {
+  const { dispatch } = useStore();
+  const { openSheet } = useActions();
+  return (
+    <div className="screen auth onb">
+      <OnboardingTop skipLabel="Plus tard" onSkip={() => dispatch({ type: "ONB_FINISH", permission: unavailable ? "granted" : "denied" })} />
+      <div className="auth-center">
+        <Spot icon="compass" tone="neutral" />
+        <h1 className="onb-title">{unavailable ? "Position introuvable pour le moment" : "Localisation désactivée"}</h1>
+        <p className="onb-text">{unavailable ? "Le téléphone ne trouve pas votre position. Choisissez votre commune : vous pourrez réessayer plus tard." : "Choisissez votre commune : vous verrez les mêmes alertes, sans les distances."}</p>
+      </div>
+      <div className="screen-footer stack-footer">
+        <Button block onClick={() => dispatch({ type: "ONB_GO", step: "commune" })}>Choisir ma commune</Button>
+        {unavailable ? null : <Button block variant="ghost" onClick={() => openSheet("location-help")}>Comment l'activer ?</Button>}
+      </div>
+    </div>
+  );
+}
+
+function LocationHelpSheet() {
+  return (
+    <ol className="steps-list">
+      <li><b>Ouvrez les Réglages</b> de votre téléphone.</li>
+      <li>Touchez <b>95 Alerte</b>, puis <b>Position</b>.</li>
+      <li>Choisissez <b>Pendant l'utilisation de l'app</b>.</li>
+    </ol>
+  );
+}
+
+const ONB_SCREENS = {
+  slides: OnboardingSlides, location: LocationPrimer, detected: CommuneDetected, commune: OnboardingCommune,
+  denied: () => <LocationDenied />, unavailable: () => <LocationDenied unavailable />,
+};
+function OnboardingFlow() {
+  const { state } = useStore();
+  const C = ONB_SCREENS[state.onb.step] || OnboardingSlides;
+  return <C />;
+}
+
+/* Depuis la carte : changer de commune (recherche de la carte, bannière « position non définie ») */
+function CommuneScreen() {
+  const { dispatch } = useStore();
+  const { pop, toast } = useActions();
+  return <CommunePicker title="Changer de commune" onBack={pop} onPick={(c, source) => { dispatch({ type: "SET_COMMUNE", communeId: c.id, source }); pop(); toast(`Commune : ${c.name}.`); }} />;
+}
+
 function ComponentsScreen() {
   const { state } = useStore();
   const { toast, confirm, openSheet } = useActions();
@@ -1947,8 +2215,9 @@ const STACK_SCREENS = {
   report: { component: ReportScreen, modal: true },
   components: { component: ComponentsScreen },
   "verify-identity": { component: VerifyIdentityScreen, modal: true },
+  commune: { component: CommuneScreen, modal: true },
 };
-const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent } };
+const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet } };
 
 /* =====================================================================
    PANNEAU DE DÉMO (hors de l'app)
@@ -1968,6 +2237,7 @@ function DemoPanel() {
           <hr />
           <Switch id="demo-offline" label="Hors connexion" checked={d.offline} onChange={(v) => setDemo("offline", v)} />
           <Switch id="demo-perm" label="Localisation refusée" checked={d.permissionDenied} onChange={(v) => setDemo("permissionDenied", v)} />
+          <Switch id="demo-gps" label="Position introuvable" checked={d.gpsUnavailable} onChange={(v) => setDemo("gpsUnavailable", v)} />
           <Switch id="demo-error" label="Erreur réseau" checked={d.networkError} onChange={(v) => setDemo("networkError", v)} />
           <Switch id="demo-empty" label="Zone sans alerte" checked={d.emptyZone} onChange={(v) => setDemo("emptyZone", v)} />
           <Switch id="demo-many" label="Beaucoup d'alertes (+80)" checked={d.manyAlerts} onChange={(v) => setDemo("manyAlerts", v)} />
@@ -1981,6 +2251,7 @@ function DemoPanel() {
           <p className="demo-note">Code SMS 000000 = code incorrect · e-mail deja@exemple.fr = déjà utilisé · « Erreur réseau » = échec FranceConnect.</p>
           <div className="lib-row">
             <Button variant="secondary" icon="play" onClick={() => { dispatch({ type: "RESTART" }); setOpen(false); }}>Rejouer le démarrage</Button>
+            <Button variant="secondary" icon="arrow-counter-clockwise" onClick={() => { dispatch({ type: "RESTART", onboarding: true }); setOpen(false); }}>Rejouer l'onboarding</Button>
             {state.session.status !== "in" ? <Button variant="ghost" onClick={() => { dispatch({ type: "LOGIN", method: "demo", identity: "verifiee" }); setOpen(false); }}>Passer la connexion</Button> : null}
           </div>
           <hr />
@@ -2026,7 +2297,7 @@ function usePrefsEffects(prefs) {
 /* Transitions entre écrans : « smart animate » (View Transitions API). Les éléments présents des deux côtés
    portent un view-transition-name (titre d'en-tête, barre d'étapes, bouton principal, barre d'onglets) et se
    déforment d'un écran à l'autre ; le reste se fond. Sans l'API ou avec les animations réduites : changement direct. */
-const SCREEN_ACTIONS = new Set(["AUTH_GO", "LOGIN", "GUEST", "LOGOUT", "SET_TAB", "PUSH", "POP"]);
+const SCREEN_ACTIONS = new Set(["AUTH_GO", "LOGIN", "GUEST", "LOGOUT", "SET_TAB", "PUSH", "POP", "ONB_GO", "ONB_FINISH"]);
 function useScreenTransitions(rawDispatch) {
   return useCallback((action) => {
     const changesScreen = SCREEN_ACTIONS.has(action.type) || (action.type === "AUTH_SET" && action.patch && action.patch.step);
@@ -2060,7 +2331,14 @@ function App() {
               </div>
               {state.demo.offline ? <Banner tone="offline" className="global-banner" title="Vous êtes actuellement hors connexion.">Les fonctionnalités dépendantes du réseau sont désactivées.</Banner> : null}
               {state.session.status !== "in" ? (
-                <main className="screen-area">{state.session.status === "splash" ? <SplashScreen /> : <AuthFlow />}</main>
+                <main className="screen-area">
+                  {state.session.status === "splash" ? <SplashScreen /> : state.session.status === "onboarding" ? <OnboardingFlow /> : <AuthFlow />}
+                  {sheetDef ? (
+                    <BottomSheet modal snap={state.sheet.snap} title={sheetDef.title} onSnap={(s) => dispatch({ type: "SNAP_SHEET", snap: s })} onClose={() => dispatch({ type: "CLOSE_SHEET" })}>
+                      <sheetDef.component {...state.sheet.params} />
+                    </BottomSheet>
+                  ) : null}
+                </main>
               ) : (
               <Fragment>
               <main className="screen-area">
