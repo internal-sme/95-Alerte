@@ -23,12 +23,13 @@ ROOT = Path(__file__).resolve().parent.parent
 BRAND = ROOT / "docs/brand"
 
 svg = (BRAND / "logo-95-alerte.svg").read_text(encoding="utf-8")
-paths = re.findall(r'<path class="(cls-[12])" d="([^"]+)"', svg)
-figure = "".join(f'<path class="logo95-yellow" d="{d}"/>' for c, d in paths if c == "cls-2")
-siren = "".join(f'<path class="logo95-red" d="{d}"/>' for c, d in paths if c == "cls-1")
-LOGO = ('<svg viewBox="0 0 217.22 222.98" class="block h-auto w-full" role="img" aria-label="95 Alerte">'
-        f'{figure}{siren}<text class="logo95-word" x="0" y="209.54" textLength="217" lengthAdjust="spacingAndGlyphs">Alerte</text></svg>')
-MARK = f'<svg viewBox="0 0 217.22 146" class="block h-auto w-full" role="img" aria-label="Symbole 95 Alerte">{figure}{siren}</svg>'
+paths = re.findall(r'<path class="(st[023])" d="([^"]+)"', svg)
+figure = "".join(f'<path class="logo95-yellow" d="{d}"/>' for c, d in paths if c == "st0")
+siren = "".join(f'<path class="logo95-red" d="{d}"/>' for c, d in paths if c == "st2")
+word = "".join(f'<path d="{d}"/>' for c, d in paths if c == "st3")
+LOGO = ('<svg viewBox="0 0 217.2 223" class="block h-auto w-full" role="img" aria-label="95 Alerte">'
+        f'{figure}{siren}<g class="logo95-word">{word}</g></svg>')
+MARK = f'<svg viewBox="0 0 217.2 146" class="block h-auto w-full" role="img" aria-label="Symbole 95 Alerte">{figure}{siren}</svg>'
 
 # Formes des familles d'alertes (inchangées dans toutes les options)
 FAMILIES = [("#15803D", "circle", "Positif"), ("#B91C1C", "diamond", "Incident"), ("#C2410C", "triangle", "Vigilance"), ("#0369A1", "square", "Info")]

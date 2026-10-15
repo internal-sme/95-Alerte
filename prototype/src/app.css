@@ -3,7 +3,7 @@
    tools/build_prototype.py). Ici : scène, cadre téléphone, structure des écrans, hôtes de
    sheets / modales / toasts, panneau de démo. */
 
-:root{ --stage:#DCE3EC; --device:#0B0F19; --scrim:rgba(15,23,42,.45); --tabbar-h:76px; --statusbar-h:44px }
+:root{ --stage:#E4E4E7; --device:#0B0F19; --scrim:rgba(15,23,42,.45); --tabbar-h:76px; --statusbar-h:44px }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){ --stage:#05080F; --device:#000; --scrim:rgba(0,0,0,.6) }}
 :root[data-theme="dark"]{ --stage:#05080F; --device:#000; --scrim:rgba(0,0,0,.6) }
 
@@ -97,6 +97,3 @@ button{font-family:inherit}
 .lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
 .placeholder-phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.2 var(--font)}
 
-/* Démarrage : l'aplat de couleur couvre aussi la barre d'état */
-.app.is-splash{background:#1E40AF}
-.app.is-splash .statusbar{color:#FFFFFF}

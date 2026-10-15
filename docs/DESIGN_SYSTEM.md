@@ -21,15 +21,21 @@
 
 | Token | Clair | Sombre | Usage |
 |---|---|---|---|
-| `--bg` | `#F8FAFC` | `#0B1220` | Fond de l'application |
+| `--bg` | `#FFFFFF` | `#0B1220` | Fond de l'application (blanc sur tous les écrans) |
 | `--surface` | `#FFFFFF` | `#111A2E` | Cartes, sheets, barres |
-| `--surface-2` | `#F1F5F9` | `#1A2540` | Champs, puces, zones secondaires |
-| `--border` | `#E2E8F0` | `#273452` | Séparateurs, contours |
+| `--surface-2` | `#F4F4F5` | `#1A2540` | Champs, puces, zones secondaires |
+| `--border` | `#E4E4E7` | `#273452` | Séparateurs, contours |
 | `--text` | `#0F172A` | `#F1F5F9` | Texte principal |
 | `--text-muted` | `#475569` | `#A3B1C6` | Texte secondaire (≥ 4.5:1) |
 | `--primary` | `#1E40AF` | `#7AA2FF` | Marque, CTA principal, liens, focus |
 | `--on-primary` | `#FFFFFF` | `#0B1220` | Texte sur `--primary` |
 | `--focus-ring` | `#2563EB` | `#93B4FF` | Anneau de focus (2 px + 2 px d'offset) |
+| `--brand-yellow` | `#F0C009` | `#F0C009` | Jaune du logo : accent de marque (onglet actif, pastille « nouveau », halo du démarrage, fond des illustrations). **Jamais pour du texte sur blanc** (1,7:1) |
+| `--brand-yellow-ink` | `#7A5E00` | `#F0C009` | Texte ou contour jaune lisible (6,1:1 sur blanc) |
+| `--on-brand-yellow` | `#1E1E1C` | `#1E1E1C` | Texte posé sur `--brand-yellow` (9,7:1) |
+| `--brand-yellow-soft` | jaune 16 % | jaune 18 % | Fond doux (illustrations) |
+
+**Marque (option B, validée le 15/10/2026)** : le bleu `--primary` reste la seule couleur d'action (boutons, liens, focus, progression). Le jaune du logo est l'accent de marque, rare. Le rouge du logo (`#E6282F`) reste dans le logo : dans l'interface, le rouge est réservé aux incidents. Logo : `docs/brand/logo-95-alerte.svg`, composant `Logo95`.
 
 ### 2.2 Familles d'alertes (§13)
 
