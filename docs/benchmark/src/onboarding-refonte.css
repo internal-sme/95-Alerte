@@ -1,0 +1,100 @@
+/* Entrée Tailwind du rapport « Onboarding : refonte ». Compilé par tools/build_benchmark_refonte.py. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Thème : valeurs RGB (sans rgb()) pour l'opacité Tailwind */
+:root{
+  --paper:250 250 247; --card:255 255 255; --sunk:244 244 241; --line:228 228 222;
+  --ink:17 19 26; --muted:86 92 104;
+  --brand:240 192 9; --brand-ink:122 94 0;
+  --primary:30 64 175; --positive:21 128 61; --incident:185 28 28; --vigilance:194 65 12; --info:3 105 161;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:12 14 20; --card:21 24 33; --sunk:28 32 43; --line:44 49 63;
+    --ink:236 238 243; --muted:160 167 182;
+    --brand:240 192 9; --brand-ink:240 192 9;
+    --primary:129 160 255; --positive:74 222 128; --incident:248 113 113; --vigilance:251 146 60; --info:56 189 248;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:12 14 20; --card:21 24 33; --sunk:28 32 43; --line:44 49 63;
+  --ink:236 238 243; --muted:160 167 182;
+  --brand:240 192 9; --brand-ink:240 192 9;
+  --primary:129 160 255; --positive:74 222 128; --incident:248 113 113; --vigilance:251 146 60; --info:56 189 248;
+  color-scheme:dark;
+}
+
+@layer base{
+  html{scroll-behavior:smooth}
+  body{@apply bg-paper text-ink font-sans antialiased}
+  h1,h2,h3{@apply font-display tracking-tight}
+  a{@apply text-primary underline-offset-2}
+  ::selection{background:rgb(var(--brand) / .35)}
+  :focus-visible{outline:2px solid rgb(var(--primary));outline-offset:2px;border-radius:4px}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+}
+
+@layer components{
+  .wrap{@apply mx-auto w-full max-w-6xl px-4 sm:px-6}
+  .eyebrow{@apply font-mono text-xs uppercase tracking-[.14em] text-brand-ink}
+  .h2{@apply font-display text-3xl sm:text-4xl font-bold leading-tight}
+  .lede{@apply text-lg leading-relaxed text-muted max-w-prose2}
+  .card{@apply rounded-3xl border border-line bg-card}
+  .chip{@apply inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1 text-xs font-medium text-ink}
+  .tag{@apply inline-flex items-center rounded-md bg-sunk px-2 py-0.5 font-mono text-[11px] text-muted}
+  .hl{background:linear-gradient(transparent 58%, rgb(var(--brand) / .55) 58%);padding:0 .08em}
+  .strip{@apply flex gap-3 overflow-x-auto pb-3;scroll-snap-type:x mandatory}
+  .shot{@apply flex-none w-[150px] sm:w-[168px] grid gap-2 content-start;scroll-snap-align:start}
+  .shot img{@apply w-full rounded-2xl border border-line bg-sunk;aspect-ratio:299/678;object-fit:cover}
+  .shot figcaption{@apply text-xs leading-snug text-muted}
+  .shot figcaption b{@apply block text-ink font-semibold}
+  .score{@apply inline-flex items-center gap-1 font-mono text-[11px] text-muted}
+  .score i{@apply block h-1.5 w-3 rounded-full bg-line}
+  .score i.on{@apply bg-brand}
+  .col h4{@apply mb-2 text-xs font-semibold uppercase tracking-wider text-muted}
+  .col ul{@apply grid gap-1.5 text-sm leading-relaxed}
+  .col li{@apply relative pl-4}
+  .col li::before{content:"";@apply absolute left-0 top-[.62em] h-1.5 w-1.5 rounded-full bg-brand}
+  .take{@apply grid gap-3 rounded-2xl bg-sunk p-4 sm:grid-cols-2}
+  .take p{@apply text-sm leading-relaxed}
+  .take b{@apply font-semibold}
+  .toc a{@apply text-ink no-underline hover:text-primary}
+
+  /* Écrans esquissés (parcours cible) */
+  .mini{@apply relative flex-none w-[176px] overflow-hidden rounded-[28px] border-[5px] border-ink/90 bg-card shadow-sm;aspect-ratio:9/19.5}
+  .mini .bar{@apply absolute inset-x-0 top-0 h-5}
+  .mini .body{@apply absolute inset-0 flex flex-col px-3 pb-3 pt-6}
+  .mini .t{@apply font-display text-[13px] font-bold leading-tight text-ink}
+  .mini .l{@apply text-[9px] leading-snug text-muted}
+  .mini .b1{@apply mt-auto grid h-7 place-items-center rounded-lg bg-primary text-[9px] font-semibold text-white}
+  .mini .b2{@apply mt-1.5 grid h-7 place-items-center rounded-lg border border-primary text-[9px] font-semibold text-primary}
+  .mini .b3{@apply mt-1 grid h-5 place-items-center text-[9px] font-semibold text-primary}
+  .stage{position:absolute;inset:0 0 auto 0;height:52%;background:radial-gradient(120% 90% at 50% 0%, rgb(var(--brand) / .55), rgb(var(--brand) / .12) 60%, transparent 75%)}
+  .stage-arc{position:absolute;left:-20%;right:-20%;top:46%;height:40%;border-radius:50% 50% 0 0;background:rgb(var(--card))}
+  .map-sk{position:absolute;inset:0;background:
+    radial-gradient(40% 22% at 30% 40%, rgb(var(--sunk)) 60%, transparent 61%),
+    radial-gradient(30% 18% at 72% 62%, rgb(var(--sunk)) 60%, transparent 61%),
+    radial-gradient(25% 14% at 80% 18%, rgb(var(--positive) / .14) 60%, transparent 61%),
+    linear-gradient(115deg, transparent 47%, rgb(var(--info) / .35) 47.5%, rgb(var(--info) / .35) 50%, transparent 50.5%),
+    rgb(var(--paper))}
+  .pin{position:absolute;width:16px;height:16px;transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;border:2px solid #fff;box-shadow:0 1px 3px rgb(0 0 0 / .25)}
+  .pin.pos{border-radius:50%;transform:translate(-50%,-50%)}
+  .pin.tri{width:0;height:0;border:9px solid transparent;border-bottom:15px solid rgb(var(--vigilance));border-radius:0;box-shadow:none;transform:translate(-50%,-70%)}
+  .ring{position:absolute;border-radius:50%;border:1.5px dashed rgb(var(--primary));background:rgb(var(--primary) / .08);transform:translate(-50%,-50%)}
+  .me{position:absolute;width:12px;height:12px;border-radius:50%;background:rgb(var(--primary));box-shadow:0 0 0 5px rgb(var(--primary) / .2);transform:translate(-50%,-50%)}
+  .sheet{@apply absolute inset-x-0 bottom-0 rounded-t-2xl bg-card px-3 pb-3 pt-2 shadow-[0_-6px_20px_rgb(0_0_0/.08)]}
+  .grab{@apply mx-auto mb-2 h-1 w-8 rounded-full bg-line}
+  .dots-sk{@apply flex justify-center gap-1}
+  .dots-sk i{@apply block h-1 w-1 rounded-full bg-line}
+  .dots-sk i.on{@apply w-3 bg-brand}
+  .prog{@apply h-1 w-full rounded-full bg-line overflow-hidden}
+  .prog i{@apply block h-full rounded-full bg-brand}
+  .chipk{@apply inline-flex items-center rounded-full border border-line px-1.5 py-0.5 text-[8px] font-medium text-ink}
+  .chipk.on{@apply border-primary bg-primary/10 text-primary}
+  .anno{@apply text-xs leading-snug text-muted}
+  .anno b{@apply block text-sm text-ink}
+}
