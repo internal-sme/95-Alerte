@@ -2,7 +2,7 @@
 
 Sources du canevas Design publié : https://claude.ai/artifact/Sd2XN1KjGF8LzZ1rtBfvm4
 
-- `project/canvas.json` : disposition des planches, une page par phase (« Phase 0 · Fondations », « Phase 1 · Démarrage et connexion », « Phase 2 · Onboarding et territoire », « Phase 2b · Onboarding v2 (refonte) »…), chacune en rangées clair, sombre et états.
+- `project/canvas.json` : disposition des planches, une page par phase (« Phase 0 · Fondations », « Phase 1 · Démarrage et connexion », « Phase 2 · Onboarding et territoire »…), chacune en rangées clair, sombre et états.
   Les états d'un même écran sont des planches qui montent l'écran avec une prop (`state`, `error`, `result`, `identity`).
 - `project/*.dc.html` : une planche par écran, reliées par des liens (bouton Play = prototype cliquable).
   Les planches `*-dark.dc.html` montent l'écran clair correspondant avec `dark`.
