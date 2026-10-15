@@ -1929,7 +1929,7 @@ function OnboardingTop({ onSkip, skipLabel = "Passer", logoRef, onMedia }) {
 }
 
 /* Zone suivie : carte illustrée mise à l'échelle autour de la position, cercle du rayon, alertes de la zone */
-function ZoneMap({ center, radiusKm, height, pins = true, label = true }) {
+function ZoneMap({ center, radiusKm, height, pins = true, label = true, stagger = false }) {
   const alerts = useVisibleAlerts();
   const ref = useRef(null);
   const [box, setBox] = useState({ w: 390, h: height || 844 });
@@ -1949,10 +1949,10 @@ function ZoneMap({ center, radiusKm, height, pins = true, label = true }) {
     <div className="zone-map" ref={ref} aria-hidden="true">
       <div className="zm-art" style={{ transform: `translate(${tx}px, ${ty}px) scale(${k})` }}><div className="map95">{MAP_ART}</div></div>
       <span className="zone-ring" style={{ left: cx0, top: cy0, width: ringPx * 2, height: ringPx * 2 }}>{label ? <span className="zr-label">{radiusKm} km</span> : null}</span>
-      {pins ? dedupeEvents(inZone).slice(0, 8).map((a) => {
+      {pins ? dedupeEvents(inZone).slice(0, 8).map((a, i) => {
         const p = toScreen(a); const cat = CATEGORY_BY_ID[a.categoryId];
         if (p.x < 12 || p.x > box.w - 12 || p.y < 12 || p.y > box.h - 12) return null;
-        return <span key={a.id} className="map-pin" style={{ left: p.x, top: p.y }}><Marker family={cat.family} icon={cat.icon} /></span>;
+        return <span key={a.id} className="map-pin" style={{ left: p.x, top: p.y, animationDelay: stagger ? `${250 + i * 90}ms` : undefined }}><Marker family={cat.family} icon={cat.icon} /></span>;
       }) : null}
       <span className="zone-me-pulse" style={{ left: cx0, top: cy0 }} />
       <span className="me" style={{ left: cx0, top: cy0 }} />
@@ -2108,9 +2108,11 @@ function OnboardingPrep() {
   }, []);
   return (
     <div className="screen auth onb onb-prep" role="status" aria-live="polite">
-      <div className="zone-scene"><ZoneMap center={center} radiusKm={zoneRadius(state)} height={260} label={false} /></div>
-      <h1 className="onb-title">Nous préparons votre carte{c ? <Fragment> de <mark className="hl">{c.name}</mark></Fragment> : null}…</h1>
-      <p className="spinner-row"><span className="spinner" aria-hidden="true" />Chargement des alertes de votre zone</p>
+      <ZoneMap center={center} radiusKm={zoneRadius(state)} label={false} stagger />
+      <div className="prep-overlay">
+        <h1 className="onb-title">Nous préparons votre carte{c ? <Fragment> de <mark className="hl">{c.name}</mark></Fragment> : null}…</h1>
+        <p className="spinner-row"><span className="spinner" aria-hidden="true" />Chargement des alertes de votre zone</p>
+      </div>
     </div>
   );
 }

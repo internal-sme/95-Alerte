@@ -534,8 +534,15 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .settings-preview .sp-options span:last-child{border-bottom:0}
 .settings-preview .sp-options .on{color:var(--text);font-weight:600;background:var(--primary-soft)}
 .settings-preview .sp-options .on .ph{color:var(--primary)}
-.onb-prep{display:grid;place-content:center;justify-items:center;gap:var(--s-4);padding:var(--s-6);text-align:center}
-.onb-prep .zone-scene{width:260px;height:260px;border-radius:50%}
+/* Préparation de la carte : la carte entière en fond, texte en surimpression sur un fondu ; marqueurs et cercle s'animent */
+.onb-prep{background:var(--map-land)}
+.onb-prep .zone-map{position:absolute;inset:0}
+.prep-overlay{position:absolute;left:0;right:0;bottom:0;z-index:4;display:grid;justify-items:center;gap:var(--s-3);padding:var(--s-12) var(--s-6) var(--s-12);background:linear-gradient(transparent,color-mix(in srgb,var(--bg) 88%,transparent) 38%,var(--bg) 70%);text-align:center}
+.onb-prep .map-pin{animation:pin-drop .5s cubic-bezier(.2,.8,.2,1) backwards}
+.onb-prep .zone-ring{animation:ring-grow .7s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes pin-drop{from{opacity:0;transform:translate(-50%,-110%)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes ring-grow{from{opacity:0;transform:translate(-50%,-50%) scale(.6)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion: reduce){.onb-prep .map-pin,.onb-prep .zone-ring{animation:none}}
 .onb-prep .spinner-row{display:flex;align-items:center;gap:var(--s-2);color:var(--text-muted);font:500 var(--fs-sm)/var(--lh-sm) var(--font)}
 .start-card{display:grid;gap:var(--s-2);padding:var(--s-3) var(--s-4);border-radius:var(--r-md);background:var(--brand-yellow-soft)}
 .start-card .sc-head{display:flex;align-items:center;gap:var(--s-2)}
@@ -2626,7 +2633,7 @@ function OnboardingTop({ onSkip, skipLabel = "Passer", logoRef, onMedia }) {
 }
 
 /* Zone suivie : carte illustrée mise à l'échelle autour de la position, cercle du rayon, alertes de la zone */
-function ZoneMap({ center, radiusKm, height, pins = true, label = true }) {
+function ZoneMap({ center, radiusKm, height, pins = true, label = true, stagger = false }) {
   const alerts = useVisibleAlerts();
   const ref = useRef(null);
   const [box, setBox] = useState({ w: 390, h: height || 844 });
@@ -2646,10 +2653,10 @@ function ZoneMap({ center, radiusKm, height, pins = true, label = true }) {
     <div className="zone-map" ref={ref} aria-hidden="true">
       <div className="zm-art" style={{ transform: `translate(${tx}px, ${ty}px) scale(${k})` }}><div className="map95">{MAP_ART}</div></div>
       <span className="zone-ring" style={{ left: cx0, top: cy0, width: ringPx * 2, height: ringPx * 2 }}>{label ? <span className="zr-label">{radiusKm} km</span> : null}</span>
-      {pins ? dedupeEvents(inZone).slice(0, 8).map((a) => {
+      {pins ? dedupeEvents(inZone).slice(0, 8).map((a, i) => {
         const p = toScreen(a); const cat = CATEGORY_BY_ID[a.categoryId];
         if (p.x < 12 || p.x > box.w - 12 || p.y < 12 || p.y > box.h - 12) return null;
-        return <span key={a.id} className="map-pin" style={{ left: p.x, top: p.y }}><Marker family={cat.family} icon={cat.icon} /></span>;
+        return <span key={a.id} className="map-pin" style={{ left: p.x, top: p.y, animationDelay: stagger ? `${250 + i * 90}ms` : undefined }}><Marker family={cat.family} icon={cat.icon} /></span>;
       }) : null}
       <span className="zone-me-pulse" style={{ left: cx0, top: cy0 }} />
       <span className="me" style={{ left: cx0, top: cy0 }} />
@@ -2805,9 +2812,11 @@ function OnboardingPrep() {
   }, []);
   return (
     <div className="screen auth onb onb-prep" role="status" aria-live="polite">
-      <div className="zone-scene"><ZoneMap center={center} radiusKm={zoneRadius(state)} height={260} label={false} /></div>
-      <h1 className="onb-title">Nous préparons votre carte{c ? <Fragment> de <mark className="hl">{c.name}</mark></Fragment> : null}…</h1>
-      <p className="spinner-row"><span className="spinner" aria-hidden="true" />Chargement des alertes de votre zone</p>
+      <ZoneMap center={center} radiusKm={zoneRadius(state)} label={false} stagger />
+      <div className="prep-overlay">
+        <h1 className="onb-title">Nous préparons votre carte{c ? <Fragment> de <mark className="hl">{c.name}</mark></Fragment> : null}…</h1>
+        <p className="spinner-row"><span className="spinner" aria-hidden="true" />Chargement des alertes de votre zone</p>
+      </div>
     </div>
   );
 }

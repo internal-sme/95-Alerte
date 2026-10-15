@@ -537,8 +537,15 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .settings-preview .sp-options span:last-child{border-bottom:0}
 .settings-preview .sp-options .on{color:var(--text);font-weight:600;background:var(--primary-soft)}
 .settings-preview .sp-options .on .ph{color:var(--primary)}
-.onb-prep{display:grid;place-content:center;justify-items:center;gap:var(--s-4);padding:var(--s-6);text-align:center}
-.onb-prep .zone-scene{width:260px;height:260px;border-radius:50%}
+/* Préparation de la carte : la carte entière en fond, texte en surimpression sur un fondu ; marqueurs et cercle s'animent */
+.onb-prep{background:var(--map-land)}
+.onb-prep .zone-map{position:absolute;inset:0}
+.prep-overlay{position:absolute;left:0;right:0;bottom:0;z-index:4;display:grid;justify-items:center;gap:var(--s-3);padding:var(--s-12) var(--s-6) var(--s-12);background:linear-gradient(transparent,color-mix(in srgb,var(--bg) 88%,transparent) 38%,var(--bg) 70%);text-align:center}
+.onb-prep .map-pin{animation:pin-drop .5s cubic-bezier(.2,.8,.2,1) backwards}
+.onb-prep .zone-ring{animation:ring-grow .7s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes pin-drop{from{opacity:0;transform:translate(-50%,-110%)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes ring-grow{from{opacity:0;transform:translate(-50%,-50%) scale(.6)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion: reduce){.onb-prep .map-pin,.onb-prep .zone-ring{animation:none}}
 .onb-prep .spinner-row{display:flex;align-items:center;gap:var(--s-2);color:var(--text-muted);font:500 var(--fs-sm)/var(--lh-sm) var(--font)}
 .start-card{display:grid;gap:var(--s-2);padding:var(--s-3) var(--s-4);border-radius:var(--r-md);background:var(--brand-yellow-soft)}
 .start-card .sc-head{display:flex;align-items:center;gap:var(--s-2)}
