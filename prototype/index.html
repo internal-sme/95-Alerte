@@ -100,6 +100,8 @@
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 .btn-block{width:100%}
 .btn-inline{justify-self:start;min-height:var(--tap);padding:0 var(--s-2);margin-left:calc(-1 * var(--s-2))}
+/* Bouton tertiaire : texte souligné seul, pour une action secondaire discrète (« Passer ») */
+.btn-tertiary{min-height:var(--tap);padding:0 var(--s-2);border:0;background:none;color:var(--primary);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
 .spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .icon-btn{display:inline-grid;place-items:center;width:var(--tap);height:var(--tap);border-radius:var(--r-full);border:0;background:var(--surface);color:var(--text);box-shadow:var(--shadow-2);cursor:pointer;position:relative}
@@ -454,7 +456,7 @@ textarea.input{min-height:96px;resize:vertical}
 .spot.spot-xl{width:176px;height:176px}
 .spot.spot-xl .ph{width:96px;height:96px}
 .dots{display:flex;justify-content:center;gap:6px;padding:var(--s-2) 0;view-transition-name:dots}
-.dots i{display:block;width:8px;height:8px;border-radius:4px;background:var(--border);transition:width .25s,background .25s}
+.dots i{display:block;width:8px;height:8px;border-radius:4px;background:color-mix(in srgb,var(--text) 22%,transparent);transition:width .25s,background .25s}
 .dots i.on{width:24px;background:var(--brand-yellow)}
 .why-list{margin:0;padding:var(--s-3) var(--s-4) var(--s-3) var(--s-8);display:grid;gap:var(--s-2);border-radius:var(--r-sm);background:var(--surface-2);color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
 .modal.sys-prompt{display:grid;justify-items:center;gap:var(--s-2);text-align:center;padding:var(--s-6) var(--s-4) var(--s-3)}
@@ -488,24 +490,16 @@ textarea.input{min-height:96px;resize:vertical}
 .hero-media .map95{position:absolute;inset:0}
 .hero-media .hero-halo{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 40%,color-mix(in srgb,var(--brand-yellow) 40%,transparent),transparent 70%)}
 .hero-media::after{content:"";position:absolute;inset:0 0 auto 0;height:112px;background:linear-gradient(rgba(15,23,42,.55),transparent);pointer-events:none}
-.onb-hero .onb-top{position:relative;z-index:3;color:#fff}
+.onb-hero .onb-top{position:relative;z-index:3;justify-content:flex-end;color:#fff}
 .onb-hero .onb-top .logo95-word{fill:#fff}
-.onb-skip.on-media{background:rgba(15,23,42,.38);color:#fff;border-radius:var(--r-full);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.hero-notif{position:absolute;left:var(--s-4);right:var(--s-4);bottom:calc(100% + var(--s-4));z-index:2;display:grid;grid-template-columns:40px minmax(0,1fr);gap:var(--s-3);align-items:center;padding:var(--s-3);border-radius:var(--r-md);background:color-mix(in srgb,var(--surface) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:var(--shadow-3);color:var(--text);text-align:left;view-transition-name:hero-notif}
-.hero-notif .hn-ico{display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-sm);background:var(--brand-yellow-soft);color:var(--brand-yellow-ink)}
-.hero-notif .hn-ico.tone-positive{background:var(--alert-positive-soft);color:var(--alert-positive)}
-.hero-notif .hn-ico.tone-done{background:var(--alert-positive-soft);color:var(--alert-positive)}
-.hero-notif .hn-head{display:flex;justify-content:space-between;gap:var(--s-2);color:var(--text-muted);font:500 var(--fs-caption)/var(--lh-caption) var(--font)}
-.hero-notif b{display:block;font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
-.hero-notif .hn-sub{display:flex;align-items:center;gap:var(--s-2);color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
-.hero-notif .hn-pins{display:flex;gap:6px;margin-left:auto}
-.hero-notif .hn-pins .marker{transform:scale(.62);margin:-7px}
+.onb-skip.on-media{color:#fff;text-shadow:0 1px 8px rgba(15,23,42,.6)}
 .hero-sheet{position:relative;z-index:2;margin-top:auto;display:grid;justify-items:center;gap:var(--s-3);padding:var(--s-8) var(--s-6) var(--s-2);box-shadow:0 -12px 32px rgba(15,23,42,.10);background:var(--bg);border-radius:50% 50% 0 0 / var(--s-8) var(--s-8) 0 0;text-align:center}
 .hero-sheet .onb-title{max-width:16ch}
 .onb-hero .screen-footer{position:relative;z-index:2}
-mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand-yellow) 60%,transparent) 58%);--hl-dark:linear-gradient(transparent 82%,var(--brand-yellow) 82%,var(--brand-yellow) 94%,transparent 94%);color:inherit;padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) mark.hl{background:var(--hl-dark)}}
-:root[data-theme="dark"] mark.hl{background:var(--hl-dark)}
+mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand-yellow) 60%,transparent) 58%);color:inherit;padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+/* Sombre : trait jaune sous le mot, qui contourne les jambages (pas de bande qui traverse les lettres) */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) mark.hl{background:none;text-decoration:underline var(--brand-yellow);text-decoration-thickness:.1em;text-underline-offset:.18em;text-decoration-skip-ink:auto}}
+:root[data-theme="dark"] mark.hl{background:none;text-decoration:underline var(--brand-yellow);text-decoration-thickness:.1em;text-underline-offset:.18em;text-decoration-skip-ink:auto}
 .step-progress{display:grid;gap:var(--s-1);view-transition-name:onb-progress}
 .step-progress .track{height:4px;border-radius:var(--r-full);background:var(--border);overflow:hidden}
 .step-progress .track i{display:block;height:100%;border-radius:inherit;background:var(--brand-yellow);transition:width .3s ease}
@@ -526,7 +520,7 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .onb-zone .detected-panel{gap:var(--s-3)}
 .onb-zone .detected-panel .step-progress,.onb-zone .detected-panel .seg{justify-self:stretch}
 .modal-scrim.coach{background:rgba(15,23,42,.78);display:flex;flex-direction:column;justify-content:center;gap:var(--s-4)}
-.coach-title mark.hl{background:linear-gradient(transparent 82%,var(--brand-yellow) 82%,var(--brand-yellow) 94%,transparent 94%)}
+.coach-title mark.hl{background:none;color:inherit;text-decoration:underline var(--brand-yellow);text-decoration-thickness:.1em;text-underline-offset:.18em;text-decoration-skip-ink:auto}
 .coach-title{margin:0;max-width:22ch;color:#fff;text-align:center;font:700 var(--fs-h2)/var(--lh-h2) var(--font)}
 .sys-actions button.is-recommended{position:relative;background:var(--primary-soft);box-shadow:inset 0 0 0 2px var(--primary)}
 .settings-preview{display:grid;gap:var(--s-2);padding:var(--s-4);border-radius:var(--r-md);background:var(--surface-2)}
@@ -2066,13 +2060,16 @@ function useSplashHandoff(logoRef, screenRef, reveal = ".welcome-title, .welcome
     const from = splashLogoRect;
     splashLogoRect = null;
     const el = logoRef.current;
-    if (!from || !el || motionReduced() || !el.animate) return;
-    const to = el.getBoundingClientRect();
-    const dx = from.x + from.w / 2 - (to.x + to.width / 2);
-    const dy = from.y + from.h / 2 - (to.y + to.height / 2);
-    const k = from.w / to.width;
+    if (!from || motionReduced() || !document.body.animate) return;
     const ease = "cubic-bezier(.2,.8,.2,1)";
-    el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }], { duration: 800, easing: ease });
+    // Écran sans logo (pages de présentation) : seule l'entrée échelonnée est jouée
+    if (el) {
+      const to = el.getBoundingClientRect();
+      const dx = from.x + from.w / 2 - (to.x + to.width / 2);
+      const dy = from.y + from.h / 2 - (to.y + to.height / 2);
+      const k = from.w / to.width;
+      el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }], { duration: 800, easing: ease });
+    }
     const screen = screenRef.current;
     screen.querySelectorAll(reveal).forEach((n, i) =>
       n.animate([{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 450, delay: 420 + i * 70, easing: ease, fill: "backwards" }));
@@ -2578,20 +2575,17 @@ const ONB_SLIDES = [
   {
     title: ["Que se passe‑t‑il ", "autour de vous", " ?"],
     text: "Incidents, travaux, bonnes nouvelles : le Val-d'Oise en direct, sur une carte.",
-    notif: { icon: "bell-fill", head: "95 Alerte", time: "maintenant", title: "3 nouvelles alertes autour de vous", sub: "Pontoise · à moins de 5 km", pins: [["incident", "fire"], ["vigilance", "traffic-cone"], ["positive", "calendar-star"]] },
     alt: "Une main tient un téléphone affichant la carte des alertes, dans une rue ancienne de Pontoise au coucher du soleil.",
   },
   {
     title: ["Un problème ? ", "Signalez-le."],
     text: "En quelques gestes, votre signalement part au service compétent.",
-    notif: { icon: "check-circle-fill", tone: "done", head: "Signalement transmis", time: "il y a 1 min", title: "Voirie · Nid-de-poule rue des Écoles", sub: "Transmis au service Voirie de Cergy" },
     alt: "Une main photographie avec son téléphone un nid-de-poule et une branche tombée sur une rue résidentielle.",
   },
   {
     title: ["Une bonne nouvelle ? ", "Partagez-la aussi."],
     text: "Fête de quartier, entraide, nouveau commerce : le positif a toute sa place.",
     tone: "positive",
-    notif: { icon: "calendar-star-fill", tone: "positive", head: "Bonne nouvelle", time: "il y a 5 min", title: "Fête de quartier aux Linandes", sub: <Fragment><Icon name="arrow-fat-up-fill" className="ph-sm" />42 confirmations</Fragment> },
     alt: "Une main tient un téléphone pendant une fête de quartier sur une place, guirlandes et stands en arrière-plan.",
   },
 ];
@@ -2625,22 +2619,8 @@ function StepProgress({ step, total }) {
 function OnboardingTop({ onSkip, skipLabel = "Passer", logoRef, onMedia }) {
   return (
     <div className="onb-top">
-      <span ref={logoRef} className="onb-logo"><Logo95 width={44} label="95 Alerte" /></span>
-      {onSkip ? <Button variant="ghost" className={cx("btn-inline onb-skip", onMedia && "on-media")} onClick={onSkip}>{skipLabel}</Button> : null}
-    </div>
-  );
-}
-
-/* Notification posée sur la photo (Citizen) : c'est l'interface réelle qui raconte, pas l'image */
-function HeroNotif({ n }) {
-  return (
-    <div className="hero-notif" aria-hidden="true">
-      <span className={cx("hn-ico", n.tone && `tone-${n.tone}`)}><Icon name={n.icon} /></span>
-      <span>
-        <span className="hn-head"><span>{n.head}</span><span>{n.time}</span></span>
-        <b>{n.title}</b>
-        <span className="hn-sub">{n.sub}{n.pins ? <span className="hn-pins">{n.pins.map(([f, i]) => <Marker key={f} family={f} icon={i} />)}</span> : null}</span>
-      </span>
+      {onMedia ? null : <span ref={logoRef} className="onb-logo"><Logo95 width={44} label="95 Alerte" /></span>}
+      {onSkip ? <Button variant={onMedia ? "tertiary" : "ghost"} className={cx(onMedia ? "onb-skip on-media" : "btn-inline onb-skip")} onClick={onSkip}>{skipLabel}</Button> : null}
     </div>
   );
 }
@@ -2681,7 +2661,7 @@ function OnboardingSlides() {
   const logoRef = useRef(null);
   const screenRef = useRef(null);
   const startX = useRef(null);
-  useSplashHandoff(logoRef, screenRef, ".onb-skip, .hero-notif, .onb-title, .onb-text, .onb .screen-footer");
+  useSplashHandoff(logoRef, screenRef, ".onb-skip, .onb-title, .onb-text, .onb .screen-footer");
   const go = (n) => { if (n >= 0 && n < ONB_SLIDES.length && n !== i) dispatch({ type: "ONB_GO", step: "slides", slide: n }); };
   const next = () => (last ? dispatch({ type: "ONB_GO", step: "location" }) : go(i + 1));
   const onKey = (e) => { if (e.key === "ArrowRight") go(i + 1); if (e.key === "ArrowLeft") go(i - 1); };
@@ -2695,10 +2675,8 @@ function OnboardingSlides() {
       </div>
       <OnboardingTop logoRef={logoRef} onMedia onSkip={() => dispatch({ type: "ONB_GO", step: "location" })} />
       <section className="hero-sheet" aria-roledescription="diapositive" aria-label={`${i + 1} sur ${ONB_SLIDES.length}`}>
-        <HeroNotif n={s.notif} />
         <h1 className="onb-title">{s.title[0]}<mark className="hl">{s.title[1]}</mark>{s.title[2] || ""}</h1>
         <p className="onb-text">{s.text}</p>
-        <p className="sr-only">{s.notif.head} : {s.notif.title}.</p>
       </section>
       <div className="screen-footer stack-footer">
         <PageDots count={ONB_SLIDES.length} index={i} />

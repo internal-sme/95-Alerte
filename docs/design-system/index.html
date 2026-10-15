@@ -103,6 +103,8 @@
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 .btn-block{width:100%}
 .btn-inline{justify-self:start;min-height:var(--tap);padding:0 var(--s-2);margin-left:calc(-1 * var(--s-2))}
+/* Bouton tertiaire : texte souligné seul, pour une action secondaire discrète (« Passer ») */
+.btn-tertiary{min-height:var(--tap);padding:0 var(--s-2);border:0;background:none;color:var(--primary);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
 .spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .icon-btn{display:inline-grid;place-items:center;width:var(--tap);height:var(--tap);border-radius:var(--r-full);border:0;background:var(--surface);color:var(--text);box-shadow:var(--shadow-2);cursor:pointer;position:relative}
@@ -457,7 +459,7 @@ textarea.input{min-height:96px;resize:vertical}
 .spot.spot-xl{width:176px;height:176px}
 .spot.spot-xl .ph{width:96px;height:96px}
 .dots{display:flex;justify-content:center;gap:6px;padding:var(--s-2) 0;view-transition-name:dots}
-.dots i{display:block;width:8px;height:8px;border-radius:4px;background:var(--border);transition:width .25s,background .25s}
+.dots i{display:block;width:8px;height:8px;border-radius:4px;background:color-mix(in srgb,var(--text) 22%,transparent);transition:width .25s,background .25s}
 .dots i.on{width:24px;background:var(--brand-yellow)}
 .why-list{margin:0;padding:var(--s-3) var(--s-4) var(--s-3) var(--s-8);display:grid;gap:var(--s-2);border-radius:var(--r-sm);background:var(--surface-2);color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
 .modal.sys-prompt{display:grid;justify-items:center;gap:var(--s-2);text-align:center;padding:var(--s-6) var(--s-4) var(--s-3)}
@@ -491,24 +493,16 @@ textarea.input{min-height:96px;resize:vertical}
 .hero-media .map95{position:absolute;inset:0}
 .hero-media .hero-halo{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 40%,color-mix(in srgb,var(--brand-yellow) 40%,transparent),transparent 70%)}
 .hero-media::after{content:"";position:absolute;inset:0 0 auto 0;height:112px;background:linear-gradient(rgba(15,23,42,.55),transparent);pointer-events:none}
-.onb-hero .onb-top{position:relative;z-index:3;color:#fff}
+.onb-hero .onb-top{position:relative;z-index:3;justify-content:flex-end;color:#fff}
 .onb-hero .onb-top .logo95-word{fill:#fff}
-.onb-skip.on-media{background:rgba(15,23,42,.38);color:#fff;border-radius:var(--r-full);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.hero-notif{position:absolute;left:var(--s-4);right:var(--s-4);bottom:calc(100% + var(--s-4));z-index:2;display:grid;grid-template-columns:40px minmax(0,1fr);gap:var(--s-3);align-items:center;padding:var(--s-3);border-radius:var(--r-md);background:color-mix(in srgb,var(--surface) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:var(--shadow-3);color:var(--text);text-align:left;view-transition-name:hero-notif}
-.hero-notif .hn-ico{display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-sm);background:var(--brand-yellow-soft);color:var(--brand-yellow-ink)}
-.hero-notif .hn-ico.tone-positive{background:var(--alert-positive-soft);color:var(--alert-positive)}
-.hero-notif .hn-ico.tone-done{background:var(--alert-positive-soft);color:var(--alert-positive)}
-.hero-notif .hn-head{display:flex;justify-content:space-between;gap:var(--s-2);color:var(--text-muted);font:500 var(--fs-caption)/var(--lh-caption) var(--font)}
-.hero-notif b{display:block;font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
-.hero-notif .hn-sub{display:flex;align-items:center;gap:var(--s-2);color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
-.hero-notif .hn-pins{display:flex;gap:6px;margin-left:auto}
-.hero-notif .hn-pins .marker{transform:scale(.62);margin:-7px}
+.onb-skip.on-media{color:#fff;text-shadow:0 1px 8px rgba(15,23,42,.6)}
 .hero-sheet{position:relative;z-index:2;margin-top:auto;display:grid;justify-items:center;gap:var(--s-3);padding:var(--s-8) var(--s-6) var(--s-2);box-shadow:0 -12px 32px rgba(15,23,42,.10);background:var(--bg);border-radius:50% 50% 0 0 / var(--s-8) var(--s-8) 0 0;text-align:center}
 .hero-sheet .onb-title{max-width:16ch}
 .onb-hero .screen-footer{position:relative;z-index:2}
-mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand-yellow) 60%,transparent) 58%);--hl-dark:linear-gradient(transparent 82%,var(--brand-yellow) 82%,var(--brand-yellow) 94%,transparent 94%);color:inherit;padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) mark.hl{background:var(--hl-dark)}}
-:root[data-theme="dark"] mark.hl{background:var(--hl-dark)}
+mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand-yellow) 60%,transparent) 58%);color:inherit;padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+/* Sombre : trait jaune sous le mot, qui contourne les jambages (pas de bande qui traverse les lettres) */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) mark.hl{background:none;text-decoration:underline var(--brand-yellow);text-decoration-thickness:.1em;text-underline-offset:.18em;text-decoration-skip-ink:auto}}
+:root[data-theme="dark"] mark.hl{background:none;text-decoration:underline var(--brand-yellow);text-decoration-thickness:.1em;text-underline-offset:.18em;text-decoration-skip-ink:auto}
 .step-progress{display:grid;gap:var(--s-1);view-transition-name:onb-progress}
 .step-progress .track{height:4px;border-radius:var(--r-full);background:var(--border);overflow:hidden}
 .step-progress .track i{display:block;height:100%;border-radius:inherit;background:var(--brand-yellow);transition:width .3s ease}
@@ -529,7 +523,7 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .onb-zone .detected-panel{gap:var(--s-3)}
 .onb-zone .detected-panel .step-progress,.onb-zone .detected-panel .seg{justify-self:stretch}
 .modal-scrim.coach{background:rgba(15,23,42,.78);display:flex;flex-direction:column;justify-content:center;gap:var(--s-4)}
-.coach-title mark.hl{background:linear-gradient(transparent 82%,var(--brand-yellow) 82%,var(--brand-yellow) 94%,transparent 94%)}
+.coach-title mark.hl{background:none;color:inherit;text-decoration:underline var(--brand-yellow);text-decoration-thickness:.1em;text-underline-offset:.18em;text-decoration-skip-ink:auto}
 .coach-title{margin:0;max-width:22ch;color:#fff;text-align:center;font:700 var(--fs-h2)/var(--lh-h2) var(--font)}
 .sys-actions button.is-recommended{position:relative;background:var(--primary-soft);box-shadow:inset 0 0 0 2px var(--primary)}
 .settings-preview{display:grid;gap:var(--s-2);padding:var(--s-4);border-radius:var(--r-md);background:var(--surface-2)}
@@ -627,6 +621,8 @@ h3.ds-sub{margin:8px 0 0;font:600 var(--fs-caption)/1 var(--font);letter-spacing
 .ds-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;display:grid;gap:12px;align-content:start;min-width:0}
 .ds-box.plain{background:transparent;border-style:dashed}
 .ds-label{font:500 11px/1.4 var(--font-mono);color:var(--text-muted)}
+/* Étiquette « New » : composant créé dans la phase en cours, retirée quand la phase est fusionnée dans develop */
+.ds-new{display:inline-flex;align-items:center;margin-right:6px;padding:1px 7px;border-radius:999px;background:var(--brand-yellow);color:var(--on-brand-yellow);font:700 10px/1.5 var(--font);letter-spacing:.06em;text-transform:uppercase;vertical-align:1px}
 .ds-note{font:400 var(--fs-sm)/var(--lh-sm) var(--font);color:var(--text-muted);max-width:72ch}
 .ds-note b{color:var(--text)}
 .row-wrap{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
@@ -1078,9 +1074,9 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
           <p class="privacy-note"><svg class="ph"><use href="#ph-lock-simple"/></svg><span>Votre numéro n'est jamais affiché. Il sert uniquement à sécuriser votre compte.</span></p>
           <ul class="recap"><li><svg class="ph"><use href="#ph-check-circle-fill"/></svg><span><b>Compte créé</b><small>Vos alertes identifiées afficheront « Jean D. »</small></span></li><li class="pending"><svg class="ph"><use href="#ph-timer"/></svg><span><b>Vérification en cours</b><small>Généralement moins de 24 h</small></span></li></ul>
         </div>
-        <div class="ds-box"><span class="ds-label">Onboarding v2 (refonte)</span>
-          <div class="hero-notif" style="position:static"><span class="hn-ico"><svg class="ph"><use href="#ph-bell-fill"/></svg></span><span><span class="hn-head"><span>95 Alerte</span><span>maintenant</span></span><b>3 nouvelles alertes autour de vous</b><span class="hn-sub">Pontoise · à moins de 5 km</span></span></div>
-          <p class="ds-note">HeroNotif : notification réelle posée sur la photo des pages de présentation (Citizen).</p>
+        <div class="ds-box"><span class="ds-label"><span class="ds-new">New</span>Onboarding v2 (refonte)</span>
+          <button type="button" class="btn btn-tertiary" style="justify-self:start"><span class="ds-new">New</span>Passer</button>
+          <p class="ds-note">Bouton tertiaire : texte souligné seul, pour une action discrète (« Passer »). Sur photo : texte blanc avec une ombre portée.</p>
           <p class="onb-title" style="font-size:var(--fs-h1);text-align:left">Un problème&nbsp;? <mark class="hl">Signalez-le.</mark></p>
           <p class="ds-note">Highlight : le mot-clé surligné en jaune (trait en sombre), jamais du texte jaune.</p>
           <div class="step-progress"><span class="track"><i style="width:50%"></i></span><small>Étape 1 sur 2</small></div>
@@ -1088,7 +1084,7 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
           <section class="start-card"><div class="sc-head"><b>Bien démarrer</b><small>1/3</small></div><div class="step-progress"><span class="track"><i style="width:33%"></i></span></div><ul><li class="done"><button type="button"><svg class="ph"><use href="#ph-check-circle-fill"/></svg>Choisir votre zone</button></li><li><button type="button"><svg class="ph"><use href="#ph-circle"/></svg>Confirmer une alerte utile</button></li></ul></section>
           <p class="ds-note">StepProgress, SettingsPreview (reprise après refus), StartChecklist (après l'onboarding). Zone suivie : ZoneMap, cercle du rayon à l'échelle de la carte.</p>
         </div>
-        <div class="ds-box"><span class="ds-label">Onboarding et territoire (phase 2)</span>
+        <div class="ds-box"><span class="ds-label"><span class="ds-new">New</span>Onboarding et territoire (phase 2)</span>
           <div class="row-wrap" style="gap:var(--s-4);align-items:center">
             <span class="spot spot-xl" aria-hidden="true"><svg class="ph"><use href="#ph-map-trifold-duotone"/></svg></span>
             <span class="spot tone-positive" aria-hidden="true"><svg class="ph"><use href="#ph-hand-heart-duotone"/></svg></span>

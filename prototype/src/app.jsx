@@ -1363,13 +1363,16 @@ function useSplashHandoff(logoRef, screenRef, reveal = ".welcome-title, .welcome
     const from = splashLogoRect;
     splashLogoRect = null;
     const el = logoRef.current;
-    if (!from || !el || motionReduced() || !el.animate) return;
-    const to = el.getBoundingClientRect();
-    const dx = from.x + from.w / 2 - (to.x + to.width / 2);
-    const dy = from.y + from.h / 2 - (to.y + to.height / 2);
-    const k = from.w / to.width;
+    if (!from || motionReduced() || !document.body.animate) return;
     const ease = "cubic-bezier(.2,.8,.2,1)";
-    el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }], { duration: 800, easing: ease });
+    // Écran sans logo (pages de présentation) : seule l'entrée échelonnée est jouée
+    if (el) {
+      const to = el.getBoundingClientRect();
+      const dx = from.x + from.w / 2 - (to.x + to.width / 2);
+      const dy = from.y + from.h / 2 - (to.y + to.height / 2);
+      const k = from.w / to.width;
+      el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }], { duration: 800, easing: ease });
+    }
     const screen = screenRef.current;
     screen.querySelectorAll(reveal).forEach((n, i) =>
       n.animate([{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 450, delay: 420 + i * 70, easing: ease, fill: "backwards" }));
@@ -1875,20 +1878,17 @@ const ONB_SLIDES = [
   {
     title: ["Que se passe‑t‑il ", "autour de vous", " ?"],
     text: "Incidents, travaux, bonnes nouvelles : le Val-d'Oise en direct, sur une carte.",
-    notif: { icon: "bell-fill", head: "95 Alerte", time: "maintenant", title: "3 nouvelles alertes autour de vous", sub: "Pontoise · à moins de 5 km", pins: [["incident", "fire"], ["vigilance", "traffic-cone"], ["positive", "calendar-star"]] },
     alt: "Une main tient un téléphone affichant la carte des alertes, dans une rue ancienne de Pontoise au coucher du soleil.",
   },
   {
     title: ["Un problème ? ", "Signalez-le."],
     text: "En quelques gestes, votre signalement part au service compétent.",
-    notif: { icon: "check-circle-fill", tone: "done", head: "Signalement transmis", time: "il y a 1 min", title: "Voirie · Nid-de-poule rue des Écoles", sub: "Transmis au service Voirie de Cergy" },
     alt: "Une main photographie avec son téléphone un nid-de-poule et une branche tombée sur une rue résidentielle.",
   },
   {
     title: ["Une bonne nouvelle ? ", "Partagez-la aussi."],
     text: "Fête de quartier, entraide, nouveau commerce : le positif a toute sa place.",
     tone: "positive",
-    notif: { icon: "calendar-star-fill", tone: "positive", head: "Bonne nouvelle", time: "il y a 5 min", title: "Fête de quartier aux Linandes", sub: <Fragment><Icon name="arrow-fat-up-fill" className="ph-sm" />42 confirmations</Fragment> },
     alt: "Une main tient un téléphone pendant une fête de quartier sur une place, guirlandes et stands en arrière-plan.",
   },
 ];
@@ -1922,22 +1922,8 @@ function StepProgress({ step, total }) {
 function OnboardingTop({ onSkip, skipLabel = "Passer", logoRef, onMedia }) {
   return (
     <div className="onb-top">
-      <span ref={logoRef} className="onb-logo"><Logo95 width={44} label="95 Alerte" /></span>
-      {onSkip ? <Button variant="ghost" className={cx("btn-inline onb-skip", onMedia && "on-media")} onClick={onSkip}>{skipLabel}</Button> : null}
-    </div>
-  );
-}
-
-/* Notification posée sur la photo (Citizen) : c'est l'interface réelle qui raconte, pas l'image */
-function HeroNotif({ n }) {
-  return (
-    <div className="hero-notif" aria-hidden="true">
-      <span className={cx("hn-ico", n.tone && `tone-${n.tone}`)}><Icon name={n.icon} /></span>
-      <span>
-        <span className="hn-head"><span>{n.head}</span><span>{n.time}</span></span>
-        <b>{n.title}</b>
-        <span className="hn-sub">{n.sub}{n.pins ? <span className="hn-pins">{n.pins.map(([f, i]) => <Marker key={f} family={f} icon={i} />)}</span> : null}</span>
-      </span>
+      {onMedia ? null : <span ref={logoRef} className="onb-logo"><Logo95 width={44} label="95 Alerte" /></span>}
+      {onSkip ? <Button variant={onMedia ? "tertiary" : "ghost"} className={cx(onMedia ? "onb-skip on-media" : "btn-inline onb-skip")} onClick={onSkip}>{skipLabel}</Button> : null}
     </div>
   );
 }
@@ -1978,7 +1964,7 @@ function OnboardingSlides() {
   const logoRef = useRef(null);
   const screenRef = useRef(null);
   const startX = useRef(null);
-  useSplashHandoff(logoRef, screenRef, ".onb-skip, .hero-notif, .onb-title, .onb-text, .onb .screen-footer");
+  useSplashHandoff(logoRef, screenRef, ".onb-skip, .onb-title, .onb-text, .onb .screen-footer");
   const go = (n) => { if (n >= 0 && n < ONB_SLIDES.length && n !== i) dispatch({ type: "ONB_GO", step: "slides", slide: n }); };
   const next = () => (last ? dispatch({ type: "ONB_GO", step: "location" }) : go(i + 1));
   const onKey = (e) => { if (e.key === "ArrowRight") go(i + 1); if (e.key === "ArrowLeft") go(i - 1); };
@@ -1992,10 +1978,8 @@ function OnboardingSlides() {
       </div>
       <OnboardingTop logoRef={logoRef} onMedia onSkip={() => dispatch({ type: "ONB_GO", step: "location" })} />
       <section className="hero-sheet" aria-roledescription="diapositive" aria-label={`${i + 1} sur ${ONB_SLIDES.length}`}>
-        <HeroNotif n={s.notif} />
         <h1 className="onb-title">{s.title[0]}<mark className="hl">{s.title[1]}</mark>{s.title[2] || ""}</h1>
         <p className="onb-text">{s.text}</p>
-        <p className="sr-only">{s.notif.head} : {s.notif.title}.</p>
       </section>
       <div className="screen-footer stack-footer">
         <PageDots count={ONB_SLIDES.length} index={i} />
