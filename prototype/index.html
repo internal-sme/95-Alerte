@@ -1955,6 +1955,7 @@ function mapLabels(level, toScreen, w, h) {
     const lh = l.cls === "lbl-dept" ? 22 : 16;
     const box = [p.x - lw / 2, p.y - lh / 2, p.x + lw / 2, p.y + lh / 2];
     if (box[2] < 0 || box[0] > w || box[3] < 0 || box[1] > h) return;
+    if (box[1] < MAP_INSET_TOP - 16) return; // rien entre les puces ni sous la barre de recherche
     if (boxes.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return;
     boxes.push(box);
     out.push({ ...l, x: p.x, y: p.y, key: l.cls + l.text + l.c.join() });
@@ -2010,7 +2011,7 @@ const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect
     return { s, cx: Math.min(DEPT_KM.x + DEPT_KM.w + 4, Math.max(DEPT_KM.x - 4, v.cx)), cy: Math.min(DEPT_KM.y + DEPT_KM.h + 4, Math.max(DEPT_KM.y - 4, v.cy)) };
   }, [minS]);
 
-  const apply = useCallback((v, settle) => {
+  const apply = useCallback((v, settle, bottomOverride) => {
     const next = clampView(v);
     viewRef.current = next;
     lastMapView = next;
@@ -2018,7 +2019,8 @@ const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect
     setView(next);
     if (settle) {
       // Le lieu annoncé est celui du centre visible (entre la barre du haut et le volet), pas du centre de l'écran
-      const { size: sz, bottomInset: bi } = geom.current;
+      const { size: sz } = geom.current;
+      const bi = bottomOverride != null ? bottomOverride : geom.current.bottomInset;
       const fy = sz ? (MAP_INSET_TOP + sz.h - bi) / 2 - sz.h / 2 : 0;
       onViewChange?.(next, settle, { x: next.cx, y: next.cy + fy / next.s });
     }
@@ -2036,18 +2038,18 @@ const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect
     return viewFor(c.x, c.y, s, peek); // la zone se cadre toujours au-dessus du volet réduit
   }, [size, zone, peek, viewFor]);
 
-  const animateTo = useCallback((target, settle = "program") => {
+  const animateTo = useCallback((target, settle = "program", bottom) => {
     cancelAnimationFrame(anim.current);
     const from = viewRef.current;
     const to = clampView(target);
-    if (!from || motionReduced()) { apply(to, settle); return; }
+    if (!from || motionReduced()) { apply(to, settle, bottom); return; }
     const t0 = performance.now();
     const dur = 420;
     const step = (t) => {
       const k = Math.min(1, (t - t0) / dur);
       const e = 1 - Math.pow(1 - k, 3);
       const s = Math.exp(Math.log(from.s) + (Math.log(to.s) - Math.log(from.s)) * e);
-      apply({ s, cx: from.cx + (to.cx - from.cx) * e, cy: from.cy + (to.cy - from.cy) * e }, k === 1 ? settle : null);
+      apply({ s, cx: from.cx + (to.cx - from.cx) * e, cy: from.cy + (to.cy - from.cy) * e }, k === 1 ? settle : null, bottom);
       if (k < 1) anim.current = requestAnimationFrame(step);
     };
     anim.current = requestAnimationFrame(step);
@@ -2078,7 +2080,8 @@ const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect
     focusAlert: (a) => {
       const p = projectKm(a);
       const v = viewRef.current;
-      animateTo(viewFor(p.x, p.y, Math.max(v ? v.s : 0, MAP_LEVELS[2].min + 8), size ? size.h * SELECTION_HALF : 420), "program");
+      const bottom = size ? size.h * SELECTION_HALF : 420;
+      animateTo(viewFor(p.x, p.y, Math.max(v ? v.s : 0, MAP_LEVELS[2].min + 8), bottom), "program", bottom);
     },
     zoomBy,
     bounds: () => {
@@ -2589,7 +2592,7 @@ function MapScreen() {
           title={loading ? <Skeleton height={20} width="62%" /> : title} subtitle={loading ? <Skeleton height={12} width="44%" /> : subtitle}
           headerAction={<ViewToggle view="map" onChange={setView} />}>
           {area ? <button type="button" className="btn btn-tertiary" style={{ justifySelf: "start" }} onClick={recenter}>Revenir à ma zone</button> : null}
-          {state.session.status === "in" && !loading ? <StartChecklist onConfirm={() => setSnap("half")} /> : null}
+          {state.session.status === "in" && !loading && listing.length ? <StartChecklist onConfirm={() => setSnap("half")} /> : null}
           {loading ? (
             <Fragment><Skeleton height={96} radius="var(--r-md)" /><Skeleton height={96} radius="var(--r-md)" /></Fragment>
           ) : listing.length === 0 ? (
