@@ -266,6 +266,7 @@ function fmtDistance(km) {
 }
 
 function publicName(user) {
+  if (!user) return "Citoyen anonyme"; // exploration sans compte : aucun nom à afficher
   if (user.display === "first") return user.firstName;
   return `${user.firstName} ${user.lastName[0]}.`;
 }
@@ -2992,7 +2993,7 @@ function ComponentsScreen() {
         <section className="lib-section"><p className="section-label">RadioCard + aperçu public</p>
           <RadioCard name="lib-pub" value="profile" checked={pub === "profile"} onChange={setPub} icon="user-circle" title="Publier avec mon profil" description="Les autres verront votre prénom et l'initiale de votre nom." />
           <RadioCard name="lib-pub" value="anon" checked={pub === "anon"} onChange={setPub} icon="detective" iconTone="muted" title="Publier anonymement" description="Aucune identité visible. La plateforme peut retrouver l'auteur en cas d'abus." />
-          <div className="preview-author"><Icon name="eye" />Visible publiquement : <b>{pub === "profile" ? `Signalé par ${publicName(state.session.user)}` : "Signalement anonyme"}</b></div>
+          <div className="preview-author"><Icon name="eye" />Visible publiquement : <b>{pub === "profile" ? `Signalé par ${publicName(state.session.user || USERS.me)}` : "Signalement anonyme"}</b></div>
         </section>
 
         <section className="lib-section"><p className="section-label">Switch · ListItem</p>
