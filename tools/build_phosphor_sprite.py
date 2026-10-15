@@ -44,11 +44,12 @@ FILL = [
     "fire", "car", "traffic-cone", "shield-warning", "leaf", "trash", "speaker-high",
     "hand-heart", "mask-happy", "soccer-ball", "calendar-star", "barricade", "lightbulb",
     "dots-three", "drop", "tree", "megaphone", "info", "warning", "siren", "star",
-    "paper-plane-tilt", "squares-four",
+    "paper-plane-tilt", "squares-four", "navigation-arrow",
 ]
 
 # Illustrations ponctuelles (écrans de confirmation, états) : Phosphor Duotone, même bibliothèque que l'interface
-DUOTONE = ["envelope-open", "hand-waving", "seal-check", "map-trifold", "identification-card", "shield-check"]
+DUOTONE = ["envelope-open", "hand-waving", "seal-check", "map-trifold", "identification-card", "shield-check",
+           "megaphone", "hand-heart", "map-pin-area", "compass"]
 
 
 def inner(svg: str) -> str:
