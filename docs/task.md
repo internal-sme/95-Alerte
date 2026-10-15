@@ -34,7 +34,7 @@
 | 0 | Fondations techniques et composants de base | — | ✅ Terminée |
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée |
-| 2b | Refonte de l'onboarding (v2, benchmark) | UI-002→007 | 🟨 En cours (photos à intégrer) |
+| 2b | Refonte de l'onboarding (v2, benchmark) | UI-002→007 | ✅ Terminée (à valider) |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ⬜ À faire |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ⬜ À faire |
 | 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
@@ -139,7 +139,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 - [x] **2b.0** Fondations : `HeroNotif`, `Highlight`, `StepProgress`, `ZoneMap`, `SettingsPreview`, `StartChecklist` dans le Design System
 - [x] **2b.1** Présentation en 3 pages : photo plein cadre, arc, notification réelle, mot-clé surligné, smart animate (média, notification, titre, points)
-- [ ] **2b.1b** Intégrer les 3 photos Magnific (`tools/fetch_onboarding_photos.py`) — bloqué : domaine pikaso.cdnpk.net refusé par le réseau de l'environnement
+- [x] **2b.1b** Intégrer les 3 photos Magnific (originaux dans `docs/brand/onboarding/`, recadrage par `tools/fetch_onboarding_photos.py`, zone photo = écran − 250 px)
 - [x] **2b.2** Amorce allégée (3 éléments, « Étape 1 sur 2 »), détail dans une feuille, demande système coachée
 - [x] **2b.3** Zone suivie : cercle sur la carte, rayon 1 / 5 / 10 km, compteur, « Étape 2 sur 2 » ; rayon utilisé par la carte et la liste
 - [x] **2b.4** Préparation de la carte (≤ 1,2 s, ignorée si animations réduites)
@@ -402,3 +402,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-15 | 2 | Phase 2 terminée sur `phase/2-onboarding`. Démarrage → 4 diapositives (titres du CDC, illustrations Phosphor Duotone, pagination par points, « Passer », balayage et flèches du clavier, transitions *smart animate* du logo, du titre, de l'illustration et des points) → amorce de localisation (bénéfices, précision approximative, « Comment ma position est-elle utilisée ? », « Plus tard ») → demande du téléphone simulée → « Vous êtes à Pontoise » (ou « Ce n'est pas ma commune ») → connexion personnalisée avec la commune → carte. Refus : « Localisation désactivée » + choix de la commune + fiche « Activer la localisation » ; position introuvable (mode démo). Choix de commune : recherche, liste avec intercommunalité, aucun résultat, hors zone (« 95 Alerte n'est pas encore disponible dans cette zone. »). Carte sans position : bandeau « Position non définie », recherche « {commune} · changer de commune ». Onboarding non rejoué une fois vu (préférence), « Rejouer l'onboarding » dans le mode démo. Hypothèses à valider : localisation demandée avant la commune ; pas de carte « Bien démarrer » ; textes des diapositives rédigés à partir du CDC. Canevas : 36 planches (page « Phase 2 »). |
 | 2026-10-15 | 2 | Benchmark Mobbin « onboardings les mieux dessinés » et plan de refonte : `docs/benchmark/onboarding-refonte.html` (HTML + Tailwind, généré par `tools/build_benchmark_refonte.py`). 12 flows (Headspace, Duolingo, Klima, Life360, Citizen, Tinder, Nextdoor, Blinkist, Lovi, Cosmos, Evernote, Polarsteps/Viator), matrice des patterns, 10 enseignements, DA « vigilance lumineuse » 2.0, audit de la phase 2, parcours cible S1 v2 en 9 écrans, plan en 6 lots (R0–R5), décisions D1–D6 à valider. |
 | 2026-10-15 | 2b | Refonte de l'onboarding sur `phase/2b-onboarding-v2` (créée depuis `phase/2-onboarding`, pas encore fusionnée) : 3 pages de présentation (photo + notification réelle, arc, mot surligné), amorce allégée, demande coachée, zone suivie réglable (1/5/10 km), préparation de la carte, réglages illustrés après refus, astuce sur le + et « Bien démarrer 1/3 ». 6 photos générées avec Magnific (Seedream 5 Pro, 2 variantes par page) ; téléchargement refusé par le réseau de l'environnement (pikaso.cdnpk.net) : la carte illustrée sert de fond en attendant. |
+| 2026-10-15 | 2b | Photos des 3 pages fournies par l'utilisateur (Pontoise, nid-de-poule, fête de quartier) : originaux dans `docs/brand/onboarding/`, WebP recadrés dans `prototype/src/onboarding/` (27 à 52 Ko), embarqués par le build ; zone photo sous l'arc dimensionnée sur le contenu (écran − 250 px) pour 375, 390 et 430. Canevas : photos en ressources de l'artefact. |

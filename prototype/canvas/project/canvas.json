@@ -1264,7 +1264,7 @@
       "maxH": 620,
       "fill": "blue",
       "page": "p2b",
-      "text": "Phase 2b · refonte de l'onboarding (benchmark Mobbin)\n\nPlay sur « Présentation · 1 » (ou « Démarrage », page Phase 1) : 3 pages, notification réelle posée sur le visuel (d'après le flow Citizen), mot-clé surligné.\n\nLocalisation : amorce allégée (Étape 1 sur 2) → demande coachée → recherche → zone suivie (Étape 2 sur 2, rayon 1 / 5 / 10 km) → préparation de la carte → connexion.\nRefus : choisir ma commune ou réglages illustrés.\n\nLes photos générées avec Magnific remplaceront la carte illustrée en fond des 3 pages dès qu'elles pourront être importées."
+      "text": "Phase 2b · refonte de l'onboarding (benchmark Mobbin)\n\nPlay sur « Présentation · 1 » (ou « Démarrage », page Phase 1) : 3 pages, notification réelle posée sur le visuel (d'après le flow Citizen), mot-clé surligné.\n\nLocalisation : amorce allégée (Étape 1 sur 2) → demande coachée → recherche → zone suivie (Étape 2 sur 2, rayon 1 / 5 / 10 km) → préparation de la carte → connexion.\nRefus : choisir ma commune ou réglages illustrés.\n\nVisuels des 3 pages : photos générées avec Magnific (Pontoise, signalement d'un nid-de-poule, fête de quartier)."
     }
   },
   "designSystems": []

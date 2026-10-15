@@ -1987,7 +1987,7 @@ function OnboardingSlides() {
     <div className="screen auth onb onb-hero" ref={screenRef} onKeyDown={onKey}
       onPointerDown={(e) => { startX.current = e.clientX; }}
       onPointerUp={(e) => { if (startX.current === null) return; const dx = e.clientX - startX.current; startX.current = null; if (dx < -50) go(i + 1); if (dx > 50) go(i - 1); }}>
-      <div className="hero-media">
+      <div className={cx("hero-media", photo && "has-photo")}>
         {photo ? <img className="hero-photo" src={photo} alt={s.alt} /> : <Fragment><div className="map95">{MAP_ART}</div><div className="hero-halo" /></Fragment>}
       </div>
       <OnboardingTop logoRef={logoRef} onMedia onSkip={() => dispatch({ type: "ONB_GO", step: "location" })} />
