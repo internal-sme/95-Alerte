@@ -4,7 +4,7 @@
    par tools/build_prototype.py. Lire AGENTS.md et docs/task.md avant
    toute modification.
    ===================================================================== */
-const { useState, useReducer, useEffect, useRef, useMemo, useCallback, createContext, useContext, Fragment } = React;
+const { useState, useReducer, useEffect, useLayoutEffect, useRef, useMemo, useCallback, createContext, useContext, Fragment } = React;
 
 /* =====================================================================
    DATA — données fictives (communes réelles du Val-d'Oise, personnes fictives)
@@ -1273,20 +1273,78 @@ function useOnline() {
   };
 }
 
-/* Démarrage (benchmark Mobbin : Pangea, monday.com, komoot) : même fond que l'accueil de connexion
-   pour un enchaînement sans rupture, logo centré, gyrophare animé, chargement nommé en bas. */
+/* Démarrage, en trois temps : le halo jaune apparaît seul, puis l'animation officielle du logo
+   (docs/brand/95-alerte-animation.gif, intégrée par le build dans window.SPLASH_GIF), puis le chargement.
+   Le GIF a un fond blanc : il est fondu dans le halo (mode multiply) en clair ; en sombre ou avec les
+   animations réduites, le logo SVG le remplace (variables --splash-gif / --splash-svg du Design System).
+   À la sortie, la position du logo est mémorisée pour la transition vers l'accueil (« smart animate »). */
+const motionReduced = () => document.documentElement.getAttribute("data-motion") === "reduce" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let splashLogoRect = null;
+const GIF_LOGO_BOX = { x: 84 / 800, y: 65 / 800, w: 643 / 800, h: 632 / 800 }; // logo dans la dernière image du GIF
+
 function SplashScreen() {
   const { dispatch } = useStore();
+  const [phase, setPhase] = useState("bg");
+  const logoRef = useRef(null);
   useEffect(() => {
-    const id = setTimeout(() => dispatch({ type: "SPLASH_DONE" }), 1600);
-    return () => clearTimeout(id);
+    const [toLogo, toLoad, toExit] = motionReduced() ? [0, 400, 1600] : [700, 3700, 4900];
+    const ids = [
+      setTimeout(() => setPhase("logo"), toLogo),
+      setTimeout(() => setPhase("load"), toLoad),
+      setTimeout(() => {
+        const box = logoRef.current;
+        const gif = box && box.querySelector(".splash-gif");
+        const svg = box && box.querySelector(".splash-svg");
+        if (gif && gif.offsetParent) {
+          const r = gif.getBoundingClientRect();
+          splashLogoRect = { x: r.x + r.width * GIF_LOGO_BOX.x, y: r.y + r.height * GIF_LOGO_BOX.y, w: r.width * GIF_LOGO_BOX.w, h: r.height * GIF_LOGO_BOX.h };
+        } else if (svg) {
+          const r = svg.getBoundingClientRect();
+          splashLogoRect = { x: r.x, y: r.y, w: r.width, h: r.height };
+        }
+        dispatch({ type: "SPLASH_DONE" });
+      }, toExit),
+    ];
+    return () => ids.forEach(clearTimeout);
   }, [dispatch]);
   return (
-    <div className="splash" role="status" aria-label="Chargement de 95 Alerte">
-      <div className="splash-center"><Logo95 width={168} /></div>
-      <div className="splash-foot"><Spinner /><span>Chargement des alertes du Val-d'Oise…</span></div>
+    <div className={cx("splash", `is-${phase}`)} role="status" aria-label="Chargement de 95 Alerte">
+      <div className="splash-halo" aria-hidden="true" />
+      <div className="splash-center">
+        <div className="splash-logo" ref={logoRef}>
+          {phase !== "bg" ? (
+            <Fragment>
+              {window.SPLASH_GIF ? <img className="splash-gif" src={window.SPLASH_GIF} alt="" width="260" height="260" /> : null}
+              <Logo95 width={209} className="splash-svg" />
+            </Fragment>
+          ) : null}
+        </div>
+      </div>
+      <div className="splash-foot" aria-hidden={phase !== "load"}><Spinner /><span>Chargement des alertes du Val-d'Oise…</span></div>
     </div>
   );
+}
+
+/* Arrivée sur l'accueil après le démarrage : le logo part de sa position sur le démarrage et se pose
+   à sa place (FLIP), le halo s'efface, le titre et les actions apparaissent ensuite. */
+function useSplashHandoff(logoRef, screenRef) {
+  useLayoutEffect(() => {
+    const from = splashLogoRect;
+    splashLogoRect = null;
+    const el = logoRef.current;
+    if (!from || !el || motionReduced() || !el.animate) return;
+    const to = el.getBoundingClientRect();
+    const dx = from.x + from.w / 2 - (to.x + to.width / 2);
+    const dy = from.y + from.h / 2 - (to.y + to.height / 2);
+    const k = from.w / to.width;
+    const ease = "cubic-bezier(.2,.8,.2,1)";
+    el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${k})` }, { transform: "none" }], { duration: 800, easing: ease });
+    const screen = screenRef.current;
+    screen.querySelectorAll(".welcome-title, .welcome-center .auth-lead, .welcome-panel, .auth-skip").forEach((n, i) =>
+      n.animate([{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }], { duration: 450, delay: 420 + i * 70, easing: ease, fill: "backwards" }));
+    const halo = screen.querySelector(".welcome .splash-halo");
+    if (halo) halo.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, easing: "ease-out", fill: "forwards" });
+  }, []);
 }
 
 function AuthHeader({ title, onBack, step }) {
@@ -1332,12 +1390,17 @@ function Benefits({ items }) {
 function LoginScreen() {
   const { dispatch } = useStore();
   const online = useOnline();
+  const logoRef = useRef(null);
+  const screenRef = useRef(null);
+  const [intro] = useState(() => splashLogoRect !== null);
+  useSplashHandoff(logoRef, screenRef);
   const go = (step) => dispatch({ type: "AUTH_GO", step });
   return (
-    <div className="screen auth welcome">
+    <div className="screen auth welcome" ref={screenRef}>
+      {intro ? <div className="splash-halo" aria-hidden="true" /> : null}
       <button type="button" className="pill auth-skip" onClick={() => dispatch({ type: "GUEST" })}>Explorer sans compte<Icon name="caret-right" className="ph-sm" /></button>
       <div className="welcome-center">
-        <Logo95 width={120} />
+        <span className="welcome-logo" ref={logoRef}><Logo95 width={120} /></span>
         <h1 className="welcome-title">Votre territoire,<br />votre vigilance.</h1>
         <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
       </div>

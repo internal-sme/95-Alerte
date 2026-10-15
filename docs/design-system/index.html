@@ -13,6 +13,7 @@
   --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F4F4F5; --border:#E4E4E7;
   /* Marque (option B validée) : jaune du logo en accent, jamais pour du texte sur blanc */
   --brand-yellow:#F0C009; --brand-yellow-ink:#7A5E00; --on-brand-yellow:#1E1E1C; --brand-yellow-soft:color-mix(in srgb,#F0C009 16%,transparent);
+  --splash-gif:block; --splash-svg:none;
   --text:#0F172A; --text-muted:#475569; --primary:#1E40AF; --on-primary:#FFFFFF; --focus-ring:#2563EB;
   /* Familles d'alertes */
   --alert-incident:#B91C1C; --alert-vigilance:#C2410C; --alert-positive:#15803D; --alert-info:#0369A1;
@@ -52,7 +53,7 @@
   --map-land:#0F1829; --map-urban:#152036; --map-forest:#12291F; --map-water:#1C3A55; --map-water-text:#7CC4EE; --map-road:#2A3753; --map-road-case:#0B1220;
   --bg:#0B1220; --surface:#111A2E; --surface-2:#1A2540; --border:#273452;
   --text:#F1F5F9; --text-muted:#A3B1C6; --primary:#7AA2FF; --on-primary:#0B1220; --focus-ring:#93B4FF;
-  --brand-yellow:#F0C009; --brand-yellow-ink:#F0C009; --on-brand-yellow:#1E1E1C; --brand-yellow-soft:color-mix(in srgb,#F0C009 18%,transparent);
+  --brand-yellow:#F0C009; --brand-yellow-ink:#F0C009; --on-brand-yellow:#1E1E1C; --brand-yellow-soft:color-mix(in srgb,#F0C009 18%,transparent); --splash-gif:none; --splash-svg:block;
   --alert-incident:#F87171; --alert-vigilance:#FB923C; --alert-positive:#4ADE80; --alert-info:#38BDF8;
   --alert-incident-soft:color-mix(in srgb,#F87171 18%,transparent);
   --alert-vigilance-soft:color-mix(in srgb,#FB923C 18%,transparent);
@@ -68,7 +69,7 @@
   --map-land:#0F1829; --map-urban:#152036; --map-forest:#12291F; --map-water:#1C3A55; --map-water-text:#7CC4EE; --map-road:#2A3753; --map-road-case:#0B1220;
   --bg:#0B1220; --surface:#111A2E; --surface-2:#1A2540; --border:#273452;
   --text:#F1F5F9; --text-muted:#A3B1C6; --primary:#7AA2FF; --on-primary:#0B1220; --focus-ring:#93B4FF;
-  --brand-yellow:#F0C009; --brand-yellow-ink:#F0C009; --on-brand-yellow:#1E1E1C; --brand-yellow-soft:color-mix(in srgb,#F0C009 18%,transparent);
+  --brand-yellow:#F0C009; --brand-yellow-ink:#F0C009; --on-brand-yellow:#1E1E1C; --brand-yellow-soft:color-mix(in srgb,#F0C009 18%,transparent); --splash-gif:none; --splash-svg:block;
   --alert-incident:#F87171; --alert-vigilance:#FB923C; --alert-positive:#4ADE80; --alert-info:#38BDF8;
   --alert-incident-soft:color-mix(in srgb,#F87171 18%,transparent);
   --alert-vigilance-soft:color-mix(in srgb,#FB923C 18%,transparent);
@@ -343,19 +344,32 @@ textarea.input{min-height:96px;resize:vertical}
 .logo95-yellow{fill:#F0C009}
 .logo95-red{fill:#E6282F}
 .logo95-word{fill:currentColor}
-/* Démarrage (Mobbin : monday.com × Pangea) : fond blanc, logo seul, halo jaune très léger qui dérive lentement */
+/* Démarrage (Mobbin : monday.com × Pangea) : fond blanc et halo jaune léger qui dérive, puis l'animation
+   officielle du logo (GIF, fondu en multiply), puis le chargement. En sombre ou animations réduites :
+   logo SVG à la place du GIF (fond blanc et texte noir du GIF illisibles sur fond sombre). */
 .splash{position:absolute;inset:0;display:grid;grid-template-rows:1fr auto;padding:var(--s-8) var(--s-6);background:var(--bg);color:var(--text);overflow:hidden}
-.splash::before{content:"";position:absolute;inset:-25%;background:radial-gradient(38% 30% at 32% 36%,color-mix(in srgb,var(--brand-yellow) 30%,transparent),transparent 70%),radial-gradient(42% 34% at 70% 64%,color-mix(in srgb,var(--brand-yellow) 20%,transparent),transparent 72%);animation:splash-drift 5s ease-in-out infinite alternate;pointer-events:none}
-.splash > *{position:relative}
+.splash > :not(.splash-halo){position:relative}
+.splash-halo{position:absolute;inset:-25%;background:radial-gradient(38% 30% at 32% 36%,color-mix(in srgb,var(--brand-yellow) 30%,transparent),transparent 70%),radial-gradient(42% 34% at 70% 64%,color-mix(in srgb,var(--brand-yellow) 20%,transparent),transparent 72%);animation:halo-in .7s ease-out both,splash-drift 5s ease-in-out .7s infinite alternate;pointer-events:none}
+@keyframes halo-in{from{opacity:0}}
 @keyframes splash-drift{from{transform:translate(-4%,-3%) scale(1)}to{transform:translate(4%,3%) scale(1.08)}}
 .splash-center{display:grid;place-items:center}
-.splash .logo95{animation:logo-in .6s cubic-bezier(.2,.8,.2,1) both}
-.splash .logo95-siren{transform-box:fill-box;transform-origin:50% 100%;animation:siren 1.2s ease-in-out .5s 2}
+.splash-logo{display:grid;place-items:center;width:260px;height:260px;max-width:100%}
+.splash-gif{display:var(--splash-gif);width:260px;height:260px;max-width:100%;mix-blend-mode:multiply}
+.splash-svg{display:var(--splash-svg);animation:logo-in .6s cubic-bezier(.2,.8,.2,1) both}
+.splash-svg .logo95-siren{transform-box:fill-box;transform-origin:50% 100%;animation:siren 1.2s ease-in-out .5s 2}
 @keyframes logo-in{from{opacity:0;transform:scale(.92)}}
 @keyframes siren{0%,100%{transform:none;filter:none}50%{transform:scale(1.18);filter:drop-shadow(0 0 6px rgba(230,40,47,.55))}}
-@media (prefers-reduced-motion:reduce){.splash .logo95,.splash .logo95-siren,.splash::before{animation:none}}
-.splash-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s-3);color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font)}
+.splash-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s-3);min-height:52px;color:var(--text-muted);font:500 var(--fs-caption)/1 var(--font);opacity:0}
 .splash-foot .spinner{color:var(--primary)}
+.splash.is-load .splash-foot{opacity:1;animation:foot-in .4s ease-out both}
+@keyframes foot-in{from{opacity:0;transform:translateY(6px)}}
+.welcome .splash-halo{z-index:0}
+.welcome > :not(.splash-halo){position:relative;z-index:1}
+.welcome > .auth-skip{position:absolute;z-index:3}
+.welcome-logo{display:block}
+:root[data-motion="reduce"]{--splash-gif:none;--splash-svg:block}
+@media (prefers-reduced-motion:reduce){:root{--splash-gif:none;--splash-svg:block}}
+@media (prefers-reduced-motion:reduce){.splash-halo,.splash-svg,.splash-svg .logo95-siren,.splash.is-load .splash-foot{animation:none}}
 .auth-body{gap:var(--s-6)}
 .screen.auth > .screen-pad{flex:1 0 auto}
 .screen.auth .screen-footer{position:sticky;bottom:0;z-index:2}
