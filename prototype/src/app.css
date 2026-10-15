@@ -3,7 +3,7 @@
    tools/build_prototype.py). Ici : scène, cadre téléphone, structure des écrans, hôtes de
    sheets / modales / toasts, panneau de démo. */
 
-:root{ --stage:#DCE3EC; --device:#0B0F19; --scrim:rgba(15,23,42,.45); --tabbar-h:76px; --statusbar-h:44px }
+:root{ --stage:#E4E4E7; --device:#0B0F19; --scrim:rgba(15,23,42,.45); --tabbar-h:76px; --statusbar-h:44px }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){ --stage:#05080F; --device:#000; --scrim:rgba(0,0,0,.6) }}
 :root[data-theme="dark"]{ --stage:#05080F; --device:#000; --scrim:rgba(0,0,0,.6) }
 
@@ -37,7 +37,7 @@ button{font-family:inherit}
 @keyframes slide-in{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}
 @keyframes rise-in{from{transform:translateY(32px);opacity:.4}to{transform:none;opacity:1}}
 
-.screen-header{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);border-bottom:1px solid var(--border)}
+.screen-header{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg)}
 .screen-header h1{margin:0;text-align:center;font:600 var(--fs-h2)/var(--lh-h2) var(--font);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .screen-header .icon-btn{box-shadow:none;background:transparent}
 
@@ -70,7 +70,8 @@ button{font-family:inherit}
 
 /* ---- Toasts ---- */
 .toast-host{position:absolute;left:var(--s-3);right:var(--s-3);bottom:calc(var(--tabbar-h) + var(--s-3));z-index:50;display:grid;gap:var(--s-2);pointer-events:none}
-.toast-host.no-tabbar{bottom:var(--s-4)}
+/* Sans barre d'onglets, l'écran a souvent un pied d'actions : le toast passe sous l'en-tête pour ne pas le masquer. */
+.toast-host.no-tabbar{bottom:auto;top:calc(56px + var(--s-2))}
 .toast-host .toast{pointer-events:auto;animation:rise-in .2s ease-out}
 .global-banner{position:relative;z-index:35;margin:0;border-radius:0}
 
@@ -95,3 +96,4 @@ button{font-family:inherit}
 .lib-row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center}
 .lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
 .placeholder-phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.2 var(--font)}
+

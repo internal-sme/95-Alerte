@@ -30,10 +30,11 @@ SCREEN = r"""
 /* ============ ÉCRANS DU PROTOTYPE ============ */
 .a95{position:relative;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font:400 var(--fs-body)/var(--lh-body) var(--font);-webkit-font-smoothing:antialiased;box-sizing:border-box}
 .a95 *{box-sizing:border-box}
-.a95 a{text-decoration:none;color:inherit}
+/* :where() garde une spécificité nulle : un <a class="btn btn-primary"> conserve les couleurs du bouton */
+:where(.a95) a{text-decoration:none;color:inherit}
 .screen95{position:relative;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
 .scroll95{flex:1;min-height:0;overflow-y:auto}
-.screen-header{display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);border-bottom:1px solid var(--border);flex:none}
+.screen-header{display:grid;grid-template-columns:var(--tap) 1fr var(--tap);align-items:center;min-height:56px;padding:0 var(--s-1);background:var(--bg);flex:none}
 .screen-header h1{margin:0;text-align:center;font:600 var(--fs-h2)/var(--lh-h2) var(--font)}
 .screen-header .icon-btn{box-shadow:none;background:transparent}
 .placeholder-phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.2 var(--font);justify-self:start}
@@ -56,6 +57,13 @@ SCREEN = r"""
 .lib-row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center}
 .lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
 .alert-card{font:inherit;text-align:left;width:100%}
+/* Démarrage et connexion : contenu défilant + pied d'actions fixe */
+.screen95.auth .scroll95{display:flex;flex-direction:column}
+.screen95.auth .scroll95 > .screen-pad{flex:1 0 auto}
+.screen95 > .screen-footer{flex:none}
+.screen95.welcome{background:var(--bg)}
+a.pill{text-decoration:none}
+.tap-through{display:flex;flex-direction:column;flex:1;color:inherit}
 /* Icônes Phosphor en masques : <span class="ph i i-fire" aria-hidden="true"></span> */
 .i{display:inline-block;background-color:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
 """

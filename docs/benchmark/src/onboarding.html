@@ -1,0 +1,461 @@
+<title>Onboarding 95 Alerte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/*BASE_CSS*/
+
+/* ============ Ajouts du rapport onboarding ============ */
+/* Parcours proposé : écrans esquissés en CSS, reliés par des flèches de lecture */
+.flow{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x mandatory}
+.step{flex:0 0 190px;display:grid;gap:10px;align-content:start;scroll-snap-align:start}
+.step .phone{width:100%}
+.step figcaption{font-size:.84rem;color:var(--muted);line-height:1.4}
+.step figcaption b{display:block;color:var(--ink);font-size:.92rem}
+.step .num{font:500 .74rem var(--f-mono);color:var(--accent)}
+.ob{position:absolute;inset:0;background:var(--surface);padding:26px 12px 12px;display:grid;grid-template-rows:auto 1fr auto;gap:8px}
+.ob .top{display:flex;justify-content:space-between;align-items:center;min-height:12px}
+.ob .skip{font:600 .58rem var(--f-body);color:var(--accent)}
+.ob .mid{display:grid;align-content:center;justify-items:center;gap:7px;text-align:center}
+.ob .foot{display:grid;gap:5px}
+.ob .t{font:700 .78rem/1.15 var(--f-display);color:var(--ink);max-width:18ch}
+.ob .l{font:400 .56rem/1.35 var(--f-body);color:var(--muted);max-width:24ch}
+.ob .btn{height:20px;border-radius:7px;background:var(--accent);color:var(--bg);font:600 .55rem/20px var(--f-body);text-align:center}
+.ob .btn.sec{background:transparent;border:1px solid var(--accent);color:var(--accent);line-height:18px}
+.ob .btn.gh{background:transparent;color:var(--accent)}
+.dots{display:flex;gap:4px;justify-content:center}
+.dots i{width:5px;height:5px;border-radius:3px;background:var(--line);display:block}
+.dots i.on{width:14px;background:var(--accent)}
+.ill{width:92px;height:76px;border-radius:18px;background:var(--accent-soft);position:relative}
+.ill.p{background:var(--positive-soft)} .ill.i{background:var(--incident-soft)} .ill.n{background:var(--info-soft)}
+.ill .pin{position:absolute}
+.ben{display:grid;gap:5px;text-align:left;width:100%}
+.ben div{display:grid;grid-template-columns:14px 1fr;gap:6px;align-items:center;font:500 .54rem/1.3 var(--f-body);color:var(--ink)}
+.ben i{width:12px;height:12px;border-radius:4px;background:var(--accent-soft);display:block}
+.priv{font:400 .5rem/1.3 var(--f-body);color:var(--muted);background:var(--surface-2);border-radius:6px;padding:5px 6px;text-align:left}
+.srch{height:18px;border-radius:9px;background:var(--surface-2);border:1px solid var(--line)}
+.li{display:grid;grid-template-columns:12px 1fr;gap:6px;align-items:center;padding:4px 0;border-bottom:1px solid var(--line);font:500 .55rem var(--f-body);color:var(--ink);text-align:left}
+.li i{width:10px;height:10px;border-radius:50%;background:var(--accent);display:block}
+.li.here i{background:transparent;border:2px solid var(--accent)}
+.banner{background:var(--vigil-soft);color:var(--ink);border-radius:7px;padding:5px 6px;font:500 .5rem/1.3 var(--f-body)}
+.decision{background:var(--accent-soft);border-radius:10px;padding:14px 16px;font-size:.93rem;display:grid;gap:4px}
+.decision b{font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+.spec{display:grid;gap:14px}
+.spec article{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:12px}
+.spec .head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline}
+.spec .head .num{font:500 .8rem var(--f-mono);color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:6px}
+.spec .head h3{font-size:1.12rem}
+.spec .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.spec .grid{grid-template-columns:minmax(0,1fr)}}
+.spec ul{margin:6px 0 0;padding-left:18px;display:grid;gap:5px;font-size:.92rem}
+.copy{font-family:var(--f-mono);font-size:.82rem;background:var(--surface-2);border-radius:8px;padding:10px 12px;display:grid;gap:4px;color:var(--ink)}
+.tasks{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.tasks li{display:grid;grid-template-columns:3.2rem minmax(0,1fr);gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:.93rem}
+.tasks li .id{font:500 .8rem/1.6 var(--f-mono);color:var(--accent)}
+.tasks li span{color:var(--muted)}
+.tasks li b{color:var(--ink)}
+</style>
+
+<div class="shell">
+  <nav class="toc" aria-label="Sommaire">
+    <h4>Sommaire</h4>
+    <ol>
+      <li><a href="#synthese">Synthèse</a></li>
+      <li><a href="#flows">Flows analysés</a></li>
+      <li><a href="#matrice">Matrice des patterns</a></li>
+      <li><a href="#da">Direction artistique</a></li>
+      <li><a href="#existant">Notre point de départ</a></li>
+      <li><a href="#parcours">Parcours proposé</a></li>
+      <li><a href="#ecrans">Spécification écran par écran</a></li>
+      <li><a href="#composants">Composants et états</a></li>
+      <li><a href="#taches">Plan de réalisation</a></li>
+      <li><a href="#methode">Méthode et limites</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow"><span class="dot95" aria-hidden="true">95</span> 95 Alerte · Benchmark onboarding · Octobre 2026</div>
+      <h1>Bien accueillir, dès le premier lancement</h1>
+      <p class="lede">Analyse, sur Mobbin, des meilleurs flows d'onboarding mobile : présentation de l'app, choix d'un territoire, demande de localisation, refus et reprise. Pour chaque flow : ses points forts en patterns de design, en expérience utilisateur et en direction artistique, ce qu'on reprend et ce qu'on évite. Le rapport se termine par un plan détaillé de refonte de notre onboarding (phase 2 de <span class="mono">docs/task.md</span>, écrans UI-002 à UI-007).</p>
+      <div class="facts">
+        <span><b>24</b> applications citées</span>
+        <span><b>33</b> écrans mobiles montrés</span>
+        <span><b>8</b> recherches Mobbin (iOS)</span>
+        <span><b>7</b> écrans dans le parcours proposé</span>
+      </div>
+    </header>
+
+    <!-- SYNTHÈSE -->
+    <section id="synthese" aria-labelledby="t-synth">
+      <h2 id="t-synth">Synthèse : 8 enseignements</h2>
+      <div class="keys">
+        <article class="key">
+          <h3>Une idée par écran, et on peut toujours passer</h3>
+          <p>Klima, Shell, Qantas et Lyft montrent une illustration, un titre court et deux lignes au plus. « Passer » ou « Skip Introduction » reste visible sur chaque écran : l'utilisateur pressé n'est jamais bloqué.</p>
+          <span class="src">Klima · Shell · Qantas · Lyft</span>
+        </article>
+        <article class="key">
+          <h3>Le dernier écran donne envie d'agir</h3>
+          <p>Klima termine sur un écran plein cadre, un seul message (« The time to act is now ») et un seul bouton. Le carrousel s'achève sur une décision, pas sur un « Suivant » de plus.</p>
+          <span class="src">Klima · Raycast</span>
+        </article>
+        <article class="key">
+          <h3>On explique avant de demander la position</h3>
+          <p>Tinder et Greenlight affichent un écran d'amorce avant la boîte de dialogue du système. Il donne le bénéfice concret, puis rassure : « Your exact location is never shared ». La demande système arrive quand la personne a déjà compris pourquoi.</p>
+          <span class="src">Tinder · Greenlight · ZARA</span>
+        </article>
+        <article class="key">
+          <h3>Position automatique ou choix manuel, à égalité</h3>
+          <p>DICE propose côte à côte « Use current location » et « Choose location ». Nextdoor permet de saisir une adresse ou de poser une épingle (« Use this location »). Refuser la géolocalisation ne coupe pas l'accès au contenu local.</p>
+          <span class="src">DICE · Nextdoor · Klarna</span>
+        </article>
+        <article class="key">
+          <h3>La confidentialité est dite au bon endroit</h3>
+          <p>Sous le champ d'adresse, Nextdoor écrit : « Your address remains private. It is used to serve you local content ». Tinder déplie « How is my location used? » à la demande. La réassurance est courte, placée là où naît l'inquiétude.</p>
+          <span class="src">Nextdoor · Tinder · Lloyds</span>
+        </article>
+        <article class="key">
+          <h3>Un refus a toujours une suite</h3>
+          <p>PayPal garde « See stores list » sous « Turn on Location Services ». Zesty propose « Skip for now ». Viator détaille les deux réglages à toucher. À l'inverse, Tinder affiche un écran « Unable to connect » qui bloque tout : c'est le contre-exemple.</p>
+          <span class="src">PayPal · Zesty · Viator · Tinder</span>
+        </article>
+        <article class="key">
+          <h3>Une permission à la fois</h3>
+          <p>DICE enchaîne localisation, puis notifications, dès l'onboarding : la seconde demande arrive sans contexte. Greenlight, lui, regroupe ses permissions derrière un objectif clair et une étape « 2/3 ». Pour nous : la localisation seulement, les notifications plus tard.</p>
+          <span class="src">DICE · Greenlight · Turo</span>
+        </article>
+        <article class="key">
+          <h3>Montrer tout de suite ce qu'on y gagne</h3>
+          <p>Nextdoor finit l'onboarding sur des recommandations locales, puis une carte « Get started » avec une progression (« 1 of 7 steps completed »). Greenlight récapitule ce qui vient d'être activé. L'écran d'accueil reprend le fil sans repartir de zéro.</p>
+          <span class="src">Nextdoor · Greenlight</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- FLOWS -->
+    <section id="flows" aria-labelledby="t-flows">
+      <h2 id="t-flows">Flows analysés</h2>
+      <p class="lede">Chaque fiche décrit des écrans réellement examinés. Les captures renvoient vers Mobbin (compte requis). Faites défiler les vignettes horizontalement sur mobile.</p>
+      <div class="apps">
+
+        <article class="app">
+          <div class="app-head"><h3>Klima</h3><div class="tags"><span class="tag n">Présentation</span><span class="tag p">Engagement citoyen</span></div></div>
+          <p class="app-sum">Application d'action climat. Son introduction en 6 écrans est la plus proche de notre ton : une cause collective, un appel à agir, aucun jargon.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>Bouton « Skip Introduction » centré en bas de chaque écran, retour et fermeture en haut</li><li>Points de pagination au-dessus de l'action</li><li>Dernier écran en photo plein cadre et un seul CTA « Sign up »</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>Un message par écran, lisible en 3 secondes</li><li>Le premier écran annonce la durée (« Take a moment ») : on sait que ce sera court</li><li>On montre l'app elle-même (maquette du téléphone) pour rendre le service concret</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>Dessin au trait sur fond blanc, une seule couleur d'accent (vert)</li><li>Passage progressif du blanc au plein cadre : la tension monte vers l'action</li><li>Mot-clé coloré dans le titre (« now »)</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>« Passer » sur chaque écran, un mot-clé coloré dans le titre, un dernier écran qui appelle à l'action (« Commencer »).</div><div class="avoid"><b>On évite</b>La photo plein cadre : trop lourde pour un fichier unique et moins accessible qu'une illustration en aplats.</div></div>
+          <div class="strip">
+            {{shot:klima-intro|Klima · « Take a moment », Skip Introduction}}
+            {{shot:klima-impact|Klima · maquette de l'app, points de pagination}}
+            {{shot:klima-final|Klima · dernier écran, un seul CTA}}
+          </div>
+        </article>
+
+        <article class="app">
+          <div class="app-head"><h3>Carrousels illustrés</h3><div class="tags"><span class="tag n">Présentation</span></div></div>
+          <p class="app-sum">Shell, Qantas, Lyft, Cash App, Monzo et Oura : six façons de mettre en scène une idée par écran. Elles montrent la même structure, avec des variantes utiles sur la pagination et la navigation.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>Structure fixe : illustration · titre · texte · pagination · action</li><li>Shell : « Skip » et « Next » côte à côte, de même largeur</li><li>Oura : compteur « 2/3 » en plus des tirets</li><li>Monzo : étiquette de rubrique au-dessus du titre (« Budget with Pots »)</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>Le bouton principal reste au même endroit d'un écran à l'autre</li><li>Lyft glisse un message de sécurité dans le carrousel, sans dramatiser</li><li>Qantas réduit la navigation à deux liens texte : plus léger, mais moins accessible au pouce</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>Illustrations en aplats, 2 à 3 couleurs, beaucoup d'air</li><li>Formes simples (cercle, carte arrondie) derrière le sujet</li><li>Titre centré court, texte gris en dessous</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>La structure fixe, la pagination en tirets (point actif allongé) et le bouton principal immobile en pied d'écran.</div><div class="avoid"><b>On évite</b>Les liens texte seuls pour naviguer (Qantas) : cible tactile trop petite, contraire à nos 48 px minimum.</div></div>
+          <div class="strip">
+            {{shot:shell-pump|Shell · Skip et Next côte à côte}}
+            {{shot:qantas-skip|Qantas · navigation en liens texte}}
+            {{shot:lyft-safe|Lyft · message de sécurité, aplats}}
+            {{shot:monzo-tag|Monzo · étiquette de rubrique}}
+            {{shot:oura-counter|Oura · compteur 2/3, mode sombre}}
+          </div>
+        </article>
+
+        <article class="app">
+          <div class="app-head"><h3>Tinder</h3><div class="tags"><span class="tag v">Localisation</span></div></div>
+          <p class="app-sum">L'amorce de localisation la plus nette du panel, et dans le même produit, le pire cas de refus. Les deux sont instructifs.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>Question en titre : « So, are you from around here? »</li><li>Pictogramme de position dans un grand cercle neutre</li><li>Bouton « Allow » et un dépliant « How is my location used? »</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>Le bénéfice d'abord, la demande ensuite</li><li>La réassurance est accessible sans quitter l'écran (« Your exact location is never shared »)</li><li>Mais en cas de refus, l'écran « Unable to connect » bloque l'app entière</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>Blanc, noir, un seul pictogramme : aucune distraction</li><li>Titre très gros, texte court</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>Le titre en question, le dépliant « Comment ma position est-elle utilisée ? » et la phrase de réassurance.</div><div class="avoid"><b>On évite</b>Bloquer l'app sans localisation : 95 Alerte doit rester utilisable avec une commune choisie à la main (PRD : localisation facultative).</div></div>
+          <div class="strip">
+            {{shot:tinder-primer|Tinder · amorce de localisation}}
+            {{shot:tinder-reassure|Tinder · « Don't worry », dépliant}}
+            {{shot:tinder-blocked|Tinder · refus bloquant (contre-exemple)}}
+          </div>
+        </article>
+
+        <article class="app">
+          <div class="app-head"><h3>Greenlight</h3><div class="tags"><span class="tag v">Permissions</span><span class="tag i">Sécurité</span></div></div>
+          <p class="app-sum">Application de sécurité familiale. Elle traite les permissions comme une fonctionnalité à activer, avec un objectif clair, une progression et un récapitulatif.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>Écran d'amorce illustré « Set up your safety features » et un seul CTA « Activate »</li><li>Indicateur « Step 2/3 » au-dessus de la demande système</li><li>Écran « Success! » qui liste ce qui est activé</li><li>Sur l'accueil : « Get started with these simple steps », 17 % complete</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>La permission est présentée comme un bénéfice de sécurité, pas comme une contrainte</li><li>Le récapitulatif prévient des limites (« will only work if… »)</li><li>La progression d'accueil reprend les étapes sautées</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>Illustration à main dessinée sur un aplat bleu-violet</li><li>Bouton plein, couleur de marque unique (sarcelle)</li><li>Mentions légales en petit, sous le CTA, avec une icône de cadenas</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>L'amorce illustrée à un seul CTA, la mention de confidentialité avec cadenas, l'idée d'un récapitulatif sur l'accueil.</div><div class="avoid"><b>On évite</b>Plusieurs permissions dans la même séquence : nous n'en demandons qu'une à l'onboarding.</div></div>
+          <div class="strip">
+            {{shot:greenlight-primer|Greenlight · amorce « safety features »}}
+            {{shot:greenlight-system|Greenlight · demande système, étape 2/3}}
+            {{shot:greenlight-success|Greenlight · récapitulatif « Success! »}}
+            {{shot:greenlight-steps|Greenlight · accueil, étapes restantes}}
+          </div>
+        </article>
+
+        <article class="app">
+          <div class="app-head"><h3>Nextdoor</h3><div class="tags"><span class="tag p">Voisinage</span><span class="tag n">Territoire</span></div></div>
+          <p class="app-sum">La référence pour l'ancrage local. Le flow (19 écrans) passe par le nom, l'adresse, la vérification, puis des recommandations du quartier avant l'accueil.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>Barre de progression continue en haut, retour à gauche</li><li>Titre conversationnel : « Hi, neighbor! What's your name? »</li><li>Adresse : champ + mention de confidentialité avec bouclier ; ou carte avec épingle et « Use this location »</li><li>Bouton « Continue » toujours en bas, pleine largeur</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>Le territoire donne immédiatement du contenu (groupes, médias locaux)</li><li>« Verifying your information… » : l'attente est nommée</li><li>L'accueil propose de finir la configuration plus tard</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>Fond blanc, champs arrondis, vert de marque réservé aux actions</li><li>Carte claire désaturée, épingle sombre</li><li>Typographie grasse et compacte pour les titres</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>Le ton « voisin », la mention de confidentialité sous le champ, la confirmation sur carte (« Utiliser cette commune »), le premier contenu local avant l'accueil.</div><div class="avoid"><b>On évite</b>Demander une adresse précise : chez nous, la commune suffit et la position reste approximative par défaut.</div></div>
+          <div class="strip">
+            {{shot:nextdoor-name|Nextdoor · « Hi, neighbor! », progression}}
+            {{shot:nextdoor-address|Nextdoor · adresse et mention privée}}
+            {{shot:nextdoor-pin|Nextdoor · épingle « Use this location »}}
+            {{shot:nextdoor-reco|Nextdoor · recommandations locales}}
+            {{shot:nextdoor-checklist|Nextdoor · accueil, « 1 of 7 steps »}}
+          </div>
+        </article>
+
+        <article class="app">
+          <div class="app-head"><h3>DICE et Klarna</h3><div class="tags"><span class="tag n">Territoire</span></div></div>
+          <p class="app-sum">Deux façons de choisir une zone : DICE met la géolocalisation et le choix manuel au même niveau, Klarna ouvre une recherche en bottom sheet.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>DICE : « Use current location » (plein) et « Choose location » (texte) sous un grand titre</li><li>DICE : recherche plein écran, résultats groupés par pays</li><li>Klarna : sheet avec titre, explication, champ de recherche et liste à boutons radio</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>Le choix manuel n'est pas caché derrière un refus</li><li>Recherche tolérante : quelques lettres suffisent</li><li>Contre-exemple : DICE demande ensuite les notifications, sans contexte</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>DICE : dégradé sombre, titre condensé en capitales, très affirmé</li><li>Klarna : sobriété, liste aérée</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>Les deux options côte à côte, la recherche de commune avec liste, la sheet pour changer de commune depuis l'accueil.</div><div class="avoid"><b>On évite</b>La demande de notifications pendant l'onboarding (décision déjà prise : au premier suivi d'alerte).</div></div>
+          <div class="strip">
+            {{shot:dice-location|DICE · position ou choix manuel}}
+            {{shot:dice-search|DICE · recherche de ville}}
+            {{shot:klarna-sheet|Klarna · sheet de sélection}}
+            {{shot:dice-notif|DICE · notifications sans contexte (contre-exemple)}}
+          </div>
+        </article>
+
+        <article class="app">
+          <div class="app-head"><h3>Permission refusée</h3><div class="tags"><span class="tag v">États</span></div></div>
+          <p class="app-sum">PayPal, Zesty, Viator, Lex et ZARA : comment rester utile quand la localisation est refusée ou coupée.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>PayPal : bouton principal « Turn on » et lien « See stores list » (alternative sans position)</li><li>Viator : sheet avec les deux réglages à toucher, illustrés comme dans iOS, et « No, thanks »</li><li>Lex : bannière sur la carte « We can't find you on the map » et « Go to Settings »</li><li>ZARA : « You can change this later in the Settings »</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>L'utilisateur garde la main : réactiver, contourner ou ignorer</li><li>Les instructions sont concrètes et courtes</li><li>La bannière n'empêche pas d'utiliser la carte</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>Pictogramme de position simple, sans dramatisation</li><li>Couleur d'avertissement douce (jaune Lex), jamais de rouge</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>L'alternative toujours visible (« Choisir ma commune »), les étapes de réglage en sheet, la bannière non bloquante sur la carte.</div><div class="avoid"><b>On évite</b>Le rouge et les écrans bloquants : un refus n'est pas une erreur (règle « rouge rare »).</div></div>
+          <div class="strip">
+            {{shot:paypal-denied|PayPal · alternative « See stores list »}}
+            {{shot:zesty-denied|Zesty · « Skip for now »}}
+            {{shot:viator-settings|Viator · étapes de réglage}}
+            {{shot:lex-banner|Lex · bannière sur la carte}}
+            {{shot:zara-later|ZARA · « modifiable plus tard »}}
+          </div>
+        </article>
+
+        <article class="app">
+          <div class="app-head"><h3>Formulaires et personnalisation</h3><div class="tags"><span class="tag n">Saisie</span></div></div>
+          <p class="app-sum">Cosmos et Letterboxd pour le rythme de saisie ; Strava et TikTok pour la personnalisation par centres d'intérêt, à garder pour plus tard.</p>
+          <div class="axes">
+            <div><h4>Patterns</h4><ul><li>Cosmos : un champ géant par écran, explication sous le titre (« It won't be displayed »)</li><li>Letterboxd : tout le formulaire et les mentions légales sur un écran</li><li>Strava : tuiles d'activités avec pictogramme ; TikTok : chips et « Skip »</li></ul></div>
+            <div><h4>Expérience</h4><ul><li>Un champ par écran réduit l'effort perçu</li><li>Dire ce qui ne sera pas public rassure</li><li>La personnalisation est toujours facultative</li></ul></div>
+            <div><h4>Direction artistique</h4><ul><li>Cosmos : très peu d'éléments, typographie au centre</li><li>Strava : tuiles grises, pictogrammes au trait</li></ul></div>
+          </div>
+          <div class="verdict"><div class="take"><b>On reprend</b>Déjà appliqué en phase 1 (une question par écran). Les tuiles de catégories serviront aux préférences d'alertes, hors onboarding.</div><div class="avoid"><b>On évite</b>Le formulaire dense de Letterboxd, et toute étape de personnalisation ajoutée à l'onboarding (non prévue au CDC).</div></div>
+          <div class="strip">
+            {{shot:cosmos-field|Cosmos · un champ par écran}}
+            {{shot:letterboxd-dense|Letterboxd · formulaire dense (contre-exemple)}}
+            {{shot:strava-tiles|Strava · tuiles d'intérêts}}
+            {{shot:tiktok-chips|TikTok · chips et « Skip »}}
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- MATRICE -->
+    <section id="matrice" aria-labelledby="t-mat">
+      <h2 id="t-mat">Matrice des patterns</h2>
+      <p class="lede">✓ : pattern présent dans les écrans examinés. — : absent ou non observé.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Application</th><th>« Passer » visible</th><th>Pagination</th><th>Illustration</th><th>Amorce avant système</th><th>Choix manuel du lieu</th><th>Usage expliqué</th><th>« Plus tard »</th><th>Suite après refus</th></tr></thead>
+          <tbody>
+            <tr><td>Klima</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c m">—</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td></tr>
+            <tr><td>Shell</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c m">—</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td></tr>
+            <tr><td>Tinder</td><td class="c m">—</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td><td class="c m">—</td></tr>
+            <tr><td>Greenlight</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td></tr>
+            <tr><td>Nextdoor</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+            <tr><td>DICE</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+            <tr><td>Klarna</td><td class="c m">—</td><td class="c m">—</td><td class="c m">—</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c m">—</td></tr>
+            <tr><td>ZARA</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td></tr>
+            <tr><td>PayPal</td><td class="c m">—</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td></tr>
+            <tr><td>Viator</td><td class="c m">—</td><td class="c m">—</td><td class="c m">—</td><td class="c y">✓</td><td class="c m">—</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+            <tr><td><b>95 Alerte (proposé)</b></td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td><td class="c y">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DA -->
+    <section id="da" aria-labelledby="t-da">
+      <h2 id="t-da">Direction artistique</h2>
+      <div class="da">
+        <div class="da-card"><h3>Ce qu'on observe</h3><p>Les onboardings les plus réussis du panel combinent une illustration en aplats (2 à 3 couleurs), un titre court très contrasté et beaucoup de vide. La couleur de marque est réservée au bouton principal et à la pagination.</p></div>
+        <div class="da-card"><h3>Illustrations 95 Alerte</h3><p>Quatre illustrations dessinées en SVG avec nos propres formes de marqueurs : cercle positif, losange incident, triangle vigilance, carré information, posées sur un fond de carte stylisé. Le vocabulaire visuel de l'onboarding est celui de la carte qu'on va découvrir.</p>
+          <div class="swatches" aria-label="Couleurs des illustrations"><span class="sw" style="background:#1E40AF">bleu</span><span class="sw" style="background:#15803D">vert</span><span class="sw" style="background:#C2410C">orange</span><span class="sw" style="background:#0369A1">info</span><span class="sw dark" style="background:#E3E9FA">fond</span></div></div>
+        <div class="da-card"><h3>Une touche chaleureuse, une seule</h3><p>L'écran « Une bonne nouvelle ? » reçoit l'illustration la plus riche (vert positif, confettis de formes). C'est la seule place où l'on s'autorise un geste plus festif, pour ancrer la place du positif (principe P7 du premier benchmark).</p></div>
+        <div class="da-card"><h3>Ce qu'on garde du Design System</h3><p>Aucun nouveau token. Titres en <span class="mono">--fs-display</span>, texte en <span class="mono">--text-muted</span>, boutons du DS uniquement (un seul primaire par écran), pagination en <span class="mono">--primary</span>. Le rouge n'apparaît que sur le losange incident de l'illustration 2.</p></div>
+      </div>
+    </section>
+
+    <!-- EXISTANT -->
+    <section id="existant" aria-labelledby="t-exist">
+      <h2 id="t-exist">Notre point de départ</h2>
+      <div class="keys">
+        <article class="key"><h3>Ce qui existe</h3><p>Phase 1 livrée : splash (1,3 s), écran de connexion avec carte illustrée, FranceConnect, inscription en écrans à une question, vérification d'identité, mode invité. Le splash enchaîne directement sur la connexion.</p></article>
+        <article class="key"><h3>Ce qui manque</h3><p>Aucune présentation du concept, aucun choix de territoire, aucune demande de localisation : la carte s'ouvre centrée sur une position fictive. Le scénario S1 du PRD (Splash → Onboarding → Localisation → Connexion → Accueil) n'est pas encore jouable.</p></article>
+        <article class="key"><h3>Ce que l'écran de connexion fait déjà</h3><p>Son texte (« Voyez ce qui se passe autour de vous… ») joue le rôle d'une mini-présentation. Une fois l'onboarding en place, il faut l'alléger pour ne pas répéter le message, et le personnaliser avec la commune choisie.</p></article>
+      </div>
+    </section>
+
+    <!-- PARCOURS -->
+    <section id="parcours" aria-labelledby="t-parcours">
+      <h2 id="t-parcours">Parcours proposé</h2>
+      <p class="lede">Sept écrans entre le splash et la carte, dont trois facultatifs selon les choix de l'utilisateur. Durée visée : moins de 45 secondes pour quelqu'un qui accepte tout, moins de 10 secondes pour quelqu'un qui passe tout.</p>
+      <div class="flow" role="list">
+        <figure class="step" role="listitem">
+          <div class="phone"><div class="ob"><div class="top"><span></span><span class="skip">Passer</span></div><div class="mid"><div class="ill n"><span class="pin c" style="left:34px;top:24px">95</span></div><div class="t">Que se passe-t-il autour de vous ?</div><div class="l">Incidents, travaux, initiatives : tout le Val-d'Oise sur une carte.</div></div><div class="foot"><div class="dots"><i class="on"></i><i></i><i></i><i></i></div><div class="btn">Suivant</div></div></div></div>
+          <figcaption><span class="num">A · 1/4</span><b>Présentation</b>Carrousel, une idée par écran, « Passer » toujours visible.</figcaption>
+        </figure>
+        <figure class="step" role="listitem">
+          <div class="phone"><div class="ob"><div class="top"><span></span><span class="skip">Passer</span></div><div class="mid"><div class="ill p"><span class="pin p" style="left:24px;top:30px"></span><span class="pin p" style="left:52px;top:18px"></span><span class="pin v" style="left:58px;top:44px"></span></div><div class="t">Une bonne nouvelle ? Partagez-la aussi.</div><div class="l">Fête de quartier, entraide, nouveau commerce.</div></div><div class="foot"><div class="dots"><i></i><i></i><i class="on"></i><i></i></div><div class="btn">Suivant</div></div></div></div>
+          <figcaption><span class="num">A · 3/4</span><b>L'écran chaleureux</b>Illustration la plus riche, vert positif.</figcaption>
+        </figure>
+        <figure class="step" role="listitem">
+          <div class="phone"><div class="ob"><div class="top"><span></span><span class="skip">Plus tard</span></div><div class="mid"><div class="ill"><span class="pin c" style="left:34px;top:24px"></span></div><div class="t">Voir les alertes près de chez vous ?</div><div class="ben"><div><i></i>Alertes à moins de 5 km</div><div><i></i>Distance sur chaque alerte</div><div><i></i>Lieu pré-rempli quand vous signalez</div></div><div class="priv">Position approximative. Jamais affichée publiquement.</div></div><div class="foot"><div class="btn">Autoriser la localisation</div><div class="btn sec">Choisir ma commune</div></div></div></div>
+          <figcaption><span class="num">B</span><b>Amorce de localisation</b>Bénéfices, réassurance, deux voies à égalité.</figcaption>
+        </figure>
+        <figure class="step" role="listitem">
+          <div class="phone"><div class="map"></div><span class="pin c" style="left:78px;top:120px"></span><div class="sheet"><div class="grab"></div><div class="t" style="font:700 .74rem var(--f-display)">Vous êtes à Pontoise</div><div class="l" style="font:400 .54rem var(--f-body);color:var(--muted)">12 alertes actives dans votre commune</div><div class="btn" style="height:20px;border-radius:7px;background:var(--accent);color:var(--bg);font:600 .55rem/20px var(--f-body);text-align:center">Continuer</div><div style="font:600 .52rem var(--f-body);color:var(--accent);text-align:center">Ce n'est pas ma commune</div></div></div>
+          <figcaption><span class="num">C</span><b>Commune détectée</b>Confirmation sur la carte (Nextdoor), avec un aperçu chiffré.</figcaption>
+        </figure>
+        <figure class="step" role="listitem">
+          <div class="phone"><div class="ob" style="grid-template-rows:auto auto 1fr"><div class="t" style="text-align:left">Votre commune</div><div class="srch"></div><div style="display:grid;align-content:start"><div class="li here"><i></i>Autour de moi</div><div class="li"><i></i>Cergy</div><div class="li"><i></i>Pontoise</div><div class="li"><i></i>Saint-Ouen-l'Aumône</div><div class="li"><i></i>Argenteuil</div></div></div></div>
+          <figcaption><span class="num">D</span><b>Choix de la commune</b>Recherche + liste ; hors zone : message dédié.</figcaption>
+        </figure>
+        <figure class="step" role="listitem">
+          <div class="phone"><div class="ob"><div class="top"><span></span><span></span></div><div class="mid"><div class="ill n"><span class="pin c" style="left:34px;top:24px"></span></div><div class="t">Localisation désactivée</div><div class="l">Choisissez votre commune : vous verrez les mêmes alertes, sans les distances.</div></div><div class="foot"><div class="btn">Choisir ma commune</div><div class="btn gh">Comment l'activer ?</div></div></div></div>
+          <figcaption><span class="num">E</span><b>Refus</b>Jamais bloquant, jamais rouge. L'alternative passe en primaire.</figcaption>
+        </figure>
+        <figure class="step" role="listitem">
+          <div class="phone"><div class="map"></div><span class="pin i" style="left:60px;top:90px"></span><span class="pin p" style="left:120px;top:140px"></span><span class="pin v" style="left:40px;top:170px"></span><div class="sheet"><div class="grab"></div><div class="banner">Pontoise · 12 alertes · Connectez-vous pour signaler</div><div class="bar s"></div><div class="bar xs"></div></div><div class="fab">+</div></div>
+          <figcaption><span class="num">F</span><b>Connexion puis carte</b>Connexion personnalisée avec la commune, puis la carte centrée dessus.</figcaption>
+        </figure>
+      </div>
+      <div class="decision"><b>Décision à valider</b><p>Le plan de <span class="mono">task.md</span> place le choix du territoire (2.3) avant la localisation (2.4). Le benchmark plaide pour l'inverse : proposer d'abord la position automatique, avec le choix manuel au même niveau (DICE), puis confirmer la commune sur la carte (Nextdoor). La liste des communes reste l'écran de secours et l'écran de changement de commune.</p></div>
+    </section>
+
+    <!-- SPEC -->
+    <section id="ecrans" aria-labelledby="t-spec">
+      <h2 id="t-spec">Spécification écran par écran</h2>
+      <div class="spec">
+        <article>
+          <div class="head"><span class="num">UI-002 → 005</span><h3>A · Présentation en 4 écrans</h3></div>
+          <div class="grid">
+            <div><h4>Mise en page</h4><ul><li>« Passer » en haut à droite (ghost), retour à partir de l'écran 2</li><li>Illustration 200 × 160 centrée, titre <span class="mono">--fs-display</span>, 2 lignes de texte au plus</li><li>Pagination en tirets au-dessus du bouton ; bouton primaire en pied d'écran, au même endroit sur les 4 écrans</li><li>Balayage horizontal + boutons ; flèches clavier</li></ul></div>
+            <div><h4>Comportement</h4><ul><li>« Suivant » sur 1 à 3, « Commencer » sur 4</li><li>« Passer » et « Commencer » mènent à l'amorce de localisation</li><li>Vu une fois : non rejoué (préférence en <span class="mono">localStorage</span>, avec repli sans stockage)</li><li>Rejouable depuis Profil › Aide</li></ul></div>
+            <div><h4>Sources</h4><ul><li>Klima : « Passer » et dernier écran d'action</li><li>Shell, Oura : bouton immobile, compteur</li><li>Monzo : mot-clé de rubrique</li></ul></div>
+          </div>
+          <div class="copy" aria-label="Textes de référence"><span>1 · Que se passe-t-il autour de vous ?</span><span>2 · Un problème ? Signalez-le.</span><span>3 · Une bonne nouvelle ? Partagez-la aussi.</span><span>4 · Votre territoire, votre vigilance. → Commencer</span></div>
+          <p class="note">Les titres sont ceux du CDC (task.md 2.2). Les lignes d'explication restent à rédiger, deux au plus, sans promettre de délai de traitement.</p>
+        </article>
+
+        <article>
+          <div class="head"><span class="num">UI-007</span><h3>B · Amorce de localisation</h3></div>
+          <div class="grid">
+            <div><h4>Mise en page</h4><ul><li>« Plus tard » en haut à droite</li><li>Illustration carte + point bleu</li><li>Titre en question, trois bénéfices avec icône Phosphor (<span class="mono">map-pin</span>, <span class="mono">ruler</span>, <span class="mono">crosshair</span>)</li><li>Encadré de confidentialité avec <span class="mono">lock-simple</span></li><li>Pied : primaire « Autoriser la localisation », secondaire « Choisir ma commune »</li></ul></div>
+            <div><h4>Comportement</h4><ul><li>« Autoriser » ouvre la demande système (simulée dans le prototype : accepter / refuser via le mode démo)</li><li>Bouton ghost « Comment ma position est-elle utilisée ? » qui déplie 3 lignes</li><li>« Plus tard » mène à la connexion ; la carte s'ouvre alors sur le Val-d'Oise entier</li></ul></div>
+            <div><h4>Sources</h4><ul><li>Tinder : question, dépliant, réassurance</li><li>Greenlight : un seul objectif, cadenas</li><li>DICE : deux voies à égalité</li></ul></div>
+          </div>
+          <div class="copy"><span>Voir les alertes près de chez vous ?</span><span>Votre position reste approximative par défaut. Elle n'est jamais affichée publiquement.</span></div>
+        </article>
+
+        <article>
+          <div class="head"><span class="num">UI-006</span><h3>C · Commune détectée, D · Choix de la commune</h3></div>
+          <div class="grid">
+            <div><h4>Mise en page</h4><ul><li>C : carte centrée sur la commune, sheet au cran moitié avec le nom, le nombre d'alertes actives, « Continuer » et « Ce n'est pas ma commune »</li><li>D : titre, champ de recherche, « Autour de moi » en tête si la position est autorisée, liste des communes du 95 triées par nom</li></ul></div>
+            <div><h4>États</h4><ul><li>Chargement de la position : spinner dans la sheet, « Recherche de votre position… »</li><li>Aucun résultat : « Aucune commune ne correspond. Vérifiez l'orthographe. »</li><li>Hors zone : « 95 Alerte n'est pas encore disponible dans cette zone. » (texte du CDC)</li><li>Hors connexion : bannière et liste des communes toujours consultable</li></ul></div>
+            <div><h4>Sources</h4><ul><li>Nextdoor : confirmation sur carte, contenu local</li><li>Klarna : sheet de recherche</li><li>DICE : recherche tolérante</li></ul></div>
+          </div>
+        </article>
+
+        <article>
+          <div class="head"><span class="num">UI-007 · refus</span><h3>E · Localisation refusée ou indisponible</h3></div>
+          <div class="grid">
+            <div><h4>Mise en page</h4><ul><li>Pictogramme neutre (bleu info), pas de rouge</li><li>Primaire « Choisir ma commune », ghost « Comment l'activer ? » qui ouvre une sheet en 2 étapes (Réglages › 95 Alerte › Position)</li></ul></div>
+            <div><h4>Plus tard, sur la carte</h4><ul><li>Bannière vigilance non bloquante : « Position désactivée · Choisir une commune »</li><li>Disparaît dès qu'une commune est choisie</li></ul></div>
+            <div><h4>Sources</h4><ul><li>PayPal, Zesty : alternative visible</li><li>Viator : étapes de réglage</li><li>Lex : bannière sur carte</li></ul></div>
+          </div>
+        </article>
+
+        <article>
+          <div class="head"><span class="num">UI-008 · ajusté</span><h3>F · Connexion personnalisée, puis accueil</h3></div>
+          <div class="grid">
+            <div><h4>Connexion</h4><ul><li>Titre : « Pontoise, en direct » (commune choisie) ; texte réduit à une ligne, la présentation ayant eu lieu</li><li>Illustration centrée sur la commune</li><li>Reste inchangé : FranceConnect, créer un compte, se connecter, continuer sans compte</li></ul></div>
+            <div><h4>Accueil</h4><ul><li>Carte centrée sur la commune (ou le Val-d'Oise si « Plus tard »)</li><li>Infobulle existante sur « Signaler »</li><li>Option à valider : carte « Bien démarrer » (Nextdoor, Greenlight) listant les étapes sautées</li></ul></div>
+            <div><h4>Sources</h4><ul><li>Nextdoor : contenu local avant l'accueil</li><li>Greenlight : étapes restantes</li></ul></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- COMPOSANTS -->
+    <section id="composants" aria-labelledby="t-comp">
+      <h2 id="t-comp">Composants et états</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Composant</th><th>Rôle</th><th>États et accessibilité</th><th>Ajout au DS</th></tr></thead>
+          <tbody>
+            <tr><td><b>OnboardingSlide</b></td><td>Illustration, titre, texte</td><td>Titre en <span class="mono">h1</span> ; région <span class="mono">aria-roledescription="diapositive"</span> ; animation coupée si mouvement réduit</td><td>Oui</td></tr>
+            <tr><td><b>PageDots</b></td><td>Pagination en tirets</td><td>Texte masqué « Écran 2 sur 4 » ; non cliquable (le bouton suffit)</td><td>Oui</td></tr>
+            <tr><td><b>Illustration95</b></td><td>4 illustrations SVG en aplats avec les formes de marqueurs</td><td><span class="mono">aria-hidden</span> ; couleurs en tokens, donc mode sombre automatique</td><td>Oui</td></tr>
+            <tr><td><b>PermissionPrimer</b></td><td>Bénéfices + encadré de confidentialité + deux voies</td><td>Bénéfices en liste ; dépliant <span class="mono">aria-expanded</span></td><td>Oui</td></tr>
+            <tr><td><b>CommunePicker</b></td><td>Recherche + liste des communes</td><td>Chargement, aucun résultat, hors zone, hors connexion ; résultats annoncés en <span class="mono">aria-live</span></td><td>Oui (réutilise <span class="mono">.list</span>)</td></tr>
+            <tr><td><b>Banner</b> (existant)</td><td>Position désactivée sur la carte</td><td>Ton vigilance, action intégrée</td><td>Déjà présent</td></tr>
+            <tr><td><b>BottomSheet</b> (existant)</td><td>Commune détectée, étapes de réglage</td><td>Crans et clavier déjà gérés</td><td>Déjà présent</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TÂCHES -->
+    <section id="taches" aria-labelledby="t-taches">
+      <h2 id="t-taches">Plan de réalisation (phase 2)</h2>
+      <p class="lede">Proposition de découpage pour <span class="mono">docs/task.md</span>, sur une branche <span class="mono">phase/2-onboarding</span>, avec les deux livrables habituels : prototype React et canevas (clair et sombre).</p>
+      <ol class="tasks">
+        <li><span class="id">2.0</span><div><b>Design System.</b> <span>Ajouter OnboardingSlide, PageDots, Illustration95 (4 SVG), PermissionPrimer, CommunePicker à <span class="mono">docs/design-system/index.html</span> et à DESIGN_SYSTEM.md.</span></div></li>
+        <li><span class="id">2.1</span><div><b>Données.</b> <span>Liste des communes du Val-d'Oise (nom, coordonnées approximatives) dans la section <span class="mono">data</span> ; une commune hors zone pour l'état dédié.</span></div></li>
+        <li><span class="id">2.2</span><div><b>Présentation A.</b> <span>4 écrans, balayage, clavier, « Passer », « Commencer », non rejouée une fois vue.</span></div></li>
+        <li><span class="id">2.3</span><div><b>Amorce B.</b> <span>Bénéfices, confidentialité, dépliant, demande système simulée (accepter / refuser via le mode démo).</span></div></li>
+        <li><span class="id">2.4</span><div><b>Commune C et D.</b> <span>Confirmation sur carte, recherche, hors zone, aucun résultat, chargement.</span></div></li>
+        <li><span class="id">2.5</span><div><b>Refus E.</b> <span>Écran de repli, sheet « Comment l'activer ? », bannière sur la carte.</span></div></li>
+        <li><span class="id">2.6</span><div><b>Enchaînement S1.</b> <span>Splash → présentation → localisation → commune → connexion personnalisée → carte centrée ; changer de commune depuis la carte.</span></div></li>
+        <li><span class="id">2.C</span><div><b>Canevas.</b> <span>Une planche par écran et par état, en clair et en sombre, reliées pour Play.</span></div></li>
+      </ol>
+      <div class="decision"><b>Critères de validation</b><p>S1 jouable de bout en bout avec localisation autorisée, refusée et reportée ; un utilisateur qui passe tout atteint la carte en 3 taps ; aucun écran sans issue ; textes lisibles à 200 % ; aucune demande de notifications pendant l'onboarding.</p></div>
+      <div class="note">Points à valider avant de coder : l'ordre localisation → commune ; la carte « Bien démarrer » sur l'accueil (non prévue au CDC) ; le contenu exact des lignes d'explication des 4 écrans.</div>
+    </section>
+
+    <footer id="methode">
+      <h4>Méthode et limites</h4>
+      <p>Recherches Mobbin (iOS) du 8 octobre 2026 : carrousels d'introduction illustrés ; amorce de localisation avant la demande système ; choix d'une ville ou d'un quartier ; onboarding d'apps de sécurité ; état de permission refusée ; adresse Nextdoor ; personnalisation par centres d'intérêt. Seuls les écrans réellement examinés sont cités. Les captures sont des aperçus basse résolution intégrés au rapport ; chaque vignette renvoie à sa page Mobbin.</p>
+      <p>Le parcours proposé est une recommandation de conception : il ne modifie aucune règle métier du PRD (localisation facultative, précision approximative, pas de service de secours).</p>
+    </footer>
+  </main>
+</div>
