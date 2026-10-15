@@ -33,8 +33,7 @@
 |---|---|---|---|
 | 0 | Fondations techniques et composants de base | — | ✅ Terminée |
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
-| 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée |
-| 2b | Refonte de l'onboarding (v2, benchmark) | UI-002→007 | ✅ Terminée (à valider) |
+| 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (refonte en revue : internal-sme/95-Alerte#9) |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ⬜ À faire |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ⬜ À faire |
 | 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
@@ -107,45 +106,27 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 ## Phase 2 — Onboarding + territoire + localisation
 
-**But** : comprendre le concept en quelques secondes et paramétrer la zone (F-01 ; CDC §7, §16, §77).
+**But** : comprendre le concept en quelques secondes et paramétrer la zone (F-01 ; CDC §7, §16, §77). Écrans conçus d'après le benchmark `docs/benchmark/onboarding-refonte.html` (12 flows Mobbin).
 
-**Décisions UX (benchmark)**
-- 4 écrans : illustration en aplats (bleu, vert, orange) + titre + 2 lignes max ; pagination par points ; « Passer » toujours visible (Uber, inDrive)
-- L'écran 3 (« Une bonne nouvelle ? ») est le plus chaleureux, pour ancrer la place du positif (Waze)
-- **Amorce de localisation** avant la demande système : bénéfice, précision approximative par défaut, « Choisir manuellement », « Plus tard » (Greenlight, lululemon)
-- **Pas de demande de notifications** dans l'onboarding (reportée, cf. phases 5 et 6) (Transit)
+**Décisions UX (benchmark et utilisateur)**
+- **3 pages de présentation** : photo plein cadre générée avec Magnific (d'après le flow Citizen : main, téléphone, rue du Val-d'Oise), arc blanc, mot-clé surligné, pagination par points, « Passer » en bouton tertiaire. Le 4e titre du CDC (« Votre territoire, votre vigilance. ») est celui de la connexion
+- La page 3 (« Une bonne nouvelle ? ») ancre la place du positif
+- **Amorce de localisation** allégée avant la demande système (Tinder), demande coachée (Life360), jamais « Toujours »
+- **Zone suivie** : cercle sur la carte, rayon 1 / 5 / 10 km (5 par défaut) ; « Étape n sur 2 » (Duolingo, Blinkist)
+- **Pas de demande de notifications** dans l'onboarding (phases 5 et 6) ; centres d'intérêt reportés aux phases 5–6
+- Après l'onboarding : astuce sur le + et carte « Bien démarrer 1/3 » (Citizen, Evernote)
 
-- [x] **2.1** UI-002 **Présentation** rapide de 95 Alerte
-- [x] **2.2** UI-003→005 **Onboarding en 4 écrans** : « Que se passe-t-il autour de vous ? » · « Un problème ? Signalez-le. » · « Une bonne nouvelle ? Partagez-la aussi. » · « Votre territoire, votre vigilance. » + CTA **Commencer** ; pagination par points, « Passer », balayage
-- [x] **2.3** UI-006 **Choix du territoire** : recherche ou liste de communes du Val-d'Oise ; commune hors zone → « 95 Alerte n'est pas encore disponible dans cette zone. »
-- [x] **2.4** UI-007 **Autorisation de localisation** : explication de l'usage, « Autoriser », « Choisir manuellement », « Plus tard » ; mention de la précision approximative par défaut
-- [x] **2.5** États : permission refusée → choix manuel proposé ; localisation indisponible
-- [x] **2.6** Enchaînement S1 : Splash → Onboarding → Localisation → Connexion → Accueil ; onboarding non rejoué une fois vu
+- [x] **2.0** Fondations : `btn-tertiary`, `Highlight`, `StepProgress`, `ZoneMap`, `SettingsPreview`, `StartChecklist`, `PageDots`, `SearchField`, `SystemPrompt`, `MapBanner` dans le Design System
+- [x] **2.1** UI-002→005 **Présentation en 3 pages** : « Que se passe-t-il autour de vous ? » · « Un problème ? Signalez-le. » · « Une bonne nouvelle ? Partagez-la aussi. » + CTA **Commencer** ; balayage, clavier, smart animate ; photos dans `docs/brand/onboarding/` (recadrage `tools/fetch_onboarding_photos.py`)
+- [x] **2.2** UI-007 **Autorisation de localisation** : amorce en trois éléments (« Étape 1 sur 2 »), « Comment ma position est utilisée ? » en feuille, demande système coachée, « Choisir ma commune », « Plus tard »
+- [x] **2.3** UI-006 **Zone suivie et choix du territoire** : commune détectée sur la carte, rayon 1 / 5 / 10 km (« Étape 2 sur 2 ») utilisé par la carte et la liste ; recherche ou liste des communes ; hors zone → « 95 Alerte n'est pas encore disponible dans cette zone. »
+- [x] **2.4** Préparation de la carte : carte entière, texte en surimpression, cercle et marqueurs animés (≤ 1,2 s, ignorée si animations réduites)
+- [x] **2.5** États : permission refusée (choix manuel, réglages illustrés « Ouvrir les réglages » / « Non merci ») ; localisation indisponible ; carte sans position (« Position non définie »)
+- [x] **2.6** Enchaînement S1 : Splash → Présentation → Localisation → Zone → Préparation → Connexion → Accueil ; onboarding non rejoué une fois vu ; arrivée : astuce « 1/1 » sur le +, « Bien démarrer 1/3 »
 
-- [x] **2.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+- [x] **2.C** Canevas de preview : page « Phase 2 · Onboarding et territoire » (clair + sombre, Play), sources dans `prototype/canvas/`, publication
 
 **Validation** : S1 complet de bout en bout jusqu'à l'accueil, avec localisation autorisée **et** refusée.
-
----
-
-## Phase 2b — Refonte de l'onboarding (v2)
-
-**But** : appliquer le benchmark `docs/benchmark/onboarding-refonte.html` (12 flows Mobbin) à tout l'onboarding. Branche `phase/2b-onboarding-v2`.
-
-**Décisions** (demande de l'utilisateur et recommandations du rapport)
-- **3 pages de présentation** au lieu de 4 ; le 4e titre du CDC (« Votre territoire, votre vigilance. ») reste le titre de la connexion
-- Illustrations des 3 pages : **photos générées avec Magnific** d'après le flow Citizen (main, téléphone, rue du Val-d'Oise) + notification réelle posée dessus
-- D2 rayon réglable 1 / 5 / 10 km (5 par défaut) · D4 nouveaux composants dérivés des tokens existants · D5 « Bien démarrer 1/3 » · D3 (centres d'intérêt) reporté aux phases 5–6 · D1 sans écran de bienvenue séparé (la page 1 joue ce rôle)
-
-- [x] **2b.0** Fondations : `HeroNotif`, `Highlight`, `StepProgress`, `ZoneMap`, `SettingsPreview`, `StartChecklist` dans le Design System
-- [x] **2b.1** Présentation en 3 pages : photo plein cadre, arc, notification réelle, mot-clé surligné, smart animate (média, notification, titre, points)
-- [x] **2b.1b** Intégrer les 3 photos Magnific (originaux dans `docs/brand/onboarding/`, recadrage par `tools/fetch_onboarding_photos.py`, zone photo = écran − 250 px)
-- [x] **2b.2** Amorce allégée (3 éléments, « Étape 1 sur 2 »), détail dans une feuille, demande système coachée
-- [x] **2b.3** Zone suivie : cercle sur la carte, rayon 1 / 5 / 10 km, compteur, « Étape 2 sur 2 » ; rayon utilisé par la carte et la liste
-- [x] **2b.4** Préparation de la carte (≤ 1,2 s, ignorée si animations réduites)
-- [x] **2b.5** Refus : réglages illustrés, « Ouvrir les réglages » / « Non merci »
-- [x] **2b.6** Arrivée : astuce « 1/1 » sur le +, carte « Bien démarrer 1/3 » dans le volet de la carte
-- [x] **2b.C** Canevas : planches refaites (présentation 1–3, amorce, feuille, demande coachée, zone 1/5/10 km, préparation, refus, aide), clair + sombre
 
 ---
 
@@ -401,7 +382,9 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-15 | 1 | **Phase 1 validée par l'utilisateur.** Avant la PR : illustrations maison remplacées par **Phosphor Duotone** (composant `Spot`, même bibliothèque que les icônes) ; **smart animate** entre les écrans (View Transitions API, éléments partagés : titre, barre d'étapes, bouton principal, barre d'onglets), règle ajoutée à AGENTS.md pour les phases suivantes ; revue des artefacts (68 planches, liens Play et imports vérifiés, aucun style obsolète). |
 | 2026-10-15 | 2 | Phase 2 terminée sur `phase/2-onboarding`. Démarrage → 4 diapositives (titres du CDC, illustrations Phosphor Duotone, pagination par points, « Passer », balayage et flèches du clavier, transitions *smart animate* du logo, du titre, de l'illustration et des points) → amorce de localisation (bénéfices, précision approximative, « Comment ma position est-elle utilisée ? », « Plus tard ») → demande du téléphone simulée → « Vous êtes à Pontoise » (ou « Ce n'est pas ma commune ») → connexion personnalisée avec la commune → carte. Refus : « Localisation désactivée » + choix de la commune + fiche « Activer la localisation » ; position introuvable (mode démo). Choix de commune : recherche, liste avec intercommunalité, aucun résultat, hors zone (« 95 Alerte n'est pas encore disponible dans cette zone. »). Carte sans position : bandeau « Position non définie », recherche « {commune} · changer de commune ». Onboarding non rejoué une fois vu (préférence), « Rejouer l'onboarding » dans le mode démo. Hypothèses à valider : localisation demandée avant la commune ; pas de carte « Bien démarrer » ; textes des diapositives rédigés à partir du CDC. Canevas : 36 planches (page « Phase 2 »). |
 | 2026-10-15 | 2 | Benchmark Mobbin « onboardings les mieux dessinés » et plan de refonte : `docs/benchmark/onboarding-refonte.html` (HTML + Tailwind, généré par `tools/build_benchmark_refonte.py`). 12 flows (Headspace, Duolingo, Klima, Life360, Citizen, Tinder, Nextdoor, Blinkist, Lovi, Cosmos, Evernote, Polarsteps/Viator), matrice des patterns, 10 enseignements, DA « vigilance lumineuse » 2.0, audit de la phase 2, parcours cible S1 v2 en 9 écrans, plan en 6 lots (R0–R5), décisions D1–D6 à valider. |
-| 2026-10-15 | 2b | Refonte de l'onboarding sur `phase/2b-onboarding-v2` (créée depuis `phase/2-onboarding`, pas encore fusionnée) : 3 pages de présentation (photo + notification réelle, arc, mot surligné), amorce allégée, demande coachée, zone suivie réglable (1/5/10 km), préparation de la carte, réglages illustrés après refus, astuce sur le + et « Bien démarrer 1/3 ». 6 photos générées avec Magnific (Seedream 5 Pro, 2 variantes par page) ; téléchargement refusé par le réseau de l'environnement (pikaso.cdnpk.net) : la carte illustrée sert de fond en attendant. |
-| 2026-10-15 | 2b | Photos des 3 pages fournies par l'utilisateur (Pontoise, nid-de-poule, fête de quartier) : originaux dans `docs/brand/onboarding/`, WebP recadrés dans `prototype/src/onboarding/` (27 à 52 Ko), embarqués par le build ; zone photo sous l'arc dimensionnée sur le contenu (écran − 250 px) pour 375, 390 et 430. Canevas : photos en ressources de l'artefact. |
-| 2026-10-15 | 2b | Retours sur les pages de présentation : logo et notification retirés de la photo, « Passer » en bouton tertiaire (texte souligné, nouveau `btn-tertiary`), surlignage du mot-clé en sombre remplacé par un trait jaune qui contourne les jambages, points de pagination plus lisibles en sombre. Nouvelle règle : étiquette « New » sur les composants créés pendant la phase (Design System et DESIGN_SYSTEM.md), retirée à la fusion. |
-| 2026-10-15 | 2 | PR de la phase 2 (internal-sme/95-Alerte#6) fusionnée dans `develop` ; `develop` fusionnée dans `phase/2b-onboarding-v2`. Étiquettes « New » de la phase 2 retirées du Design System (règle AGENTS.md), celles de la phase 2b conservées jusqu'à sa fusion. |
+| 2026-10-15 | 2 | Refonte de l'onboarding sur `phase/2b-onboarding-v2` (créée depuis `phase/2-onboarding`, pas encore fusionnée) : 3 pages de présentation (photo + notification réelle, arc, mot surligné), amorce allégée, demande coachée, zone suivie réglable (1/5/10 km), préparation de la carte, réglages illustrés après refus, astuce sur le + et « Bien démarrer 1/3 ». 6 photos générées avec Magnific (Seedream 5 Pro, 2 variantes par page) ; téléchargement refusé par le réseau de l'environnement (pikaso.cdnpk.net) : la carte illustrée sert de fond en attendant. |
+| 2026-10-15 | 2 | Photos des 3 pages fournies par l'utilisateur (Pontoise, nid-de-poule, fête de quartier) : originaux dans `docs/brand/onboarding/`, WebP recadrés dans `prototype/src/onboarding/` (27 à 52 Ko), embarqués par le build ; zone photo sous l'arc dimensionnée sur le contenu (écran − 250 px) pour 375, 390 et 430. Canevas : photos en ressources de l'artefact. |
+| 2026-10-15 | 2 | Retours sur les pages de présentation : logo et notification retirés de la photo, « Passer » en bouton tertiaire (texte souligné, nouveau `btn-tertiary`), surlignage du mot-clé en sombre remplacé par un trait jaune qui contourne les jambages, points de pagination plus lisibles en sombre. Nouvelle règle : étiquette « New » sur les composants créés pendant la phase (Design System et DESIGN_SYSTEM.md), retirée à la fusion. |
+| 2026-10-15 | 2 | PR de la phase 2 (internal-sme/95-Alerte#6) fusionnée dans `develop` ; `develop` fusionnée dans `phase/2b-onboarding-v2`. Étiquettes « New » de la phase 2 retirées du Design System (règle AGENTS.md), celles de la refonte conservées jusqu'à sa fusion. |
+| 2026-10-15 | 2 | Une seule phase 2 : la refonte (ex-« 2b ») remplace l'onboarding initial dans `task.md`, le canevas (une page « Phase 2 · Onboarding et territoire ») et le Design System. |
+| 2026-10-15 | 2 | Branche renommée `phase/2-onboarding-territoire` (nouvelle PR vers `develop`, l'ancienne fermée). Branches déjà fusionnées à supprimer sur GitHub (suppression refusée depuis la session) : `phase/2-onboarding`, `phase/2b-onboarding-v2`, `claude/ecstatic-mayer-ybg1n7` ; restent `master`, `develop`, `phase/0-fondations`, `phase/1-splash-connexion` et `phase/2-onboarding-territoire`. |
