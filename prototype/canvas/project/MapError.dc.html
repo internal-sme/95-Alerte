@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Erreur de chargement</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/de0d8abfa9909648c4d74114c042874a">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95">
+<div class="screen map-screen"><div class="map95 map-live lv-2 is-error" role="region" aria-label="Carte des alertes. Flèches pour déplacer la carte, plus et moins pour zoomer."><span class="me-wrap" role="img" aria-label="Vous êtes ici" style="left: 195px; top: 389.5px;"><span class="me-accuracy" style="width: 28px; height: 28px;"></span><span class="me"></span></span></div><div class="map-top-wrap"><div class="map-top"><button type="button" class="search"><span class="ph i i-magnifying-glass" aria-hidden="true"></span><span>Pontoise<small> · rechercher</small></span></button><button type="button" class="icon-btn is-filter" aria-label="Filtres"><span class="ph i i-sliders-horizontal" aria-hidden="true"></span></button><button type="button" class="icon-btn" aria-label="Notifications, 2 non lues"><span class="ph i i-bell" aria-hidden="true"></span><span class="badge-count" aria-hidden="true">2</span></button></div><div class="map-chips" role="group" aria-label="Type d'alertes"><button type="button" class="chip" aria-pressed="true"><span class="ph i i-check" aria-hidden="true"></span>Toutes</button><button type="button" class="chip" aria-pressed="false">Positives</button><button type="button" class="chip" aria-pressed="false">Négatives</button></div></div><div class="map-error" role="alert"><span class="spot tone-neutral" aria-hidden="true"><span class="ph i i-cloud-slash-duotone" aria-hidden="true"></span></span><h2>Impossible de charger la carte.</h2><p>Vérifiez votre connexion. La liste des alertes reste disponible.</p><a class="btn btn-primary btn-block" href="{{l.Main}}">Réessayer</a><a class="btn btn-secondary btn-block" href="{{l.MapList}}">Voir la liste</a></div></div>
+  </div>
+  <nav class="tabbar" aria-label="Navigation principale">
+    <a class="tab" href="{{l.Main}}" aria-current="page"><span class="ph i i-map-trifold-fill" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="{{l.Alerts}}"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="{{l.Report}}" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="{{l.Activity}}"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="{{l.Profile}}"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark": {"editor": "boolean", "default": false}, "$preview": {"width": 390, "height": 844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const go = (n) => n + s + '.dc.html';
+    return { theme: s ? 't-dark' : 't-light', l: { Activity: go('Activity'), Alerts: go('Alerts'), Main: go('Main'), MapList: go('MapList'), Profile: go('Profile'), Report: go('Report') } };
+  }
+}
+</script>
+</body>
+</html>

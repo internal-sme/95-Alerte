@@ -1,8 +1,8 @@
-/* Tailwind 3.4.17 — rapport « Onboarding : refonte » (docs/benchmark/onboarding-refonte.html).
+/* Tailwind 3.4.17 — rapports « benchmark + refonte » (docs/benchmark/*-refonte.html).
    Les couleurs pointent vers des variables CSS : le rapport suit le thème clair ou sombre. */
 const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
 module.exports = {
-  content: [__dirname + "/onboarding-refonte.html"],
+  content: [__dirname + "/*-refonte.html"],
   theme: {
     extend: {
       colors: {

@@ -20,6 +20,10 @@
     {
       "id": "p2",
       "name": "Phase 2 · Onboarding et territoire"
+    },
+    {
+      "id": "p3",
+      "name": "Phase 3 · Carte interactive"
     }
   ],
   "boards": {
@@ -28,9 +32,9 @@
       "y": 0,
       "w": 390,
       "h": 844,
-      "title": "Accueil · Carte",
+      "title": "Accueil · carte (zone suivie)",
       "is_interactive": true,
-      "page": "p0"
+      "page": "p3"
     },
     "Alerts.dc.html": {
       "x": 470,
@@ -73,9 +77,9 @@
       "y": 1200,
       "w": 390,
       "h": 844,
-      "title": "Accueil · Carte (sombre)",
+      "title": "Accueil · carte (zone suivie) (sombre)",
       "is_interactive": true,
-      "page": "p0"
+      "page": "p3"
     },
     "Alerts-dark.dc.html": {
       "x": 470,
@@ -779,22 +783,22 @@
       "page": "p2"
     },
     "MainNoPosition.dc.html": {
-      "x": 3760,
-      "y": 0,
+      "x": 3290,
+      "y": 2400,
       "w": 390,
       "h": 844,
       "title": "Carte · position non définie",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p3"
     },
     "MainNoPosition-dark.dc.html": {
-      "x": 3760,
-      "y": 1200,
+      "x": 3290,
+      "y": 3600,
       "w": 390,
       "h": 844,
       "title": "Carte · position non définie (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p3"
     },
     "CommuneFromMap.dc.html": {
       "x": 4700,
@@ -993,6 +997,312 @@
       "title": "Zone suivie · 10 km (sombre)",
       "is_interactive": true,
       "page": "p2"
+    },
+    "MapHalf.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Accueil · volet ouvert",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapHalf-dark.dc.html": {
+      "x": 470,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Accueil · volet ouvert (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapSelected.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Sélection · fiche (1/2)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapSelected-dark.dc.html": {
+      "x": 940,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Sélection · fiche (1/2) (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapSelectedNext.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Sélection · alerte voisine",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapSelectedNext-dark.dc.html": {
+      "x": 1410,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Sélection · alerte voisine (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapArea.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Sélection · alerte de zone",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapArea-dark.dc.html": {
+      "x": 1880,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Sélection · alerte de zone (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapQuartier.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Zoom · quartier",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapQuartier-dark.dc.html": {
+      "x": 2350,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Zoom · quartier (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapInterco.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Zoom · intercommunalité",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapInterco-dark.dc.html": {
+      "x": 2820,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Zoom · intercommunalité (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapDept.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Zoom · département",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapDept-dark.dc.html": {
+      "x": 3290,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Zoom · département (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapList.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Liste (bascule)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapList-dark.dc.html": {
+      "x": 3760,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Liste (bascule) (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapLegend.dc.html": {
+      "x": 4230,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Comprendre la carte",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapLegend-dark.dc.html": {
+      "x": 4230,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Comprendre la carte (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapFilters.dc.html": {
+      "x": 4700,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Filtres",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapFilters-dark.dc.html": {
+      "x": 4700,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Filtres (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapLoading.dc.html": {
+      "x": 0,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Chargement",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapLoading-dark.dc.html": {
+      "x": 0,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Chargement (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapMoved.dc.html": {
+      "x": 470,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Après déplacement · « Voir les alertes ici »",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapMoved-dark.dc.html": {
+      "x": 470,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Après déplacement · « Voir les alertes ici » (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapHere.dc.html": {
+      "x": 940,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes de la zone affichée",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapHere-dark.dc.html": {
+      "x": 940,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes de la zone affichée (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapEmpty.dc.html": {
+      "x": 1410,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Aucun événement",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapEmpty-dark.dc.html": {
+      "x": 1410,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Aucun événement (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapError.dc.html": {
+      "x": 1880,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Erreur de chargement",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapError-dark.dc.html": {
+      "x": 1880,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Erreur de chargement (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapMany.dc.html": {
+      "x": 2350,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Beaucoup d'alertes",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapMany-dark.dc.html": {
+      "x": 2350,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Beaucoup d'alertes (sombre)",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapOutside.dc.html": {
+      "x": 2820,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Hors Val-d'Oise",
+      "is_interactive": true,
+      "page": "p3"
+    },
+    "MapOutside-dark.dc.html": {
+      "x": 2820,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Hors Val-d'Oise (sombre)",
+      "is_interactive": true,
+      "page": "p3"
     }
   },
   "order": [
@@ -1103,7 +1413,41 @@
     "Detected1.dc.html",
     "Detected1-dark.dc.html",
     "Detected10.dc.html",
-    "Detected10-dark.dc.html"
+    "Detected10-dark.dc.html",
+    "MapHalf.dc.html",
+    "MapHalf-dark.dc.html",
+    "MapSelected.dc.html",
+    "MapSelected-dark.dc.html",
+    "MapSelectedNext.dc.html",
+    "MapSelectedNext-dark.dc.html",
+    "MapArea.dc.html",
+    "MapArea-dark.dc.html",
+    "MapQuartier.dc.html",
+    "MapQuartier-dark.dc.html",
+    "MapInterco.dc.html",
+    "MapInterco-dark.dc.html",
+    "MapDept.dc.html",
+    "MapDept-dark.dc.html",
+    "MapList.dc.html",
+    "MapList-dark.dc.html",
+    "MapLegend.dc.html",
+    "MapLegend-dark.dc.html",
+    "MapFilters.dc.html",
+    "MapFilters-dark.dc.html",
+    "MapLoading.dc.html",
+    "MapLoading-dark.dc.html",
+    "MapMoved.dc.html",
+    "MapMoved-dark.dc.html",
+    "MapHere.dc.html",
+    "MapHere-dark.dc.html",
+    "MapEmpty.dc.html",
+    "MapEmpty-dark.dc.html",
+    "MapError.dc.html",
+    "MapError-dark.dc.html",
+    "MapMany.dc.html",
+    "MapMany-dark.dc.html",
+    "MapOutside.dc.html",
+    "MapOutside-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -1220,6 +1564,47 @@
       "fill": "blue",
       "page": "p2",
       "text": "Phase 2 · onboarding et territoire\n\nPlay sur « Présentation · 1 » (ou « Démarrage », page Phase 1) : 3 pages avec photo (générées avec Magnific d'après le flow Citizen), mot-clé surligné, « Passer » en bouton tertiaire.\n\nLocalisation : amorce (Étape 1 sur 2) → demande coachée → recherche → zone suivie (Étape 2 sur 2, rayon 1 / 5 / 10 km) → préparation de la carte → connexion.\nRefus : choisir ma commune ou réglages illustrés.\nCommune : liste, recherche, aucun résultat, hors zone ; changement de commune depuis la carte ; carte sans position.\n\nDans la version React, le mode démo simule le refus et la position introuvable, et peut rejouer l'onboarding : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+    },
+    "p3Light": {
+      "x": 0,
+      "y": -300,
+      "text": "Carte interactive · clair",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p3"
+    },
+    "p3Dark": {
+      "x": 0,
+      "y": 900,
+      "text": "Carte interactive · sombre",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p3"
+    },
+    "p3States": {
+      "x": 0,
+      "y": 2100,
+      "text": "États · clair",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p3"
+    },
+    "p3StatesDark": {
+      "x": 0,
+      "y": 3300,
+      "text": "États · sombre",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p3"
+    },
+    "p3How": {
+      "x": 3760,
+      "y": 2400,
+      "w": 340,
+      "maxH": 700,
+      "fill": "blue",
+      "page": "p3",
+      "text": "Phase 3 · carte interactive (rapport docs/benchmark/carte-refonte.html)\n\nPlay sur « Accueil · carte » : touchez un marqueur (incendie, Pontoise) pour la fiche, puis ‹ › pour l'alerte voisine ; le regroupement « 2 » ouvre l'alerte de zone (inondation, polygone) ; + / − passent du quartier à l'intercommunalité puis au département ; (i) ouvre la légende, le bouton Filtres la feuille de filtres, « Liste » la bascule ; le recentrage simule un déplacement (« Voir les alertes ici »).\n\nFond : 184 communes réelles (IGN), 12 intercommunalités, quartiers fictifs à Cergy-Pontoise ; hors département hachuré.\n\nVersion React complète (glisser, pincer, molette, clavier, mode démo) : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
     }
   },
   "designSystems": []

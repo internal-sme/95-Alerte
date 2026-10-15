@@ -37,6 +37,8 @@ ICONS = [
     # Prototype : barre d'état, démo, navigation
     "wifi-high", "cell-signal-full", "battery-full", "arrow-left", "squares-four",
     "play", "fast-forward", "arrow-counter-clockwise", "path", "circle",
+    # Carte (phase 3)
+    "minus", "polygon", "arrows-out-simple",
 ]
 FILL = [
     "map-trifold", "list-bullets", "pulse", "user-circle", "bell", "arrow-fat-up",
@@ -49,7 +51,7 @@ FILL = [
 
 # Illustrations ponctuelles (écrans de confirmation, états) : Phosphor Duotone, même bibliothèque que l'interface
 DUOTONE = ["envelope-open", "hand-waving", "seal-check", "map-trifold", "identification-card", "shield-check",
-           "megaphone", "hand-heart", "map-pin-area", "compass"]
+           "megaphone", "hand-heart", "map-pin-area", "compass", "cloud-slash"]
 
 
 def inner(svg: str) -> str:

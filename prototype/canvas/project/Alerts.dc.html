@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Alertes</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/0f50dfbb5686c3819ae3ebeecdaeffda">
+<link rel="stylesheet" href="/_blob/de0d8abfa9909648c4d74114c042874a">
 </head>
 <body>
 <x-dc>
@@ -18,13 +18,13 @@ body{margin:0}
   <div class="screen95 scroll95">
     <div class="screen-title row">
       <div><h1>Alertes</h1><p>25 alertes actives dans le Val-d'Oise</p></div>
-      <button class="icon-btn flat" type="button" aria-label="Filtres"><span class="ph i i-sliders-horizontal" aria-hidden="true"></span></button>
+      <a class="icon-btn flat" href="{{l.filters}}" aria-label="Filtres"><span class="ph i i-sliders-horizontal" aria-hidden="true"></span></a>
     </div>
     <div class="screen-pad">
-      <div class="seg is-block" role="group" aria-label="Type d'alertes">
-        <button type="button" aria-pressed="{{f.all}}" onClick="{{showAll}}">Toutes</button>
-        <button type="button" aria-pressed="{{f.positive}}" onClick="{{showPositive}}">Positives</button>
-        <button type="button" aria-pressed="{{f.negative}}" onClick="{{showNegative}}">Négatives</button>
+      <div class="map-chips" role="group" aria-label="Type d'alertes">
+        <button type="button" class="chip" aria-pressed="{{f.all}}" onClick="{{showAll}}"><sc-if value="{{f.all}}" hint-placeholder-val="{{true}}"><span class="ph i i-check" aria-hidden="true"></span></sc-if>Toutes</button>
+        <button type="button" class="chip" aria-pressed="{{f.positive}}" onClick="{{showPositive}}"><sc-if value="{{f.positive}}" hint-placeholder-val="{{false}}"><span class="ph i i-check" aria-hidden="true"></span></sc-if>Positives</button>
+        <button type="button" class="chip" aria-pressed="{{f.negative}}" onClick="{{showNegative}}"><sc-if value="{{f.negative}}" hint-placeholder-val="{{false}}"><span class="ph i i-check" aria-hidden="true"></span></sc-if>Négatives</button>
       </div>
       <section class="list-section">
         <h2 class="section-label">À moins de 5 km</h2>
@@ -90,7 +90,7 @@ class Component extends DCLogic {
     const rest = list.filter((r) => r[7] > 5).sort((a, b) => a[8] - b[8]).slice(0, 10);
     return {
       theme: s ? 't-dark' : 't-light',
-      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
+      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html', filters: 'MapFilters' + s + '.dc.html' },
       f: { all: filter === 'all', positive: filter === 'positive', negative: filter === 'negative' },
       showAll: () => this.setState({ filter: 'all' }),
       showPositive: () => this.setState({ filter: 'positive' }),

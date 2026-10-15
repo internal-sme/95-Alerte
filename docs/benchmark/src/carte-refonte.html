@@ -1,0 +1,451 @@
+<!-- Source du rapport : python3 tools/build_benchmark_refonte.py carte-refonte → docs/benchmark/carte-refonte.html -->
+<title>Carte et refonte</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/*TAILWIND*/
+</style>
+
+<header class="border-b border-line">
+  <div class="wrap grid gap-8 py-12 sm:py-16 lg:grid-cols-[1.25fr_1fr] lg:items-end">
+    <div class="grid gap-5">
+      <p class="eyebrow">95 Alerte · Benchmark Mobbin · phase 3 · octobre 2026</p>
+      <h1 class="text-4xl font-extrabold leading-[1.05] sm:text-6xl">La carte d'accueil : <span class="hl">ce que font les meilleurs</span>.</h1>
+      <p class="lede">Nous avons passé en revue une quinzaine de flows iOS de cartes sur Mobbin et en avons retenu douze. Ils couvrent les signalements en direct, la recherche locale, les zones, les légendes, les regroupements de marqueurs et les états de chargement. Pour chaque flow, le rapport détaille les points forts en patterns de design, en expérience utilisateur et en direction artistique. Il se termine par un audit de notre carte actuelle et un plan de refonte aligné sur les tâches 3.1 à 3.11 de <span class="font-mono text-base">docs/task.md</span>.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="chip">12 flows retenus</span><span class="chip">15 flows analysés</span><span class="chip">32 écrans cités</span><span class="chip">Plan en 6 lots</span>
+      </div>
+    </div>
+    <nav class="card toc p-5 text-sm" aria-label="Sommaire">
+      <p class="eyebrow mb-3">Sommaire</p>
+      <ol class="grid gap-1.5">
+        <li><a href="#methode">1. Méthode et grille de lecture</a></li>
+        <li><a href="#flows">2. Les 12 flows</a></li>
+        <li><a href="#matrice">3. Matrice des patterns</a></li>
+        <li><a href="#lecons">4. Dix enseignements</a></li>
+        <li><a href="#da">5. Direction artistique de la carte</a></li>
+        <li><a href="#audit">6. Audit de notre carte</a></li>
+        <li><a href="#cible">7. Écran cible et ses états</a></li>
+        <li><a href="#plan">8. Plan de refonte détaillé</a></li>
+        <li><a href="#decisions">9. Décisions à prendre</a></li>
+      </ol>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="methode" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">01 · Méthode</p><h2 class="h2">Trois critères, une note sur 5</h2>
+    <p class="lede">Nous avons cherché sur Mobbin (iOS) des cartes de signalements, des cartes de recherche avec volet de résultats, des marqueurs regroupés, des zones colorées avec légende, des états « rechercher dans cette zone » et des bascules carte et liste. La grille est la même que pour l'onboarding.</p></div>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="card p-5"><p class="font-display text-lg font-bold">Patterns de design</p><p class="mt-2 text-sm text-muted">Les marqueurs, les regroupements, le volet en trois positions, la carte sélectionnée, la légende, les filtres flottants et la bascule carte ou liste.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Expérience utilisateur</p><p class="mt-2 text-sm text-muted">Comprendre en 3 secondes ce qui se passe autour de soi, garder le contexte en ouvrant un élément, éviter les marqueurs illisibles en masse, et disposer d'états clairs : chargement, vide, erreur.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Direction artistique</p><p class="mt-2 text-sm text-muted">Un fond de carte qui s'efface au profit des données, une hiérarchie des couleurs, la lisibilité en clair et en sombre, un mouvement qui renseigne.</p></div>
+  </div>
+  <p class="text-sm text-muted">Les images sont des aperçus Mobbin à basse résolution, avec leur mention « curated by Mobbin ». Chaque flow renvoie à sa page Mobbin. Les rapports liés sont <span class="font-mono">benchmark-mobbin.html</span> et <span class="font-mono">onboarding-refonte.html</span> (Life360, Citizen, Nextdoor).</p>
+</section>
+
+<section id="flows" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-10 py-14">
+    <div class="grid gap-3"><p class="eyebrow">02 · Les 12 flows</p><h2 class="h2">Du plus proche de notre usage au plus inspirant</h2>
+      <p class="lede">Waze et Citizen font notre métier : des signalements sur une carte. Airbnb, Too Good To Go, Resy et Turo maîtrisent l'association de la carte et du volet. Apple Météo, Lime et Forest montrent comment lire des zones. Google Arts &amp; Culture, Hypelist et Wanderlog apportent des idées de marqueurs et de regroupements.</p></div>
+
+    <!-- Waze -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">01</p><h3 class="text-2xl font-bold">Waze · Signalements et confirmation</h3><p class="text-sm text-muted">Trafic communautaire · <a href="https://mobbin.com/flows/d7af641e-2364-471b-9a21-7bf89dc673ec">signalements</a>, <a href="https://mobbin.com/flows/d79e38d7-da40-4cd8-819a-f98f2691a699">confirmer</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:waze-map}}" alt="Waze : carte avec de nombreux marqueurs illustrés de travaux et de bouchons, volet « Où allez-vous ? »"><figcaption><b>Le type se lit sans légende</b>Un pictogramme rond par type, sans texte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:waze-report}}" alt="Waze : carte sombre en haut « Heavy traffic, 1.0 km away », il y a 4 min par OneLoner, boutons commenter et pouce"><figcaption><b>Résumé en haut</b>Distance en grand, ancienneté, auteur.</figcaption></figure>
+        <figure class="shot"><img src="{{img:waze-confirm}}" alt="Waze : signalement de travaux avec un compteur 33 sur le bouton pouce"><figcaption><b>Confirmation chiffrée</b>« 33 » sur le pouce.</figcaption></figure>
+        <figure class="shot"><img src="{{img:waze-liked}}" alt="Waze : pouce passé à 34 après confirmation"><figcaption><b>Retour immédiat</b>Le compteur passe à 34.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Marqueurs-pictogrammes par type ; regroupement « 2 » en pastille.</li><li>Fiche de résumé ancrée, distance en titre display.</li><li>Deux actions rondes : commenter et confirmer avec compteur.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'essentiel en un regard : quoi, à quelle distance, depuis quand, par qui.</li><li>Confirmer prend un toucher et se voit tout de suite (validation sociale).</li><li>Le volet de recherche reste en bas, la carte garde la scène.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Carte grise désaturée : seuls les signalements portent la couleur.</li><li>Personnages ludiques, cohérents mais trop enfantins pour un service public.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La fiche de résumé : distance en grand, ancienneté, auteur public (« Jean D. » ou « Citoyen anonyme »). Le compteur de confirmations sur ⬆, qui réagit au toucher. Un fond de carte qui s'efface.</p><p><b>À éviter.</b> Les mascottes : nos marqueurs gardent forme, icône Phosphor et couleur de famille.</p></div>
+    </article>
+
+    <!-- Airbnb -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">02</p><h3 class="text-2xl font-bold">Airbnb · Bascule liste et carte, carte flottante</h3><p class="text-sm text-muted">Hébergement · <a href="https://mobbin.com/flows/ed7d4a94-2729-44f9-92c1-f82c7a078333">flow 1</a>, <a href="https://mobbin.com/flows/11dcbf0c-d2a0-4f3c-833b-cc0b0a50477d">flow 2</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:airbnb-list}}" alt="Airbnb : liste de logements avec un bouton flottant « Carte » en bas"><figcaption><b>Pilule « Carte »</b>Flottante au-dessus de la liste.</figcaption></figure>
+        <figure class="shot"><img src="{{img:airbnb-map}}" alt="Airbnb : carte avec étiquettes de prix, volet « Plus de 1 000 logements »"><figcaption><b>Le volet compte</b>« Plus de 1 000 logements ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:airbnb-card}}" alt="Airbnb : étiquette de prix sélectionnée en noir et carte flottante du logement avec photo"><figcaption><b>Sélection inversée</b>Pin noir et carte flottante fermable.</figcaption></figure>
+        <figure class="shot"><img src="{{img:airbnb-peek}}" alt="Airbnb : carte avec beaucoup d'étiquettes et de pastilles grises plus petites"><figcaption><b>Deux tailles de marqueurs</b>Étiquette pleine ou pastille réduite.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>La bascule liste et carte est une pilule flottante, au même endroit dans les deux vues.</li><li>Marqueur sélectionné inversé (noir), carte flottante au-dessus du volet.</li><li>Quand la densité est trop forte, des pastilles réduites s'ajoutent aux étiquettes.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le volet donne le total, ce qui rassure sur l'exhaustivité.</li><li>La carte flottante n'occulte pas la carte : on garde le contexte.</li><li>La fermeture (×) est toujours visible.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une carte très pâle, un noir réservé à la sélection et des ombres douces.</li><li>Une typographie unique, une seule couleur d'accent (le rose de la marque) hors de la carte.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 3.8 : la pilule « Liste » / « Carte » flottante, mémorisée. La sélection d'un marqueur par inversion (contour épais et agrandissement). Les marqueurs « secondaires » réduits quand la densité est forte (tâche 3.9, « beaucoup d'alertes »).</p><p><b>À éviter.</b> Les étiquettes de texte comme marqueurs : chez nous, forme + icône, et jamais la couleur seule.</p></div>
+    </article>
+
+    <!-- Too Good To Go -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">03</p><h3 class="text-2xl font-bold">Too Good To Go · Recherche et filtres flottants</h3><p class="text-sm text-muted">Anti-gaspi local · <a href="https://mobbin.com/flows/98a3eff7-137c-44c0-9a20-fae21039f9a4">carte</a>, <a href="https://mobbin.com/flows/89153577-ae17-49bc-b2ab-250e7ca7f9f9">parcourir</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:tgtg-map}}" alt="Too Good To Go : recherche et puces de filtres flottantes sur la carte, volet « 8 Surprise Bags » à mi-hauteur"><figcaption><b>Filtres sur la carte</b>Puces déroulantes sous la recherche.</figcaption></figure>
+        <figure class="shot"><img src="{{img:tgtg-peek}}" alt="Too Good To Go : volet replié « 7 Surprise Bags », marqueurs-logos sur la carte"><figcaption><b>Volet replié</b>Il ne reste que le compteur.</figcaption></figure>
+        <figure class="shot"><img src="{{img:tgtg-list}}" alt="Too Good To Go : liste de cartes avec un bouton « Map » flottant"><figcaption><b>Même barre en liste</b>Recherche et filtres identiques.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Barre de recherche, bouton de position, puis rangée de puces déroulantes défilantes.</li><li>La même barre en carte et en liste : seul le contenu change.</li><li>Volet à trois positions : replié (compteur), mi-hauteur, plein.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On filtre sans quitter la carte.</li><li>Le compteur du volet se met à jour avec les filtres.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Vert profond de marque sur une carte crème, avec des cartes photo aux coins arrondis.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 3.6 : la recherche flottante, plus un bouton « Filtres » et des puces Toutes / Positives / Négatives qui sortent du volet pour passer sous la recherche. Le compteur « 9 alertes dans votre zone » suit les filtres.</p><p><b>À éviter.</b> Trop de puces déroulantes : trois au maximum, le reste dans la feuille de filtres (phase 4).</p></div>
+    </article>
+
+    <!-- Citizen -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">04</p><h3 class="text-2xl font-bold">Citizen · Lieu d'un incident</h3><p class="text-sm text-muted">Sécurité publique · <a href="https://mobbin.com/flows/b922e788-a429-4fc8-a832-207b1b54a8cb">lieu de l'incident</a>, <a href="https://mobbin.com/flows/7fec47e7-219b-4a14-b464-1872b7bbcc95">accueil</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:citizen-incident}}" alt="Citizen : fiche d'incident avec distance en rouge, titre, mini-carte et résumé"><figcaption><b>Distance et adresse</b>En tête de la fiche, avec mini-carte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-map}}" alt="Citizen : carte sombre plein écran avec un marqueur entouré d'un anneau rouge"><figcaption><b>Anneau sur le marqueur</b>Un seul point, entouré, sur une carte nuit.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Anneau autour du marqueur pour la gravité et la sélection.</li><li>Mini-carte dans la fiche qui ouvre la carte plein écran.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le lieu est toujours à un toucher de l'alerte.</li><li>Limite : le flux vidéo pousse à l'alarme ; la carte passe au second plan.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une carte nuit très sombre, une seule couleur d'alerte.</li><li>Limite : le rouge est partout, ce qui donne un ton anxiogène.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> L'anneau pulsé réservé aux alertes critiques (« Urgent », tâche 3.3), déjà en place, à garder rare. La mini-carte dans la fiche alerte (phase 5).</p><p><b>À éviter.</b> Le rouge par défaut. Chez nous, le positif a la même visibilité que le négatif.</p></div>
+    </article>
+
+    <!-- Apple Météo -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">05</p><h3 class="text-2xl font-bold">Météo (Apple) · Calques, légende, ma position</h3><p class="text-sm text-muted">Météo · <a href="https://mobbin.com/flows/d3527f25-ebfd-4258-95de-f1975795911c">température</a>, <a href="https://mobbin.com/flows/ae6c194b-1f54-4581-a71f-82699af5e468">options</a>, <a href="https://mobbin.com/flows/5d4b3e85-bce5-401f-964e-36bed43dcdb1">changer de carte</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:weather-legend}}" alt="Météo : légende verticale des précipitations en haut à gauche, menu de calques ouvert"><figcaption><b>Légende flottante</b>Compacte, en haut à gauche.</figcaption></figure>
+        <figure class="shot"><img src="{{img:weather-layers}}" alt="Météo : menu Précipitations, Température, Qualité de l'air, Vent"><figcaption><b>Calques en menu</b>Un seul calque à la fois.</figcaption></figure>
+        <figure class="shot"><img src="{{img:weather-me}}" alt="Météo : bulle « 24° » ancrée sur Los Angeles, carte des températures"><figcaption><b>Ma position en bulle</b>Une donnée ancrée au point.</figcaption></figure>
+        <figure class="shot"><img src="{{img:weather-time}}" alt="Météo : curseur de temps « Prévisions » en bas de la carte"><figcaption><b>Curseur de temps</b>Lecture de l'évolution.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Trois boutons ronds empilés à droite : calques, ma position, liste.</li><li>Une légende verbale (Faible, Modéré, Fort, Extrême) et non chiffrée.</li><li>Fermeture (×) en haut à gauche, à la place du retour.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>La légende rend les zones compréhensibles sans apprentissage.</li><li>Le curseur de temps montre la dynamique.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Des panneaux en verre dépoli sur la carte : flottants mais lisibles.</li><li>Des aplats translucides qui laissent voir le fond.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 3.11 : les polygones translucides pour les alertes de zone (inondation, travaux), avec une mini-légende à la demande. La pile de boutons ronds à droite : ma position, zoom +/−, légende (tâches 3.2 et 3.5). Le zoom à 4 niveaux annoncé par une étiquette (« Commune »).</p><p><b>À éviter.</b> Les calques multiples : un seul sujet, les alertes.</p></div>
+    </article>
+
+    <!-- Resy -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">06</p><h3 class="text-2xl font-bold">Resy · Carrousel synchronisé avec les marqueurs</h3><p class="text-sm text-muted">Restaurants · <a href="https://mobbin.com/flows/a045dfc8-9921-4862-85d9-331b9ff61858">passage en carte</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:resy-list}}" alt="Resy : liste sombre de restaurants avec bouton carte rond"><figcaption><b>Bouton carte rond</b>En bas à droite de la liste.</figcaption></figure>
+        <figure class="shot"><img src="{{img:resy-map}}" alt="Resy : carte nuit avec marqueurs bleus, « Search Here » et carte de restaurant en carrousel horizontal"><figcaption><b>Carrousel horizontal</b>La carte suit le marqueur, et inversement.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Cartes horizontales défilantes au-dessus du volet, synchronisées avec les marqueurs.</li><li>« Rechercher ici » et position côte à côte.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On parcourt les éléments sans viser des marqueurs minuscules.</li><li>Le marqueur actif grossit au balayage.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une carte nuit violacée, des marqueurs bleus et gris (actif, inactif) : très lisible en sombre.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Option pour la tâche 3.7 : quand un marqueur est sélectionné, la fiche de résumé se balaie à gauche et à droite vers l'alerte voisine, et la carte suit. Le mode sombre de notre carte s'inspire de son contraste.</p><p><b>À éviter.</b> Un carrousel en plus du volet : la fiche remplace le volet, sans s'y ajouter.</p></div>
+    </article>
+
+    <!-- Turo -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">07</p><h3 class="text-2xl font-bold">Turo · « Rechercher dans cette zone » et chargement</h3><p class="text-sm text-muted">Location de voitures · <a href="https://mobbin.com/flows/219e227c-8694-475e-9fbb-aa5a2c3eb243">rechercher une zone</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:turo-area}}" alt="Turo : bouton « Search this area » en haut de la carte après déplacement"><figcaption><b>Après un déplacement</b>« Rechercher dans cette zone ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:turo-loading}}" alt="Turo : bouton en chargement (trois points) et volet en squelette"><figcaption><b>Chargement en place</b>Le bouton devient trois points, le volet se grise.</figcaption></figure>
+        <figure class="shot"><img src="{{img:turo-result}}" alt="Turo : « 2 cars available » dans le volet et nouveaux marqueurs"><figcaption><b>Résultat</b>Le compteur se met à jour.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Bouton-pilule qui n'apparaît qu'après un déplacement de la carte.</li><li>Squelette dans le volet pendant le chargement.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>La recherche ne se relance pas toute seule à chaque geste : pas de saut de contenu.</li><li>Le chargement se lit là où le résultat arrivera.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Un violet d'action unique ; la carte reste neutre.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 3.9 : au chargement initial, un squelette dans le volet et des marqueurs qui apparaissent progressivement. Après un déplacement hors de la zone, la pilule « Voir les alertes ici » remplace « 3 nouvelles alertes ».</p><p><b>À éviter.</b> Deux pilules en même temps : une seule pilule contextuelle sous la recherche.</p></div>
+    </article>
+
+    <!-- Google Arts & Culture -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">08</p><h3 class="text-2xl font-bold">Google Arts &amp; Culture · Regroupements et volet</h3><p class="text-sm text-muted">Culture · <a href="https://mobbin.com/flows/219b2e99-5438-4ffd-b48a-8dc8f0a2c0e6">galerie en carte</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:gac-clusters}}" alt="Google Arts & Culture : pastilles orange numérotées 2, 12, 14 et liste « Musées près de vous » dans le volet"><figcaption><b>Regroupements numérotés</b>Pastilles pleines, chiffre blanc.</figcaption></figure>
+        <figure class="shot"><img src="{{img:gac-selected}}" alt="Google Arts & Culture : un musée sélectionné, volet réduit à sa fiche"><figcaption><b>Sélection</b>Le volet se réduit à l'élément choisi.</figcaption></figure>
+        <figure class="shot"><img src="{{img:hm-clusters}}" alt="H&M : regroupements rouges « 4 » entourés d'un halo sur une carte de Los Angeles"><figcaption><b>Halo de regroupement (H&amp;M)</b>Le halo indique « plusieurs ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Pastilles numérotées dont la taille suit le nombre.</li><li>Le volet passe de la liste « près de vous » à la fiche de l'élément choisi.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le regroupement évite le chevauchement et indique où regarder.</li><li>Le chiffre est lisible au pouce (pastille de 28 à 40 px).</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une seule couleur pour les regroupements, différente des marqueurs.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 3.4 : regroupements bleu primaire en trois tailles (déjà en place), qui se divisent au zoom (12 → 5 + 7 → individuels). Toucher un regroupement zoome. Un liseré de famille autour de la pastille s'il est homogène.</p><p><b>À éviter.</b> Une couleur de regroupement proche d'une famille d'alerte.</p></div>
+    </article>
+
+    <!-- Lime -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">09</p><h3 class="text-2xl font-bold">Lime · Zones expliquées</h3><p class="text-sm text-muted">Mobilité · <a href="https://mobbin.com/flows/01826238-e4a6-458c-8708-e912d7f2b780">stationnement et zones</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:lime-map}}" alt="Lime : zone rouge translucide sur la carte pendant un trajet"><figcaption><b>Zone sur la carte</b>Aplat translucide et contour.</figcaption></figure>
+        <figure class="shot"><img src="{{img:lime-zones}}" alt="Lime : liste des types de zones avec une vignette de carte illustrée pour chacun"><figcaption><b>Légende illustrée</b>Une vignette par type de zone.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Polygone : aplat à 20 % et contour plein de même teinte.</li><li>Légende en liste, une vignette de carte par type.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Chaque zone dit ce qu'elle implique, pas seulement ce qu'elle est.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Vignettes en mini-cartes : la légende parle la langue de la carte.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 3.11 : polygone translucide (teinte de famille à 16 % et contour en pointillés pour l'étendue). La légende « Comprendre la carte » ouverte depuis un bouton (i), avec une mini-carte par forme de marqueur et pour les zones.</p><p><b>À éviter.</b> Le rouge plein pour les zones : il est réservé à « Urgent ».</p></div>
+    </article>
+
+    <!-- Forest -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">10</p><h3 class="text-2xl font-bold">Forest · Guide de la carte</h3><p class="text-sm text-muted">Vélos · <a href="https://mobbin.com/flows/31d28c5f-b83a-4d47-a473-92638ebc50e1">informations de carte</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:forest-map}}" alt="Forest : carte 3D avec marqueurs, boutons info et recherche empilés à droite"><figcaption><b>Bouton (i) sur la carte</b>Empilé avec les autres contrôles.</figcaption></figure>
+        <figure class="shot"><img src="{{img:forest-guide}}" alt="Forest : « Your map guide » chaque icône de la carte expliquée en une phrase"><figcaption><b>« Votre guide de la carte »</b>Une icône, une phrase.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Une page « guide » : chaque symbole de la carte avec sa phrase.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'aide vient au moment du doute, pas au démarrage.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Des titres en capitales grasses et un fond crème : une personnalité forte sans effet gadget.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La légende « Comprendre la carte » : les quatre formes (losange incident, triangle vigilance, cercle positif, carré information), « Urgent », les regroupements, la zone suivie et « Vous êtes ici ». C'est aussi la garantie « jamais la couleur seule ».</p><p><b>À éviter.</b> Une page plein écran : chez nous, une feuille du bas suffit.</p></div>
+    </article>
+
+    <!-- Hypelist -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">11</p><h3 class="text-2xl font-bold">Hypelist · Filtrer la carte</h3><p class="text-sm text-muted">Adresses · <a href="https://mobbin.com/flows/877f37b5-e635-452c-99e2-7076e281684b">filtrer une carte</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:hypelist-map}}" alt="Hypelist : carte avec marqueurs-photos ronds et compteurs, bouton Filtre en haut"><figcaption><b>Bouton « Filtrer » centré</b>Retour et position de part et d'autre.</figcaption></figure>
+        <figure class="shot"><img src="{{img:hypelist-filter}}" alt="Hypelist : feuille « Filtrer par catégorie » avec coches et bouton Confirmer"><figcaption><b>Feuille de filtres</b>Cases cochées et « Confirmer ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Feuille de filtres par catégorie, avec un bouton de validation unique.</li><li>Le compteur est posé sur le marqueur (« 2 », « 3 »).</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le filtrage reste dans le contexte de la carte.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Pilules noires sur une carte en couleur : contrôles discrets et sûrs.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le bouton « Filtres » de l'en-tête (tâche 3.6) ouvre une feuille du bas avec les catégories cochées, en préparation de la phase 4. Le pastillage d'un compteur sur les marqueurs regroupés d'un même lieu.</p><p><b>À éviter.</b> Les marqueurs-photos : nos photos sont facultatives, ce sont les formes qui portent le sens.</p></div>
+    </article>
+
+    <!-- Wanderlog -->
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">12</p><h3 class="text-2xl font-bold">Wanderlog · Densité maîtrisée</h3><p class="text-sm text-muted">Voyage · <a href="https://mobbin.com/flows/593294c6-d415-4271-9644-4cf16b81f139">passage en carte</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:wanderlog-pins}}" alt="Wanderlog : nombreux marqueurs numérotés et colorés qui se chevauchent, volet « Day 1 »"><figcaption><b>Contre-exemple utile</b>Sans regroupement, les marqueurs se chevauchent.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Marqueurs numérotés reliés à la liste du volet.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Limite : au-delà de 15 marqueurs, la carte devient illisible sans regroupement.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une couleur par jour : jolie, mais elle ne se lit pas sans légende.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le critère de qualité de la tâche 3.9 (« beaucoup d'alertes ») : au-delà de 12 marqueurs visibles, on regroupe, et un marqueur sélectionné passe toujours au premier plan.</p><p><b>À éviter.</b> Coder une information uniquement par la couleur.</p></div>
+    </article>
+  </div>
+</section>
+
+<section id="matrice" class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">03 · Matrice</p><h2 class="h2">Qui fait quoi</h2><p class="lede">● pattern maîtrisé · ○ présent mais partiel · vide si absent. La dernière ligne situe notre carte actuelle.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line">
+    <table class="w-full min-w-[860px] text-sm">
+      <caption class="sr-only">Patterns de carte par app</caption>
+      <thead class="bg-sunk text-left text-xs uppercase tracking-wider text-muted">
+        <tr><th class="p-3">App</th><th class="p-3">Marqueurs typés</th><th class="p-3">Regroupements</th><th class="p-3">Fiche de sélection</th><th class="p-3">Volet 3 positions</th><th class="p-3">Recherche + filtres flottants</th><th class="p-3">Bascule liste / carte</th><th class="p-3">Zones et légende</th><th class="p-3">États (chargement, zone)</th></tr>
+      </thead>
+      <tbody class="divide-y divide-line text-center">
+        <tr><th class="p-3 text-left">Waze</th><td>●</td><td>○</td><td>●</td><td>○</td><td>○</td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Airbnb</th><td>○</td><td>○</td><td>●</td><td>●</td><td>●</td><td>●</td><td></td><td>○</td></tr>
+        <tr><th class="p-3 text-left">Too Good To Go</th><td>○</td><td></td><td>○</td><td>●</td><td>●</td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Citizen</th><td>●</td><td></td><td>●</td><td></td><td></td><td>○</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Météo (Apple)</th><td></td><td></td><td>○</td><td></td><td>○</td><td></td><td>●</td><td>○</td></tr>
+        <tr><th class="p-3 text-left">Resy</th><td>○</td><td></td><td>●</td><td>○</td><td>●</td><td>●</td><td></td><td>○</td></tr>
+        <tr><th class="p-3 text-left">Turo</th><td>○</td><td></td><td></td><td>●</td><td>●</td><td></td><td></td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Google Arts &amp; Culture</th><td>○</td><td>●</td><td>●</td><td>●</td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Lime</th><td>○</td><td></td><td></td><td>○</td><td></td><td></td><td>●</td><td></td></tr>
+        <tr><th class="p-3 text-left">Forest</th><td>●</td><td></td><td></td><td></td><td>○</td><td></td><td>●</td><td></td></tr>
+        <tr><th class="p-3 text-left">Hypelist</th><td>○</td><td>○</td><td></td><td>○</td><td>●</td><td>○</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Wanderlog</th><td>○</td><td></td><td>○</td><td>●</td><td></td><td>●</td><td></td><td></td></tr>
+        <tr class="bg-brand/10 font-semibold"><th class="p-3 text-left">95 Alerte (aujourd'hui)</th><td>●</td><td>○</td><td>●</td><td>●</td><td>○</td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-muted">Nos marqueurs, notre fiche de sélection et notre volet sont au niveau des meilleurs. Il nous manque : une vraie carte qu'on peut déplacer et zoomer, la bascule liste et carte, les zones avec leur légende, et les états de chargement et de zone.</p>
+</section>
+
+<section id="lecons" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+    <div class="grid gap-3"><p class="eyebrow">04 · Enseignements</p><h2 class="h2">Dix règles pour la carte</h2></div>
+    <ol class="grid gap-4 sm:grid-cols-2">
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">01 · Waze, Airbnb</p><p class="mt-1 font-display text-lg font-bold">Le fond s'efface, les données parlent</p><p class="mt-1 text-sm text-muted">Carte désaturée, une seule couleur par famille, aucune couleur décorative.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">02 · Waze, Forest</p><p class="mt-1 font-display text-lg font-bold">Le type se lit sans légende… mais la légende existe</p><p class="mt-1 text-sm text-muted">Forme + icône + couleur sur le marqueur, et un guide (i) au moment du doute.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">03 · Google Arts &amp; Culture, Wanderlog</p><p class="mt-1 font-display text-lg font-bold">Au-delà de 12 marqueurs, on regroupe</p><p class="mt-1 text-sm text-muted">Les pastilles numérotées se divisent au zoom ; toucher un regroupement zoome.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">04 · Airbnb, Resy</p><p class="mt-1 font-display text-lg font-bold">La sélection inverse, la fiche ne masque pas</p><p class="mt-1 text-sm text-muted">Marqueur agrandi et contrasté ; fiche à mi-hauteur, carte toujours visible.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">05 · Waze</p><p class="mt-1 font-display text-lg font-bold">Quoi, où, depuis quand, combien l'ont confirmé</p><p class="mt-1 text-sm text-muted">Les quatre informations de la fiche, dans cet ordre.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">06 · Too Good To Go, Airbnb</p><p class="mt-1 font-display text-lg font-bold">Recherche, filtres et bascule toujours au même endroit</p><p class="mt-1 text-sm text-muted">Barre flottante identique en carte et en liste ; pilule « Liste » ou « Carte » mémorisée.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">07 · Turo</p><p class="mt-1 font-display text-lg font-bold">On ne relance pas tout à chaque geste</p><p class="mt-1 text-sm text-muted">« Voir les alertes ici » après un déplacement ; chargement en place, en squelette.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">08 · Météo, Lime</p><p class="mt-1 font-display text-lg font-bold">Une zone est un aplat qui laisse voir la carte</p><p class="mt-1 text-sm text-muted">Teinte de famille translucide et contour ; ce que la zone implique, en une phrase.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">09 · Météo, Forest</p><p class="mt-1 font-display text-lg font-bold">Contrôles empilés à droite</p><p class="mt-1 text-sm text-muted">Ma position, zoom +/−, légende : des boutons ronds de 48 px, jamais sous le volet.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">10 · contre-exemple Citizen</p><p class="mt-1 font-display text-lg font-bold">Rouge rare, positif visible</p><p class="mt-1 text-sm text-muted">L'anneau pulsé reste réservé à « Urgent » ; les événements positifs ont la même taille de marqueur.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="da" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">05 · Direction artistique</p><h2 class="h2">« Vigilance lumineuse » appliquée à la carte</h2><p class="lede">La carte reste illustrée : pas de tuiles externes, conformément à AGENTS.md. Elle gagne des niveaux de zoom, des contours, des zones et une hiérarchie des contrôles.</p></div>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="card overflow-hidden"><div class="relative h-36"><div class="map-sk"></div><span class="pin" style="left:30%;top:45%;background:rgb(var(--incident))"></span><span class="pin tri" style="left:62%;top:35%"></span><span class="pin pos" style="left:72%;top:66%;background:rgb(var(--positive))"></span><span class="pin" style="left:45%;top:72%;background:rgb(var(--info));border-radius:3px;transform:translate(-50%,-50%)"></span></div><div class="p-4"><p class="font-bold">Fond effacé</p><p class="mt-1 text-sm text-muted">Terre, routes et eau en gris chauds et bleu pâle. Seuls les marqueurs, la zone suivie et « Vous êtes ici » portent une couleur saturée.</p></div></div>
+    <div class="card overflow-hidden"><div class="relative h-36"><div class="map-sk"></div><div style="position:absolute;left:22%;top:20%;width:46%;height:52%;border-radius:38% 52% 44% 40%;background:rgb(var(--info) / .16);border:2px dashed rgb(var(--info))"></div><span class="pin" style="left:45%;top:46%;background:rgb(var(--info));border-radius:3px;transform:translate(-50%,-50%)"></span></div><div class="p-4"><p class="font-bold">Zones translucides</p><p class="mt-1 text-sm text-muted">Une alerte de zone (inondation, travaux) devient un polygone à 16 % de la teinte de famille, avec un contour en pointillés et son marqueur au centre.</p></div></div>
+    <div class="card overflow-hidden"><div class="grid h-36 place-items-center"><div class="flex items-end gap-4"><span class="grid h-7 w-7 place-items-center rounded-full bg-primary text-[11px] font-bold text-white ring-4 ring-primary/20">3</span><span class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-bold text-white ring-4 ring-primary/20">12</span><span class="grid h-11 w-11 place-items-center rounded-full bg-primary text-sm font-bold text-white ring-4 ring-primary/20">48</span></div></div><div class="p-4"><p class="font-bold">Regroupements en trois tailles</p><p class="mt-1 text-sm text-muted">Bleu primaire avec halo : moins de 10, moins de 30, plus. Le chiffre est toujours lisible au pouce.</p></div></div>
+    <div class="card overflow-hidden"><div class="grid h-36 place-items-center"><div class="grid gap-2"><span class="grid h-11 w-11 place-items-center rounded-full border border-line bg-card shadow-sm text-xs font-semibold">+</span><span class="grid h-11 w-11 place-items-center rounded-full border border-line bg-card shadow-sm text-xs font-semibold">−</span><span class="grid h-11 w-11 place-items-center rounded-full border border-line bg-card shadow-sm text-xs font-semibold">◎</span></div></div><div class="p-4"><p class="font-bold">Pile de contrôles</p><p class="mt-1 text-sm text-muted">Zoom +/−, ma position et légende (i) : des boutons ronds empilés à droite, qui remontent avec le volet.</p></div></div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="eyebrow">Mouvement</p><p class="mt-2 text-sm">Les marqueurs apparaissent progressivement au chargement (comme sur l'écran de préparation de la carte). Les regroupements se divisent en fondu au zoom ; le marqueur sélectionné grossit. Si les animations sont réduites, le changement est direct.</p></div>
+    <div class="card p-5"><p class="eyebrow">Sombre</p><p class="mt-2 text-sm">Une carte nuit bleutée, comme Resy : les familles s'éclaircissent (tokens sombres existants) et les contours blancs des marqueurs passent à 2 px pour rester détachés.</p></div>
+    <div class="card p-5"><p class="eyebrow">Niveaux</p><p class="mt-2 text-sm">Le zoom a quatre niveaux, chacun signalé par une étiquette discrète sous la recherche : Département, Intercommunalité, Commune, Quartier. Les libellés de la carte changent avec le niveau.</p></div>
+  </div>
+</section>
+
+<section id="audit" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+    <div class="grid gap-3"><p class="eyebrow">06 · Audit</p><h2 class="h2">Notre carte actuelle</h2><p class="lede">Captures du prototype (fin de la phase 2), en clair et en sombre, au format 390 × 844. La base est solide : marqueurs conformes, regroupement, fiche avec votes, volet en trois positions. Il manque la vraie carte et ses états.</p></div>
+    <div class="strip">
+      <figure class="shot"><img src="{{img:ours-peek}}" alt="95 Alerte : carte d'accueil avec volet replié et carte Bien démarrer sous le bouton +"><figcaption><b>Accueil (volet replié)</b><span class="text-incident">−</span> « Bien démarrer » passe sous le +. <span class="text-incident">−</span> La zone suivie n'est pas dessinée.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-half}}" alt="95 Alerte : volet à mi-hauteur avec filtres et carte Bien démarrer"><figcaption><b>Volet à mi-hauteur</b><span class="text-positive">+</span> Filtres, compteur. <span class="text-incident">−</span> Filtres dans le volet, invisibles volet replié.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-selected}}" alt="95 Alerte : marqueur sélectionné et fiche Voirie avec Confirmer 22 et Contester"><figcaption><b>Sélection</b><span class="text-positive">+</span> Fiche à la Waze, votes. <span class="text-incident">−</span> Ni auteur ni statut ; pas de passage à l'alerte voisine.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-dark}}" alt="95 Alerte en sombre : carte nuit"><figcaption><b>Sombre</b><span class="text-positive">+</span> Lisible. <span class="text-incident">−</span> La pilule « 3 nouvelles alertes » garde un contour de focus après un toucher.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-nopos}}" alt="95 Alerte en sombre : bandeau Position non définie"><figcaption><b>Sans position</b><span class="text-positive">+</span> Bandeau clair. <span class="text-incident">−</span> La carte montre toujours Pontoise.</figcaption></figure>
+    </div>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="card p-5"><p class="font-bold">Ce qu'on garde</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Formes de marqueurs, halo « Urgent », regroupement bleu</li><li>Fiche de sélection avec Confirmer / Contester</li><li>Volet en trois positions, compteur, filtres de type</li><li>Bandeau « Position non définie »</li></ul></div>
+      <div class="card p-5"><p class="font-bold">Ce qu'on refond</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Fond : carte du Val-d'Oise à 4 niveaux, déplaçable et zoomable</li><li>En-tête : recherche, filtres et notifications ; puces sous la recherche</li><li>Fiche : auteur public, statut, alerte voisine au balayage</li><li>« Bien démarrer » : dans le volet, jamais sous le +</li></ul></div>
+      <div class="card p-5"><p class="font-bold">Ce qu'on ajoute</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Zone suivie dessinée, polygones d'alertes de zone</li><li>Pile de contrôles : zoom, position, légende</li><li>Bascule « Liste » / « Carte » mémorisée</li><li>États : squelette, « Voir les alertes ici », vide, erreur, densité</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="cible" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">07 · Écran cible</p><h2 class="h2">La carte et ses états</h2><p class="lede">Huit esquisses : l'état normal, la sélection, le zoom et les états de la tâche 3.9. La barre du haut (recherche, filtres, notifications) et la pile de contrôles restent identiques partout.</p></div>
+  <div class="flex gap-5 overflow-x-auto pb-4" role="list">
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><span class="ring" style="left:52%;top:40%;width:120px;height:120px"></span><span class="me" style="left:52%;top:40%"></span><span class="pin" style="left:38%;top:32%;background:rgb(var(--incident))"></span><span class="pin tri" style="left:66%;top:30%"></span><span class="pin pos" style="left:62%;top:52%;background:rgb(var(--positive))"></span><div class="absolute inset-x-2 top-6 grid gap-1"><div class="flex h-6 items-center gap-1 rounded-full bg-card px-2 text-[8px] text-muted shadow">Pontoise · rechercher<span class="ml-auto">⚙</span></div><div class="flex gap-1"><span class="chipk on">Toutes</span><span class="chipk">Positives</span><span class="chipk">Négatives</span></div></div><div class="absolute right-2 top-[44%] grid gap-1"><span class="grid h-5 w-5 place-items-center rounded-full bg-card text-[8px] shadow">+</span><span class="grid h-5 w-5 place-items-center rounded-full bg-card text-[8px] shadow">−</span><span class="grid h-5 w-5 place-items-center rounded-full bg-card text-[8px] shadow">◎</span></div><div class="sheet pb-8"><div class="grab"></div><p class="t">9 alertes dans votre zone</p><p class="l">Rayon 5 km · mis à jour à l'instant</p></div><div class="absolute bottom-2 left-1/2 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full bg-primary text-white text-[10px]">+</div></div><p class="anno"><b>1 · Accueil</b>Zone suivie dessinée, puces sous la recherche, pile de contrôles, compteur dans le volet.</p></div>
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><span class="pin" style="left:40%;top:30%;background:rgb(var(--incident));width:22px;height:22px;box-shadow:0 0 0 4px rgb(var(--incident) / .25)"></span><span class="pin pos" style="left:64%;top:36%;background:rgb(var(--positive))"></span><div class="sheet"><div class="grab"></div><p class="l"><b class="text-incident">Incendie</b> · il y a 12 min · Jean D.</p><p class="t mt-1">Fumée rue Carnot</p><p class="l">Pontoise · 1,1 km · Transmis</p><div class="mt-1.5 flex gap-1"><span class="chipk on">⬆ 24</span><span class="chipk">⬇ 3</span><span class="chipk">8 commentaires</span></div><span class="b1 !mt-2">Voir le détail</span><p class="l mt-1 text-center">‹ balayez pour l'alerte voisine ›</p></div></div><p class="anno"><b>2 · Sélection</b>Quoi, où, depuis quand, par qui, combien ; balayage vers l'alerte voisine (Waze, Resy).</p></div>
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><span class="absolute grid h-7 w-7 place-items-center rounded-full bg-primary text-[9px] font-bold text-white ring-4 ring-primary/20" style="left:30%;top:30%">12</span><span class="absolute grid h-6 w-6 place-items-center rounded-full bg-primary text-[9px] font-bold text-white ring-4 ring-primary/20" style="left:62%;top:46%">5</span><div class="absolute left-1/2 top-6 -translate-x-1/2 rounded-full bg-ink/80 px-2 py-0.5 text-[8px] text-paper">Intercommunalité</div><div class="sheet pb-8"><div class="grab"></div><p class="t">47 alertes · Cergy-Pontoise</p></div></div><p class="anno"><b>3 · Zoom arrière</b>Niveau annoncé, regroupements par taille ; toucher un regroupement zoome.</p></div>
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><div style="position:absolute;left:20%;top:22%;width:58%;height:34%;border-radius:40% 55% 45% 38%;background:rgb(var(--info) / .16);border:2px dashed rgb(var(--info))"></div><span class="pin" style="left:48%;top:38%;background:rgb(var(--info));border-radius:3px;transform:translate(-50%,-50%)"></span><div class="sheet"><div class="grab"></div><p class="l"><b class="text-info">Inondation</b> · zone · il y a 2 h</p><p class="t mt-1">Crue de l'Oise, quais fermés</p><p class="l">Zone de 1,2 km · Pontoise</p></div></div><p class="anno"><b>4 · Alerte de zone</b>Polygone translucide de la famille, marqueur au centre (Lime, Météo).</p></div>
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk opacity-60"></div><div class="absolute left-1/2 top-12 -translate-x-1/2 rounded-full bg-primary px-2 py-1 text-[8px] font-semibold text-white">Voir les alertes ici</div><div class="sheet"><div class="grab"></div><div class="h-2 w-2/3 rounded bg-line"></div><div class="mt-1.5 h-10 rounded-lg bg-sunk"></div><div class="mt-1.5 h-10 rounded-lg bg-sunk"></div></div></div><p class="anno"><b>5 · Hors zone, chargement</b>« Voir les alertes ici » après déplacement ; squelette dans le volet (Turo).</p></div>
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><span class="ring" style="left:50%;top:40%;width:120px;height:120px"></span><span class="me" style="left:50%;top:40%"></span><div class="sheet"><div class="grab"></div><p class="t">Aucun événement dans cette zone.</p><p class="l">Élargissez la zone ou revenez plus tard.</p><span class="b2 !mt-2">Élargir à 10 km</span></div></div><p class="anno"><b>6 · Vide</b>Texte du PRD, une action utile (élargir la zone).</p></div>
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-sunk"></div><div class="body items-center justify-center text-center"><p class="t">Impossible de charger la carte.</p><p class="l mt-1">Vérifiez votre connexion. La liste des alertes reste disponible.</p><span class="b1 !mt-3 w-full">Réessayer</span><span class="b3">Voir la liste</span></div></div><p class="anno"><b>7 · Erreur</b>Texte du PRD, réessayer, et la liste en secours.</p></div>
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-card"></div><div class="absolute inset-x-2 top-6 grid gap-1"><div class="flex h-6 items-center rounded-full border border-line bg-card px-2 text-[8px] text-muted">Pontoise · rechercher</div></div><div class="absolute inset-x-2 top-14 grid gap-1.5"><div class="h-10 rounded-lg border border-line"></div><div class="h-10 rounded-lg border border-line"></div><div class="h-10 rounded-lg border border-line"></div></div><div class="absolute bottom-10 left-1/2 -translate-x-1/2 rounded-full bg-ink px-2 py-1 text-[8px] font-semibold text-paper">Carte</div></div><p class="anno"><b>8 · Liste</b>Même barre ; pilule « Carte » flottante, choix mémorisé (Airbnb, Too Good To Go).</p></div>
+  </div>
+</section>
+
+<section id="plan" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+    <div class="grid gap-3"><p class="eyebrow">08 · Plan</p><h2 class="h2">Refonte en six lots</h2><p class="lede">Chaque lot livre les deux versions (prototype React et canevas, en clair et en sombre). Il passe par la revue de direction artistique (390, 375, 430) et le test de bout en bout. Les composants nouveaux entrent d'abord dans le Design System, avec l'étiquette « New ».</p></div>
+    <div class="grid gap-4">
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">C0 · Fondations · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Langage de carte</h3><p class="mt-2 text-sm text-muted">Préalable</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">MapControls</span> pile zoom, position, légende</li><li><span class="tag">MapLevelTag</span> étiquette de niveau</li><li><span class="tag">AreaShape</span> polygone de zone</li><li><span class="tag">MapLegend</span> feuille « Comprendre la carte »</li><li><span class="tag">ViewToggle</span> pilule Liste / Carte</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Section « Carte (phase 3) » dans le Design System, étiquetée « New »</li><li>Contrastes AA des contrôles sur la carte, clair et sombre</li><li>Aucune nouvelle teinte : familles et tokens existants</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">C1 · Carte · 3 j</p><h3 class="mt-1 text-xl font-bold">Val-d'Oise à 4 niveaux</h3><p class="mt-2 text-sm text-muted">Tâches 3.1, 3.2</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Carte SVG du département : contour, intercommunalités, communes, quartiers fictifs du secteur Cergy-Pontoise, hors couverture grisé</li><li>Déplacement au doigt, pincement, double toucher, boutons +/−, clavier (flèches, +/−)</li><li>Libellés selon le niveau ; étiquette de niveau sous la recherche</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>60 images/s sur le prototype (transform CSS, pas de re-rendu SVG)</li><li>Toujours recentrable sur la zone suivie</li><li>Aucune tuile externe (règle AGENTS.md)</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">C2 · Marqueurs · 2 j</p><h3 class="mt-1 text-xl font-bold">Lire et regrouper</h3><p class="mt-2 text-sm text-muted">Tâches 3.3, 3.4, 3.10</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Marqueurs existants, sélection agrandie et contrastée, toujours au premier plan</li><li>Regroupement par niveau de zoom (12 → 5 + 7 → individuels), toucher = zoom animé</li><li>Alertes expirées absentes de la carte active</li><li>Densité : au-delà de 12 marqueurs visibles, regroupement plus serré</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Marqueurs distinguables en niveaux de gris (validation de la phase)</li><li>Zones tactiles d'au moins 44 px autour de chaque marqueur</li><li>Lecteur d'écran : « Incendie, Urgent, 1,1 km »</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">C3 · Position et en-tête · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Se repérer, filtrer</h3><p class="mt-2 text-sm text-muted">Tâches 3.5, 3.6</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>« Vous êtes ici » avec halo de précision ; zone suivie dessinée ; position manuelle si refusée</li><li>Barre : recherche (commune, adresse), bouton Filtres, notifications avec badge ; accès au profil par l'onglet</li><li>Puces Toutes / Positives / Négatives sous la recherche (sorties du volet)</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Rien de la barre ne chevauche les marqueurs du centre</li><li>Les filtres mettent à jour le compteur du volet</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">C4 · Volet et fiche · 2 j</p><h3 class="mt-1 text-xl font-bold">Sélectionner, basculer</h3><p class="mt-2 text-sm text-muted">Tâches 3.7, 3.8</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Fiche : catégorie, ancienneté, auteur public, commune et distance, statut, votes et commentaires, « Voir le détail »</li><li>Balayage vers l'alerte voisine, la carte suit</li><li>Pilule « Liste » / « Carte » mémorisée (préférence)</li><li>« Bien démarrer » déplacé sous les filtres du volet, jamais sous le +</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Smart animate du marqueur à la fiche</li><li>Fermeture (×) et Échap ; focus rendu au marqueur</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">C5 · États et zones · 2 j</p><h3 class="mt-1 text-xl font-bold">Tout prévoir</h3><p class="mt-2 text-sm text-muted">Tâches 3.9, 3.11</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Chargement : squelette du volet, marqueurs progressifs</li><li>« Aucun événement dans cette zone. », « Impossible de charger la carte. », hors connexion, beaucoup d'alertes</li><li>« Voir les alertes ici » après déplacement ; pilule « n nouvelles alertes »</li><li>Polygones des alertes de zone ; feuille « Comprendre la carte »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Chaque état déclenchable par le mode démo</li><li>Textes du PRD §10.3</li><li>Une seule pilule contextuelle à la fois</li></ul></div>
+        </div>
+      </article>
+    </div>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="card p-5"><p class="eyebrow">Ordre et charge</p><p class="mt-2 text-sm text-muted">C0, puis C1 (le plus lourd), puis C2 et C3 en parallèle, puis C4 et C5 : environ 12 jours. Canevas (3.C) au fil des lots.</p></div>
+      <div class="card p-5"><p class="eyebrow">Indicateurs (tests)</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>« Que se passe-t-il autour de moi ? » compris en moins de 3 s</li><li>Type d'alerte reconnu sans couleur : 90 % ou plus</li><li>Ouvrir une alerte en 1 toucher depuis la carte</li><li>S2 jouable jusqu'à la fiche, en clair et en sombre</li></ul></div>
+      <div class="card p-5"><p class="eyebrow">Risques</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Poids de la carte SVG du département : la simplifier et charger les quartiers à la demande</li><li>Gestes au doigt dans un artefact : tester le pincement sur iOS et Android</li><li>Quartiers fictifs : les nommer comme tels dans la légende</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="decisions" class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">09 · Décisions</p><h2 class="h2">Avant de démarrer</h2><p class="lede">Ces points touchent la navigation, le CDC ou les tokens : selon AGENTS.md, ils demandent une validation.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="bg-sunk text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">#</th><th class="p-3">Question</th><th class="p-3">Recommandation</th><th class="p-3">Impact si non</th></tr></thead>
+      <tbody class="divide-y divide-line">
+        <tr><td class="p-3 font-mono">E1</td><td class="p-3">La tâche 3.6 prévoit logo et profil dans l'en-tête : les garder ?</td><td class="p-3">Non. Recherche, filtres et notifications suffisent ; le profil est déjà un onglet. Moins de chrome sur la carte (Airbnb, Too Good To Go).</td><td class="p-3 text-muted">En-tête plus chargé, recherche plus étroite</td></tr>
+        <tr><td class="p-3 font-mono">E2</td><td class="p-3">Bascule « Liste » / « Carte » sur l'accueil alors qu'un onglet « Alertes » existe (navigation principale) ?</td><td class="p-3">Garder l'onglet « Alertes » (liste complète, phase 4) ; la pilule de l'accueil bascule la même zone en liste, sans changer d'onglet.</td><td class="p-3 text-muted">Doublon à expliquer, ou retrait de 3.8</td></tr>
+        <tr><td class="p-3 font-mono">E3</td><td class="p-3">Puces Toutes / Positives / Négatives sous la recherche plutôt que dans le volet ?</td><td class="p-3">Oui : visibles à tout moment, comme Too Good To Go.</td><td class="p-3 text-muted">Filtres cachés volet replié</td></tr>
+        <tr><td class="p-3 font-mono">E4</td><td class="p-3">Balayage entre alertes dans la fiche de sélection ?</td><td class="p-3">Oui, avec flèches clavier et annonce « 2 sur 9 ».</td><td class="p-3 text-muted">Retour à la carte pour chaque alerte</td></tr>
+        <tr><td class="p-3 font-mono">E5</td><td class="p-3">Quartiers fictifs sur le secteur Cergy-Pontoise uniquement ?</td><td class="p-3">Oui pour le prototype ; communes réelles partout, quartiers détaillés là où sont les données de démo.</td><td class="p-3 text-muted">Charge de dessin bien plus lourde</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="wrap flex flex-wrap items-center justify-between gap-3 py-8 text-sm text-muted">
+    <p>95 Alerte · rapport généré par <span class="font-mono">tools/build_benchmark_refonte.py carte-refonte</span> · sources Mobbin (iOS), aperçus à basse résolution.</p>
+    <p>Rapports liés : <span class="font-mono">benchmark-mobbin.html</span>, <span class="font-mono">onboarding-refonte.html</span></p>
+  </div>
+</footer>

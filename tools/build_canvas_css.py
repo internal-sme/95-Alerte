@@ -67,6 +67,13 @@ SCREEN = r"""
 .screen95.welcome{background:var(--bg)}
 a.pill{text-decoration:none}
 .tap-through{display:flex;flex-direction:column;flex:1;color:inherit}
+/* Carte (phase 3) : écran plein cadre, volet avec sous-titre */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;background:var(--bg)}
+.map-screen{overflow:hidden}
+.bs-titles{flex:1;min-width:0}
+.bs-titles h2{margin:0;font:600 var(--fs-h3)/var(--lh-h3) var(--font)}
+.bs-titles p{margin:2px 0 0;color:var(--text-muted);font:400 var(--fs-caption)/1.4 var(--font)}
+.map-live a.marker,.map-live a.cluster,.map-controls a.icon-btn,a.view-toggle,a.chip{text-decoration:none}
 /* Icônes Phosphor en masques : <span class="ph i i-fire" aria-hidden="true"></span> */
 .i{display:inline-block;background-color:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
 """
