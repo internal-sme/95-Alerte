@@ -43,6 +43,8 @@ Une phase n'est terminée que lorsque **les deux versions** sont à jour et publ
 - **Revue de direction artistique avant de présenter la phase** (captures en clair et en sombre, 390 × 844, 375 × 812 et 430 × 932) : cohérence avec les écrans existants, espacements uniquement en tokens (`--s-*`), hiérarchie typographique, rouge rare, aucun texte coupé ou masqué (toast, FAB, pied d'écran).
 - **Boutons : uniquement ceux du Design System** — `btn-primary` (un seul par écran), `btn-secondary`, `btn-ghost`, `btn-destructive`, avec `btn-block` (CTA de pied d'écran) ou `btn-inline` (action annexe). Pas de lien stylé en bouton ni de style ad hoc. Dans le canevas, un `<a class="btn …">` doit garder les couleurs du bouton.
 - Formulaires (connexion, inscription, signalement) : une question par écran, CTA principal toujours au même endroit, dans le pied d'écran.
+- **Transitions entre écrans : « smart animate »** (à partir de la phase 2, et appliqué à la phase 1) : View Transitions API via `useScreenTransitions` ; les éléments communs aux deux écrans portent un `view-transition-name` (titre d'en-tête, barre d'étapes, bouton principal, barre d'onglets, logo) et se déforment, le reste se fond. Tout nouvel écran nomme ses éléments partagés. Animations réduites : changement direct.
+- **Illustrations : Phosphor Duotone** (composant `Spot`), même bibliothèque que les icônes. Pas de dessin maison ni d'autre bibliothèque d'illustrations.
 
 ## Branches et pull requests — une branche par phase
 

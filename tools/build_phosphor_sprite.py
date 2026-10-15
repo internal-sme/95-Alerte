@@ -10,7 +10,7 @@ Usage :
     python3 tools/build_phosphor_sprite.py package/assets > sprite.svg
 
 Dans la page : <svg class="ph" aria-hidden="true"><use href="#ph-fire"/></svg>
-Variante pleine : #ph-fire-fill
+Variante pleine : #ph-fire-fill · Duotone (illustrations) : #ph-envelope-open-duotone
 """
 import re
 import sys
@@ -47,6 +47,9 @@ FILL = [
     "paper-plane-tilt", "squares-four",
 ]
 
+# Illustrations ponctuelles (écrans de confirmation, états) : Phosphor Duotone, même bibliothèque que l'interface
+DUOTONE = ["envelope-open", "hand-waving", "seal-check", "map-trifold", "identification-card", "shield-check"]
+
 
 def inner(svg: str) -> str:
     return re.sub(r"^.*?<svg[^>]*>|</svg>\s*$", "", svg.strip(), flags=re.S)
@@ -60,6 +63,9 @@ def main(assets: Path) -> None:
     for name in FILL:
         src = assets / "fill" / f"{name}-fill.svg"
         out.append(f'<symbol id="ph-{name}-fill" viewBox="0 0 256 256">{inner(src.read_text())}</symbol>')
+    for name in DUOTONE:
+        src = assets / "duotone" / f"{name}-duotone.svg"
+        out.append(f'<symbol id="ph-{name}-duotone" viewBox="0 0 256 256">{inner(src.read_text())}</symbol>')
     out.append("</svg>")
     sys.stdout.write("".join(out))
 

@@ -1360,16 +1360,10 @@ function AuthHeader({ title, onBack, step }) {
   );
 }
 
-/* Illustration de marque (benchmark onboarding) : pictogramme central entouré des quatre formes
-   de familles d'alertes — le vocabulaire visuel de la carte */
-function Illustration95({ icon, tone }) {
-  return (
-    <div className={cx("ill95", tone && `tone-${tone}`)} aria-hidden="true">
-      <span className="bg" />
-      <svg className="shapes" viewBox="0 0 176 132"><circle className="s-pos" cx="30" cy="30" r="11" /><path className="s-inc" d="M146 14 159 27 146 40 133 27Z" /><path className="s-vig" d="M150 92 163 115H137Z" /><rect className="s-info" x="16" y="88" width="22" height="22" rx="6" /></svg>
-      <span className="core"><Icon name={icon} /></span>
-    </div>
-  );
+/* Illustration ponctuelle : icône Phosphor Duotone dans une pastille (même bibliothèque que l'interface,
+   pas de dessin maison). Fond jaune de marque doux, ou teinte de la famille pour les tons positif/erreur. */
+function Spot({ icon, tone }) {
+  return <span className={cx("spot", tone && `tone-${tone}`)} aria-hidden="true"><Icon name={`${icon}-duotone`} /></span>;
 }
 
 /* La confidentialité dite là où naît l'inquiétude, sous le champ concerné (Nextdoor) */
@@ -1628,7 +1622,7 @@ function SignupEmailScreen() {
     <div className="screen auth">
       <AuthHeader title="Créer un compte" step={3} onBack={() => setPhase("address")} />
       <div className="auth-center">
-        <Illustration95 icon="envelope" />
+        <Spot icon="envelope-open" />
         <h2>Confirmez votre adresse e-mail</h2>
         <p>Nous avons envoyé un lien à <b>{maskEmail(email)}</b>. Ouvrez-le pour confirmer votre adresse.</p>
       </div>
@@ -1781,7 +1775,7 @@ function SignupDoneScreen() {
     <div className="screen auth">
       <div className="screen-pad auth-done">
         <div className="auth-center compact" role="status">
-          <Illustration95 icon="hand-waving" tone="positive" />
+          <Spot icon="hand-waving" />
           <h2>Bienvenue, {f.firstName} !</h2>
           <p>Votre compte 95 Alerte est prêt.</p>
         </div>
@@ -2029,8 +2023,21 @@ function usePrefsEffects(prefs) {
   }, [prefs]);
 }
 
+/* Transitions entre écrans : « smart animate » (View Transitions API). Les éléments présents des deux côtés
+   portent un view-transition-name (titre d'en-tête, barre d'étapes, bouton principal, barre d'onglets) et se
+   déforment d'un écran à l'autre ; le reste se fond. Sans l'API ou avec les animations réduites : changement direct. */
+const SCREEN_ACTIONS = new Set(["AUTH_GO", "LOGIN", "GUEST", "LOGOUT", "SET_TAB", "PUSH", "POP"]);
+function useScreenTransitions(rawDispatch) {
+  return useCallback((action) => {
+    const changesScreen = SCREEN_ACTIONS.has(action.type) || (action.type === "AUTH_SET" && action.patch && action.patch.step);
+    if (!changesScreen || !document.startViewTransition || motionReduced()) return rawDispatch(action);
+    document.startViewTransition(() => ReactDOM.flushSync(() => rawDispatch(action)));
+  }, [rawDispatch]);
+}
+
 function App() {
-  const [state, dispatch] = useReducer(reducer, undefined, initialState);
+  const [state, rawDispatch] = useReducer(reducer, undefined, initialState);
+  const dispatch = useScreenTransitions(rawDispatch);
   const now = useClock(state.demo.timeSpeed);
   usePrefsEffects(state.prefs);
   const store = useMemo(() => ({ state, dispatch }), [state]);
