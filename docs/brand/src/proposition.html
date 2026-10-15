@@ -1,0 +1,142 @@
+<title>Marque 95 Alerte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'] },
+      colors: {
+        page: 'var(--page)', card: 'var(--card)', line: 'var(--line)', ink: 'var(--ink)', mute: 'var(--mute)', accent: 'var(--accent)', 'accent-soft': 'var(--accent-soft)',
+        good: 'var(--good)', 'good-soft': 'var(--good-soft)', warn: 'var(--warn)', 'warn-soft': 'var(--warn-soft)'
+      }
+    } }
+  };
+</script>
+<style>
+/* Page de décision : colonne de lecture, maquettes d'options dessinées en Tailwind avec leurs couleurs propres
+   (indépendantes du thème de la page, puisque ce sont des rendus d'écran). */
+:root{--page:#F5F7FA;--card:#FFFFFF;--line:#DCE3EC;--ink:#0F172A;--mute:#475569;--accent:#1E40AF;--accent-soft:#E3E9FA;--good:#15803D;--good-soft:#E2F4E8;--warn:#B45309;--warn-soft:#FDF0DC}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0B1220;--card:#111A2E;--line:#273452;--ink:#F1F5F9;--mute:#A3B1C6;--accent:#93B4FF;--accent-soft:#1B2A4D;--good:#6FD893;--good-soft:#15301F;--warn:#F6B26A;--warn-soft:#3A2A14;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#0B1220;--card:#111A2E;--line:#273452;--ink:#F1F5F9;--mute:#A3B1C6;--accent:#93B4FF;--accent-soft:#1B2A4D;--good:#6FD893;--good-soft:#15301F;--warn:#F6B26A;--warn-soft:#3A2A14;color-scheme:dark}
+body{background:var(--page);color:var(--ink)}
+h1,h2,h3{text-wrap:balance}
+.logo95-yellow{fill:#F0C009}.logo95-red{fill:#E6282F}
+.logo95-word{fill:currentColor}
+.shot img{aspect-ratio:299/678;width:100%;height:auto;display:block}
+.num{font-variant-numeric:tabular-nums}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+</style>
+
+<div class="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6">
+
+  <header class="grid gap-5 border-b border-line pb-8">
+    <p class="text-xs font-semibold uppercase tracking-widest text-mute">95 Alerte · Proposition de marque · Octobre 2026</p>
+    <div class="flex flex-wrap items-center gap-6">
+      <div class="w-24 text-ink">{{logo}}</div>
+      <h1 class="max-w-xl text-3xl font-extrabold tracking-tight sm:text-4xl">Logo, écran de démarrage et couleurs</h1>
+    </div>
+    <p class="max-w-3xl text-mute">Le logo est intégré au prototype, avec un nouvel écran de démarrage. La palette de l'application n'est pas modifiée : cette page compare les couleurs du logo à celles de <span class="font-mono text-sm">DESIGN_SYSTEM.md</span> et propose trois façons de les accorder, pour décider ensemble.</p>
+    <div class="grid max-w-3xl gap-1 rounded-xl border border-line bg-card p-4 text-sm"><b>Décisions du 15 octobre</b><span class="text-mute">Démarrage sur fond blanc avec le logo et un halo jaune léger animé (fusion monday.com × Pangea) ; fond blanc sur tous les écrans ; option de couleurs B retenue et intégrée ; logo vectorisé reçu. La section 2 montre encore la première version (aplat bleu), remplacée depuis.</span></div>
+    <ul class="flex flex-wrap gap-2 text-sm">
+      <li class="rounded-full bg-good-soft px-3 py-1 font-semibold text-good">Logo · intégré</li>
+      <li class="rounded-full bg-good-soft px-3 py-1 font-semibold text-good">Démarrage · fond blanc et halo jaune</li>
+      <li class="rounded-full bg-good-soft px-3 py-1 font-semibold text-good">Couleurs · option B validée et intégrée</li>
+    </ul>
+  </header>
+
+  <!-- 1. LOGO -->
+  <section class="mt-14 grid gap-6" aria-labelledby="t-logo">
+    <h2 id="t-logo" class="text-2xl font-bold">1. Le logo dans l'application</h2>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <figure class="grid gap-2"><div class="grid aspect-square place-items-center rounded-xl border border-line p-6" style="background:#F8FAFC;color:#0F172A"><div class="w-28">{{logo}}</div></div><figcaption class="text-sm text-mute">Fond clair (<span class="font-mono">--bg</span>)</figcaption></figure>
+      <figure class="grid gap-2"><div class="grid aspect-square place-items-center rounded-xl border border-line p-6" style="background:#0B1220;color:#F1F5F9"><div class="w-28">{{logo}}</div></div><figcaption class="text-sm text-mute">Fond sombre : « Alerte » passe en clair</figcaption></figure>
+      <figure class="grid gap-2"><div class="grid aspect-square place-items-center rounded-xl border border-line p-6" style="background:#1E40AF;color:#FFFFFF"><div class="w-28">{{logo}}</div></div><figcaption class="text-sm text-mute">Aplat bleu de marque (démarrage)</figcaption></figure>
+      <figure class="grid gap-2"><div class="grid aspect-square place-items-center rounded-xl border border-line p-6" style="background:#F8FAFC"><div class="w-28">{{mark}}</div></div><figcaption class="text-sm text-mute">Symbole seul (petites tailles, icône)</figcaption></figure>
+    </div>
+    <ul class="grid max-w-3xl list-disc gap-1.5 pl-5 text-sm text-mute">
+      <li>Fichier source conservé tel quel : <span class="font-mono">docs/brand/logo-95-alerte.svg</span>. Dans l'app, il est intégré en SVG (composant <span class="font-mono">Logo95</span>), donc net à toutes les tailles.</li>
+      <li>« 95 » jaune et gyrophare rouge gardent leurs couleurs d'origine dans tous les thèmes ; seul « Alerte » suit la couleur du texte pour rester lisible en mode sombre.</li>
+      <li>Le mot « Alerte » est vectorisé (fichier fourni le 15 octobre) : rendu identique au logo d'origine, sans police à charger.</li>
+    </ul>
+  </section>
+
+  <!-- 2. SPLASH -->
+  <section class="mt-16 grid gap-6" aria-labelledby="t-splash">
+    <h2 id="t-splash" class="text-2xl font-bold">2. Écran de démarrage : 5 références Mobbin</h2>
+    <p class="max-w-3xl text-mute">27 écrans de démarrage examinés sur Mobbin. Les cinq ci-dessous sont ceux qui servent le mieux un logo coloré avec un mot-symbole. Chaque vignette ouvre la page Mobbin.</p>
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <figure class="shot grid content-start gap-2"><a class="overflow-hidden rounded-2xl ring-2 ring-accent" href="https://mobbin.com/screens/f4e17e11-35dc-4bad-af21-c4e549abc3a8" target="_blank" rel="noopener">{{img:noom|Noom, aplat corail et mot-symbole blanc}}</a><figcaption class="text-sm"><b>Noom · retenu</b><span class="block text-mute">Aplat de couleur plein écran, logo seul au centre. Le plus franc et le plus mémorisable.</span></figcaption></figure>
+      <figure class="shot grid content-start gap-2"><a class="overflow-hidden rounded-2xl border border-line" href="https://mobbin.com/screens/b10c50cc-1c65-41a4-aa63-a2a69fb670b1" target="_blank" rel="noopener">{{img:monday|monday.com, symbole multicolore sur blanc}}</a><figcaption class="text-sm"><b>monday.com</b><span class="block text-mute">Symbole multicolore seul sur blanc : laisse parler les couleurs du logo.</span></figcaption></figure>
+      <figure class="shot grid content-start gap-2"><a class="overflow-hidden rounded-2xl border border-line" href="https://mobbin.com/screens/e47dc06f-a07a-4a08-b71d-40aef1c57131" target="_blank" rel="noopener">{{img:pangea|Pangea, dégradé bleu très clair}}</a><figcaption class="text-sm"><b>Pangea</b><span class="block text-mute">Dégradé bleu très léger : transition douce vers l'écran suivant.</span></figcaption></figure>
+      <figure class="shot grid content-start gap-2"><a class="overflow-hidden rounded-2xl border border-line" href="https://mobbin.com/screens/5c4f8d75-0c7f-4cd1-951f-7dbcb3e47ffc" target="_blank" rel="noopener">{{img:linkedin|LinkedIn, icône au centre et mot-symbole en bas}}</a><figcaption class="text-sm"><b>LinkedIn</b><span class="block text-mute">Icône au centre, nom en bas : utile si l'on sépare symbole et mot.</span></figcaption></figure>
+      <figure class="shot grid content-start gap-2"><a class="overflow-hidden rounded-2xl border border-line" href="https://mobbin.com/screens/95c3abc9-c927-4afd-92e0-d8ee508f0cd3" target="_blank" rel="noopener">{{img:komoot|komoot, formes autour du logo et « Loading routes »}}</a><figcaption class="text-sm"><b>komoot</b><span class="block text-mute">Le chargement est nommé (« Loading routes ») : on sait ce qui se prépare.</span></figcaption></figure>
+    </div>
+
+    <div class="grid gap-6 rounded-2xl border border-line bg-card p-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+      <div class="grid grid-cols-2 gap-3">
+        <figure class="shot grid gap-1.5"><div class="overflow-hidden rounded-2xl border border-line">{{img:95-splash|95 Alerte, démarrage en aplat bleu}}</div><figcaption class="text-xs text-mute">Démarrage (intégré)</figcaption></figure>
+        <figure class="shot grid gap-1.5"><div class="overflow-hidden rounded-2xl border border-line">{{img:95-welcome|95 Alerte, accueil de connexion avec le logo}}</div><figcaption class="text-xs text-mute">Écran suivant : accueil</figcaption></figure>
+      </div>
+      <div class="grid content-start gap-3">
+        <h3 class="text-lg font-bold">Ce qui est en place</h3>
+        <ul class="grid list-disc gap-1.5 pl-5 text-sm text-mute">
+          <li><b class="text-ink">Aplat bleu plein écran</b> (Noom), barre d'état comprise, dans le bleu de marque actuel <span class="font-mono">#1E40AF</span>. Même couleur en clair et en sombre : c'est un moment de marque.</li>
+          <li><b class="text-ink">Logo seul au centre</b>, « Alerte » en blanc. Le « 95 » jaune sur bleu atteint <span class="num font-semibold text-ink">5,1:1</span>.</li>
+          <li><b class="text-ink">Le gyrophare s'allume</b> : deux pulsations lumineuses, coupées si l'utilisateur a réduit les animations. C'est l'animation qui remplace un GIF, plus légère et nette à toute taille.</li>
+          <li><b class="text-ink">Chargement nommé</b> (komoot) : « Chargement des alertes du Val-d'Oise… ».</li>
+          <li>Durée portée à 1,6 s pour laisser l'animation se jouer.</li>
+        </ul>
+        <p class="rounded-lg bg-warn-soft p-3 text-sm text-ink"><b>Point d'attention :</b> le rouge du gyrophare sur le bleu n'atteint que 1,96:1. Il reste lisible parce qu'il est posé sur le « 5 » jaune, mais une version du logo avec un liseré blanc autour du gyrophare améliorerait le rendu sur fond bleu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. COMPARATIF -->
+  <section class="mt-16 grid gap-6" aria-labelledby="t-comp">
+    <h2 id="t-comp" class="text-2xl font-bold">3. Couleurs du logo et couleurs de l'application</h2>
+    <div class="overflow-x-auto rounded-xl border border-line bg-card">
+      <table class="w-full min-w-[640px] text-left text-sm">
+        <thead class="bg-[var(--page)] text-xs uppercase tracking-wider text-mute">
+          <tr><th class="px-4 py-3">Couleur</th><th class="px-4 py-3">Rôle aujourd'hui</th><th class="px-4 py-3">Sur blanc</th><th class="px-4 py-3">Sur fond sombre</th><th class="px-4 py-3">Conséquence</th></tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          <tr><td class="px-4 py-3"><span class="inline-flex items-center gap-2"><i class="h-5 w-5 rounded" style="background:#F0C009"></i><span class="font-mono">#F0C009</span></span><span class="block text-mute">Jaune du logo</span></td><td class="px-4 py-3">Absent du Design System</td><td class="num px-4 py-3 font-semibold text-warn">1,71:1</td><td class="num px-4 py-3 font-semibold text-good">10,9:1</td><td class="px-4 py-3 text-mute">Utilisable en fond ou en décor, jamais pour du texte sur blanc. Texte noir dessus : 9,7:1.</td></tr>
+          <tr><td class="px-4 py-3"><span class="inline-flex items-center gap-2"><i class="h-5 w-5 rounded" style="background:#E6282F"></i><span class="font-mono">#E6282F</span></span><span class="block text-mute">Rouge du gyrophare</span></td><td class="px-4 py-3">Proche de <span class="font-mono">--alert-incident #B91C1C</span></td><td class="num px-4 py-3 font-semibold text-warn">4,46:1</td><td class="num px-4 py-3 font-semibold text-warn">4,2:1</td><td class="px-4 py-3 text-mute">Risque de confusion avec les incidents (règle « rouge rare »). À garder dans le logo uniquement.</td></tr>
+          <tr><td class="px-4 py-3"><span class="inline-flex items-center gap-2"><i class="h-5 w-5 rounded" style="background:#1E1E1C"></i><span class="font-mono">#1E1E1C</span></span><span class="block text-mute">Noir du mot « Alerte »</span></td><td class="px-4 py-3">Très proche de <span class="font-mono">--text #0F172A</span></td><td class="num px-4 py-3 font-semibold text-good">16,7:1</td><td class="num px-4 py-3 text-mute">—</td><td class="px-4 py-3 text-mute">Déjà couvert par <span class="font-mono">--text</span>, qui prend le relais en mode sombre.</td></tr>
+          <tr><td class="px-4 py-3"><span class="inline-flex items-center gap-2"><i class="h-5 w-5 rounded" style="background:#1E40AF"></i><span class="font-mono">#1E40AF</span></span><span class="block text-mute">Bleu de l'app</span></td><td class="px-4 py-3"><span class="font-mono">--primary</span> : CTA, liens, focus</td><td class="num px-4 py-3 font-semibold text-good">8,7:1</td><td class="num px-4 py-3 text-mute">—</td><td class="px-4 py-3 text-mute">Absent du logo, mais le jaune ressort très bien dessus (5,1:1).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="grid max-w-3xl list-disc gap-1.5 pl-5 text-sm text-mute">
+      <li>Le logo et l'app ne partagent aucune couleur : le bleu institutionnel n'est pas dans le logo, le jaune n'est pas dans l'app.</li>
+      <li>Le rouge du logo et le rouge des incidents sont deux rouges voisins : en mettre un troisième dans l'interface brouillerait le code « rouge = incident ».</li>
+      <li>Le jaune est trop clair pour du texte sur blanc ; il lui faut une variante foncée pour les libellés.</li>
+    </ul>
+  </section>
+
+  <!-- 4. OPTIONS -->
+  <section class="mt-16 grid gap-6" aria-labelledby="t-opt">
+    <h2 id="t-opt" class="text-2xl font-bold">4. Trois façons d'accorder les couleurs</h2>
+    <p class="max-w-3xl text-mute">Chaque maquette montre le même écran avec les couleurs de l'option : en-tête, bouton principal, bouton secondaire, badge, légende des familles d'alertes et barre d'onglets.</p>
+    <div class="grid gap-5 lg:grid-cols-3">
+
+      {{option:A}}
+      {{option:B}}
+      {{option:C}}
+
+    </div>
+  </section>
+
+  <!-- 5. DÉCISION -->
+  <section class="mt-16 grid gap-4 rounded-2xl border border-line bg-card p-6" aria-labelledby="t-dec">
+    <h2 id="t-dec" class="text-2xl font-bold">5. À valider ensemble</h2>
+    <ol class="grid list-decimal gap-2 pl-5 text-sm">
+      <li><b>Démarrage en aplat bleu</b> : on le garde ? (Sinon : variante blanche façon monday.com, déjà prête à tester.)</li>
+      <li><b>Option de couleurs</b> : A, B (recommandée) ou C.</li>
+      <li><b>Logo vectorisé</b> : pouvez-vous fournir le fichier avec le texte « Alerte » en tracés, et si possible une version avec liseré blanc autour du gyrophare ?</li>
+    </ol>
+    <p class="text-sm text-mute">Avec l'option B, la suite serait : ajouter les 3 tokens à <span class="font-mono">DESIGN_SYSTEM.md</span> §2.1 et à la page Design System, puis les appliquer au prototype React et au canevas (pagination, badge « Nouveau », illustrations). Rien n'est modifié tant que l'option n'est pas validée.</p>
+  </section>
+</div>

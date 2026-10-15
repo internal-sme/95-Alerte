@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Compte prêt</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/b662404cca4045c77f371318eee644b1">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 auth">
+    <div class="scroll95">
+      <div class="screen-pad auth-done">
+        <div class="auth-center compact" role="status">
+          <span class="spot" aria-hidden="true"><span class="ph i i-hand-waving-duotone"></span></span>
+          <h2>Bienvenue, Jean !</h2>
+          <p>Votre compte 95 Alerte est prêt.</p>
+        </div>
+        <ul class="recap">
+          <li><span class="ph i i-check-circle-fill" aria-hidden="true"></span><span><b>Compte créé</b><small>Vos alertes identifiées afficheront « Jean D. ».</small></span></li>
+          <li class="{{id.cls}}"><span class="ph i {{id.icon}}" aria-hidden="true"></span><span><b>{{id.title}}</b><small>{{id.text}}</small></span></li>
+          <li class="info"><span class="ph i i-map-pin" aria-hidden="true"></span><span><b>9 alertes à moins de 5 km</b><small>Positives et négatives, mises à jour en direct.</small></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="screen-footer stack-footer">
+      <a class="btn btn-primary btn-block" href="{{l.next}}"><span class="ph i i-map-trifold" aria-hidden="true"></span>Voir la carte</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"identity":{"editor":"enum","options":["en_cours","verifiee","non_verifiee"],"default":"en_cours"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const identity = this.props.identity || 'en_cours';
+    const LINES = {
+      verifiee: { cls: '', icon: 'i-check-circle-fill', title: 'Identité vérifiée', text: 'Vos signalements sont traités en priorité.' },
+      en_cours: { cls: 'pending', icon: 'i-timer', title: 'Vérification en cours', text: 'Nous vous préviendrons du résultat.' },
+      non_verifiee: { cls: 'pending', icon: 'i-identification-card', title: 'Identité non vérifiée', text: 'Vous pourrez la vérifier depuis votre profil.' }
+    };
+    const profile = { verifiee: 'Main', en_cours: 'Main', non_verifiee: 'Main' }[identity];
+    return { theme: s ? 't-dark' : 't-light', id: LINES[identity] || LINES.en_cours, l: { next: profile + s + '.dc.html' } };
+  }
+}
+</script>
+</body>
+</html>

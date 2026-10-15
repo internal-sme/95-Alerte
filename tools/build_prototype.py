@@ -6,9 +6,11 @@ Sources :
   - prototype/src/app.css          → styles propres au prototype
   - prototype/src/phosphor-sprite.svg → icônes (tools/build_phosphor_sprite.py)
   - prototype/src/app.jsx          → application React (transpilée dans le navigateur par Babel)
+  - docs/brand/95-alerte-animation.gif → animation du logo au démarrage (data URI, window.SPLASH_GIF)
 
 Usage : python3 tools/build_prototype.py
 """
+import base64
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -35,6 +37,8 @@ def main() -> None:
     css = design_system_css() + "\n\n" + (SRC / "app.css").read_text(encoding="utf-8")
     sprite = (SRC / "phosphor-sprite.svg").read_text(encoding="utf-8")
     app = (SRC / "app.jsx").read_text(encoding="utf-8")
+    # Animation officielle du logo (démarrage), hors du script Babel pour ne pas le ralentir
+    gif = base64.b64encode((ROOT / "docs/brand/95-alerte-animation.gif").read_bytes()).decode()
     page = f"""<title>95 Alerte</title>
 <!-- Fichier généré par tools/build_prototype.py : modifier prototype/src/ puis relancer le script. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,6 +49,7 @@ def main() -> None:
 </style>
 {sprite}
 <div id="root"><div class="boot">Chargement de 95 Alerte…</div></div>
+<script>window.SPLASH_GIF = "data:image/gif;base64,{gif}";</script>
 <script src="{REACT}"></script>
 <script src="{REACT_DOM}"></script>
 <script src="{BABEL}"></script>

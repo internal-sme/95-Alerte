@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Connexion</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/b662404cca4045c77f371318eee644b1">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95 auth welcome">
+    <a class="pill auth-skip" href="{{l.guest}}">Explorer sans compte<span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></a>
+    <div class="welcome-center">
+      <svg class="logo95" viewBox="0 0 217.2 223" width="120" height="123.2" role="img" aria-label="95 Alerte"><g class="logo95-figure"><path class="logo95-yellow" d="M93.6,14.4C83.5,4.4,73.1,0,55.3,0,25.4,0,4.8,19.7,4.8,46.4v.4c0,26.9,18.5,42.8,47.3,42.8s20.1-3.4,26.9-9.1c-1.1,11.4-6.8,30.1-26.9,30.1s-19.3-3.6-29-11.4l-15.4,22.2c11.2,9.3,24.2,15.7,43.6,15.7,37.7,0,57.9-29.4,57.9-72.3v-.4c0-26.1-6.2-40.5-15.7-50h0ZM79.6,45.7c0,11.4-8.3,19.7-22.7,19.7s-23.1-8.1-23.1-19.9v-.4c0-11.8,8.1-20.1,22.5-20.1s23.3,8.5,23.3,20.3v.4h0Z"></path><path class="logo95-yellow" d="M170.8,48.5c-7.4,0-12.1.9-17.4,2.3l1.5-22.9h56.4V2.3h-81.4l-3.8,65.3,11.1,7.4c3.8-7.3,10.6-12.7,18.6-13.5,15.4-1.6,24.6,3.7,30.6,13.6,6.1,10.1,5.4,20.8-1.8,30.4-5.4,7.4-11.4,14.3-17.1,21.5-.9,1.1-1.9,2.2-3.2.9-8.5-8.1-19.2-14.2-25.8-24.2-1.5-2.3-2.7-4.8-3.4-7.3,0,0-.2-.1-.2-.2l-17.6,21c12.9,12.3,28.4,19.9,49.6,19.9,30.5,0,50.4-17.8,50.4-45.8v-.4c0-29.9-20.6-42.4-46.4-42.4h0Z"></path></g><g class="logo95-siren"><path class="logo95-red" d="M161.9,108.5c-1.7.4-3.3-.4-3.9-2.2,2.1-.6,4.1-1.1,6.2-1.7.4,1.8-.6,3.3-2.3,3.8Z"></path><path class="logo95-red" d="M173.6,101.1c-6.1,1.7-12.3,3.3-18.5,4.9-1.4.4-2.4-.4-2.3-1.9.1-1.6.6-3.2,1.4-4.6.4-.7.6-1.4.7-2.1-2.5-1.9-4.3-4.8-4.6-8.2-.6-6.3,3.9-11.7,10.4-12.3,6.4-.6,11.8,3.9,12.4,10.2.3,2.9-.5,5.7-2.1,7.8,1.5.8,2.7,1.9,3.6,3.3.9,1.3.4,2.4-1,2.8h0Z"></path></g><g class="logo95-word"><path d="M28.5,153.5h5.9l25.4,56.1h-6.8l-6.5-14.7h-30.3l-6.6,14.7H3.1l25.4-56.1ZM44,189.2l-12.6-28.4-12.7,28.4h25.4Z"></path><path d="M66.2,151.5h6.1v58h-6.1v-58Z"></path><path d="M80.1,189.1v-.2c0-11.8,8.3-21.4,19.7-21.4s19.2,9.7,19.2,21.7,0,1.3,0,2h-32.6c.9,8.9,7.2,13.9,14.5,13.9s9.6-2.3,13-5.8l3.8,3.4c-4.1,4.6-9.1,7.7-16.9,7.7-11.3,0-20.5-8.7-20.5-21.4ZM112.7,186.7c-.6-7.5-4.9-14-13.1-14s-12.6,6-13.4,14h26.5Z"></path><path d="M125.7,168.4h6.1v10.7c3-6.8,9-11.8,16.8-11.5v6.6h-.5c-9,0-16.3,6.4-16.3,18.8v16.4h-6.1v-41.1Z"></path><path d="M156.1,198.6v-24.8h-5.7v-5.4h5.7v-12.4h6.1v12.4h13v5.4h-13v24c0,5,2.8,6.8,6.9,6.8s3.8-.4,6-1.4v5.2c-2.1,1.1-4.5,1.7-7.4,1.7-6.6,0-11.6-3.3-11.6-11.6Z"></path><path d="M178.3,189.1v-.2c0-11.8,8.3-21.4,19.7-21.4s19.2,9.7,19.2,21.7,0,1.3,0,2h-32.6c.9,8.9,7.2,13.9,14.5,13.9s9.6-2.3,13-5.8l3.8,3.4c-4.1,4.6-9.1,7.7-16.9,7.7-11.3,0-20.5-8.7-20.5-21.4ZM211,186.7c-.6-7.5-4.9-14-13.1-14s-12.6,6-13.4,14h26.5Z"></path></g></svg>
+      <h1 class="welcome-title">Votre territoire,<br>votre vigilance.</h1>
+      <p class="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
+    </div>
+    <div class="welcome-panel">
+      <a class="btn btn-primary btn-block" href="{{l.fc}}"><span class="ph i i-identification-card" aria-hidden="true"></span>Continuer avec FranceConnect</a>
+      <a class="btn btn-secondary btn-block" href="{{l.signup}}">Créer un compte</a>
+      <a class="btn btn-ghost btn-block" href="{{l.signin}}">J'ai déjà un compte</a>
+      <p class="legal">FranceConnect vérifie votre identité ; vos alertes peuvent rester anonymes. En continuant, vous acceptez les conditions d'utilisation.</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    return {
+      theme: s ? 't-dark' : 't-light',
+      l: { fc: 'FranceConnect' + s + '.dc.html', signup: 'SignupInfo' + s + '.dc.html', signin: 'SignIn' + s + '.dc.html', guest: 'Main' + s + '.dc.html' }
+    };
+  }
+}
+</script>
+</body>
+</html>
