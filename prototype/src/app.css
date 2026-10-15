@@ -96,3 +96,7 @@ button{font-family:inherit}
 .lib-row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center}
 .lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
 .placeholder-phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.2 var(--font)}
+
+/* Démarrage : l'aplat de couleur couvre aussi la barre d'état */
+.app.is-splash{background:#1E40AF}
+.app.is-splash .statusbar{color:#FFFFFF}

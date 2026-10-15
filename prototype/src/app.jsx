@@ -1241,8 +1241,22 @@ function maskEmail(e) {
   return u && dom ? `${u[0]}•••@${dom}` : "votre adresse";
 }
 
-function BrandMark({ size = 64 }) {
-  return <span className="brand-mark" style={{ width: size, height: size, fontSize: size * 0.4 }} aria-hidden="true">95</span>;
+/* Logo officiel 95 Alerte (docs/brand/logo-95-alerte.svg). « 95 » jaune et gyrophare rouge : couleurs
+   de l'asset, hors tokens (harmonisation en cours de validation). « Alerte » prend la couleur du texte
+   (lisible en mode sombre) ; Gotham n'étant pas disponible, Montserrat (Google Fonts) le remplace. */
+const LOGO_95 = "M93.57,14.4C83.53,4.36,73.12,0,55.32,0,25.4,0,4.76,19.7,4.76,46.4v.37c0,26.89,18.55,42.8,47.34,42.8,11.36,0,20.07-3.41,26.89-9.1-1.13,11.37-6.82,30.12-26.89,30.12-11.18,0-19.32-3.6-28.97-11.36l-15.35,22.15c11.18,9.28,24.24,15.72,43.56,15.72,37.68,0,57.94-29.36,57.94-72.34v-.39c0-26.13-6.24-40.52-15.72-49.99Zm-14.01,31.25c0,11.36-8.34,19.7-22.72,19.7s-23.11-8.14-23.11-19.89v-.37c0-11.75,8.14-20.08,22.54-20.08s23.29,8.53,23.29,20.26v.39Z";
+const LOGO_5 = "M170.83,48.49c-7.38,0-12.12,.94-17.42,2.26l1.52-22.91h56.43V2.28h-81.43l-3.78,65.33,11.13,7.38c3.8-7.31,10.55-12.72,18.58-13.51,15.44-1.6,24.6,3.74,30.58,13.61,6.14,10.11,5.35,20.78-1.75,30.43-5.44,7.37-11.44,14.33-17.15,21.51-.91,1.14-1.88,2.17-3.24,.89-8.53-8.14-19.18-14.15-25.78-24.19-1.54-2.34-2.66-4.81-3.41-7.31-.08-.08-.17-.14-.24-.22l-17.61,21.02c12.88,12.31,28.41,19.89,49.62,19.89,30.49,0,50.37-17.8,50.37-45.84v-.37c0-29.92-20.64-42.42-46.39-42.42Z";
+const LOGO_SIREN = ["M161.88,108.5c-1.7,.45-3.27-.36-3.89-2.15,2.06-.55,4.13-1.09,6.23-1.66,.37,1.85-.59,3.33-2.34,3.81Z", "M173.64,101.12c-6.15,1.66-12.31,3.29-18.47,4.91-1.42,.37-2.38-.42-2.28-1.9,.1-1.63,.58-3.2,1.42-4.61,.41-.71,.64-1.42,.67-2.14-2.52-1.88-4.26-4.79-4.57-8.19-.57-6.33,3.95-11.72,10.37-12.31,6.41-.59,11.82,3.86,12.4,10.23,.27,2.92-.54,5.66-2.1,7.83,1.47,.81,2.68,1.92,3.6,3.34,.86,1.29,.44,2.44-1.04,2.83Z"];
+function Logo95({ width = 160, mark = false, label = "95 Alerte", className }) {
+  const vb = mark ? "0 0 217.22 146" : "0 0 217.22 222.98";
+  const h = mark ? width * 146 / 217.22 : width * 222.98 / 217.22;
+  return (
+    <svg className={cx("logo95", className)} viewBox={vb} width={width} height={h} role="img" aria-label={label}>
+      <g className="logo95-figure"><path className="logo95-yellow" d={LOGO_95} /><path className="logo95-yellow" d={LOGO_5} /></g>
+      <g className="logo95-siren">{LOGO_SIREN.map((d) => <path key={d.slice(0, 12)} className="logo95-red" d={d} />)}</g>
+      {mark ? null : <text className="logo95-word" x="0" y="209.54" textLength="217" lengthAdjust="spacingAndGlyphs">Alerte</text>}
+    </svg>
+  );
 }
 
 function IdentityBadge({ status }) {
@@ -1261,20 +1275,18 @@ function useOnline() {
   };
 }
 
+/* Démarrage (benchmark Mobbin : Pangea, monday.com, komoot) : même fond que l'accueil de connexion
+   pour un enchaînement sans rupture, logo centré, gyrophare animé, chargement nommé en bas. */
 function SplashScreen() {
   const { dispatch } = useStore();
   useEffect(() => {
-    const id = setTimeout(() => dispatch({ type: "SPLASH_DONE" }), 1300);
+    const id = setTimeout(() => dispatch({ type: "SPLASH_DONE" }), 1600);
     return () => clearTimeout(id);
   }, [dispatch]);
   return (
     <div className="splash" role="status" aria-label="Chargement de 95 Alerte">
-      <div className="splash-center">
-        <BrandMark size={88} />
-        <h1>95 Alerte</h1>
-        <p>Votre territoire, votre vigilance.</p>
-      </div>
-      <div className="splash-foot"><Spinner /><span>Version 0.1 · prototype</span></div>
+      <div className="splash-center"><Logo95 width={168} /></div>
+      <div className="splash-foot"><Spinner /><span>Chargement des alertes du Val-d'Oise…</span></div>
     </div>
   );
 }
@@ -1327,7 +1339,7 @@ function LoginScreen() {
     <div className="screen auth welcome">
       <button type="button" className="pill auth-skip" onClick={() => dispatch({ type: "GUEST" })}>Explorer sans compte<Icon name="caret-right" className="ph-sm" /></button>
       <div className="welcome-center">
-        <BrandMark size={72} />
+        <Logo95 width={120} />
         <h1 className="welcome-title">Votre territoire,<br />votre vigilance.</h1>
         <p className="auth-lead">Les bonnes et les mauvaises nouvelles du Val-d'Oise, en direct.</p>
       </div>
@@ -1973,7 +1985,7 @@ function App() {
       <ClockContext.Provider value={now}>
         <div className="stage">
           <div className="device">
-            <div className="app">
+            <div className={cx("app", state.session.status === "splash" && "is-splash")}>
               <div className="statusbar" aria-hidden="true">
                 <span>{fmtClock(now)}</span>
                 <span className="sb-icons"><Icon name="cell-signal-full" />{state.demo.offline ? <Icon name="wifi-slash" /> : <Icon name="wifi-high" />}<Icon name="battery-full" /></span>

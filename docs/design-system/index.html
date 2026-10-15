@@ -1,7 +1,7 @@
 <title>Design System 95 Alerte</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* Référence vivante du Design System 95 Alerte.
    Layout : navigation de sections à gauche (desktop), colonne de spécimens ; barre d'outils collante
@@ -334,13 +334,22 @@ textarea.input{min-height:96px;resize:vertical}
 .report-hint .tooltip{white-space:nowrap}
 
 /* Démarrage et connexion (phase 1) */
-.brand-mark{display:inline-grid;place-items:center;flex:none;border-radius:28%;background:var(--primary);color:var(--on-primary);font-family:var(--font);font-weight:800;letter-spacing:-.03em;box-shadow:var(--shadow-2)}
-.splash{position:absolute;inset:0;display:grid;grid-template-rows:1fr auto;background:var(--primary);color:var(--on-primary);padding:var(--s-8) var(--s-6)}
-.splash .brand-mark{background:var(--on-primary);color:var(--primary)}
-.splash-center{display:grid;justify-items:center;align-content:center;gap:var(--s-3);text-align:center}
-.splash-center h1{margin:var(--s-2) 0 0;font:700 var(--fs-display)/var(--lh-display) var(--font);letter-spacing:-.02em}
-.splash-center p{margin:0;font:500 var(--fs-body)/var(--lh-body) var(--font);opacity:.85}
-.splash-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s-3);font:500 var(--fs-caption)/1 var(--font);opacity:.8}
+/* Logo (asset de marque : couleurs fixes, « Alerte » en couleur de texte) */
+.logo95{display:block;flex:none;max-width:100%;height:auto;color:var(--text);overflow:visible}
+.logo95-yellow{fill:#F0C009}
+.logo95-red{fill:#E6282F}
+.logo95-word{fill:currentColor;font:400 79.51px "Gotham","Montserrat",var(--font);letter-spacing:-.05em}
+/* Démarrage (référence Mobbin : Noom) : aplat de couleur plein écran, logo centré. Le bleu de marque est fixé
+   (même valeur en clair et en sombre) : c'est un moment de marque, pas un écran d'interface. */
+.splash{position:absolute;inset:0;display:grid;grid-template-rows:1fr auto;padding:var(--s-8) var(--s-6);background:#1E40AF;color:#FFFFFF}
+.splash .logo95{color:#FFFFFF}
+.splash-center{display:grid;place-items:center}
+.splash .logo95{animation:logo-in .6s cubic-bezier(.2,.8,.2,1) both}
+.splash .logo95-siren{transform-box:fill-box;transform-origin:50% 100%;animation:siren 1.2s ease-in-out .5s 2}
+@keyframes logo-in{from{opacity:0;transform:scale(.92)}}
+@keyframes siren{0%,100%{transform:none;filter:none}50%{transform:scale(1.18);filter:drop-shadow(0 0 6px rgba(230,40,47,.55))}}
+@media (prefers-reduced-motion:reduce){.splash .logo95,.splash .logo95-siren{animation:none}}
+.splash-foot{display:flex;flex-direction:column;align-items:center;gap:var(--s-3);color:rgba(255,255,255,.85);font:500 var(--fs-caption)/1 var(--font)}
 .auth-body{gap:var(--s-6)}
 .screen.auth > .screen-pad{flex:1 0 auto}
 .screen.auth .screen-footer{position:sticky;bottom:0;z-index:2}

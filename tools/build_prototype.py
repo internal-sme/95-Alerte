@@ -22,7 +22,7 @@ END = "/* ============ CHROME"
 REACT = "https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"
 REACT_DOM = "https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"
 BABEL = "https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"
-FONTS = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+FONTS = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400&family=JetBrains+Mono:wght@400;500&display=swap"
 
 
 def design_system_css() -> str:
