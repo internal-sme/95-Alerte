@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Localisation · amorce</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/56105b4e6b1f49154cdcad13fa33fc56">
+<link rel="stylesheet" href="/_blob/0f50dfbb5686c3819ae3ebeecdaeffda">
 </head>
 <body>
 <x-dc>
@@ -22,45 +22,51 @@ body{margin:0}
     </div>
     <div class="scroll95">
       <div class="screen-pad">
-        <div class="auth-center compact">
-          <span class="spot" aria-hidden="true"><span class="ph i i-map-pin-area-duotone" aria-hidden="true"></span></span>
-          <h1 class="onb-title">Voir les alertes près de chez vous&nbsp;?</h1>
+        <div class="step-progress"><span class="track" aria-hidden="true"><i style="width: 50%"></i></span><small>Étape 1 sur 2</small></div>
+        <div class="zone-scene"><div class="zone-map" aria-hidden="true"><div class="zm-art" style="transform: translate(0px, -112.615px) scale(0.861538);"><div class="map95"><svg class="map-art" viewBox="0 0 390 768" aria-hidden="true"><rect class="land" width="390" height="768"></rect><path class="forest" d="M282 0H390V150C362 168 318 160 298 128C280 98 270 40 282 0Z"></path><path class="forest" d="M0 470C38 452 84 470 92 512C100 556 64 592 22 600L0 602Z"></path><path class="forest" d="M330 420C356 398 390 404 390 404V540C360 552 330 534 322 504C316 478 314 440 330 420Z"></path><path class="urban" d="M150 230C176 206 238 200 262 226C286 252 280 300 252 320C224 340 176 336 156 312C136 288 128 252 150 230Z"></path><path class="urban" d="M236 288C262 276 316 290 322 322C328 356 300 376 268 372C240 368 222 344 222 318C222 302 226 294 236 288Z"></path><path class="urban" d="M20 300C46 280 110 290 134 318C156 346 150 404 120 420C90 436 40 424 22 396C4 368 0 318 20 300Z"></path><path class="urban" d="M40 190C64 176 112 184 124 206C134 226 120 250 94 256C66 262 40 250 32 230C26 214 28 198 40 190Z"></path><path class="water" d="M396 120C352 156 304 198 268 230C246 250 232 274 214 292C192 314 160 324 136 336C106 352 80 388 76 428C72 470 96 500 132 512C172 526 206 548 222 590C236 628 232 690 240 772"></path><path class="road-case minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200"></path><path class="road-case minor" d="M196 290C170 312 132 334 84 344"></path><path class="road-case" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478"></path><path class="road-case" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380"></path><path class="road minor" d="M190 262C154 248 114 232 78 220C44 208 14 202 -4 200"></path><path class="road minor" d="M196 290C170 312 132 334 84 344"></path><path class="road" d="M266 -4C262 76 256 150 248 214C242 262 244 330 254 478"></path><path class="road" d="M394 650C334 590 292 530 254 478C224 438 176 408 122 394C80 384 40 380 -4 380"></path><text class="label" x="262" y="250" text-anchor="middle">Pontoise</text><text class="label" x="290" y="392" text-anchor="middle">Saint-Ouen-l'Aumône</text><text class="label" x="60" y="446" text-anchor="middle">Cergy</text><text class="label" x="80" y="176" text-anchor="middle">Osny</text><text class="label water-label" x="344" y="198" text-anchor="middle">L'Oise</text></svg></div></div><span class="zone-ring" style="left: 168px; top: 120px; width: 201.6px; height: 201.6px;"></span><span class="zone-me-pulse" style="left: 168px; top: 120px;"></span><span class="me" style="left: 168px; top: 120px;"></span></div></div>
+        <div class="auth-intro">
+          <h1 class="onb-title" style="text-align: left">Voir les alertes <mark class="hl">près de chez vous</mark>&nbsp;?</h1>
+          <p class="onb-text" style="text-align: left; max-width: none">Votre position reste approximative. Elle n'est jamais publiée.</p>
         </div>
-        <ul class="benefits">
-          <li><span class="bi"><span class="ph i i-map-pin" aria-hidden="true"></span></span><span>Les alertes à moins de 5 km<small>Positives et négatives, en direct.</small></span></li>
-          <li><span class="bi"><span class="ph i i-path" aria-hidden="true"></span></span><span>La distance sur chaque alerte<small>Pour savoir si vous êtes concerné.</small></span></li>
-          <li><span class="bi"><span class="ph i i-crosshair" aria-hidden="true"></span></span><span>Le lieu déjà rempli quand vous signalez<small>Vous pourrez toujours le modifier.</small></span></li>
-        </ul>
-        <p class="privacy-note"><span class="ph i i-lock-simple" aria-hidden="true"></span><span>Votre position reste approximative par défaut. Elle n'est jamais affichée publiquement.</span></p>
-        <a class="btn btn-ghost btn-inline" href="{{l.why}}" aria-expanded="{{whyOpen}}"><sc-if value="{{showWhy}}" hint-placeholder-val="{{false}}"><span class="ph i i-caret-down" aria-hidden="true"></span></sc-if><sc-if value="{{hideWhy}}" hint-placeholder-val="{{true}}"><span class="ph i i-caret-right" aria-hidden="true"></span></sc-if>Comment ma position est-elle utilisée&nbsp;?</a>
-        <sc-if value="{{showWhy}}" hint-placeholder-val="{{false}}">
-          <ul class="why-list" id="loc-why">
-            <li>Elle sert à trier les alertes par distance et à proposer un lieu quand vous signalez.</li>
-            <li>Sur une alerte publiée, la précision dépend de la catégorie : rue, quartier ou zone.</li>
-            <li>Vous pouvez la désactiver à tout moment dans les réglages du téléphone.</li>
-          </ul>
-        </sc-if>
       </div>
     </div>
     <div class="screen-footer stack-footer">
       <sc-if value="{{isLocating}}" hint-placeholder-val="{{false}}">
-        <a class="btn btn-primary btn-block" href="{{l.detected}}" aria-busy="true" style="opacity:.6"><span class="spinner" aria-hidden="true"></span>Recherche de votre position…</a>
+        <a class="btn btn-primary btn-block" href="{{l.detected}}" aria-busy="true" style="opacity: .6"><span class="spinner" aria-hidden="true"></span>Recherche de votre position…</a>
       </sc-if>
       <sc-if value="{{notLocating}}" hint-placeholder-val="{{true}}">
         <a class="btn btn-primary btn-block" href="{{l.system}}"><span class="ph i i-navigation-arrow" aria-hidden="true"></span>Autoriser la localisation</a>
       </sc-if>
       <a class="btn btn-secondary btn-block" href="{{l.commune}}">Choisir ma commune</a>
+      <a class="btn btn-ghost btn-block" href="{{l.why}}">Comment ma position est utilisée&nbsp;?</a>
     </div>
+    <sc-if value="{{isWhy}}" hint-placeholder-val="{{false}}">
+      <a class="bs-scrim" href="{{l.self}}" aria-label="Fermer"></a>
+      <section class="bs" style="height: 520px" role="dialog" aria-modal="true" aria-label="Comment ma position est utilisée">
+        <span class="bs-handle"><span></span></span>
+        <div class="bs-head"><h2>Comment ma position est utilisée</h2><a class="icon-btn flat" href="{{l.self}}" aria-label="Fermer"><span class="ph i i-x" aria-hidden="true"></span></a></div>
+        <div class="bs-body">
+          <ul class="benefits">
+            <li><span class="bi"><span class="ph i i-map-pin" aria-hidden="true"></span></span><span>Les alertes de votre zone<small>Positives et négatives, en direct.</small></span></li>
+            <li><span class="bi"><span class="ph i i-path" aria-hidden="true"></span></span><span>La distance sur chaque alerte<small>Pour savoir si vous êtes concerné.</small></span></li>
+            <li><span class="bi"><span class="ph i i-crosshair" aria-hidden="true"></span></span><span>Le lieu déjà rempli quand vous signalez<small>Vous pourrez toujours le modifier.</small></span></li>
+          </ul>
+          <ul class="why-list"><li>Sur une alerte publiée, la précision dépend de la catégorie : rue, quartier ou zone.</li><li>Vous pouvez la désactiver à tout moment dans les réglages du téléphone.</li></ul>
+          <p class="privacy-note"><span class="ph i i-lock-simple" aria-hidden="true"></span><span>Votre position reste approximative par défaut. Elle n'est jamais affichée publiquement.</span></p>
+        </div>
+      </section>
+    </sc-if>
     <sc-if value="{{isSystem}}" hint-placeholder-val="{{false}}">
-      <div class="modal-scrim" role="presentation">
+      <div class="modal-scrim coach" role="presentation">
+        <p class="coach-title" aria-hidden="true">Choisissez <mark class="hl">«&nbsp;Pendant l'utilisation&nbsp;»</mark></p>
         <div class="modal sys-prompt" role="alertdialog" aria-modal="true">
           <span class="ph sys-icon i i-navigation-arrow-fill" aria-hidden="true"></span>
           <h2>Autoriser « 95 Alerte » à utiliser votre position&nbsp;?</h2>
           <p>Votre position sert à afficher les alertes proches de vous.</p>
           <div class="sys-actions">
-            <a class="sys-btn" href="{{l.locating}}">Autoriser pendant l'utilisation</a>
-            <a class="sys-btn" href="{{l.locating}}">Autoriser une fois</a>
-            <a class="sys-btn" href="{{l.denied}}">Ne pas autoriser</a>
+            <a class="is-recommended" href="{{l.locating}}" style="background: var(--primary-soft); box-shadow: inset 0 0 0 2px var(--primary)">Autoriser pendant l'utilisation</a>
+            <a href="{{l.locating}}">Autoriser une fois</a>
+            <a href="{{l.denied}}">Ne pas autoriser</a>
           </div>
           <p class="sys-note">Simulation de la demande du téléphone</p>
         </div>
@@ -74,13 +80,11 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.props.dark === true ? '-dark' : '';
     const st = this.props.state || 'primer';
-    const why = st === 'why' || st === 'system';
     return {
       theme: s ? 't-dark' : 't-light',
-      showWhy: why, hideWhy: !why, whyOpen: why ? 'true' : 'false',
-      isSystem: st === 'system', isLocating: st === 'locating', notLocating: st !== 'locating',
+      isWhy: st === 'why', isSystem: st === 'system', isLocating: st === 'locating', notLocating: st !== 'locating',
       l: {
-        later: 'Login' + s + '.dc.html', why: (why ? 'Location' : 'LocationWhy') + s + '.dc.html',
+        later: 'Login' + s + '.dc.html', self: 'Location' + s + '.dc.html', why: 'LocationWhy' + s + '.dc.html',
         system: 'LocationSystem' + s + '.dc.html', locating: 'Locating' + s + '.dc.html',
         detected: 'Detected' + s + '.dc.html', denied: 'Denied' + s + '.dc.html', commune: 'Commune' + s + '.dc.html'
       }
