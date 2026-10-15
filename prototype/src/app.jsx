@@ -1118,7 +1118,7 @@ const GEO_LAYERS = MAP95 ? (
 ) : null;
 
 /* Libellés selon le niveau, sans chevauchement (les plus peuplés d'abord) */
-function mapLabels(level, toScreen, w, h) {
+function mapLabels(level, toScreen, w, h, topInset = MAP_INSET_TOP - 16) {
   if (!MAP95) return [];
   const cand = [];
   const add = (text, c, cls, priority) => cand.push({ text, c, cls, priority });
@@ -1148,7 +1148,7 @@ function mapLabels(level, toScreen, w, h) {
     const lh = l.cls === "lbl-dept" ? 22 : 16;
     const box = [p.x - lw / 2, p.y - lh / 2, p.x + lw / 2, p.y + lh / 2];
     if (box[2] < 0 || box[0] > w || box[3] < 0 || box[1] > h) return;
-    if (box[1] < MAP_INSET_TOP - 16) return; // rien entre les puces ni sous la barre de recherche
+    if (box[1] < topInset) return; // rien entre les puces ni sous la barre de recherche
     if (boxes.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return;
     boxes.push(box);
     out.push({ ...l, x: p.x, y: p.y, key: l.cls + l.text + l.c.join() });
@@ -1599,6 +1599,24 @@ function MapFiltersSheet() {
   );
 }
 
+/* Puces de type et bouton Filtres : partagés par la carte et l'onglet Alertes (même filtre) */
+function TypeChips() {
+  const { state, dispatch } = useStore();
+  return (
+    <div className="map-chips" role="group" aria-label="Type d'alertes">
+      {[{ v: "all", l: "Toutes" }, { v: "positive", l: "Positives" }, { v: "negative", l: "Négatives" }].map((o) => (
+        <Chip key={o.v} selected={state.mapFilter.type === o.v} onClick={() => dispatch({ type: "SET_MAP_FILTER", patch: { type: o.v } })}>{o.l}</Chip>
+      ))}
+    </div>
+  );
+}
+function FilterButton({ flat }) {
+  const { state } = useStore();
+  const { openSheet } = useActions();
+  const n = state.mapFilter.hidden.length + (state.mapFilter.urgentOnly ? 1 : 0);
+  return <IconButton icon="sliders-horizontal" className={cx("is-filter", flat && "flat")} label={`Filtres${n ? `, ${n} actif${n > 1 ? "s" : ""}` : ""}`} badge={n || null} onClick={() => openSheet("map-filters", {}, "half")} />;
+}
+
 function mapFilterMatch(f, a) {
   const cat = CATEGORY_BY_ID[a.categoryId];
   return (f.type === "all" || cat.type === f.type) && !f.hidden.includes(cat.family) && (!f.urgentOnly || cat.priority === "critique");
@@ -1711,7 +1729,6 @@ function MapScreen() {
   }
 
   const unread = state.notifications.filter((n) => !n.read).length;
-  const activeFilters = f.hidden.length + (f.urgentOnly ? 1 : 0);
   const title = area ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} dans cette zone`
     : hasZone ? (listing.length ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} dans votre zone` : "Aucun événement dans cette zone.")
     : `${listing.length} alertes dans le Val-d'Oise`;
@@ -1721,16 +1738,12 @@ function MapScreen() {
     <div className="map-top-wrap">
       <div className="map-top">
         <button type="button" className="search" onClick={() => push("commune")}>
-          <Icon name="magnifying-glass" /><span>{pos.communeId ? COMMUNE_BY_ID[pos.communeId].name : "Rechercher"}<small> · commune, adresse</small></span>
+          <Icon name="magnifying-glass" /><span>{pos.communeId ? <Fragment>{COMMUNE_BY_ID[pos.communeId].name}<small> · rechercher</small></Fragment> : <Fragment>Rechercher<small> · commune, adresse</small></Fragment>}</span>
         </button>
-        <IconButton icon="sliders-horizontal" className="is-filter" label={`Filtres${activeFilters ? `, ${activeFilters} actif${activeFilters > 1 ? "s" : ""}` : ""}`} badge={activeFilters || null} onClick={() => openSheet("map-filters", {}, "half")} />
+        <FilterButton />
         <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive bientôt.")} />
       </div>
-      <div className="map-chips" role="group" aria-label="Type d'alertes">
-        {[{ v: "all", l: "Toutes" }, { v: "positive", l: "Positives" }, { v: "negative", l: "Négatives" }].map((o) => (
-          <Chip key={o.v} selected={f.type === o.v} onClick={() => dispatch({ type: "SET_MAP_FILTER", patch: { type: o.v } })}>{o.l}</Chip>
-        ))}
-      </div>
+      <TypeChips />
     </div>
   );
 
@@ -1801,9 +1814,8 @@ function AlertsScreen() {
   const { state } = useStore();
   const { toast } = useActions();
   const alerts = useVisibleAlerts();
-  const [filter, setFilter] = useState("all");
   const pos = state.session.position;
-  const list = alerts.filter((a) => filter === "all" || CATEGORY_BY_ID[a.categoryId].type === filter);
+  const list = alerts.filter((a) => mapFilterMatch(state.mapFilter, a));
   const near = list.filter((a) => haversineKm(pos, a) <= zoneRadius(state)).sort((a, b) => haversineKm(pos, a) - haversineKm(pos, b));
   const rest = list.filter((a) => haversineKm(pos, a) > zoneRadius(state)).sort((a, b) => b.createdAt - a.createdAt).slice(0, 10);
   const open = () => toast("La fiche alerte complète arrive bientôt.");
@@ -1811,10 +1823,10 @@ function AlertsScreen() {
     <div className="screen">
       <div className="screen-title row">
         <div><h1>Alertes</h1><p>{alerts.length} alertes actives dans le Val-d'Oise</p></div>
-        <IconButton icon="sliders-horizontal" label="Filtres" className="flat" onClick={() => toast("Les filtres détaillés arrivent bientôt.")} />
+        <FilterButton flat />
       </div>
       <div className="screen-pad">
-        <SegmentedControl block label="Type d'alertes" value={filter} onChange={setFilter} options={[{ value: "all", label: "Toutes" }, { value: "positive", label: "Positives" }, { value: "negative", label: "Négatives" }]} />
+        <TypeChips />
         {list.length === 0 ? (
           <EmptyState title="Aucune alerte dans cette zone." action={<Button variant="secondary" onClick={() => toast("Zone élargie à tout le Val-d'Oise.")}>Élargir la zone</Button>}>Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
         ) : (
@@ -2621,23 +2633,30 @@ function ZoneMap({ center, radiusKm, height, pins = true, label = true, stagger 
   const ref = useRef(null);
   const [box, setBox] = useState({ w: 390, h: height || 844 });
   useLayoutEffect(() => { const el = ref.current; if (el) setBox({ w: el.clientWidth, h: el.clientHeight }); }, []);
-  const me = projectToMap(center);
-  // La carte illustrée remplit toujours le cadre (jamais de bords vides) ; elle est centrée sur la position autant que possible
-  const k = Math.max(box.w / 390, box.h / 768);
-  const clamp = (v, lo) => Math.min(0, Math.max(lo, v));
-  const tx = clamp(box.w / 2 - me.x * k, box.w - 390 * k);
-  const ty = clamp(box.h * (height ? 0.5 : 0.36) - me.y * k, box.h - 768 * k);
-  const cx0 = tx + me.x * k, cy0 = ty + me.y * k;
-  // Cercle à l'échelle de la carte, plafonné pour rester dans le cadre ; l'étiquette donne le rayon exact
-  const ringPx = Math.min(radiusKm * PX_PER_KM * k, Math.min(box.w, box.h) * (radiusKm > 5 ? 0.47 : 0.42));
-  const toScreen = (p) => { const q = projectToMap(p); return { x: tx + q.x * k, y: ty + q.y * k }; };
+  // Même carte que l'accueil (phase 3) : l'échelle cadre exactement le rayon choisi
+  const ringPx = Math.min(box.w, box.h) * (radiusKm > 5 ? 0.44 : 0.4);
+  const s = ringPx / radiusKm;
+  const c = projectKm(center);
+  const cx0 = box.w / 2;
+  const cy0 = box.h * (height ? 0.5 : 0.36);
+  const toScreen = (x, y) => ({ x: cx0 + (x - c.x) * s, y: cy0 + (y - c.y) * s });
+  const level = levelOf(s);
   const inZone = alerts.filter((a) => haversineKm(center, a) <= radiusKm);
   return (
     <div className="zone-map" ref={ref} aria-hidden="true">
-      <div className="zm-art" style={{ transform: `translate(${tx}px, ${ty}px) scale(${k})` }}><div className="map95">{MAP_ART}</div></div>
+      <div className={cx("map95", "map-live", "is-static", `lv-${level}`)}>
+        {MAP95 ? (
+          <svg className="map-geo" width={box.w} height={box.h}>
+            <g className="zm-geo" style={{ transform: `translate(${cx0 - c.x * s}px, ${cy0 - c.y * s}px) scale(${s})` }}>{GEO_LAYERS}</g>
+          </svg>
+        ) : MAP_ART}
+        {mapLabels(level, toScreen, box.w, box.h, 0).map((l) => <span key={l.key} className={cx("map-label", l.cls)} style={{ left: l.x, top: l.y }}>{l.text}</span>)}
+      </div>
       <span className="zone-ring" style={{ left: cx0, top: cy0, width: ringPx * 2, height: ringPx * 2 }}>{label ? <span className="zr-label">{radiusKm} km</span> : null}</span>
       {pins ? dedupeEvents(inZone).slice(0, 8).map((a, i) => {
-        const p = toScreen(a); const cat = CATEGORY_BY_ID[a.categoryId];
+        const k = projectKm(a);
+        const p = toScreen(k.x, k.y);
+        const cat = CATEGORY_BY_ID[a.categoryId];
         if (p.x < 12 || p.x > box.w - 12 || p.y < 12 || p.y > box.h - 12) return null;
         return <span key={a.id} className="map-pin" style={{ left: p.x, top: p.y, animationDelay: stagger ? `${250 + i * 90}ms` : undefined }}><Marker family={cat.family} icon={cat.icon} /></span>;
       }) : null}

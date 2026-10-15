@@ -509,8 +509,8 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .zone-scene{position:relative;height:240px;border-radius:var(--r-lg);overflow:hidden;background:var(--map-land);box-shadow:var(--shadow-1);isolation:isolate}
 .zone-scene::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(70% 60% at 50% 45%,transparent 55%,color-mix(in srgb,var(--bg) 70%,transparent));pointer-events:none}
 .zone-map{position:absolute;inset:0;overflow:hidden;background:var(--map-land)}
-.zone-map .zm-art{position:absolute;left:0;top:0;width:390px;height:768px;transform-origin:0 0;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.zone-map .zm-art .map95{position:absolute;inset:0}
+.zone-map .zm-geo{transform-origin:0 0;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.map-live.is-static{cursor:default;touch-action:auto}
 .zone-ring{position:absolute;z-index:2;border-radius:50%;border:2px dashed var(--primary);background:color-mix(in srgb,var(--primary) 8%,transparent);transform:translate(-50%,-50%);transition:width .45s cubic-bezier(.2,.8,.2,1),height .45s cubic-bezier(.2,.8,.2,1)}
 .zone-ring .zr-label{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);padding:2px var(--s-2);border-radius:var(--r-full);background:var(--primary);color:var(--on-primary);font:600 var(--fs-caption)/1.4 var(--font);white-space:nowrap}
 .zone-map .me{position:absolute;z-index:3;width:18px;height:18px;border-radius:50%;background:var(--primary);border:3px solid #fff;box-shadow:0 1px 4px rgba(15,23,42,.35);transform:translate(-50%,-50%)}
@@ -559,7 +559,7 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .start-card li.done .ph{color:var(--alert-positive)}
 .start-card li .ph-sm{margin-left:auto;color:var(--text-muted)}
 .tooltip.coach b{display:block;color:var(--brand-yellow);font:600 var(--fs-caption)/1.3 var(--font);text-transform:uppercase;letter-spacing:.06em}
-@media (prefers-reduced-motion: reduce){.zone-me-pulse{animation:none}.zone-map .zm-art,.zone-ring{transition:none}}
+@media (prefers-reduced-motion: reduce){.zone-me-pulse{animation:none}.zone-map .zm-geo,.zone-ring{transition:none}}
 :root[data-motion="reduce"] .zone-me-pulse{animation:none}
 
 /* Carte (fond illustré, marqueurs positionnés, position de l'utilisateur) */
@@ -621,7 +621,7 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .me-wrap{position:absolute;z-index:2;display:grid;place-items:center;transform:translate(-50%,-50%);pointer-events:none}
 .me-accuracy{position:absolute;border-radius:50%;background:color-mix(in srgb,var(--focus-ring) 14%,transparent);border:1px solid color-mix(in srgb,var(--focus-ring) 45%,transparent)}
 .map95 .me-wrap .me{position:relative;transform:none;box-shadow:var(--shadow-1)}
-.map-top-wrap{position:absolute;top:0;left:0;right:0;z-index:6;display:grid;gap:var(--s-2);padding:var(--s-3) var(--s-3) 0;pointer-events:none}
+.map-top-wrap{position:absolute;top:0;left:0;right:0;z-index:6;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s-2);padding:var(--s-3) var(--s-3) 0;pointer-events:none}
 .map-top-wrap .map-top{pointer-events:auto}
 .map-top .search{min-width:0}
 .summary-head{flex-wrap:wrap}
