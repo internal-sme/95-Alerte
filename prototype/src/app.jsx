@@ -4,7 +4,7 @@
    par tools/build_prototype.py. Lire AGENTS.md et docs/task.md avant
    toute modification.
    ===================================================================== */
-const { useState, useReducer, useEffect, useLayoutEffect, useRef, useMemo, useCallback, createContext, useContext, Fragment } = React;
+const { useState, useReducer, useEffect, useLayoutEffect, useRef, useMemo, useCallback, useImperativeHandle, createContext, useContext, Fragment } = React;
 
 /* =====================================================================
    DATA — données fictives (communes réelles du Val-d'Oise, personnes fictives)
@@ -18,6 +18,7 @@ const INTERCOS = {
   cp: "CA de Cergy-Pontoise",
   vp: "CA Val Parisis",
   sg: "CA Saint Germain Boucles de Seine",
+  mgp: "Métropole du Grand Paris",
   pv: "CA Plaine Vallée",
   rpf: "CA Roissy Pays de France",
   vo3f: "CC Vallée de l'Oise et des Trois Forêts",
@@ -29,7 +30,7 @@ const COMMUNES = [
   { id: "cergy", name: "Cergy", interco: "cp", lat: 49.0364, lng: 2.0631, quartiers: ["Grand Centre", "Axe Majeur", "Saint-Christophe", "Hauts-de-Cergy"] },
   { id: "saint-ouen-l-aumone", name: "Saint-Ouen-l'Aumône", interco: "cp", lat: 49.0447, lng: 2.1111, quartiers: ["Le Parc", "Liesse", "Épluches"] },
   { id: "osny", name: "Osny", interco: "cp", lat: 49.0603, lng: 2.0628, quartiers: ["Centre", "Moulin-à-Vent"] },
-  { id: "argenteuil", name: "Argenteuil", interco: "sg", lat: 48.9472, lng: 2.2467, quartiers: ["Centre", "Val-Notre-Dame", "Orgemont", "Val d'Argent"] },
+  { id: "argenteuil", name: "Argenteuil", interco: "mgp", lat: 48.9472, lng: 2.2467, quartiers: ["Centre", "Val-Notre-Dame", "Orgemont", "Val d'Argent"] },
   { id: "bezons", name: "Bezons", interco: "sg", lat: 48.9261, lng: 2.2178, quartiers: ["Centre", "Agriculture"] },
   { id: "herblay", name: "Herblay-sur-Seine", interco: "vp", lat: 48.9897, lng: 2.165, quartiers: ["Centre", "Les Beauregards"] },
   { id: "franconville", name: "Franconville", interco: "vp", lat: 48.9886, lng: 2.23, quartiers: ["Centre", "Montédour"] },
@@ -140,14 +141,18 @@ const ALERT_SEED = [
   ["a25", "voirie", "Banc public cassé square Marcel-Pagnol", "L'assise est fendue et une latte dépasse, risque de blessure pour les enfants.", "pontoise", "Les Louvrais", "Square Marcel-Pagnol", 240, "me", 7, 0, 1, true, "pris_en_compte", "active"],
   ["a26", "autre-neg", "Chien errant blessé près du canal", "Il boite et reste près du pont, il semble apeuré.", "saint-ouen-l-aumone", "Épluches", "Quai de l'Écluse", 45, null, 10, 0, 4, true, "transmis", "active"],
   ["a27", "evenement", "Inauguration de la nouvelle aire de jeux", "Ouverture officielle à 15 h, goûter offert aux enfants.", "roissy", "Village", "Rue de la Mairie", 150, "u7", 33, 0, 4, true, "transmis", "active"],
+  ["a29", "travaux", "Chaussée fermée pour travaux de réseau", "Remplacement d'une canalisation : rue barrée, déviation par la rue de Liesse jusqu'à jeudi.", "saint-ouen-l-aumone", "Liesse", "Rue du Général-Leclerc", 130, "u9", 11, 0, 2, false, "pris_en_compte", "active"],
+  ["a30", "inondation", "Chemin de halage inondé au pied de l'Axe Majeur", "L'Oise déborde sur le chemin de halage : passage impossible à pied et à vélo.", "cergy", "Axe Majeur", "Chemin de halage", 55, null, 14, 1, 3, true, "transmis", "active"],
   ["a28", "eclairage", "Lampadaire clignotant (doublon)", "Supprimé par l'auteur : doublon d'une alerte existante.", "ermont", "Centre", "Avenue de la Gare", 600, "me", 0, 0, 0, false, "envoye", "supprimee"],
 ];
 
-/* Positions précises des alertes visibles sur la carte d'accueil (secteur Pontoise / Cergy) */
+/* Positions précises des alertes du secteur Cergy-Pontoise, dans leur quartier (fictif) de la carte */
 const ALERT_POSITIONS = {
-  a1: [49.04463, 2.10392], a19: [49.04628, 2.08986], a25: [49.06211, 2.11174], a6: [49.04463, 2.12174],
-  a26: [49.03435, 2.13361], a2: [49.03846, 2.06174], a22: [49.03538, 2.06955], a4: [49.02531, 2.07486], a17: [49.06211, 2.06486],
+  a1: [49.03559, 2.0938], a19: [49.03873, 2.08831], a25: [49.06237, 2.09532], a6: [49.05499, 2.13491], a26: [49.03928, 2.11338],
+  a2: [49.04381, 2.04605], a22: [49.0415, 2.06899], a4: [49.027, 2.07228], a17: [49.0668, 2.07512], a29: [49.03554, 2.14277], a30: [49.02386, 2.07913],
 };
+/* Alertes de zone (inondation, travaux) : demi-largeur de la zone concernée, en km (tâche 3.11) */
+const ALERT_AREAS = { a30: 0.55, a29: 0.3, a9: 0.45, a14: 0.35 };
 
 function seededJitter(id, amp) {
   let h = 0;
@@ -170,7 +175,7 @@ function buildAlert(row) {
     authorId: authorId || `u${(id.length % 9) + 1}`, // l'auteur reste connu du système (CDC §9)
     anonymous: !authorId,
     votesUp: up, votesDown: down, commentsCount: comments,
-    hasPhoto, transmission, status, duplicateGroup: duplicateGroup || null,
+    hasPhoto, transmission, status, duplicateGroup: duplicateGroup || null, areaKm: ALERT_AREAS[id] || null,
   };
 }
 
@@ -305,7 +310,7 @@ function cx(...parts) {
    STORE — état unique (useReducer)
    ===================================================================== */
 const PREFS_KEY = "95alerte:prefs";
-const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false };
+const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false, homeView: "map" };
 const DEFAULT_DEMO = { offline: false, permissionDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 function initialAuth() {
@@ -334,6 +339,7 @@ function initialState() {
     comments: SEED_COMMENTS,
     notifications: SEED_NOTIFICATIONS,
     nav: { tab: "map", stack: [] },
+    mapFilter: { type: "all", hidden: [], urgentOnly: false },
     sheet: null,
     modal: null,
     toasts: [],
@@ -366,6 +372,8 @@ function reducer(state, action) {
       return { ...state, toasts: state.toasts.filter((t) => t.id !== action.id) };
     case "SET_PREF":
       return { ...state, prefs: { ...state.prefs, [action.key]: action.value } };
+    case "SET_MAP_FILTER":
+      return { ...state, mapFilter: { ...state.mapFilter, ...action.patch } };
     case "SET_DEMO":
       return { ...state, demo: { ...state.demo, [action.key]: action.value } };
     case "VOTE": {
@@ -632,7 +640,7 @@ const MARKER_SHAPES = {
 };
 const FAMILY_LABEL = { incident: "Incident", vigilance: "Vigilance", positive: "Événement positif", info: "Information" };
 
-function Marker({ family, icon, selected, critical, label, style, onClick }) {
+function Marker({ family, icon, selected, critical, label, style, onClick, dataId }) {
   const content = (
     <Fragment>
       <svg className="shape" viewBox="0 0 36 36" aria-hidden="true">{MARKER_SHAPES[family]}</svg>
@@ -641,7 +649,7 @@ function Marker({ family, icon, selected, critical, label, style, onClick }) {
     </Fragment>
   );
   const cls = cx("marker", `fam-${family}`, selected && "is-selected", critical && "is-critical");
-  if (onClick) return <button type="button" className={cls} style={{ ...style, border: 0, background: "none", padding: 0, cursor: "pointer" }} aria-label={label} onClick={onClick}>{content}</button>;
+  if (onClick) return <button type="button" className={cls} style={{ ...style, border: 0, background: "none", padding: 0, cursor: "pointer" }} aria-label={label} onClick={onClick} data-alert={dataId}>{content}</button>;
   return <span className={cls} style={style} role={label ? "img" : undefined} aria-label={label}>{content}</span>;
 }
 
@@ -704,12 +712,7 @@ function AlertCard({ alert, onOpen, showStatus }) {
   const pos = state.session.position;
   const dist = pos ? fmtDistance(haversineKm(pos, alert)) : null;
   const commune = COMMUNE_BY_ID[alert.communeId].name;
-  const life = alertLifecycle(alert, now);
-  let status = null;
-  if (life === "proche") status = <StatusBadge status="proche" label={`Expire dans ${fmtRemaining(alert.expiresAt - now)}`} />;
-  else if (life === "expiree" || life === "supprimee" || life === "moderee") status = <StatusBadge status={life} />;
-  else if (["en_traitement", "traite", "cloture"].includes(alert.transmission)) status = <StatusBadge status={alert.transmission} />;
-  else if (cat.type === "negative" || showStatus) status = <StatusBadge status="transmis" />;
+  const status = alertStatus(alert, now, showStatus);
   const ago = fmtRelative(now - alert.createdAt);
   const aria = `${cat.label}. ${alert.title}. ${commune}${dist ? `, ${dist}` : ""}, ${ago}. ${alert.votesUp} confirmations, ${alert.commentsCount} commentaires.`;
   return (
@@ -843,12 +846,12 @@ function ScreenHeader({ title, onBack, action, close }) {
 
 const SNAP_HEIGHTS = { peek: 132, half: 0.5, full: 0.92 };
 
-function BottomSheet({ snap = "half", onSnap, onClose, title, modal, children, dismissible = true, peek = SNAP_HEIGHTS.peek, headerAction }) {
+function BottomSheet({ snap = "half", onSnap, onClose, title, subtitle, modal, children, dismissible = true, peek = SNAP_HEIGHTS.peek, half = SNAP_HEIGHTS.half, headerAction }) {
   const ref = useRef(null);
   const drag = useRef(null);
   const [dragH, setDragH] = useState(null);
   const parentH = () => ref.current?.parentElement?.clientHeight || 700;
-  const heightFor = (s) => (s === "peek" ? peek : SNAP_HEIGHTS[s] * parentH());
+  const heightFor = (s) => (s === "peek" ? peek : (s === "half" ? half : SNAP_HEIGHTS[s]) * parentH());
   const order = ["peek", "half", "full"];
 
   useEffect(() => {
@@ -896,7 +899,7 @@ function BottomSheet({ snap = "half", onSnap, onClose, title, modal, children, d
         </button>
         {title || headerAction || (modal && dismissible) ? (
           <div className="bs-head">
-            {title ? <h2>{title}</h2> : <span style={{ flex: 1 }} />}
+            {title && subtitle ? <div className="bs-titles"><h2>{title}</h2><p>{subtitle}</p></div> : title ? <h2>{title}</h2> : <span style={{ flex: 1 }} />}
             {headerAction}
             {modal && dismissible ? <IconButton icon="x" label="Fermer" onClick={onClose} style={{ boxShadow: "none", width: 40, height: 40 }} /> : null}
           </div>
@@ -1022,88 +1025,769 @@ const MAP_ART = (
   </svg>
 );
 
-function AlertSummary({ alert, onClose }) {
-  const { state } = useStore();
-  const { toast } = useActions();
-  const now = useNow();
-  const cat = CATEGORY_BY_ID[alert.categoryId];
-  const dist = fmtDistance(haversineKm(state.session.position, alert));
-  const duplicates = alert.duplicateGroup ? state.alerts.filter((a) => a.duplicateGroup === alert.duplicateGroup && a.status === "active").length : 1;
+/* =====================================================================
+   CARTE INTERACTIVE DU VAL-D'OISE (phase 3)
+   Géométrie : prototype/src/map-95.json (tools/build_map_95.py), embarquée par le build (window.MAP_95).
+   Repère en kilomètres ; la vue est { cx, cy, s } : point du repère au centre de l'écran et échelle en px/km.
+   ===================================================================== */
+const MAP95 = (typeof window !== "undefined" && window.MAP_95) || null;
+const PROJ = MAP95 ? MAP95.proj : { lat0: 49.245, lng0: 1.6, kx: 72.95, ky: 111.32 };
+const DEPT_KM = MAP95 ? { x: MAP95.bounds[0], y: MAP95.bounds[1], w: MAP95.bounds[2], h: MAP95.bounds[3] } : { x: 0, y: 0, w: 72.5, h: 37.4 };
+
+function projectKm(p) {
+  return { x: (p.lng - PROJ.lng0) * PROJ.kx, y: (PROJ.lat0 - p.lat) * PROJ.ky };
+}
+
+/* Chemins « M x yL x y…Z » → anneaux, pour savoir dans quelle commune ou quel quartier tombe un point */
+function pathRings(d) {
+  return d.split("Z").filter(Boolean).map((r) => r.slice(1).split("L").map((pt) => pt.split(" ").map(Number)));
+}
+function inRings(rings, x, y) {
+  let inside = false;
+  rings.forEach((ring) => {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i];
+      const [xj, yj] = ring[j];
+      if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+  });
+  return inside;
+}
+
+const GEO = MAP95 ? {
+  dept: pathRings(MAP95.dept),
+  communes: MAP95.communes.map((c) => ({ ...c, rings: pathRings(c.d) })),
+  quartiers: MAP95.quartiers.map((q) => ({ ...q, rings: pathRings(q.d) })),
+  epci: Object.fromEntries(MAP95.epci.map((e) => [e.id, e])),
+} : null;
+
+/* Où tombe un point du repère : département, intercommunalité, commune, quartier fictif */
+function placeAt(x, y) {
+  if (!GEO || !inRings(GEO.dept, x, y)) return { inside: false };
+  const commune = GEO.communes.find((c) => inRings(c.rings, x, y));
+  const quartier = commune ? GEO.quartiers.find((q) => q.commune === commune.code && inRings(q.rings, x, y)) : null;
+  return { inside: true, commune, quartier, epci: commune ? GEO.epci[commune.epci] : null };
+}
+
+/* Quatre niveaux de zoom (tâche 3.2) : seuils en px/km */
+const MAP_LEVELS = [
+  { id: "departement", label: "Département", min: 0 },
+  { id: "interco", label: "Intercommunalité", min: 10 },
+  { id: "commune", label: "Commune", min: 24 },
+  { id: "quartier", label: "Quartier", min: 60 },
+];
+const MAP_MAX_S = 170;
+function levelOf(s) {
+  return MAP_LEVELS.reduce((k, l, i) => (s >= l.min ? i : k), 0);
+}
+function levelText(level, place) {
+  if (!place.inside) return "Hors Val-d'Oise";
+  const commune = place.commune ? place.commune.name : "Val-d'Oise";
+  if (level === 0) return "Département · Val-d'Oise";
+  if (level === 1) return `Intercommunalité · ${place.epci ? place.epci.short : commune}`;
+  if (level === 3 && place.quartier) return `Quartier · ${place.quartier.name}, ${commune}`;
+  return `Commune · ${commune}`;
+}
+
+/* Alertes de zone (inondation, travaux) : polygone translucide autour du marqueur (tâche 3.11) */
+function areaPath(alert) {
+  const c = projectKm(alert);
+  const pts = Array.from({ length: 12 }, (_, i) => {
+    const [j] = seededJitter(`${alert.id}${i}`, 0.5);
+    const r = alert.areaKm * (0.82 + j);
+    const t = (i / 12) * Math.PI * 2;
+    return `${(c.x + Math.cos(t) * r * 1.15).toFixed(3)} ${(c.y + Math.sin(t) * r * 0.85).toFixed(3)}`;
+  });
+  return `M${pts.join("L")}Z`;
+}
+
+/* Fond de carte : construit une seule fois ; le niveau de zoom choisit les couches visibles (CSS) */
+const GEO_LAYERS = MAP95 ? (
+  <Fragment>
+    <path className="geo-dept" d={MAP95.dept} />
+    {MAP95.forests.map((f) => <path key={f.name} className="geo-forest" d={f.d} />)}
+    {MAP95.lakes.map((l) => <path key={l.name} className="geo-lake" d={l.d} />)}
+    <g className="geo-communes">{MAP95.communes.map((c) => <path key={c.code} d={c.d} />)}</g>
+    <g className="geo-quartiers">{MAP95.quartiers.map((q) => <path key={q.commune + q.name} d={q.d} />)}</g>
+    <g className="geo-epci">{MAP95.epci.map((e) => <path key={e.id} d={e.d} />)}</g>
+    {MAP95.water.map((w) => <path key={w.name} className={cx("geo-water", w.w > 8 && "is-large")} d={w.d} />)}
+    {MAP95.roads.map((r) => <path key={`${r.ref}-case`} className="geo-road-case" d={r.d} />)}
+    {MAP95.roads.map((r) => <path key={r.ref} className={cx("geo-road", `is-${r.cls}`)} d={r.d} />)}
+    <path className="geo-dept-line" d={MAP95.dept} />
+  </Fragment>
+) : null;
+
+/* Libellés selon le niveau, sans chevauchement (les plus peuplés d'abord) */
+function mapLabels(level, toScreen, w, h) {
+  if (!MAP95) return [];
+  const cand = [];
+  const add = (text, c, cls, priority) => cand.push({ text, c, cls, priority });
+  if (level === 0) {
+    add("Val-d'Oise", [DEPT_KM.x + DEPT_KM.w * 0.47, DEPT_KM.y + DEPT_KM.h * 0.32], "lbl-dept", 0);
+    MAP95.communes.slice(0, 6).forEach((c, i) => add(c.name, c.c, "lbl-town", 10 + i));
+  }
+  if (level === 1) {
+    MAP95.epci.filter((e) => e.n > 2).forEach((e) => add(e.short, e.c, "lbl-epci", 1));
+    MAP95.communes.filter((c) => c.pop >= 25000).forEach((c, i) => add(c.name, c.c, "lbl-town", 10 + i));
+  }
+  if (level >= 2) {
+    MAP95.communes.forEach((c, i) => add(c.name, c.c, level === 3 ? "lbl-town is-strong" : "lbl-town", 10 + i));
+    MAP95.water.forEach((wt) => add(wt.name, wt.c, "lbl-water", 400));
+  }
+  if (level === 3) {
+    MAP95.quartiers.forEach((q) => add(q.name, q.c, "lbl-quartier", 2));
+    MAP95.forests.forEach((f) => add(f.name, f.c, "lbl-forest", 300));
+  }
+  if (level <= 1) MAP95.outside.forEach((o) => add(o.name, o.c, "lbl-outside", 200));
+  cand.sort((a, b) => a.priority - b.priority);
+  const boxes = [];
+  const out = [];
+  cand.forEach((l) => {
+    const p = toScreen(l.c[0], l.c[1]);
+    const lw = l.text.length * (l.cls === "lbl-dept" ? 9 : 6.6) + 8;
+    const lh = l.cls === "lbl-dept" ? 22 : 16;
+    const box = [p.x - lw / 2, p.y - lh / 2, p.x + lw / 2, p.y + lh / 2];
+    if (box[2] < 0 || box[0] > w || box[3] < 0 || box[1] > h) return;
+    if (boxes.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return;
+    boxes.push(box);
+    out.push({ ...l, x: p.x, y: p.y, key: l.cls + l.text + l.c.join() });
+  });
+  return out;
+}
+
+/* Regroupement à l'écran (tâche 3.4) : marqueurs à moins de `radius` px → un regroupement ; il se divise au zoom */
+function clusterOnScreen(items, radius) {
+  const used = new Set();
+  const out = [];
+  items.forEach((p) => {
+    if (used.has(p.a.id)) return;
+    const group = items.filter((q) => !used.has(q.a.id) && Math.hypot(q.x - p.x, q.y - p.y) < radius);
+    group.forEach((q) => used.add(q.a.id));
+    out.push({ key: group.map((q) => q.a.id).join("-"), alerts: group.map((q) => q.a), x: group.reduce((s, q) => s + q.x, 0) / group.length, y: group.reduce((s, q) => s + q.y, 0) / group.length });
+  });
+  return out;
+}
+
+const PRIORITY_RANK = { critique: 0, elevee: 1, normale: 2 };
+const MAP_INSET_TOP = 148; // barre de recherche, puces et étiquette de niveau
+const SELECTION_HALF = 0.62; // fiche de sélection : assez haute pour tout montrer, la carte reste visible au-dessus
+let lastMapView = null; // vue conservée entre deux visites de l'onglet Carte (pour la même zone suivie)
+let lastMapZone = null;
+let mapLoadedOnce = false;
+
+const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect, zone, me, sheetMode, peek, loading, onViewChange, error }, ref) {
+  const box = useRef(null);
+  const [size, setSize] = useState(null);
+  const zoneKey = zone ? `${zone.center.lat},${zone.center.lng},${zone.radiusKm}` : "none";
+  const [view, setView] = useState(lastMapZone === zoneKey ? lastMapView : null);
+  const viewRef = useRef(view);
+  const anim = useRef(null);
+  const pointers = useRef(new Map());
+  const gesture = useRef(null);
+
+  useLayoutEffect(() => {
+    const el = box.current;
+    const measure = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const bottomInset = size ? (sheetMode === "peek" ? peek : size.h * (sheetMode === "selection" ? SELECTION_HALF : 0.5)) : peek;
+  const geom = useRef({});
+  geom.current = { size, bottomInset };
+  const minS = size ? Math.max(3, ((size.w - 24) / DEPT_KM.w) * 0.8) : 3;
+  const clampView = useCallback((v) => {
+    const s = Math.min(MAP_MAX_S, Math.max(minS, v.s));
+    return { s, cx: Math.min(DEPT_KM.x + DEPT_KM.w + 4, Math.max(DEPT_KM.x - 4, v.cx)), cy: Math.min(DEPT_KM.y + DEPT_KM.h + 4, Math.max(DEPT_KM.y - 4, v.cy)) };
+  }, [minS]);
+
+  const apply = useCallback((v, settle) => {
+    const next = clampView(v);
+    viewRef.current = next;
+    lastMapView = next;
+    lastMapZone = zoneKey;
+    setView(next);
+    if (settle) {
+      // Le lieu annoncé est celui du centre visible (entre la barre du haut et le volet), pas du centre de l'écran
+      const { size: sz, bottomInset: bi } = geom.current;
+      const fy = sz ? (MAP_INSET_TOP + sz.h - bi) / 2 - sz.h / 2 : 0;
+      onViewChange?.(next, settle, { x: next.cx, y: next.cy + fy / next.s });
+    }
+  }, [clampView, onViewChange, zoneKey]);
+
+  /* Centre visible : entre la barre du haut et le volet */
+  const focusY = (h, bottom) => (MAP_INSET_TOP + (h - bottom)) / 2;
+  const viewFor = useCallback((x, y, s, bottom = bottomInset) => ({ s, cx: x, cy: y - (focusY(size.h, bottom) - size.h / 2) / s }), [size, bottomInset]);
+  const fitZone = useCallback(() => {
+    if (!size) return null;
+    if (!zone) return { s: ((size.w - 24) / DEPT_KM.w), cx: DEPT_KM.x + DEPT_KM.w / 2, cy: DEPT_KM.y + DEPT_KM.h / 2 + 4 };
+    const c = projectKm(zone.center);
+    const visH = size.h - MAP_INSET_TOP - peek - 32;
+    const s = Math.min(MAP_MAX_S, (size.w - 48) / (2 * zone.radiusKm), visH / (2 * zone.radiusKm));
+    return viewFor(c.x, c.y, s, peek); // la zone se cadre toujours au-dessus du volet réduit
+  }, [size, zone, peek, viewFor]);
+
+  const animateTo = useCallback((target, settle = "program") => {
+    cancelAnimationFrame(anim.current);
+    const from = viewRef.current;
+    const to = clampView(target);
+    if (!from || motionReduced()) { apply(to, settle); return; }
+    const t0 = performance.now();
+    const dur = 420;
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - k, 3);
+      const s = Math.exp(Math.log(from.s) + (Math.log(to.s) - Math.log(from.s)) * e);
+      apply({ s, cx: from.cx + (to.cx - from.cx) * e, cy: from.cy + (to.cy - from.cy) * e }, k === 1 ? settle : null);
+      if (k < 1) anim.current = requestAnimationFrame(step);
+    };
+    anim.current = requestAnimationFrame(step);
+  }, [apply, clampView]);
+
+  // Première vue : la zone suivie (ou tout le département sans position) ; nouvelle zone → la carte s'y recentre
+  const shownZone = useRef(zoneKey);
+  useEffect(() => {
+    if (!size) return;
+    if (!viewRef.current) { apply(fitZone(), "init"); return; }
+    if (shownZone.current !== zoneKey) { shownZone.current = zoneKey; animateTo(fitZone(), "recenter"); }
+  }, [size, zoneKey, fitZone, apply, animateTo]);
+  useEffect(() => { if (viewRef.current && size) apply(viewRef.current, "init"); }, [!!size]); // vue restaurée : informer l'écran
+
+  const zoomBy = useCallback((k, at) => {
+    const v = viewRef.current;
+    if (!v || !size) return;
+    const px = at ? at.x : size.w / 2;
+    const py = at ? at.y : focusY(size.h, bottomInset);
+    const wx = v.cx + (px - size.w / 2) / v.s;
+    const wy = v.cy + (py - size.h / 2) / v.s;
+    const s = Math.min(MAP_MAX_S, Math.max(minS, v.s * k));
+    animateTo({ s, cx: wx - (px - size.w / 2) / s, cy: wy - (py - size.h / 2) / s }, "user");
+  }, [size, bottomInset, minS, animateTo]);
+
+  useImperativeHandle(ref, () => ({
+    recenter: () => { const v = fitZone(); if (v) animateTo(v, "recenter"); },
+    focusAlert: (a) => {
+      const p = projectKm(a);
+      const v = viewRef.current;
+      animateTo(viewFor(p.x, p.y, Math.max(v ? v.s : 0, MAP_LEVELS[2].min + 8), size ? size.h * SELECTION_HALF : 420), "program");
+    },
+    zoomBy,
+    bounds: () => {
+      const v = viewRef.current;
+      if (!v || !size) return null;
+      return { x0: v.cx - size.w / 2 / v.s, x1: v.cx + size.w / 2 / v.s, y0: v.cy + (MAP_INSET_TOP - size.h / 2) / v.s, y1: v.cy + (size.h - bottomInset - size.h / 2) / v.s };
+    },
+  }), [fitZone, animateTo, viewFor, size, zoomBy, bottomInset]);
+
+  /* Gestes : glisser (1 doigt), pincer (2 doigts), molette, double toucher, clavier */
+  const local = (e) => { const r = box.current.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  const onPointerDown = (e) => {
+    if (e.button && e.button !== 0) return;
+    cancelAnimationFrame(anim.current);
+    pointers.current.set(e.pointerId, local(e));
+    const pts = [...pointers.current.values()];
+    const v = viewRef.current;
+    if (pts.length === 1) gesture.current = { type: "pan", start: pts[0], v, moved: false, id: e.pointerId };
+    if (pts.length === 2) {
+      const mid = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+      gesture.current = { type: "pinch", dist: Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y), mid, v, moved: true };
+      try { box.current.setPointerCapture(e.pointerId); } catch (err) { /* pointeur déjà relâché */ }
+    }
+  };
+  const onPointerMove = (e) => {
+    const g = gesture.current;
+    if (!g || !pointers.current.has(e.pointerId)) return;
+    pointers.current.set(e.pointerId, local(e));
+    const pts = [...pointers.current.values()];
+    if (g.type === "pan" && pts.length === 1) {
+      const dx = pts[0].x - g.start.x;
+      const dy = pts[0].y - g.start.y;
+      if (!g.moved && Math.hypot(dx, dy) < 6) return;
+      if (!g.moved) { g.moved = true; try { box.current.setPointerCapture(e.pointerId); } catch (err) { /* idem */ } }
+      apply({ s: g.v.s, cx: g.v.cx - dx / g.v.s, cy: g.v.cy - dy / g.v.s });
+    }
+    if (g.type === "pinch" && pts.length === 2) {
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      const mid = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+      const s = Math.min(MAP_MAX_S, Math.max(minS, g.v.s * (dist / g.dist)));
+      const wx = g.v.cx + (g.mid.x - size.w / 2) / g.v.s;
+      const wy = g.v.cy + (g.mid.y - size.h / 2) / g.v.s;
+      apply({ s, cx: wx - (mid.x - size.w / 2) / s, cy: wy - (mid.y - size.h / 2) / s });
+    }
+  };
+  const onPointerUp = (e) => {
+    pointers.current.delete(e.pointerId);
+    const g = gesture.current;
+    if (!g) return;
+    if (pointers.current.size === 0) {
+      gesture.current = null;
+      if (g.moved) apply(viewRef.current, "user");
+    } else if (g.type === "pinch") {
+      const [p] = [...pointers.current.values()];
+      gesture.current = { type: "pan", start: p, v: viewRef.current, moved: true };
+    }
+  };
+  useEffect(() => {
+    const el = box.current;
+    let timer = null;
+    const onWheel = (e) => {
+      e.preventDefault();
+      const v = viewRef.current;
+      if (!v || !size) return;
+      const at = local(e);
+      const k = Math.exp(-e.deltaY * 0.0022);
+      const s = Math.min(MAP_MAX_S, Math.max(minS, v.s * k));
+      const wx = v.cx + (at.x - size.w / 2) / v.s;
+      const wy = v.cy + (at.y - size.h / 2) / v.s;
+      apply({ s, cx: wx - (at.x - size.w / 2) / s, cy: wy - (at.y - size.h / 2) / s });
+      clearTimeout(timer);
+      timer = setTimeout(() => apply(viewRef.current, "user"), 160);
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => { el.removeEventListener("wheel", onWheel); clearTimeout(timer); };
+  }, [size, minS, apply]);
+  const onKeyDown = (e) => {
+    const v = viewRef.current;
+    if (!v || e.target !== box.current) return;
+    const step = 80 / v.s;
+    const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
+    if (moves[e.key]) { e.preventDefault(); animateTo({ ...v, cx: v.cx + moves[e.key][0], cy: v.cy + moves[e.key][1] }, "user"); }
+    if (e.key === "+" || e.key === "=") { e.preventDefault(); zoomBy(2); }
+    if (e.key === "-" || e.key === "_") { e.preventDefault(); zoomBy(0.5); }
+  };
+  const onDoubleClick = (e) => {
+    if (e.target.closest("button")) return;
+    zoomBy(2, local(e));
+  };
+
+  const v = view;
+  const ready = size && v;
+  const level = ready ? levelOf(v.s) : 0;
+  const toScreen = (x, y) => ({ x: (x - v.cx) * v.s + size.w / 2, y: (y - v.cy) * v.s + size.h / 2 });
+
+  // Marqueurs : alertes visibles à l'écran ; la sélection reste toujours individuelle et au premier plan
+  let pins = [];
+  if (ready && !loading && !error) {
+    const items = alerts
+      .map((a) => ({ a, ...toScreen(projectKm(a).x, projectKm(a).y) }))
+      .filter((p) => p.x > -30 && p.x < size.w + 30 && p.y > -30 && p.y < size.h + 30)
+      .sort((p, q) => PRIORITY_RANK[CATEGORY_BY_ID[p.a.categoryId].priority] - PRIORITY_RANK[CATEGORY_BY_ID[q.a.categoryId].priority]);
+    const free = items.filter((p) => p.a.id !== selectedId);
+    const radius = free.length > 12 ? 58 : 44; // au-delà de 12 marqueurs visibles, regroupement plus serré
+    pins = clusterOnScreen(free, radius);
+    const sel = items.find((p) => p.a.id === selectedId);
+    if (sel) pins.push({ key: sel.a.id, alerts: [sel.a], x: sel.x, y: sel.y, selected: true });
+  }
+  const labels = ready && !error ? mapLabels(level, toScreen, size.w, size.h) : [];
+  const meScreen = ready && me ? toScreen(projectKm(me).x, projectKm(me).y) : null;
+
+  const openCluster = (p) => {
+    const ks = p.alerts.map(projectKm);
+    const x0 = Math.min(...ks.map((k) => k.x));
+    const x1 = Math.max(...ks.map((k) => k.x));
+    const y0 = Math.min(...ks.map((k) => k.y));
+    const y1 = Math.max(...ks.map((k) => k.y));
+    const visH = size.h - MAP_INSET_TOP - bottomInset;
+    const fit = Math.min((size.w - 96) / Math.max(0.05, x1 - x0), (visH - 96) / Math.max(0.05, y1 - y0));
+    const s = Math.min(MAP_MAX_S, Math.max(v.s * 2, fit));
+    animateTo(viewFor((x0 + x1) / 2, (y0 + y1) / 2, s), "user");
+  };
+
   return (
-    <div className={cx("summary", `fam-${cat.family}`)}>
-      <div className="summary-head"><TypeBadge category={cat} /><span className="demo-note">{fmtRelative(now - alert.createdAt)}</span><IconButton icon="x" label="Fermer l'aperçu" className="flat" onClick={onClose} /></div>
-      <h3 className="summary-title">{alert.title}</h3>
-      <p className="summary-meta"><Icon name="map-pin" className="ph-sm" />{displayPlace(alert)} · {dist}</p>
-      {duplicates > 1 ? <Banner tone="info" icon="copy">{duplicates} signalements semblent concerner le même événement.</Banner> : null}
-      <VoteBar alert={alert} />
-      <Button block onClick={() => toast("La fiche alerte complète arrive bientôt.")}>Voir le détail</Button>
+    <div ref={box} className={cx("map95", "map-live", `lv-${level}`, error && "is-error")} tabIndex={0} role="region"
+      aria-label="Carte des alertes. Flèches pour déplacer la carte, plus et moins pour zoomer."
+      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onKeyDown={onKeyDown} onDoubleClick={onDoubleClick}>
+      {ready && !error ? (
+        <svg className="map-geo" width={size.w} height={size.h} aria-hidden="true">
+          <g transform={`translate(${size.w / 2 - v.cx * v.s} ${size.h / 2 - v.cy * v.s}) scale(${v.s})`}>
+            {GEO_LAYERS}
+            {zone ? <circle className="geo-zone" cx={projectKm(zone.center).x} cy={projectKm(zone.center).y} r={zone.radiusKm} /> : null}
+            {loading ? null : alerts.filter((a) => a.areaKm).map((a) => <path key={a.id} className={cx("area-shape", `fam-${CATEGORY_BY_ID[a.categoryId].family}`, a.id === selectedId && "is-selected")} d={areaPath(a)} />)}
+          </g>
+        </svg>
+      ) : null}
+      {labels.map((l) => <span key={l.key} className={cx("map-label", l.cls)} style={{ left: l.x, top: l.y }} aria-hidden="true">{l.text}</span>)}
+      {meScreen ? (
+        <span className="me-wrap" style={{ left: meScreen.x, top: meScreen.y }} role="img" aria-label="Vous êtes ici">
+          <span className="me-accuracy" style={{ width: Math.max(28, 0.15 * v.s * 2), height: Math.max(28, 0.15 * v.s * 2) }} />
+          <span className="me" />
+        </span>
+      ) : null}
+      {pins.map((p, i) => {
+        if (p.alerts.length > 1) {
+          return (
+            <span key={p.key} className="map-pin is-cluster" style={{ left: p.x, top: p.y, animationDelay: mapLoadedOnce ? undefined : `${i * 45}ms` }}>
+              <ClusterMarker count={p.alerts.length} onClick={() => openCluster(p)} />
+            </span>
+          );
+        }
+        const a = p.alerts[0];
+        const cat = CATEGORY_BY_ID[a.categoryId];
+        const critical = cat.priority === "critique";
+        const dist = me ? `, ${fmtDistance(haversineKm(me, a))}` : "";
+        return (
+          <span key={p.key} className={cx("map-pin", p.selected && "is-selected")} style={{ left: p.x, top: p.y, animationDelay: mapLoadedOnce ? undefined : `${i * 45}ms` }}>
+            <Marker family={cat.family} icon={cat.icon} selected={p.selected} critical={critical} dataId={a.id}
+              label={`${cat.label}${critical ? ", Urgent" : ""}${a.areaKm ? ", alerte de zone" : ""}${dist} : ${a.title}`} onClick={() => onSelect(a.id)} />
+          </span>
+        );
+      })}
+    </div>
+  );
+});
+
+function MapLevelTag({ text, scale }) {
+  // Échelle : 1 km, 500 m ou 5 km selon le zoom, pour une barre de 40 à 90 px
+  const steps = [0.1, 0.2, 0.5, 1, 2, 5, 10];
+  const km = steps.find((k) => k * scale >= 40) || 10;
+  return (
+    <div className="map-level" aria-live="polite">
+      <span>{text}</span>
+      <span className="map-scale" aria-label={`Échelle : ${km < 1 ? `${km * 1000} m` : `${km} km`}`}><i style={{ width: km * scale }} />{km < 1 ? `${km * 1000} m` : `${km} km`}</span>
     </div>
   );
 }
 
-function MapScreen() {
+function MapControls({ onZoomIn, onZoomOut, onLocate, onLegend, bottom, locateLabel }) {
+  return (
+    <div className="map-controls" style={{ bottom }}>
+      <IconButton icon="info" label="Comprendre la carte" onClick={onLegend} />
+      <div className="mc-zoom" role="group" aria-label="Zoom">
+        <IconButton icon="plus" label="Zoomer" onClick={onZoomIn} />
+        <IconButton icon="minus" label="Dézoomer" onClick={onZoomOut} />
+      </div>
+      <IconButton icon="crosshair" label={locateLabel} onClick={onLocate} />
+    </div>
+  );
+}
+
+function ViewToggle({ view, onChange, floating }) {
+  const toList = view === "map";
+  return (
+    <button type="button" className={cx("view-toggle", floating && "is-floating")} onClick={() => onChange(toList ? "list" : "map")} aria-label={toList ? "Afficher la liste des alertes" : "Afficher la carte"}>
+      <Icon name={toList ? "list-bullets" : "map-trifold"} />{toList ? "Liste" : "Carte"}
+    </button>
+  );
+}
+
+/* Statut affiché sur une alerte (carte, fiche de sélection) */
+function alertStatus(alert, now, showStatus) {
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const life = alertLifecycle(alert, now);
+  if (life === "proche") return <StatusBadge status="proche" label={`Expire dans ${fmtRemaining(alert.expiresAt - now)}`} />;
+  if (life === "expiree" || life === "supprimee" || life === "moderee") return <StatusBadge status={life} />;
+  if (["pris_en_compte", "en_traitement", "traite", "cloture"].includes(alert.transmission)) return <StatusBadge status={alert.transmission} />;
+  if (cat.type === "negative" || showStatus) return <StatusBadge status="transmis" />;
+  return null;
+}
+
+/* Fiche de sélection (tâche 3.7) : quoi, où, depuis quand, par qui, combien ; balayage vers l'alerte voisine */
+function AlertSummary({ alert, onClose, index, total, onStep }) {
   const { state } = useStore();
-  const { toast, push } = useActions();
+  const { toast } = useActions();
+  const now = useNow();
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const pos = state.session.position;
+  const dist = pos.source !== "default" ? ` · ${fmtDistance(haversineKm(pos, alert))}` : "";
+  const author = publicAuthor(alert);
+  const duplicates = alert.duplicateGroup ? state.alerts.filter((a) => a.duplicateGroup === alert.duplicateGroup && a.status === "active").length : 1;
+  const swipe = useRef(null);
+  const onPointerDown = (e) => { if (!e.target.closest("button")) swipe.current = { x: e.clientX, y: e.clientY }; };
+  const onPointerUp = (e) => {
+    const s = swipe.current;
+    swipe.current = null;
+    if (!s || total < 2) return;
+    const dx = e.clientX - s.x;
+    if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(e.clientY - s.y) * 1.5) onStep(dx < 0 ? 1 : -1);
+  };
+  const onKeyDown = (e) => {
+    if (total < 2 || e.target.closest(".vote")) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); onStep(1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); onStep(-1); }
+  };
+  return (
+    <div className={cx("summary", `fam-${cat.family}`)} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onKeyDown={onKeyDown}>
+      <div className="summary-head">
+        <TypeBadge category={cat} />
+        {alert.areaKm ? <span className="badge badge-area"><Icon name="polygon" />Zone</span> : null}
+        <span className="demo-note">{fmtRelative(now - alert.createdAt)}</span>
+        <IconButton icon="x" label="Fermer la fiche" className="flat" onClick={onClose} />
+      </div>
+      <h3 className="summary-title">{alert.title}</h3>
+      <p className="summary-meta"><Icon name="map-pin" className="ph-sm" /><span>{displayPlace(alert)}{dist}</span></p>
+      <div className="summary-by">
+        <span className={cx("avatar", author.anonymous && "anon")} aria-hidden="true">{author.anonymous ? <Icon name="detective" /> : author.initials}</span>
+        <span>Signalé par <b>{author.name}</b></span>
+        {alertStatus(alert, now)}
+      </div>
+      {alert.areaKm ? <p className="summary-meta"><Icon name="polygon" className="ph-sm" />Zone d'environ {fmtDistance(alert.areaKm * 2)} de large</p> : null}
+      {duplicates > 1 ? <Banner tone="info" icon="copy">{duplicates} signalements semblent concerner le même événement.</Banner> : null}
+      <div className="summary-actions">
+        <VoteBar alert={alert} compact />
+        <span className="summary-comments"><Icon name="chat-circle" />{alert.commentsCount} commentaire{alert.commentsCount > 1 ? "s" : ""}</span>
+      </div>
+      <Button block onClick={() => toast("La fiche alerte complète arrive bientôt.")}>Voir le détail</Button>
+      {total > 1 ? (
+        <div className="summary-pager">
+          <IconButton icon="caret-left" label="Alerte précédente" className="flat" onClick={() => onStep(-1)} />
+          <span aria-live="polite">{index + 1} sur {total} · balayez pour l'alerte voisine</span>
+          <IconButton icon="caret-right" label="Alerte suivante" className="flat" onClick={() => onStep(1)} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/* Feuilles de la carte : légende (« Comprendre la carte ») et filtres */
+function MapLegendSheet() {
+  const rows = [
+    { m: <Marker family="incident" icon="fire" />, t: "Incident", d: "Losange rouge : incendie, accident, inondation, sécurité." },
+    { m: <Marker family="vigilance" icon="traffic-cone" />, t: "Vigilance", d: "Triangle orange : voirie, éclairage, propreté, nuisances." },
+    { m: <Marker family="positive" icon="hand-heart" />, t: "Événement positif", d: "Cercle vert : solidarité, culture, sport, environnement." },
+    { m: <Marker family="info" icon="megaphone" />, t: "Information", d: "Carré bleu : travaux, information utile." },
+    { m: <Marker family="incident" icon="fire" critical />, t: "Urgent", d: "Halo animé et étiquette : alerte critique, signalée en priorité." },
+    { m: <span className="cluster c-s">12</span>, t: "Regroupement", d: "Plusieurs alertes proches. Touchez pour zoomer : le groupe se divise." },
+    { m: <span className="legend-swatch area fam-incident" />, t: "Alerte de zone", d: "Inondation, travaux : la zone concernée est dessinée autour du marqueur." },
+    { m: <span className="legend-swatch zone" />, t: "Votre zone", d: "Le rayon suivi (1, 5 ou 10 km), modifiable dans le profil." },
+    { m: <span className="me" />, t: "Vous êtes ici", d: "Avec la précision de la localisation, si vous l'avez autorisée." },
+    { m: <span className="legend-swatch outside" />, t: "Hors Val-d'Oise", d: "95 Alerte n'est pas encore disponible dans cette zone." },
+  ];
+  return (
+    <Fragment>
+      <ul className="legend-list">
+        {rows.map((r) => <li key={r.t}><span className="legend-mark">{r.m}</span><span><b>{r.t}</b>{r.d}</span></li>)}
+      </ul>
+      <p className="demo-note">Contours des communes : IGN (ADMIN EXPRESS). Quartiers de Cergy, Pontoise, Saint-Ouen-l'Aumône et Osny : découpage fictif pour la démonstration.</p>
+      <Banner tone="info" icon="siren" title="95 Alerte n'est pas un service de secours.">En cas d'urgence, appelez le 112.</Banner>
+    </Fragment>
+  );
+}
+
+const MAP_FAMILIES = ["incident", "vigilance", "positive", "info"];
+function MapFiltersSheet() {
+  const { state, dispatch } = useStore();
+  const { closeSheet } = useActions();
   const alerts = useVisibleAlerts();
-  const [filter, setFilter] = useState("all");
+  const f = state.mapFilter;
+  const set = (patch) => dispatch({ type: "SET_MAP_FILTER", patch });
+  const count = alerts.filter((a) => mapFilterMatch(f, a)).length;
+  const examples = { incident: "fire", vigilance: "traffic-cone", positive: "hand-heart", info: "megaphone" };
+  return (
+    <Fragment>
+      <p className="section-label">Familles d'alertes</p>
+      {MAP_FAMILIES.map((fam) => (
+        <div key={fam} className="filter-row">
+          <Marker family={fam} icon={examples[fam]} />
+          <Switch id={`filter-${fam}`} label={FAMILY_LABEL[fam]} checked={!f.hidden.includes(fam)} onChange={(on) => set({ hidden: on ? f.hidden.filter((x) => x !== fam) : [...f.hidden, fam] })} />
+        </div>
+      ))}
+      <p className="section-label">Priorité</p>
+      <div className="filter-row">
+        <span className="filter-urgent" aria-hidden="true"><Icon name="siren-fill" /></span>
+        <Switch id="filter-urgent" label="Seulement les alertes urgentes" checked={f.urgentOnly} onChange={(on) => set({ urgentOnly: on })} />
+      </div>
+      <div className="lib-row">
+        <Button block onClick={closeSheet}>{count ? `Afficher ${count} alerte${count > 1 ? "s" : ""}` : "Aucune alerte avec ces filtres"}</Button>
+        <button type="button" className="btn btn-tertiary" onClick={() => set({ type: "all", hidden: [], urgentOnly: false })}>Tout réinitialiser</button>
+      </div>
+    </Fragment>
+  );
+}
+
+function mapFilterMatch(f, a) {
+  const cat = CATEGORY_BY_ID[a.categoryId];
+  return (f.type === "all" || cat.type === f.type) && !f.hidden.includes(cat.family) && (!f.urgentOnly || cat.priority === "critique");
+}
+
+/* =====================================================================
+   ÉCRAN D'ACCUEIL : la carte (phase 3)
+   ===================================================================== */
+function MapScreen() {
+  const { state, dispatch } = useStore();
+  const { toast, push, openSheet, setPref } = useActions();
+  const now = useNow();
+  const all = useVisibleAlerts(); // 3.10 : alertes actives et non expirées seulement
+  const map = useRef(null);
+  const pos = state.session.position;
+  const f = state.mapFilter;
+  const homeView = state.prefs.homeView || "map";
+  const hasZone = pos.source !== "default";
+  const radius = zoneRadius(state);
+  const showMe = hasZone && pos.source === "gps" && !state.demo.permissionDenied && !state.demo.gpsUnavailable;
+  const zone = useMemo(() => (hasZone ? { center: { lat: pos.lat, lng: pos.lng }, radiusKm: radius } : null), [hasZone, pos.lat, pos.lng, radius]);
+
   const [snap, setSnap] = useState("peek");
   const [selectedId, setSelectedId] = useState(null);
-  const pos = state.session.position;
-  const unread = state.notifications.filter((n) => !n.read).length;
-  const filtered = alerts.filter((a) => filter === "all" || CATEGORY_BY_ID[a.categoryId].type === filter);
-  const pins = useMemo(() => clusterPins(dedupeEvents(filtered)), [filtered]);
-  const near = filtered
-    .map((a) => ({ a, km: haversineKm(pos, a) }))
-    .filter((x) => x.km <= zoneRadius(state))
-    .sort((x, y) => x.km - y.km)
-    .map((x) => x.a);
-  const selected = selectedId ? alerts.find((a) => a.id === selectedId) : null;
-  const me = projectToMap(pos);
-  const PEEK = 156;
+  const [area, setArea] = useState(null); // « Voir les alertes ici » : zone affichée au lieu de la zone suivie
+  const [viewInfo, setViewInfo] = useState(null);
+  const [newSeen, setNewSeen] = useState(false);
+  const [loading, setLoading] = useState(!mapLoadedOnce);
+  const [retrying, setRetrying] = useState(false);
+  const PEEK = 148;
 
-  const openAlert = (id) => { setSelectedId(id); setSnap("half"); };
-  const closeSummary = () => { setSelectedId(null); setSnap("peek"); };
+  useEffect(() => {
+    if (!loading) return undefined;
+    const t = setTimeout(() => { setLoading(false); setTimeout(() => { mapLoadedOnce = true; }, 900); }, 900);
+    return () => clearTimeout(t);
+  }, [loading]);
+
+  const events = useMemo(() => dedupeEvents(all.filter((a) => mapFilterMatch(f, a))), [all, f]);
+  const inArea = (a) => { const k = projectKm(a); return k.x >= area.x0 && k.x <= area.x1 && k.y >= area.y0 && k.y <= area.y1; };
+  const listing = useMemo(() => {
+    const scoped = area ? events.filter(inArea) : hasZone ? events.filter((a) => haversineKm(pos, a) <= radius) : events;
+    return hasZone ? scoped.map((a) => ({ a, km: haversineKm(pos, a) })).sort((x, y) => x.km - y.km).map((x) => x.a) : scoped.sort((x, y) => y.createdAt - x.createdAt);
+  }, [events, area, hasZone, pos, radius]);
+  const fresh = hasZone && !area ? listing.filter((a) => now - a.createdAt < HOUR) : [];
+
+  const selected = selectedId ? all.find((a) => a.id === selectedId) : null;
+  const ring = selected && listing.some((a) => a.id === selected.id) ? listing : selected ? [selected] : [];
+  const index = selected ? ring.findIndex((a) => a.id === selected.id) : -1;
+
+  const select = (id) => {
+    const a = all.find((x) => x.id === id);
+    if (!a) return;
+    setSelectedId(id);
+    setSnap("half");
+    map.current?.focusAlert(a);
+  };
+  const closeSummary = useCallback(() => {
+    const id = selectedId;
+    setSelectedId(null);
+    setSnap("peek");
+    // Le focus revient au marqueur de l'alerte fermée
+    requestAnimationFrame(() => document.querySelector(`.map-live [data-alert="${id}"]`)?.focus());
+  }, [selectedId]);
+  const step = (d) => { if (ring.length > 1) select(ring[(index + d + ring.length) % ring.length].id); };
+  useEffect(() => {
+    if (!selected) return undefined;
+    const onKey = (e) => { if (e.key === "Escape") closeSummary(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected, closeSummary]);
+
+  const onViewChange = useCallback((v, why, focus) => {
+    const place = placeAt(focus.x, focus.y);
+    setViewInfo({ s: v.s, level: levelOf(v.s), place, moved: why === "user" ? true : why === "recenter" || why === "init" ? false : undefined });
+  }, []);
+  const moved = viewInfo && viewInfo.moved;
+  const recenter = () => {
+    setArea(null);
+    setSelectedId(null);
+    setSnap("peek");
+    map.current?.recenter();
+    if (state.demo.permissionDenied && hasZone) toast(`Localisation désactivée : position choisie manuellement (${COMMUNE_BY_ID[pos.communeId]?.name || "Pontoise"}).`);
+  };
+  const searchHere = () => {
+    const b = map.current?.bounds();
+    if (!b) return;
+    setArea(b);
+    setSelectedId(null);
+    setViewInfo((vi) => ({ ...vi, moved: false }));
+    setSnap("half");
+  };
+  const widen = () => { dispatch({ type: "SET_RADIUS", km: 10 }); setArea(null); toast("Zone élargie à 10 km."); };
+  const retry = () => { setRetrying(true); setTimeout(() => { setRetrying(false); toast("Toujours impossible de charger la carte.", { tone: "error", actionLabel: "OK" }); }, 900); };
+  // Carte ⇄ liste : « smart animate » (la barre de recherche, les puces et la bascule se déforment, le reste se fond)
+  const setView = (v) => {
+    const run = () => ReactDOM.flushSync(() => { setPref("homeView", v); setSelectedId(null); setSnap("peek"); });
+    if (document.startViewTransition && !motionReduced()) document.startViewTransition(run); else run();
+  };
+
+  const level = viewInfo ? viewInfo.level : 0;
+  const place = viewInfo ? viewInfo.place : { inside: true };
+  const sheetH = selected ? (snap === "full" ? "full" : "selection") : snap;
+
+  // Une seule pilule contextuelle à la fois : hors territoire > voir ici > nouvelles alertes
+  let pill = null;
+  if (homeView === "map" && !state.demo.networkError && !loading && !selected) {
+    if (viewInfo && !place.inside) pill = <span className="pill is-info" role="status"><Icon name="info" />95 Alerte n'est pas encore disponible dans cette zone.</span>;
+    else if (moved) pill = <button type="button" className="pill" onClick={searchHere}><Icon name="arrows-clockwise" />Voir les alertes ici</button>;
+    else if (fresh.length && !newSeen) pill = <Pill onClick={() => { setNewSeen(true); setSnap("half"); }}>{fresh.length} nouvelle{fresh.length > 1 ? "s" : ""} alerte{fresh.length > 1 ? "s" : ""}</Pill>;
+  }
+
+  const unread = state.notifications.filter((n) => !n.read).length;
+  const activeFilters = f.hidden.length + (f.urgentOnly ? 1 : 0);
+  const title = area ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} dans cette zone`
+    : hasZone ? (listing.length ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} dans votre zone` : "Aucun événement dans cette zone.")
+    : `${listing.length} alertes dans le Val-d'Oise`;
+  const subtitle = area ? "Zone affichée sur la carte" : hasZone ? `Rayon ${radius} km · mis à jour à l'instant` : "Choisissez une zone pour voir les alertes proches";
+
+  const header = (
+    <div className="map-top-wrap">
+      <div className="map-top">
+        <button type="button" className="search" onClick={() => push("commune")}>
+          <Icon name="magnifying-glass" /><span>{pos.communeId ? COMMUNE_BY_ID[pos.communeId].name : "Rechercher"}<small> · commune, adresse</small></span>
+        </button>
+        <IconButton icon="sliders-horizontal" className="is-filter" label={`Filtres${activeFilters ? `, ${activeFilters} actif${activeFilters > 1 ? "s" : ""}` : ""}`} badge={activeFilters || null} onClick={() => openSheet("map-filters", {}, "half")} />
+        <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive bientôt.")} />
+      </div>
+      <div className="map-chips" role="group" aria-label="Type d'alertes">
+        {[{ v: "all", l: "Toutes" }, { v: "positive", l: "Positives" }, { v: "negative", l: "Négatives" }].map((o) => (
+          <Chip key={o.v} selected={f.type === o.v} onClick={() => dispatch({ type: "SET_MAP_FILTER", patch: { type: o.v } })}>{o.l}</Chip>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (homeView === "list") {
+    return (
+      <div className="screen map-screen is-list">
+        {header}
+        <div className="home-list">
+          <div className="home-list-head"><h2>{title}</h2><p>{subtitle}</p></div>
+          {state.session.status === "in" ? <StartChecklist onConfirm={() => {}} /> : null}
+          {listing.length === 0 ? (
+            <EmptyState title="Aucun événement dans cette zone." action={radius < 10 && hasZone ? <Button variant="secondary" onClick={widen}>Élargir à 10 km</Button> : null}>Élargissez la zone ou revenez plus tard.</EmptyState>
+          ) : listing.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => toast("La fiche alerte complète arrive bientôt.")} />)}
+        </div>
+        <ViewToggle view="list" floating onChange={setView} />
+      </div>
+    );
+  }
 
   return (
     <div className="screen map-screen">
-      <div className="map95" aria-label="Carte des alertes autour de Pontoise">
-        {MAP_ART}
-        {state.demo.permissionDenied || pos.source !== "gps" ? null : <span className="me" style={{ left: me.x, top: me.y }} role="img" aria-label="Vous êtes ici" />}
-        {pins.map((p) => {
-          if (p.alerts.length > 1) {
-            return <ClusterMarker key={p.key} count={p.alerts.length} style={{ position: "absolute", left: p.x, top: p.y, transform: "translate(-50%,-50%)", zIndex: 4 }} onClick={() => toast(`${p.alerts.length} alertes regroupées : le zoom arrive avec la carte interactive.`)} />;
-          }
-          const a = p.alerts[0];
-          const cat = CATEGORY_BY_ID[a.categoryId];
-          return (
-            <span key={p.key} className="map-pin" style={{ left: p.x, top: p.y }}>
-              <Marker family={cat.family} icon={cat.icon} selected={selectedId === a.id} critical={cat.priority === "critique"} label={`${cat.label} : ${a.title}`} onClick={() => openAlert(a.id)} />
-            </span>
-          );
-        })}
-      </div>
-      <div className="map-top">
-        <button type="button" className="search" onClick={() => push("commune")}><Icon name="magnifying-glass" />{pos.communeId ? `${COMMUNE_BY_ID[pos.communeId].name} · changer de commune` : "Rechercher une commune…"}</button>
-        <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive bientôt.")} />
-      </div>
-      {pos.source === "default" ? (
+      <LiveMap ref={map} alerts={events} selectedId={selectedId} onSelect={select} zone={zone} me={showMe ? pos : null}
+        sheetMode={sheetH} peek={PEEK} loading={loading} error={state.demo.networkError} onViewChange={onViewChange} />
+      {header}
+      {!state.demo.networkError && viewInfo ? <MapLevelTag text={levelText(level, place)} scale={viewInfo.s} /> : null}
+      {!hasZone ? (
         <button type="button" className="map-banner" onClick={() => push("commune")}><Icon name="map-pin" /><span><b>Position non définie</b>Choisissez votre commune pour voir les alertes proches.</span><Icon name="caret-right" className="ph-sm" /></button>
-      ) : null}
-      {pos.source === "default" ? null : <div className="map-pill"><Pill onClick={() => { setSelectedId(null); setSnap("half"); }}>3 nouvelles alertes</Pill></div>}
-      <IconButton icon="crosshair" label="Recentrer sur ma position" className="map-locate" style={{ bottom: PEEK + 12 }} onClick={() => toast(state.demo.permissionDenied ? "Localisation désactivée : position choisie manuellement (Pontoise)." : "Carte centrée sur votre position.")} />
+      ) : pill ? <div className="map-pill">{pill}</div> : null}
 
-      {selected ? (
-        <BottomSheet snap={snap === "peek" ? "half" : snap} peek={PEEK} onSnap={setSnap} onClose={closeSummary}>
-          <AlertSummary alert={selected} onClose={closeSummary} />
+      {state.demo.networkError ? (
+        <div className="map-error" role="alert">
+          <Spot icon="cloud-slash" tone="neutral" />
+          <h2>Impossible de charger la carte.</h2>
+          <p>Vérifiez votre connexion. La liste des alertes reste disponible.</p>
+          <Button block loading={retrying} onClick={retry}>Réessayer</Button>
+          <Button block variant="secondary" onClick={() => setView("list")}>Voir la liste</Button>
+        </div>
+      ) : (
+        sheetH === "peek" ? (
+          <MapControls bottom={PEEK + 12} onLegend={() => openSheet("map-legend", {}, "half")}
+            onZoomIn={() => map.current?.zoomBy(2)} onZoomOut={() => map.current?.zoomBy(0.5)} onLocate={recenter}
+            locateLabel={showMe ? "Recentrer sur ma position" : "Recentrer sur ma zone"} />
+        ) : null
+      )}
+
+      {state.demo.networkError ? null : selected ? (
+        <BottomSheet snap={snap === "peek" ? "half" : snap} peek={PEEK} half={SELECTION_HALF} onSnap={setSnap} onClose={closeSummary} title={null}>
+          <AlertSummary alert={selected} onClose={closeSummary} index={index} total={ring.length} onStep={step} />
         </BottomSheet>
       ) : (
         <BottomSheet snap={snap} peek={PEEK} onSnap={setSnap} dismissible={false}
-          title={near.length ? `${near.length} alerte${near.length > 1 ? "s" : ""} autour de vous` : "Aucune alerte autour de vous"}>
-          <SegmentedControl block label="Type d'alertes" value={filter} onChange={setFilter} options={[{ value: "all", label: "Toutes" }, { value: "positive", label: "Positives" }, { value: "negative", label: "Négatives" }]} />
-          {state.session.status === "in" ? <StartChecklist onConfirm={() => setSnap("half")} /> : null}
-          {near.length === 0 ? (
-            <EmptyState title="Aucune alerte dans cette zone.">Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
-          ) : near.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => openAlert(a.id)} />)}
+          title={loading ? <Skeleton height={20} width="62%" /> : title} subtitle={loading ? <Skeleton height={12} width="44%" /> : subtitle}
+          headerAction={<ViewToggle view="map" onChange={setView} />}>
+          {area ? <button type="button" className="btn btn-tertiary" style={{ justifySelf: "start" }} onClick={recenter}>Revenir à ma zone</button> : null}
+          {state.session.status === "in" && !loading ? <StartChecklist onConfirm={() => setSnap("half")} /> : null}
+          {loading ? (
+            <Fragment><Skeleton height={96} radius="var(--r-md)" /><Skeleton height={96} radius="var(--r-md)" /></Fragment>
+          ) : listing.length === 0 ? (
+            <EmptyState title="Aucun événement dans cette zone." action={radius < 10 && hasZone ? <Button variant="secondary" onClick={widen}>Élargir à 10 km</Button> : null}>Élargissez la zone ou revenez plus tard.</EmptyState>
+          ) : listing.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => select(a.id)} />)}
         </BottomSheet>
       )}
     </div>
@@ -2365,7 +3049,7 @@ const STACK_SCREENS = {
   "verify-identity": { component: VerifyIdentityScreen, modal: true },
   commune: { component: CommuneScreen, modal: true },
 };
-const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet } };
+const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: MapFiltersSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet } };
 
 /* =====================================================================
    PANNEAU DE DÉMO (hors de l'app)

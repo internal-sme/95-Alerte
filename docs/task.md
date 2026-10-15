@@ -33,8 +33,8 @@
 |---|---|---|---|
 | 0 | Fondations techniques et composants de base | — | ✅ Terminée |
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
-| 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (refonte en revue : internal-sme/95-Alerte#9) |
-| 3 | Accueil — carte interactive | UI-011 / HOME-01 | ⬜ À faire |
+| 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (internal-sme/95-Alerte#11) |
+| 3 | Accueil — carte interactive | UI-011 / HOME-01 | 🟨 En cours (branche `phase/3-carte`) |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ⬜ À faire |
 | 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ⬜ À faire |
@@ -132,27 +132,34 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 
 ## Phase 3 — Accueil : carte interactive
 
-**But** : l'écran le plus important — « Que se passe-t-il autour de moi ? » (F-03 ; CDC §10–§16, §71, §75).
+**But** : l'écran le plus important — « Que se passe-t-il autour de moi ? » (F-03 ; CDC §10–§16, §71, §75). Écrans conçus d'après le benchmark `docs/benchmark/carte-refonte.html` (12 flows Mobbin, plan en 6 lots C0–C5).
 
 **Décisions UX (benchmark)**
-- Carte claire et désaturée ; marqueurs en formes de famille ; clusters bleus numérotés (Waze)
-- Bottom sheet en position **peek** par défaut : « 12 alertes autour de vous » + chips Toutes / Positives / Négatives (Nextdoor)
-- **Pilule flottante** « 3 nouvelles alertes » qui recentre la carte au tap (Citizen)
-- Tap sur un marqueur → sheet de résumé avec **compteur de confirmations** visible (Waze)
-- Alertes de zone (inondation, travaux) dessinées en **polygone translucide** (Nextdoor)
+- Carte claire et désaturée ; marqueurs en formes de famille ; regroupements bleus numérotés en 3 tailles (Waze, Google Arts & Culture)
+- Bottom sheet en position **peek** par défaut : « n alertes dans votre zone » + « Rayon 5 km · mis à jour à l'instant » (Airbnb, Too Good To Go)
+- **Pilule flottante** contextuelle, une seule à la fois : hors territoire > « Voir les alertes ici » après déplacement (Turo) > « n nouvelles alertes » (Citizen)
+- Tap sur un marqueur → fiche de résumé avec **compteur de confirmations** (Waze), balayage vers l'alerte voisine (Resy)
+- Alertes de zone (inondation, travaux) en **polygone translucide** (Lime, Météo Apple)
 - **Bulle d'aide** sur le + au premier lancement : « Signalez un événement » (Citizen)
 
-- [ ] **3.1** **Carte SVG** du Val-d'Oise : contour départemental, communes, quartiers fictifs, zone hors couverture grisée
-- [ ] **3.2** Pan et zoom (gestes + boutons) avec **4 niveaux** : département → intercommunalité → commune → quartier ; libellés selon le niveau
-- [ ] **3.3** **Marqueurs** par famille (losange incident, triangle vigilance, cercle positif, carré information) + icône Phosphor de la catégorie ; marqueur sélectionné agrandi ; halo « Urgent » pour les alertes critiques
-- [ ] **3.4** **Clustering** : compteurs qui se divisent au zoom (12 → 5 + 7 → individuels) ; tap sur un cluster = zoom
-- [ ] **3.5** **Ma position** : bouton, point « Vous êtes ici », halo de précision ; si la localisation est refusée, la position manuelle est utilisée
-- [ ] **3.6** En-tête : logo, 🔔 notifications (badge), 👤 profil ; barre de recherche flottante ; bouton filtres
-- [ ] **3.7** **Bottom sheet** au tap sur un marqueur : catégorie, ville, ancienneté, extrait, ⬆ ⬇ 💬, « Voir le détail »
-- [ ] **3.8** Bascule **[ Carte ] [ Liste ]** conservée entre les visites
-- [ ] **3.9** États : chargement initial (skeleton), marqueurs progressifs, « Aucun événement dans cette zone. », « Impossible de charger la carte. », beaucoup d'alertes
-- [ ] **3.10** Les alertes expirées n'apparaissent pas sur la carte active
-- [ ] **3.11** Pilule « n nouvelles alertes », polygone pour les alertes de zone, bulle d'aide sur le + au premier lancement
+**Décisions validées par l'utilisateur (« vas sur tes recommandations »)**
+- **E1** : pas de logo ni de profil dans l'en-tête de la carte (recherche, filtres, notifications ; le profil reste un onglet)
+- **E2** : l'onglet « Alertes » reste (liste complète, phase 4) ; la bascule « Liste / Carte » de l'accueil montre la même zone en liste, sans changer d'onglet
+- **E3** : puces Toutes / Positives / Négatives sous la recherche, toujours visibles
+- **E4** : balayage entre alertes dans la fiche de sélection, avec flèches et annonce « n sur N »
+- **E5** : quartiers fictifs sur le secteur Cergy-Pontoise uniquement (Cergy, Pontoise, Saint-Ouen-l'Aumône, Osny) ; communes réelles partout
+
+- [x] **3.1** **Carte SVG** du Val-d'Oise : contour départemental, 184 communes (IGN ADMIN EXPRESS via france-geojson) et 12 intercommunalités (`@etalab/decoupage-administratif`), quartiers fictifs de Cergy-Pontoise, Oise, Seine, forêts, grands axes ; hors département hachuré. Géométrie générée par `tools/build_map_95.py` → `prototype/src/map-95.json` (sources dans `tools/data/map-95/`), embarquée par le build
+- [x] **3.2** Pan et zoom : glisser, pincer, molette, double toucher, boutons + / −, clavier (flèches, + / −) ; **4 niveaux** département → intercommunalité → commune → quartier ; libellés selon le niveau, sans chevauchement ; étiquette de niveau + échelle sous la recherche
+- [x] **3.3** **Marqueurs** par famille + icône ; marqueur sélectionné agrandi, hors regroupement et au premier plan ; halo « Urgent » ; nom accessible « Incendie, Urgent, 1,1 km : … »
+- [x] **3.4** **Clustering** recalculé à l'écran : les regroupements se divisent au zoom (département 16 + 10 → intercommunalité 6 + 2… → commune individuels) ; tap sur un regroupement = zoom sur ses alertes ; regroupement plus serré au-delà de 12 marqueurs
+- [x] **3.5** **Ma position** : point « Vous êtes ici » avec halo de précision ; zone suivie dessinée ; bouton de recentrage ; si la localisation est refusée, la position manuelle (commune) est utilisée
+- [x] **3.6** En-tête (E1) : recherche (commune, adresse), bouton Filtres (compteur bleu), notifications (badge) ; puces de type sous la recherche (E3) ; feuille « Filtres » (familles, urgentes seulement)
+- [x] **3.7** **Fiche de sélection** : catégorie, zone, ancienneté, titre, lieu et distance, auteur public, statut, ⬆ ⬇, commentaires, « Voir le détail » ; balayage / flèches / « n sur N » (E4) ; × et Échap, focus rendu au marqueur
+- [x] **3.8** Bascule **Liste / Carte** (E2) mémorisée (`prefs.homeView`), avec transition « smart animate »
+- [x] **3.9** États : chargement (squelette du volet, marqueurs progressifs), « Aucun événement dans cette zone. » + « Élargir à 10 km », « Impossible de charger la carte. » + Réessayer / Voir la liste, hors connexion (bandeau global), beaucoup d'alertes (+80), hors territoire
+- [x] **3.10** Les alertes expirées n'apparaissent pas sur la carte active
+- [x] **3.11** Pilule « n nouvelles alertes », polygones des alertes de zone, bulle d'aide sur le + au premier lancement ; feuille « Comprendre la carte » (légende)
 
 - [ ] **3.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
