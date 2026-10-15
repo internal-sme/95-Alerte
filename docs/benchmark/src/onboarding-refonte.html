@@ -1,0 +1,507 @@
+<!-- Source du rapport : python3 tools/build_benchmark_refonte.py → docs/benchmark/onboarding-refonte.html -->
+<title>Onboarding et refonte</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/*TAILWIND*/
+</style>
+
+<header class="border-b border-line">
+  <div class="wrap grid gap-8 py-12 sm:py-16 lg:grid-cols-[1.25fr_1fr] lg:items-end">
+    <div class="grid gap-5">
+      <p class="eyebrow">95 Alerte · Benchmark Mobbin · octobre 2026</p>
+      <h1 class="text-4xl font-extrabold leading-[1.05] sm:text-6xl">Les onboardings les mieux dessinés, <span class="hl">et ce qu'on en fait</span>.</h1>
+      <p class="lede">Nous avons passé en revue une vingtaine de flows d'onboarding iOS sur Mobbin et en avons retenu douze. Ce sont les plus aboutis en direction artistique, et les plus proches de notre usage : une carte, une zone, une permission de localisation, une communauté locale. Pour chacun, le rapport détaille les points forts en patterns de design, en expérience utilisateur et en direction artistique. Le rapport se termine par un audit de notre onboarding actuel (phase 2) et un plan de refonte complète des interfaces.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="chip">12 flows retenus</span><span class="chip">20 flows analysés</span><span class="chip">53 écrans cités</span><span class="chip">Plan en 6 lots</span>
+      </div>
+    </div>
+    <nav class="card toc p-5 text-sm" aria-label="Sommaire">
+      <p class="eyebrow mb-3">Sommaire</p>
+      <ol class="grid gap-1.5">
+        <li><a href="#methode">1. Méthode et grille de lecture</a></li>
+        <li><a href="#flows">2. Les 12 flows</a></li>
+        <li><a href="#matrice">3. Matrice des patterns</a></li>
+        <li><a href="#lecons">4. Dix enseignements</a></li>
+        <li><a href="#da">5. Direction artistique : « vigilance lumineuse » 2.0</a></li>
+        <li><a href="#audit">6. Audit de notre onboarding (phase 2)</a></li>
+        <li><a href="#parcours">7. Parcours cible</a></li>
+        <li><a href="#plan">8. Plan de refonte détaillé</a></li>
+        <li><a href="#decisions">9. Décisions à prendre</a></li>
+      </ol>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- 1. MÉTHODE -->
+<section id="methode" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">01 · Méthode</p><h2 class="h2">Trois critères, une note sur 5</h2>
+    <p class="lede">Nous avons cherché sur Mobbin (iOS) les carrousels de présentation, les questionnaires de personnalisation, les demandes de localisation et les apps de sécurité et de communauté locale. Un flow est retenu s'il excelle sur au moins un des trois axes et s'il apporte quelque chose de transposable à une app civique.</p></div>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="card p-5"><p class="font-display text-lg font-bold">Patterns de design</p><p class="mt-2 text-sm text-muted">Les composants et les structures d'écran : pagination, barre de progression, cartes de choix, feuille, repère sur la carte, liste de démarrage.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Expérience utilisateur</p><p class="mt-2 text-sm text-muted">Le temps avant de voir la valeur, la charge cognitive par écran, les permissions demandées au bon moment, la reprise après un refus et la sortie toujours possible.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Direction artistique</p><p class="mt-2 text-sm text-muted">L'unité de l'illustration, de la couleur et de la typographie, la continuité avec l'écran de démarrage, le mouvement, la personnalité sans gadget.</p></div>
+  </div>
+  <p class="text-sm text-muted">Les images sont des aperçus Mobbin à basse résolution, avec leur mention « curated by Mobbin ». Chaque flow renvoie à sa page Mobbin. Les dates et les tarifs visibles dans certains écrans appartiennent aux apps d'origine.</p>
+</section>
+
+<!-- 2. FLOWS -->
+<section id="flows" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-10 py-14">
+    <div class="grid gap-3"><p class="eyebrow">02 · Les 12 flows</p><h2 class="h2">Du plus inspirant au plus utile pour nous</h2>
+      <p class="lede">L'ordre suit la pertinence pour 95 Alerte, pas une note absolue. Les trois premiers sont des références de direction artistique. Les suivants traitent directement la localisation, la zone suivie et la sécurité.</p></div>
+
+    <!-- Headspace -->
+    <article id="f-headspace" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">01</p><h3 class="text-2xl font-bold">Headspace · Onboarding</h3><p class="text-sm text-muted">Bien-être · 21 écrans · <a href="https://mobbin.com/flows/31b21791-dec6-448a-8253-648f5ebbba3e">flow 1</a>, <a href="https://mobbin.com/flows/7cdc08c0-3bcb-4882-90dd-5cf92019616f">flow 2</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:headspace-welcome}}" alt="Headspace : écran d'accueil, illustration sur un arc jaune, boutons Créer un compte et Se connecter"><figcaption><b>Accueil sur une « scène »</b>Arc jaune, personnage, carte blanche arrondie pour le texte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:headspace-carousel}}" alt="Headspace : diapositive « Science-backed meditation » avec un chiffre et l'illustration en bas"><figcaption><b>Une preuve par diapositive</b>Titre, un chiffre, illustration qui déborde.</figcaption></figure>
+        <figure class="shot"><img src="{{img:headspace-style}}" alt="Headspace : « What's your mindfulness style? » avec illustration géométrique"><figcaption><b>Annonce du questionnaire</b>On dit pourquoi on pose des questions.</figcaption></figure>
+        <figure class="shot"><img src="{{img:headspace-mind}}" alt="Headspace : « What's on your mind? », choix en pilules avec coche"><figcaption><b>Choix en pilules</b>Coche bleue, un seul CTA en bas.</figcaption></figure>
+        <figure class="shot"><img src="{{img:headspace-reco}}" alt="Headspace : recommandation d'un cours avec « Why this recommendation »"><figcaption><b>Résultat expliqué</b>« Pourquoi cette recommandation ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Gabarit constant : illustration en haut, texte sur une carte qui « monte », CTA plein en bas.</li><li>Questions en pilules à cocher, plusieurs choix possibles.</li><li>L'écran de résultat explique le lien avec les réponses.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Chaque question est annoncée et justifiée avant d'être posée.</li><li>Le compte vient après la promesse, pas avant.</li><li>Un seul bouton principal par écran, toujours au même endroit.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une « scène » de couleur (arc jaune ou orange) relie tous les écrans.</li><li>Les formes simples et les couleurs franches sont reconnaissables même en vignette.</li><li>Le personnage (le soleil) sert de fil conducteur, sans voler la vedette au texte.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La scène en arc dans le jaune de marque : elle prolonge le halo du démarrage et porte les illustrations Phosphor. On ajoute un « Pourquoi ? » sur l'écran de commune détectée.</p><p><b>À éviter.</b> L'essai gratuit et la tarification en fin de parcours : sans objet pour un service public.</p></div>
+    </article>
+
+    <!-- Duolingo -->
+    <article id="f-duolingo" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">02</p><h3 class="text-2xl font-bold">Duolingo · Onboarding</h3><p class="text-sm text-muted">Éducation · 20 écrans · <a href="https://mobbin.com/flows/b0b4f93f-5637-46ec-9d77-49ecda6b991d">flow 1</a>, <a href="https://mobbin.com/flows/ac9d2f58-868d-4fd3-a79c-9655ce6b1522">flow 2</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:duo-learn}}" alt="Duolingo : la mascotte demande « What would you like to learn? », liste de langues"><figcaption><b>Question portée par une voix</b>Bulle de la mascotte, barre de progression.</figcaption></figure>
+        <figure class="shot"><img src="{{img:duo-level}}" alt="Duolingo : niveau de français, réponses avec icône de barres"><figcaption><b>Réponses-cartes</b>Icône graduée + libellé.</figcaption></figure>
+        <figure class="shot"><img src="{{img:duo-routine}}" alt="Duolingo : « Let's set up a learning routine! » écran de transition"><figcaption><b>Transition de chapitre</b>Une phrase, aucun choix.</figcaption></figure>
+        <figure class="shot"><img src="{{img:duo-widget}}" alt="Duolingo : proposition d'ajouter un widget avec « Not now »"><figcaption><b>Permission « douce »</b>Montrer le résultat, « Pas maintenant ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:duo-start}}" alt="Duolingo : choix « Start from scratch » recommandé ou « Find my level »"><figcaption><b>Option recommandée</b>Badge « Recommandé ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Barre de progression épaisse en haut, retour à gauche.</li><li>Réponses en grandes cartes avec icône. L'état sélectionné est bordé et teinté.</li><li>Un badge « Recommandé » sur l'option conseillée.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Une question par écran, avec une réponse par défaut raisonnable.</li><li>Les demandes facultatives ont un « Pas maintenant » visible.</li><li>Des écrans de transition donnent du rythme sans rien demander.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>La voix de la marque passe par la bulle, pas par des paragraphes.</li><li>Boutons en relief (ombre basse), très tactiles.</li><li>Le vert de marque est réservé à l'action : la discipline chromatique est exemplaire.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La barre de progression pour les étapes de localisation et de zone. Les réponses-cartes avec icône pour le choix du rayon. « Pas maintenant » sur toute demande facultative.</p><p><b>À éviter.</b> La mascotte : pour une app civique, la crédibilité passe avant la complicité. La « voix » 95 Alerte reste dans les textes.</p></div>
+    </article>
+
+    <!-- Klima -->
+    <article id="f-klima" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">03</p><h3 class="text-2xl font-bold">Klima · Présentation de l'app</h3><p class="text-sm text-muted">Climat, impact · 6 écrans · <a href="https://mobbin.com/flows/c9c02ea6-6d8f-4bb7-ba1a-4c74fdfb858c">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:klima-intro}}" alt="Klima : main tenant un téléphone, dessin au trait, « Take a moment to learn more »"><figcaption><b>Ouverture au trait</b>Une main, un téléphone, une flèche.</figcaption></figure>
+        <figure class="shot"><img src="{{img:klima-impact}}" alt="Klima : maquette du produit dans un téléphone sur fond sombre, « Monitor your impact via the app »"><figcaption><b>Le produit comme illustration</b>Vraie interface dans un cadre.</figcaption></figure>
+        <figure class="shot"><img src="{{img:klima-final}}" alt="Klima : photo de forêt plein écran, « The time to act is now. » avec « now » en vert"><figcaption><b>Final émotionnel</b>Un mot coloré dans le titre.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>« Passer l'introduction » en pilule, toujours visible.</li><li>Retour et fermeture dans les coins, pagination centrée.</li><li>Le dernier écran porte le seul CTA plein.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Trois temps : intention, preuve, appel à agir.</li><li>On voit le produit avant de créer un compte.</li><li>La réassurance (projets certifiés) est placée au bon moment.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une montée en intensité : trait, puis interface sur fond sombre, puis photo plein cadre.</li><li>Un mot-clé du titre dans la couleur de marque (« now »).</li><li>Typographie grasse et compacte, centrée.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le produit comme illustration : nos diapositives montrent des fragments réels (marqueurs, carte, carte d'alerte) au lieu d'une icône isolée. Un mot-clé du titre surligné en jaune.</p><p><b>À éviter.</b> La photo plein écran : pas de banque d'images dans le prototype, et elle alourdirait l'app.</p></div>
+    </article>
+
+    <!-- Life360 -->
+    <article id="f-life360" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">04</p><h3 class="text-2xl font-bold">Life360 · Onboarding et lieux</h3><p class="text-sm text-muted">Localisation familiale · 37 + 8 écrans · <a href="https://mobbin.com/flows/fb439f5d-687c-4c12-87ca-42fe945cff3f">onboarding</a>, <a href="https://mobbin.com/flows/25a07254-c0f3-4128-b5b6-77a83a8adcc2">ajout d'un lieu</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:life-splash}}" alt="Life360 : écran de démarrage violet avec le logo"><figcaption><b>Couleur de marque pleine</b>Le violet porte tout l'onboarding.</figcaption></figure>
+        <figure class="shot"><img src="{{img:life-coach}}" alt="Life360 : demande système avec des flèches pointant « Change to Always Allow »"><figcaption><b>Demande système coachée</b>Des flèches désignent le bon bouton.</figcaption></figure>
+        <figure class="shot"><img src="{{img:life-tip}}" alt="Life360 : carte avec une bulle « Tip 1/1 : Add Places »"><figcaption><b>Conseil posé sur la carte</b>« Astuce 1/1 », fermable.</figcaption></figure>
+        <figure class="shot"><img src="{{img:life-place}}" alt="Life360 : ajout d'un lieu avec un cercle de zone et un curseur de rayon « 743 m zone »"><figcaption><b>Zone réglable</b>Cercle sur la carte et curseur.</figcaption></figure>
+        <figure class="shot"><img src="{{img:life-map}}" alt="Life360 : carte avec la zone, la liste People et « Add a new Member »"><figcaption><b>Carte et volet</b>La zone reste visible après réglage.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>La demande système est mise en scène, avec flèches et titre « Choisissez… ».</li><li>Un repère contextuel sur la carte (« Astuce 1/1 ») plutôt qu'un tutoriel.</li><li>Un cercle de zone et un curseur de rayon, avec la valeur en mètres.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>La permission est demandée là où elle sert.</li><li>On apprend en faisant : le premier lieu se crée sur la vraie carte.</li><li>Le volet du bas garde le contexte de la carte.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une seule couleur forte, déclinée en fonds, boutons et zones.</li><li>Une carte claire et désaturée, sur laquelle les marqueurs ressortent.</li><li>Plus utilitaire que mémorable : c'est l'efficacité qui prime.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La « zone suivie » : le cercle de 5 km affiché sur la carte dès la commune détectée. La demande système coachée. Le repère « Astuce 1/1 » sur le bouton + Signaler à la première arrivée.</p><p><b>À éviter.</b> La demande « Toujours autoriser » : 95 Alerte n'a besoin que de « Pendant l'utilisation » (règle de confidentialité).</p></div>
+    </article>
+
+    <!-- Citizen -->
+    <article id="f-citizen" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">05</p><h3 class="text-2xl font-bold">Citizen · Onboarding, lieux suivis, alertes</h3><p class="text-sm text-muted">Sécurité publique · 29 écrans · <a href="https://mobbin.com/flows/379c9718-fed9-4b58-a53b-2ecea1884587">onboarding</a>, <a href="https://mobbin.com/flows/deb8818f-1bdf-44a6-a94f-493cb0832919">profil</a>, <a href="https://mobbin.com/flows/3282c2d9-0d71-4904-8d4a-e7b883f31298">zones</a>, <a href="https://mobbin.com/flows/e4aaaf49-1a5d-4679-9303-1296b03e88fe">alertes</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:citizen-splash}}" alt="Citizen : écran de démarrage noir avec le logo"><figcaption><b>Démarrage sobre</b>Noir, logo, aucun texte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-about}}" alt="Citizen : « Share a little about yourself », âge et genre"><figcaption><b>Question justifiée</b>« Pour adapter l'expérience ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-todo}}" alt="Citizen : liste « To-Do 2/3 completed » et réglages de sécurité"><figcaption><b>Liste de démarrage</b>« 2 sur 3 terminées ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-follow}}" alt="Citizen : « Follow Places You Care About » avec un bouton Add Location"><figcaption><b>Lieux suivis</b>Alerte même hors de sa position.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-alerts}}" alt="Citizen : liste d'alertes avec « helpful / not helpful »"><figcaption><b>Retour sur l'alerte</b>« Utile / pas utile ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Après l'onboarding, une liste « À faire » avec un compteur garde le fil.</li><li>Un état vide qui invite à agir : cercle, icône, titre, un bouton.</li><li>Les lieux suivis (domicile, quartier, ville) se gèrent en liste.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Les alertes d'un lieu suivi arrivent même quand on est ailleurs.</li><li>Le retour « utile » sur chaque alerte rejoint notre vote ⬆ ⬇.</li><li>Limite : le paywall s'intercale dans l'onboarding et la demande de données personnelles est lourde.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Un sombre profond avec un dégradé bleu nuit : très « veille ».</li><li>Une typographie système bien étagée.</li><li>Limite : un ton anxiogène (titres de faits divers, vidéos d'incidents).</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La liste « Bien démarrer » avec compteur (1/3). L'idée de suivre d'autres lieux, comme le domicile ou le travail, à garder pour la phase des notifications.</p><p><b>À éviter.</b> Le sensationnalisme, le rouge omniprésent, la demande d'âge et de genre, le paywall. Nos événements positifs ont la même place que les négatifs.</p></div>
+    </article>
+
+    <!-- Tinder -->
+    <article id="f-tinder" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">06</p><h3 class="text-2xl font-bold">Tinder · Comment la position est utilisée</h3><p class="text-sm text-muted">Rencontres · 2 écrans · <a href="https://mobbin.com/flows/efc405e6-4272-4147-9382-46903f3836d9">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:tinder-primer}}" alt="Tinder : « So, are you from around here? », pastille avec icône de position, bouton Allow"><figcaption><b>Amorce minimale</b>Une question, un visuel, un bouton.</figcaption></figure>
+        <figure class="shot"><img src="{{img:tinder-reassure}}" alt="Tinder : « Don't worry— » votre position exacte n'est jamais partagée"><figcaption><b>Réassurance dépliée</b>Le texte remplace l'écran.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Le titre est une question, avec une seule phrase de bénéfice.</li><li>Un lien « Comment ma position est-elle utilisée ? » avec chevron.</li><li>La réponse se déplie en plein écran, puis se replie.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Trois éléments à l'écran seulement : charge minimale.</li><li>Le détail n'apparaît que pour qui le demande.</li><li>« Votre position exacte n'est jamais partagée » : la phrase qui rassure.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Beaucoup de blanc, une pastille grise, un CTA noir : le calme avant la demande.</li><li>Un titre très gras sur deux lignes.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> L'allègement de notre amorce : sept blocs aujourd'hui, trois demain. Le titre, une phrase et la scène avec le cercle de 5 km. Les bénéfices et la confidentialité passent dans le dépliant « Comment ma position est-elle utilisée ? ».</p><p><b>À éviter.</b> Laisser croire que la position est obligatoire (« You won't be able to match… ») : chez nous, le choix manuel est toujours possible.</p></div>
+    </article>
+
+    <!-- Nextdoor -->
+    <article id="f-nextdoor" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">07</p><h3 class="text-2xl font-bold">Nextdoor · Alertes du quartier</h3><p class="text-sm text-muted">Communauté locale · 4 écrans · <a href="https://mobbin.com/flows/6b4f645a-feed-47a4-9c48-e6dbb4b24f9a">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:nextdoor-alerts}}" alt="Nextdoor : « Alerts in Boston », filtres en pilules, cartes Power Outage avec statut Resolved"><figcaption><b>Cartes d'alerte calmes</b>Distance, ancienneté, statut.</figcaption></figure>
+        <figure class="shot"><img src="{{img:nextdoor-empty}}" alt="Nextdoor : état vide illustré au trait « No alerts in this area. »"><figcaption><b>État vide illustré</b>Une ville au trait, une phrase.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Filtres en pilules (Sécurité, Coupures, Météo, Feux).</li><li>Carte d'alerte : icône ronde de catégorie, « 1,1 mi · 4 j », statut « Résolu » coché.</li><li>Un champ « Écrire à propos de cette alerte » directement sur la carte.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'état vide rassure : « Aucune alerte dans cette zone. »</li><li>Le statut de résolution est visible sans ouvrir l'alerte.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Le jaune signale l'alerte, sans rouge : vigilant mais pas alarmiste.</li><li>Une illustration au trait monochrome, cohérente avec les icônes.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le ton jaune et sans peur, proche de notre « vigilance lumineuse ». L'état vide « Aucune alerte autour de vous » avec une scène Phosphor Duotone composée (maisons, arbres, soleil).</p><p><b>À éviter.</b> Les cartes trop textuelles : nos cartes gardent forme, icône et couleur pour la famille.</p></div>
+    </article>
+
+    <!-- Blinkist -->
+    <article id="f-blinkist" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">08</p><h3 class="text-2xl font-bold">Blinkist · Onboarding</h3><p class="text-sm text-muted">Lecture · 17 écrans · <a href="https://mobbin.com/flows/a9e95e3d-961b-422b-b217-d3fe6fe34e0f">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:blinkist-goals}}" alt="Blinkist : « Step 1 of 4 », barre verte, choix d'objectifs en tuiles"><figcaption><b>« Étape 1 sur 4 »</b>Barre et compteur en toutes lettres.</figcaption></figure>
+        <figure class="shot"><img src="{{img:blinkist-swipe}}" alt="Blinkist : pile de cartes, pouce haut ou bas pour calibrer ses goûts"><figcaption><b>Calibrer en jouant</b>Pouce haut ou bas sur des cartes.</figcaption></figure>
+        <figure class="shot"><img src="{{img:blinkist-home}}" alt="Blinkist : accueil avec la carte « Set a weekly learning goal »"><figcaption><b>Objectif sur l'accueil</b>La suite de l'onboarding, sur l'accueil.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Compteur textuel en plus de la barre, lisible par un lecteur d'écran.</li><li>Tuiles pleine largeur, sélection multiple.</li><li>Une carte d'objectif sur l'accueil prolonge l'onboarding.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>« Vous pourrez toujours modifier vos réponses » : le droit à l'erreur.</li><li>« Passer » à partir de l'étape facultative.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Bleu nuit et vert : une palette restreinte et lisible.</li><li>Moins de personnalité, mais une grande clarté.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> « Étape 2 sur 3 » dans les étapes de réglage (position, zone, centres d'intérêt). La mention « Vous pourrez toujours modifier ». La carte d'objectif sur l'accueil devient notre carte « Bien démarrer ».</p><p><b>À éviter.</b> Le balayage de contenus pour calibrer : pas de catalogue à goûter chez nous.</p></div>
+    </article>
+
+    <!-- Lovi -->
+    <article id="f-lovi" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">09</p><h3 class="text-2xl font-bold">Lovi · Questionnaire</h3><p class="text-sm text-muted">Soin de la peau · 14 écrans · <a href="https://mobbin.com/flows/4f825f5b-7b5f-4550-93e5-556c45531194">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:lovi-hello}}" alt="Lovi : sphère souriante lumineuse, « Hi, I'm Lóvi! », bouton Next lumineux"><figcaption><b>Halo et lumière</b>Sphère, halo, CTA qui rayonne.</figcaption></figure>
+        <figure class="shot"><img src="{{img:lovi-question}}" alt="Lovi : question en bulle, deux cartes avec icône au trait et description"><figcaption><b>Cartes à deux lignes</b>Libellé et explication.</figcaption></figure>
+        <figure class="shot"><img src="{{img:lovi-multi}}" alt="Lovi : choix multiples en grille avec un mot surligné dans la question"><figcaption><b>Mot-clé coloré</b>Dans la question elle-même.</figcaption></figure>
+        <figure class="shot"><img src="{{img:lovi-scan}}" alt="Lovi : proposition de scan avec « Make a face scan » et « Not now »"><figcaption><b>Proposition facultative</b>« Plus tard » de même poids visuel.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>La question en bulle, ancrée à un avatar.</li><li>Cartes radio : icône au trait, libellé, description courte.</li><li>Un bouton secondaire « Plus tard », large, juste sous le principal.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Chaque écran tient sans défilement.</li><li>Les étapes sensibles (scan) sont proposées, jamais imposées.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une lumière diffuse : halos, dégradés pâles, CTA lumineux.</li><li>Une typographie ronde et chaleureuse, aucun angle dur.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le halo lumineux derrière l'illustration (notre jaune à 16 %), qui fait écho au démarrage. Le mot-clé surligné dans le titre. Les cartes radio à deux lignes pour le rayon de zone.</p><p><b>À éviter.</b> Le bouton qui rayonne : il ferait du bruit à côté des marqueurs « Urgent ».</p></div>
+    </article>
+
+    <!-- Cosmos -->
+    <article id="f-cosmos" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">10</p><h3 class="text-2xl font-bold">Cosmos · Création de compte</h3><p class="text-sm text-muted">Inspiration visuelle · 16 écrans · <a href="https://mobbin.com/flows/57c31f5e-c70f-4e26-8e91-55582612ed9c">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:cosmos-email}}" alt="Cosmos : « Enter your email address », grand champ centré"><figcaption><b>Le champ est le titre</b>Saisie en très grand, centrée.</figcaption></figure>
+        <figure class="shot"><img src="{{img:cosmos-name}}" alt="Cosmos : « Enter your full name — This will be shown on your profile »"><figcaption><b>Ce qui sera public</b>« Sera affiché sur votre profil ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:cosmos-age}}" alt="Cosmos : âge saisi au clavier numérique, « It won't be displayed »"><figcaption><b>Ce qui restera privé</b>« Ne sera pas affiché ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Une question par écran. La saisie occupe le centre, en corps 32.</li><li>Le logo animé sert d'indicateur de progression : ses points se remplissent.</li><li>Le CTA reste désactivé, puis devient noir quand la réponse est valide.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Chaque donnée dit si elle sera publique ou privée.</li><li>Aucune distraction : pas d'illustration, pas de liens.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Fond cassé, typographie seule : un luxe de silence.</li><li>Le logo devient la progression : une idée de marque forte.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre (inscription, phase 1).</b> « Affiché publiquement : Jean D. » et « Jamais affiché » sous chaque champ. La saisie en grand format pour le nom et le code SMS.</p><p><b>À éviter.</b> Le logo comme seul indicateur : notre barre d'étapes reste plus explicite pour l'accessibilité.</p></div>
+    </article>
+
+    <!-- Evernote -->
+    <article id="f-evernote" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">11</p><h3 class="text-2xl font-bold">Evernote · Personnalisation et arrivée</h3><p class="text-sm text-muted">Productivité · 13 écrans · <a href="https://mobbin.com/flows/4f4d734f-364e-4506-917e-6a5a17fbadff">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:evernote-perso}}" alt="Evernote : maquette de l'app dans un téléphone sur des formes colorées, « Let's personalize your Evernote »"><figcaption><b>Maquette et formes</b>Le produit, habillé de formes.</figcaption></figure>
+        <figure class="shot"><img src="{{img:evernote-loading}}" alt="Evernote : « Personalizing your experience », anneau de progression 40 %"><figcaption><b>Préparation visible</b>Anneau en pourcentage et preuve sociale.</figcaption></figure>
+        <figure class="shot"><img src="{{img:evernote-home}}" alt="Evernote : accueil avec la carte « Complete your setup »"><figcaption><b>« Terminez la configuration »</b>Carte en tête d'accueil.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Le surtitre « Pour commencer » ou « Presque fini » situe l'étape.</li><li>Un écran de préparation entre les réponses et le résultat.</li><li>Une carte de configuration à terminer sur l'accueil.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'attente devient une promesse (« on prépare votre… »).</li><li>Limite : l'offre payante surgit juste après.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une vraie interface sur des formes organiques aux couleurs de marque.</li><li>Un surtitre en capitales bleues, un titre noir très gras.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Un écran « Nous préparons votre carte de Cergy… » de 1,2 s au plus, qui remplace la transition muette. La carte « Bien démarrer » en tête du volet de la carte.</p><p><b>À éviter.</b> La fausse attente : l'écran ne dure que le temps du chargement réel, et disparaît si les animations sont réduites.</p></div>
+    </article>
+
+    <!-- Polarsteps + Viator -->
+    <article id="f-recovery" class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">12</p><h3 class="text-2xl font-bold">Polarsteps et Viator · Réactiver la localisation</h3><p class="text-sm text-muted">Voyage · 2 + 3 écrans · <a href="https://mobbin.com/flows/a5eeb480-1524-4a31-b819-5cc74f7fbef2">Polarsteps</a>, <a href="https://mobbin.com/flows/247308cf-b335-49b7-9644-bb99eabc7217">Viator</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:polarsteps-settings}}" alt="Polarsteps : feuille avec un exemple des réglages du téléphone, Location puis Always cochée, bouton Open phone settings"><figcaption><b>L'exemple des Réglages</b>Les réglages du téléphone, redessinés.</figcaption></figure>
+        <figure class="shot"><img src="{{img:viator-settings}}" alt="Viator : feuille « Find experiences nearby », étapes 1 et 2 avec les réglages illustrés, « No, thanks »"><figcaption><b>Étapes numérotées et illustrées</b>« Non merci » souligné.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Une feuille du bas, pas un écran plein : le contexte reste visible.</li><li>Des réglages du téléphone redessinés, avec la bonne ligne cochée.</li><li>Le CTA ouvre directement les Réglages.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On montre au lieu d'expliquer : pas besoin de lire.</li><li>« Non merci » ferme sans culpabiliser.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Un cadre « Exemple » gris clair, qui ne se confond pas avec l'interface réelle.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Dans notre fiche « Activer la localisation », la liste en trois étapes devient l'illustration des réglages : « Position », puis « Pendant l'utilisation de l'app » cochée. Le CTA devient « Ouvrir les réglages » et le bouton fantôme « Non merci ».</p><p><b>À éviter.</b> « Toujours » coché (Polarsteps) : nous ne demandons que « Pendant l'utilisation ».</p></div>
+    </article>
+
+    <!-- Mentions -->
+    <div class="grid gap-4">
+      <h3 class="text-xl font-bold">Mentions pour la direction artistique</h3>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:raycast-welcome}}" alt="Raycast : icône rouge lumineuse sur fond noir, « Welcome to Raycast »"><figcaption><b>Raycast</b>Icône lumineuse, deux boutons empilés. <a href="https://mobbin.com/flows/1c30eb52-9997-4a33-a50d-05dc3e7a8f09">Flow</a></figcaption></figure>
+        <figure class="shot"><img src="{{img:anydistance-splash}}" alt="Any Distance : logo lumineux orange sur fond noir"><figcaption><b>Any Distance</b>Le logo s'allume comme un néon. <a href="https://mobbin.com/flows/e7ee2e9a-6e5b-43bc-a868-1e39545e115c">Flow</a></figcaption></figure>
+        <figure class="shot"><img src="{{img:anydistance-home}}" alt="Any Distance : carte sombre en fond, mascotte et bouton Start"><figcaption><b>Any Distance</b>La carte comme décor d'accueil.</figcaption></figure>
+        <figure class="shot"><img src="{{img:deepstash-topics}}" alt="Deepstash : sujets en pilules avec emoji, sections Recommandé pour vous"><figcaption><b>Deepstash</b>Pilules groupées « Recommandé pour vous ». <a href="https://mobbin.com/flows/b0aa66bf-1028-4de9-890e-d9b46265970d">Flow</a></figcaption></figure>
+        <figure class="shot"><img src="{{img:wanderlog-question}}" alt="Wanderlog : « What's your dream vacation? », cartes de réponse sur dégradé pastel"><figcaption><b>Wanderlog</b>Dégradé pastel, réponses-cartes. <a href="https://mobbin.com/flows/43df4d6b-29ef-484e-98bc-2164e5c193b7">Flow</a></figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. MATRICE -->
+<section id="matrice" class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">03 · Matrice</p><h2 class="h2">Qui fait quoi</h2><p class="lede">● pattern maîtrisé · ○ présent mais partiel · vide si absent. La dernière ligne situe notre onboarding actuel (phase 2).</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line">
+    <table class="w-full min-w-[820px] text-sm">
+      <caption class="sr-only">Patterns d'onboarding par app</caption>
+      <thead class="bg-sunk text-left text-xs uppercase tracking-wider text-muted">
+        <tr><th class="p-3">App</th><th class="p-3">Valeur avant compte</th><th class="p-3">1 question / écran</th><th class="p-3">Progression lisible</th><th class="p-3">Amorce de permission</th><th class="p-3">Reprise après refus</th><th class="p-3">Produit comme illustration</th><th class="p-3">Personnalisation</th><th class="p-3">Suite après l'onboarding</th></tr>
+      </thead>
+      <tbody class="divide-y divide-line text-center">
+        <tr><th class="p-3 text-left">Headspace</th><td>●</td><td>●</td><td>○</td><td></td><td></td><td>○</td><td>●</td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Duolingo</th><td>●</td><td>●</td><td>●</td><td>●</td><td></td><td>○</td><td>●</td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Klima</th><td>●</td><td></td><td>○</td><td></td><td></td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Life360</th><td>○</td><td>●</td><td></td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Citizen</th><td>○</td><td>●</td><td></td><td>○</td><td></td><td>○</td><td>○</td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Tinder</th><td></td><td>●</td><td></td><td>●</td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Nextdoor</th><td>●</td><td></td><td></td><td></td><td></td><td>●</td><td>○</td><td></td></tr>
+        <tr><th class="p-3 text-left">Blinkist</th><td>○</td><td>●</td><td>●</td><td></td><td></td><td></td><td>●</td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Lovi</th><td>○</td><td>●</td><td>○</td><td>●</td><td></td><td></td><td>●</td><td></td></tr>
+        <tr><th class="p-3 text-left">Cosmos</th><td></td><td>●</td><td>●</td><td></td><td></td><td></td><td>○</td><td></td></tr>
+        <tr><th class="p-3 text-left">Evernote</th><td>○</td><td>●</td><td>●</td><td></td><td></td><td>●</td><td>●</td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Polarsteps / Viator</th><td></td><td></td><td></td><td>●</td><td>●</td><td></td><td></td><td></td></tr>
+        <tr class="bg-brand/10 font-semibold"><th class="p-3 text-left">95 Alerte (phase 2)</th><td>○</td><td>●</td><td>○</td><td>●</td><td>○</td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-muted">Nos trois manques : nous ne montrons pas encore le produit, l'onboarding n'a pas de suite sur la carte, et la reprise après refus reste textuelle. Pour la personnalisation, une décision est nécessaire (voir §9).</p>
+</section>
+
+<!-- 4. LEÇONS -->
+<section id="lecons" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+    <div class="grid gap-3"><p class="eyebrow">04 · Enseignements</p><h2 class="h2">Dix règles tirées des meilleurs flows</h2></div>
+    <ol class="grid gap-4 sm:grid-cols-2">
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">01 · Klima, Evernote, Life360</p><p class="mt-1 font-display text-lg font-bold">Le produit est la meilleure illustration</p><p class="mt-1 text-sm text-muted">Des marqueurs, une carte, une carte d'alerte : l'utilisateur reconnaîtra ce qu'il a vu en arrivant sur l'accueil.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">02 · Headspace, Lovi</p><p class="mt-1 font-display text-lg font-bold">Une scène qui relie les écrans</p><p class="mt-1 text-sm text-muted">Un fond de marque constant (arc, halo) donne l'unité. Chez nous : le halo jaune du démarrage, conservé jusqu'à la carte.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">03 · Tinder, Cosmos</p><p class="mt-1 font-display text-lg font-bold">Trois éléments par écran</p><p class="mt-1 text-sm text-muted">Titre, une phrase, une action. Le reste se déplie à la demande.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">04 · Duolingo, Blinkist</p><p class="mt-1 font-display text-lg font-bold">La progression se lit et s'entend</p><p class="mt-1 text-sm text-muted">Une barre en haut et « Étape 2 sur 3 » en texte : rassurant et accessible.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">05 · Life360, Tinder</p><p class="mt-1 font-display text-lg font-bold">La permission au moment où elle sert</p><p class="mt-1 text-sm text-muted">Amorce minimale, demande système coachée, aucune demande de notifications pendant l'onboarding.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">06 · Polarsteps, Viator</p><p class="mt-1 font-display text-lg font-bold">Après un refus, on montre</p><p class="mt-1 text-sm text-muted">Les réglages du téléphone redessinés, puis un bouton qui les ouvre. Et le choix manuel reste à égalité.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">07 · Duolingo, Lovi</p><p class="mt-1 font-display text-lg font-bold">« Pas maintenant » a sa place</p><p class="mt-1 text-sm text-muted">Toute étape facultative propose une sortie visible, en bouton fantôme pleine largeur.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">08 · Cosmos, Citizen</p><p class="mt-1 font-display text-lg font-bold">Dire ce qui sera public</p><p class="mt-1 text-sm text-muted">Sous chaque donnée : « Affiché : Jean D. » ou « Jamais affiché ». C'est essentiel pour l'anonymat chez nous.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">09 · Citizen, Evernote, Blinkist</p><p class="mt-1 font-display text-lg font-bold">L'onboarding continue sur l'accueil</p><p class="mt-1 text-sm text-muted">Une astuce sur la carte, puis une carte « Bien démarrer 1/3 » qui se coche au fil des premières actions.</p></li>
+      <li class="card p-5"><p class="font-mono text-xs text-brand-ink">10 · Nextdoor, contre-exemple Citizen</p><p class="mt-1 font-display text-lg font-bold">Vigilant, jamais anxiogène</p><p class="mt-1 text-sm text-muted">Le jaune pour l'attention, le rouge rare. Le positif aussi visible que le négatif, dès la première diapositive.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 5. DA -->
+<section id="da" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">05 · Direction artistique</p><h2 class="h2">« Vigilance lumineuse » 2.0</h2><p class="lede">La direction ne change pas : fond blanc, jaune de marque en accent, bleu pour l'action, marqueurs par famille, icônes et illustrations Phosphor. La refonte lui donne une scène, un rythme et une voix.</p></div>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="card overflow-hidden"><div class="relative h-36 bg-card"><div class="stage"></div><div class="stage-arc" style="top:62%"></div><div class="absolute left-1/2 top-[38%] grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-card shadow"><span class="pin pos" style="position:static;transform:none;background:rgb(var(--positive))"></span></div></div><div class="p-4"><p class="font-bold">La scène</p><p class="mt-1 text-sm text-muted">Un halo jaune radial en haut de l'écran et un arc blanc qui reçoit le texte. C'est le prolongement direct du démarrage (Headspace, Lovi).</p></div></div>
+    <div class="card overflow-hidden"><div class="relative h-36"><div class="map-sk"></div><span class="pin" style="left:30%;top:45%;background:rgb(var(--incident))"></span><span class="pin tri" style="left:62%;top:35%"></span><span class="pin pos" style="left:72%;top:66%;background:rgb(var(--positive))"></span><span class="pin" style="left:45%;top:72%;background:rgb(var(--info));border-radius:3px;transform:translate(-50%,-50%)"></span></div><div class="p-4"><p class="font-bold">Le produit en illustration</p><p class="mt-1 text-sm text-muted">Les fragments réels (carte illustrée, marqueurs du DS, carte d'alerte) composés avec Phosphor Duotone. Ni dessin maison ni photo (Klima, Life360).</p></div></div>
+    <div class="card overflow-hidden"><div class="grid h-36 place-items-center px-4"><p class="font-display text-2xl font-extrabold leading-tight">Un problème&nbsp;? <span class="hl">Signalez-le.</span></p></div><div class="p-4"><p class="font-bold">Le mot surligné</p><p class="mt-1 text-sm text-muted">Le titre display reste noir. Le verbe d'action reçoit un surlignage jaune derrière le texte, jamais un texte jaune sur blanc, faute de contraste (Klima, Lovi).</p></div></div>
+    <div class="card overflow-hidden"><div class="grid h-36 content-center gap-2 px-6"><div class="prog"><i style="width:66%"></i></div><p class="font-mono text-xs text-muted">Étape 2 sur 3</p><div class="h-2 w-2/3 rounded bg-line"></div><div class="h-2 w-1/2 rounded bg-line"></div></div><div class="p-4"><p class="font-bold">Le rythme</p><p class="mt-1 text-sm text-muted">Les éléments entrent en cascade (40 ms d'écart), avec smart animate entre les écrans. Les marqueurs « tombent » sur la carte d'aperçu. Avec animations réduites : changement direct.</p></div></div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="eyebrow">Voix</p><p class="mt-2 text-sm">Pas de mascotte : la crédibilité d'un service territorial passe avant la complicité. La voix tient dans des titres-questions courts, au vouvoiement, avec des verbes d'action. Nous reprenons les textes du CDC et du PRD §10.3.</p></div>
+    <div class="card p-5"><p class="eyebrow">Couleur</p><p class="mt-2 text-sm">Jaune à 16 % pour les scènes et les halos. Bleu primaire pour un seul CTA par écran. Familles d'alertes uniquement sur les marqueurs. Rouge réservé à « Urgent ». Le sombre reprend les mêmes rôles, avec un halo à 18 %.</p></div>
+    <div class="card p-5"><p class="eyebrow">Typographie</p><p class="mt-2 text-sm">Display 32/36 en gras pour les titres d'onboarding (36/40 au-delà de 400 px), corps 16/24, surtitre en petites capitales espacées, en jaune foncé (<span class="font-mono">--brand-yellow-ink</span>), pour situer l'étape (Evernote).</p></div>
+  </div>
+</section>
+
+<!-- 6. AUDIT -->
+<section id="audit" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+    <div class="grid gap-3"><p class="eyebrow">06 · Audit</p><h2 class="h2">Notre onboarding actuel, au regard du benchmark</h2><p class="lede">Ce sont les captures du prototype de la phase 2, en clair et en sombre, au format 390 × 844. La base est saine : un seul CTA, « Passer » partout, le choix manuel, une reprise après refus. La refonte porte sur l'impact visuel, la densité et la suite du parcours.</p></div>
+    <div class="strip">
+      <figure class="shot"><img src="{{img:ours-slide1}}" alt="95 Alerte : diapositive 1, grande pastille jaune avec une carte, « Que se passe-t-il autour de vous ? »"><figcaption><b>Diapositives</b><span class="text-incident">−</span> Une icône isolée, environ 40 % de vide, aucun fragment du produit.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-slide3}}" alt="95 Alerte : diapositive 3, pastille verte, « Une bonne nouvelle ? Partagez-la aussi. »"><figcaption><b>Le positif</b><span class="text-positive">+</span> Une teinte verte dédiée. <span class="text-incident">−</span> La même mise en page que le négatif.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-primer}}" alt="95 Alerte : amorce de localisation avec trois bénéfices, une note de confidentialité, un dépliant et deux boutons"><figcaption><b>Amorce</b><span class="text-incident">−</span> Sept blocs : la charge la plus lourde du parcours. Tinder en a trois.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-system}}" alt="95 Alerte : demande système simulée sur fond voilé"><figcaption><b>Demande système</b><span class="text-positive">+</span> Fidèle. <span class="text-incident">−</span> Pas de coaching, rien ne désigne le bon choix.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-detected}}" alt="95 Alerte : carte avec « Vous êtes à Pontoise », 9 alertes actives à moins de 5 km"><figcaption><b>Commune détectée</b><span class="text-positive">+</span> Carte et chiffre. <span class="text-incident">−</span> La zone de 5 km n'est pas dessinée, aucun marqueur.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-picker}}" alt="95 Alerte : liste des communes avec recherche"><figcaption><b>Choix de commune</b><span class="text-positive">+</span> Recherche et intercommunalité. <span class="text-incident">−</span> Vingt lignes sans hiérarchie.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-denied}}" alt="95 Alerte en sombre : « Localisation désactivée », Choisir ma commune, Comment l'activer"><figcaption><b>Refus</b><span class="text-positive">+</span> Choix manuel en action principale. <span class="text-incident">−</span> L'aide reste une liste de texte.</figcaption></figure>
+      <figure class="shot"><img src="{{img:ours-map}}" alt="95 Alerte en sombre : carte avec le bandeau « Position non définie »"><figcaption><b>Arrivée sur la carte</b><span class="text-positive">+</span> Bandeau clair. <span class="text-incident">−</span> Aucune astuce ni liste de démarrage. L'onboarding s'arrête net.</figcaption></figure>
+    </div>
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="card p-5"><p class="font-bold">Ce qu'on garde</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Ordre localisation, puis commune</li><li>Un CTA par écran, « Passer » et « Plus tard » partout</li><li>Texte hors zone du CDC, états refusé et introuvable</li><li>Smart animate du logo, du titre, du Spot et des points</li></ul></div>
+      <div class="card p-5"><p class="font-bold">Ce qu'on refond</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Diapositives : scène et fragments du produit</li><li>Amorce : trois éléments, le reste en feuille</li><li>Zone suivie dessinée sur la carte</li><li>Aide après refus : réglages illustrés</li></ul></div>
+      <div class="card p-5"><p class="font-bold">Ce qu'on ajoute</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Bienvenue « la valeur d'abord » sur une carte vivante</li><li>Barre « Étape n sur 3 » pour les réglages</li><li>Préparation de la carte (≤ 1,2 s)</li><li>Astuce sur + Signaler et carte « Bien démarrer 1/3 »</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. PARCOURS CIBLE -->
+<section id="parcours" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">07 · Parcours cible</p><h2 class="h2">S1 v2 : de la promesse à la première action</h2><p class="lede">Voici neuf écrans esquissés. Les écrans 2 à 5 gardent les quatre titres du CDC. Les étapes de réglage (6 à 8) portent une barre de progression. Pour arriver sur la carte, il faut deux touchers au minimum (« Passer », puis « Plus tard »).</p></div>
+  <div class="flex gap-5 overflow-x-auto pb-4" role="list">
+    <!-- 1 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><span class="pin" style="left:35%;top:30%;background:rgb(var(--incident))"></span><span class="pin pos" style="left:68%;top:24%;background:rgb(var(--positive))"></span><span class="pin tri" style="left:56%;top:44%"></span><div class="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-card via-card to-transparent"></div><div class="body justify-end"><p class="eyebrow text-[8px]">Val-d'Oise · en direct</p><p class="t mt-1">Votre territoire, <span class="hl">votre vigilance.</span></p><p class="l mt-1">Les bonnes et les mauvaises nouvelles, autour de vous.</p><span class="b1 !mt-3">Commencer</span><span class="b3">J'ai déjà un compte</span></div></div><p class="anno"><b>1 · Bienvenue</b>Carte vivante floutée : trois marqueurs tombent après le démarrage (Any Distance, Life360).</p></div>
+    <!-- 2 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="stage"></div><div class="absolute left-1/2 top-[22%] h-[30%] w-[78%] -translate-x-1/2 overflow-hidden rounded-xl border border-line shadow"><div class="map-sk"></div><span class="pin" style="left:30%;top:40%;background:rgb(var(--incident))"></span><span class="pin pos" style="left:70%;top:55%;background:rgb(var(--positive))"></span><span class="me" style="left:50%;top:50%"></span></div><div class="body"><div class="flex justify-between text-[8px] font-semibold"><span>95</span><span class="text-primary">Passer</span></div><div class="mt-auto grid gap-1 text-center"><p class="t">Que se passe-t-il <span class="hl">autour de vous</span>&nbsp;?</p><p class="l">Incidents, travaux, bonnes nouvelles : en direct sur la carte.</p></div><div class="dots-sk mt-2"><i class="on"></i><i></i><i></i><i></i></div><span class="b1 !mt-2">Suivant</span></div></div><p class="anno"><b>2 · Voir</b>Fragment de carte réel sur la scène jaune (Klima, Headspace).</p></div>
+    <!-- 3 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="stage"></div><div class="absolute left-1/2 top-[18%] grid w-[78%] -translate-x-1/2 gap-1.5"><div class="grid h-9 w-9 place-items-center justify-self-center rounded-full bg-primary text-sm font-bold text-white shadow">+</div><div class="rounded-lg border border-line bg-card p-1.5 text-[8px] shadow-sm"><b>Voirie · Nid-de-poule</b><br><span class="text-muted">Transmis au service Voirie de Cergy</span></div></div><div class="body"><div class="flex justify-between text-[8px] font-semibold"><span>95</span><span class="text-primary">Passer</span></div><div class="mt-auto grid gap-1 text-center"><p class="t">Un problème&nbsp;? <span class="hl">Signalez-le.</span></p><p class="l">Votre signalement part au service compétent.</p></div><div class="dots-sk mt-2"><i></i><i class="on"></i><i></i><i></i></div><span class="b1 !mt-2">Suivant</span></div></div><p class="anno"><b>3 · Signaler</b>Le + se transforme en carte routée vers un service.</p></div>
+    <!-- 4 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="stage" style="background:radial-gradient(120% 90% at 50% 0%, rgb(var(--positive) / .32), rgb(var(--positive) / .08) 60%, transparent 75%)"></div><div class="absolute left-1/2 top-[20%] grid w-[78%] -translate-x-1/2 gap-1"><div class="rounded-lg border border-line bg-card p-1.5 text-[8px] shadow-sm"><span class="text-positive font-semibold">Positif · Fête de quartier</span><br>Les Linandes · samedi<div class="mt-1 flex gap-1"><span class="chipk on">⬆ 42</span><span class="chipk">6 commentaires</span></div></div></div><div class="body"><div class="flex justify-between text-[8px] font-semibold"><span>95</span><span class="text-primary">Passer</span></div><div class="mt-auto grid gap-1 text-center"><p class="t">Une bonne nouvelle&nbsp;? <span class="hl">Partagez-la aussi.</span></p><p class="l">Le positif a toute sa place.</p></div><div class="dots-sk mt-2"><i></i><i></i><i class="on"></i><i></i></div><span class="b1 !mt-2">Suivant</span></div></div><p class="anno"><b>4 · Partager</b>Scène verte : le positif a sa couleur et des votes.</p></div>
+    <!-- 5 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="stage"></div><div class="absolute left-1/2 top-[20%] grid h-20 w-20 -translate-x-1/2 place-items-center rounded-full bg-card shadow"><svg viewBox="0 0 256 256" width="44" height="44" fill="currentColor" class="text-primary" aria-hidden="true"><path d="M216,56v56c0,96-88,120-88,120S40,208,40,112V56a8,8,0,0,1,8-8H208A8,8,0,0,1,216,56Z" opacity="0.2"/><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></svg></div><div class="body"><div class="flex justify-between text-[8px] font-semibold"><span>95</span><span class="text-primary">Passer</span></div><div class="mt-auto grid gap-1 text-center"><p class="t">Votre territoire, <span class="hl">votre vigilance.</span></p><p class="l">Confirmez les alertes utiles, suivez leur traitement.</p></div><div class="dots-sk mt-2"><i></i><i></i><i></i><i class="on"></i></div><span class="b1 !mt-2">Commencer</span></div></div><p class="anno"><b>5 · Confiance</b>Spot shield-check en Phosphor Duotone, sur la scène.</p></div>
+    <!-- 6 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk opacity-80"></div><span class="ring" style="left:50%;top:30%;width:88px;height:88px"></span><span class="me" style="left:50%;top:32%"></span><div class="absolute inset-x-0 bottom-0 h-[55%] bg-card"></div><div class="body"><div class="prog"><i style="width:33%"></i></div><p class="mt-1 font-mono text-[8px] text-muted">Étape 1 sur 3</p><div class="mt-auto grid gap-1"><p class="t">Voir les alertes près de chez vous&nbsp;?</p><p class="l">Votre position reste approximative. Elle n'est jamais publiée.</p></div><span class="b1 !mt-2">Autoriser la localisation</span><span class="b2">Choisir ma commune</span><span class="b3">Comment ma position est-elle utilisée&nbsp;?</span></div></div><p class="anno"><b>6 · Amorce allégée</b>Trois éléments et le cercle de 5 km. Le détail passe en feuille (Tinder).</p></div>
+    <!-- 7 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini" style="background:rgb(var(--brand) / .25)"><div class="body items-center justify-center text-center"><p class="t">Choisissez «&nbsp;Pendant l'utilisation&nbsp;»</p><div class="mt-3 w-full rounded-xl bg-card p-2 text-[8px] shadow"><p class="font-semibold">Autoriser « 95 Alerte » à utiliser votre position&nbsp;?</p><div class="mt-2 grid gap-1 text-primary"><span class="rounded bg-primary/10 py-1 font-semibold ring-2 ring-primary">→ Pendant l'utilisation ←</span><span class="py-1">Une fois</span><span class="py-1">Ne pas autoriser</span></div></div><p class="l mt-2">Vous pourrez changer d'avis dans les réglages.</p></div></div><p class="anno"><b>7 · Demande coachée</b>Le bon choix est désigné, jamais « Toujours » (Life360).</p></div>
+    <!-- 8 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><span class="ring" style="left:50%;top:30%;width:96px;height:96px"></span><span class="me" style="left:50%;top:30%"></span><span class="pin" style="left:36%;top:22%;background:rgb(var(--incident))"></span><span class="pin pos" style="left:62%;top:38%;background:rgb(var(--positive))"></span><div class="sheet"><div class="grab"></div><div class="prog"><i style="width:66%"></i></div><p class="mt-1 font-mono text-[8px] text-muted">Étape 2 sur 3</p><p class="t mt-1">Vous êtes à Pontoise</p><p class="l">9 alertes dans votre zone.</p><div class="mt-1.5 flex gap-1"><span class="chipk">1 km</span><span class="chipk on">5 km</span><span class="chipk">10 km</span></div><span class="b1 !mt-2">Continuer</span><span class="b3">Ce n'est pas ma commune</span></div></div><p class="anno"><b>8 · Zone suivie</b>Le cercle est dessiné. Le rayon est à confirmer (décision D2).</p></div>
+    <!-- 9 -->
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="map-sk"></div><span class="pin" style="left:36%;top:28%;background:rgb(var(--incident))"></span><span class="pin pos" style="left:64%;top:36%;background:rgb(var(--positive))"></span><div class="sheet pb-10"><div class="grab"></div><div class="rounded-lg bg-sunk p-1.5 text-[8px]"><b>Bien démarrer · 1/3</b><div class="prog mt-1"><i style="width:33%"></i></div><p class="mt-1 text-muted">✓ Zone choisie · Confirmer une alerte · Faire un signalement</p></div></div><div class="absolute bottom-9 left-1/2 -translate-x-1/2 rounded-lg bg-ink px-2 py-1 text-[8px] text-paper">Signalez un événement · 1/1</div><div class="absolute bottom-2 left-1/2 grid h-7 w-7 -translate-x-1/2 place-items-center rounded-full bg-primary text-white">+</div></div><p class="anno"><b>9 · Arrivée</b>Astuce sur le + et carte « Bien démarrer 1/3 » (Life360, Citizen, Evernote).</p></div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="card p-5"><p class="font-bold">Branches</p><ul class="mt-2 grid gap-1.5 text-sm text-muted"><li><b class="text-ink">Refus (6 → 7 → refus)</b> : écran « Localisation désactivée ». Le choix de la commune reste l'action principale. La feuille « Activer la localisation » montre les réglages illustrés, avec « Ouvrir les réglages » et « Non merci ».</li><li><b class="text-ink">Plus tard</b> : on arrive sur la carte avec le bandeau « Position non définie », qui reste inchangé.</li><li><b class="text-ink">Hors zone</b> : texte du CDC, puis suggestion des communes limitrophes du Val-d'Oise.</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Entre 8 et 9 : préparation et connexion</p><ul class="mt-2 grid gap-1.5 text-sm text-muted"><li><b class="text-ink">Préparation</b> : « Nous préparons votre carte de Pontoise… », 1,2 s au plus, avec les marqueurs qui apparaissent (Evernote).</li><li><b class="text-ink">Connexion</b> (phase 1) : l'accroche reprend la commune, l'écran est inchangé, sauf la mention de confidentialité sous chaque champ (Cosmos).</li><li><b class="text-ink">Étape 3 sur 3, facultative</b> : « Qu'est-ce qui compte pour vous ? », des familles en pilules. Elle est soumise à la décision D3.</li></ul></div>
+  </div>
+</section>
+
+<!-- 8. PLAN -->
+<section id="plan" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+    <div class="grid gap-3"><p class="eyebrow">08 · Plan</p><h2 class="h2">Refonte en six lots</h2><p class="lede">Chaque lot livre les deux versions exigées par AGENTS.md : le prototype React et le canevas, en clair et en sombre. Il passe par la revue de direction artistique (390, 375, 430) et le test de bout en bout. Les composants nouveaux sont d'abord ajoutés au Design System, puis utilisés.</p></div>
+
+    <div class="grid gap-4">
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">R0 · Fondations · 2 j</p><h3 class="mt-1 text-xl font-bold">Langage visuel</h3><p class="mt-2 text-sm text-muted">Préalable à tous les lots</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">Stage</span> scène en halo et arc, variantes jaune, verte et neutre</li><li><span class="tag">Highlight</span> surlignage du mot-clé</li><li><span class="tag">StepProgress</span> barre et « Étape n sur N »</li><li><span class="tag">ProductScene</span> composition de fragments : mini-carte, marqueurs, AlertCard compacte</li><li>Tokens de mouvement : durée, courbe, décalage en cascade</li></ul></div>
+          <div><p class="font-semibold">Critères de validation</p><ul class="mt-1 grid gap-1 text-muted"><li>Section « Onboarding v2 » ajoutée dans <span class="font-mono">docs/design-system/index.html</span> et <span class="font-mono">DESIGN_SYSTEM.md</span></li><li>Contraste AA du texte posé sur la scène, en clair et en sombre</li><li>Aucune nouvelle couleur hors tokens. Les tokens nouveaux sont soumis à validation (D4)</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">R1 · Bienvenue et diapositives · 3 j</p><h3 class="mt-1 text-xl font-bold">La valeur d'abord</h3><p class="mt-2 text-sm text-muted">Écrans 1 à 5 · UI-002 à UI-005</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Bienvenue sur une carte vivante floutée, logo transféré depuis le démarrage (FLIP existant)</li><li>4 diapositives : <span class="tag">Stage</span> et <span class="tag">ProductScene</span>, titres du CDC avec <span class="tag">Highlight</span></li><li>Smart animate : scène fixe, fragment qui se transforme d'une diapositive à l'autre</li><li>Balayage, flèches du clavier, « Passer », pagination par points (inchangés)</li></ul></div>
+          <div><p class="font-semibold">Critères de validation</p><ul class="mt-1 grid gap-1 text-muted"><li>Le produit est reconnaissable sur chaque diapositive (test des 5 secondes)</li><li>Plus de 25 % de vide vertical nulle part à 390 × 844</li><li>Le positif a la même surface que le négatif</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">R2 · Localisation · 2 j</p><h3 class="mt-1 text-xl font-bold">Amorce, demande, reprise</h3><p class="mt-2 text-sm text-muted">Écrans 6 et 7 · UI-007, états 2.5</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Amorce en trois éléments et cercle de 5 km. Bénéfices et confidentialité passent en feuille</li><li>Demande système coachée (fond de scène, choix désigné)</li><li><span class="tag">SettingsPreview</span> : réglages illustrés dans la feuille d'aide, avec « Ouvrir les réglages » et « Non merci »</li><li><span class="tag">StepProgress</span> « Étape 1 sur 3 »</li></ul></div>
+          <div><p class="font-semibold">Critères de validation</p><ul class="mt-1 grid gap-1 text-muted"><li>Trois éléments au plus au-dessus du pied d'écran</li><li>Choix manuel accessible en un toucher depuis chaque écran</li><li>Jamais « Toujours » proposé ni suggéré</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">R3 · Territoire · 2 j</p><h3 class="mt-1 text-xl font-bold">Zone suivie</h3><p class="mt-2 text-sm text-muted">Écran 8 · UI-006</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Commune détectée : cercle de zone, marqueurs réels, compteur « 9 alertes dans votre zone »</li><li>Rayon en pilules (1, 5, 10 km), si D2 est validée. Sinon, 5 km affiché sans réglage</li><li>Choix de commune : « Autour de moi », « Communes proches », puis A à Z, avec un aperçu de carte au survol</li><li>Hors zone : suggestions de communes limitrophes</li></ul></div>
+          <div><p class="font-semibold">Critères de validation</p><ul class="mt-1 grid gap-1 text-muted"><li>La zone est visible sur la carte d'accueil, à l'identique</li><li>Recherche : résultat en moins de 2 frappes pour les 20 communes de démo</li><li>Lecteur d'écran : la zone est annoncée en texte (« rayon de 5 km »)</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">R4 · Arrivée · 2 j</p><h3 class="mt-1 text-xl font-bold">L'onboarding continue</h3><p class="mt-2 text-sm text-muted">Écran 9 · lien avec la phase 3</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Préparation de la carte (1,2 s au plus, ignorée si les animations sont réduites)</li><li><span class="tag">CoachMark</span> « Signalez un événement · 1/1 » sur le +, qui remplace la bulle actuelle</li><li><span class="tag">StartChecklist</span> « Bien démarrer 1/3 » : zone choisie, confirmer une alerte, faire un signalement. Fermable, se coche toute seule (D5)</li></ul></div>
+          <div><p class="font-semibold">Critères de validation</p><ul class="mt-1 grid gap-1 text-muted"><li>Rien ne masque le + ni la barre d'onglets</li><li>La liste disparaît une fois complète, avec un toast de félicitation</li><li>Préférence mémorisée (<span class="font-mono">localStorage</span> dans un <span class="font-mono">try/catch</span>)</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">R5 · Extension · continu</p><h3 class="mt-1 text-xl font-bold">Refonte de toutes les interfaces</h3><p class="mt-2 text-sm text-muted">Phases 1, 3 à 10</p></div>
+        <div class="overflow-x-auto"><table class="w-full min-w-[520px] text-left text-sm"><thead class="text-xs uppercase tracking-wider text-muted"><tr><th class="py-1 pr-3">Interface</th><th class="py-1 pr-3">Apport du benchmark</th><th class="py-1">Phase</th></tr></thead><tbody class="divide-y divide-line text-muted">
+          <tr><td class="py-2 pr-3 text-ink">Connexion et inscription</td><td class="py-2 pr-3">Saisie grand format, « Affiché » ou « Jamais affiché » sous chaque champ (Cosmos), scène derrière le logo</td><td class="py-2">1 (retouches)</td></tr>
+          <tr><td class="py-2 pr-3 text-ink">Carte d'accueil</td><td class="py-2 pr-3">Cercle de zone permanent, astuces numérotées, volet qui garde le contexte (Life360)</td><td class="py-2">3</td></tr>
+          <tr><td class="py-2 pr-3 text-ink">Liste et filtres</td><td class="py-2 pr-3">Filtres en pilules par famille, statut « Traité » visible, état vide illustré et rassurant (Nextdoor)</td><td class="py-2">4</td></tr>
+          <tr><td class="py-2 pr-3 text-ink">Fiche alerte et votes</td><td class="py-2 pr-3">Retour « utile » au sens de Citizen, « Pourquoi je vois cette alerte » (Headspace)</td><td class="py-2">5</td></tr>
+          <tr><td class="py-2 pr-3 text-ink">Signaler</td><td class="py-2 pr-3">Barre « Étape n sur 7 », réponses-cartes avec icône, option recommandée (Duolingo)</td><td class="py-2">6</td></tr>
+          <tr><td class="py-2 pr-3 text-ink">Notifications</td><td class="py-2 pr-3">Demande au premier suivi d'alerte, résultat montré avant, « Pas maintenant » (Duolingo, Citizen)</td><td class="py-2">5 et 6</td></tr>
+          <tr><td class="py-2 pr-3 text-ink">Activité et profil</td><td class="py-2 pr-3">Liste de démarrage, lieux suivis (domicile, travail) en liste (Citizen)</td><td class="py-2">8 et 9</td></tr>
+        </tbody></table></div>
+      </article>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-3">
+      <div class="card p-5"><p class="eyebrow">Ordre et charge</p><p class="mt-2 text-sm text-muted">R0, puis R1 et R2 en parallèle, puis R3 et R4 : environ 11 jours pour l'onboarding v2. R5 s'intègre au fil des phases 3 à 10, sans lot dédié.</p></div>
+      <div class="card p-5"><p class="eyebrow">Indicateurs (tests utilisateurs)</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Carte visible en moins de 45 s (moins de 10 s avec « Passer »)</li><li>Autorisation de la localisation : 60 % ou plus</li><li>Onboarding terminé : 85 % ou plus</li><li>Test des 5 secondes : l'app est comprise, à 4 sur 5 ou plus</li></ul></div>
+      <div class="card p-5"><p class="eyebrow">Risques</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Carte « vivante » : poids et performance du SVG. On réutilise la carte existante</li><li>Fragments du produit : à garder synchronisés avec les composants réels</li><li>Pas de mascotte : la personnalité repose sur la scène et les textes</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. DÉCISIONS -->
+<section id="decisions" class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">09 · Décisions</p><h2 class="h2">Avant de démarrer</h2><p class="lede">Ces points touchent le CDC, les règles métier ou les tokens : selon AGENTS.md, ils demandent une validation explicite.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="bg-sunk text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">#</th><th class="p-3">Question</th><th class="p-3">Recommandation</th><th class="p-3">Impact si non</th></tr></thead>
+      <tbody class="divide-y divide-line">
+        <tr><td class="p-3 font-mono">D1</td><td class="p-3">Ajouter un écran de bienvenue avant les 4 diapositives du CDC ?</td><td class="p-3">Oui : c'est la valeur d'abord. Le titre « Votre territoire, votre vigilance. » est partagé avec la diapositive 4.</td><td class="p-3 text-muted">La diapositive 1 joue ce rôle avec la carte vivante</td></tr>
+        <tr><td class="p-3 font-mono">D2</td><td class="p-3">Rayon de zone réglable (1, 5, 10 km) ?</td><td class="p-3">Oui, avec 5 km par défaut. Le PRD parle des alertes « à moins de 5 km » sans interdire de réglage.</td><td class="p-3 text-muted">Cercle de 5 km affiché, sans réglage</td></tr>
+        <tr><td class="p-3 font-mono">D3</td><td class="p-3">Étape facultative « Qu'est-ce qui compte pour vous ? » (familles) ?</td><td class="p-3">Plus tard, en phase 5 et 6 avec les notifications. Elle ne filtre jamais la carte, pour ne pas cacher le positif.</td><td class="p-3 text-muted">Barre en 2 étapes au lieu de 3</td></tr>
+        <tr><td class="p-3 font-mono">D4</td><td class="p-3">Nouveaux tokens : scène (dégradé), mouvement (durées, décalage) ?</td><td class="p-3">Oui, dérivés de <span class="font-mono">--brand-yellow</span> et <span class="font-mono">--alert-positive</span>, sans nouvelle teinte.</td><td class="p-3 text-muted">Scène codée en dur, à éviter</td></tr>
+        <tr><td class="p-3 font-mono">D5</td><td class="p-3">Carte « Bien démarrer 1/3 » sur la carte (absente du CDC) ?</td><td class="p-3">Oui, fermable, et elle se retire une fois complète.</td><td class="p-3 text-muted">Seule l'astuce sur le + reste</td></tr>
+        <tr><td class="p-3 font-mono">D6</td><td class="p-3">Où livrer : dans la phase 2 en cours, ou dans une phase 2 bis ?</td><td class="p-3">Valider et fusionner la phase 2 telle quelle, puis ouvrir <span class="font-mono">phase/2b-onboarding-v2</span> depuis <span class="font-mono">develop</span>.</td><td class="p-3 text-muted">La PR de la phase 2 grossit et la revue s'allonge</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="wrap flex flex-wrap items-center justify-between gap-3 py-8 text-sm text-muted">
+    <p>95 Alerte · rapport généré par <span class="font-mono">tools/build_benchmark_refonte.py</span> · sources Mobbin (iOS), aperçus à basse résolution.</p>
+    <p>Rapports liés : <span class="font-mono">benchmark-mobbin.html</span>, <span class="font-mono">onboarding-mobbin.html</span></p>
+  </div>
+</footer>
