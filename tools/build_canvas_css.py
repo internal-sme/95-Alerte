@@ -23,6 +23,9 @@ css = css.replace(":root{", ":root,.t-light{", 1)
 media = re.search(r"@media \(prefers-color-scheme: dark\)\{:root:not\(\[data-theme=\"light\"\]\)\{.*?color-scheme:dark\}\}", css, re.S)
 css = css.replace(media.group(0), "")
 css = css.replace(':root[data-theme="dark"]{', ".t-dark{")
+# Règles de composant propres au sombre : suivent la classe de la planche, jamais le thème du visualiseur
+css = re.sub(r'@media \(prefers-color-scheme: dark\)\{:root:not\(\[data-theme="light"\]\) [^{]+\{[^}]*\}\}', "", css)
+css = css.replace(':root[data-theme="dark"] ', ".t-dark ")
 css = css.replace(':root[data-contrast="high"]', ".t-contrast")
 css = css.replace(':root[data-motion="reduce"] *', ".t-motion *")
 

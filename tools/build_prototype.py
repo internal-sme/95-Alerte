@@ -7,10 +7,13 @@ Sources :
   - prototype/src/phosphor-sprite.svg → icônes (tools/build_phosphor_sprite.py)
   - prototype/src/app.jsx          → application React (transpilée dans le navigateur par Babel)
   - docs/brand/95-alerte-animation.gif → animation du logo au démarrage (data URI, window.SPLASH_GIF)
+  - prototype/src/onboarding/slide-{1,2,3}.webp → photos des pages de présentation (window.ONB_PHOTOS),
+    générées avec Magnific d'après le flow Citizen ; si un fichier manque, la page montre la carte illustrée
 
 Usage : python3 tools/build_prototype.py
 """
 import base64
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -39,6 +42,8 @@ def main() -> None:
     app = (SRC / "app.jsx").read_text(encoding="utf-8")
     # Animation officielle du logo (démarrage), hors du script Babel pour ne pas le ralentir
     gif = base64.b64encode((ROOT / "docs/brand/95-alerte-animation.gif").read_bytes()).decode()
+    photos = {n: "data:image/webp;base64," + base64.b64encode(f.read_bytes()).decode()
+              for n in (1, 2, 3) if (f := SRC / f"onboarding/slide-{n}.webp").exists()}
     page = f"""<title>95 Alerte</title>
 <!-- Fichier généré par tools/build_prototype.py : modifier prototype/src/ puis relancer le script. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +54,7 @@ def main() -> None:
 </style>
 {sprite}
 <div id="root"><div class="boot">Chargement de 95 Alerte…</div></div>
-<script>window.SPLASH_GIF = "data:image/gif;base64,{gif}";</script>
+<script>window.SPLASH_GIF = "data:image/gif;base64,{gif}"; window.ONB_PHOTOS = {json.dumps(photos)};</script>
 <script src="{REACT}"></script>
 <script src="{REACT_DOM}"></script>
 <script src="{BABEL}"></script>

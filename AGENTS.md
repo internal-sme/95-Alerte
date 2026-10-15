@@ -45,6 +45,7 @@ Une phase n'est terminée que lorsque **les deux versions** sont à jour et publ
 - Formulaires (connexion, inscription, signalement) : une question par écran, CTA principal toujours au même endroit, dans le pied d'écran.
 - **Transitions entre écrans : « smart animate »** (à partir de la phase 2, et appliqué à la phase 1) : View Transitions API via `useScreenTransitions` ; les éléments communs aux deux écrans portent un `view-transition-name` (titre d'en-tête, barre d'étapes, bouton principal, barre d'onglets, logo) et se déforment, le reste se fond. Tout nouvel écran nomme ses éléments partagés. Animations réduites : changement direct.
 - **Illustrations : Phosphor Duotone** (composant `Spot`), même bibliothèque que les icônes. Pas de dessin maison ni d'autre bibliothèque d'illustrations.
+  Exception validée : les **3 pages de présentation** de l'onboarding utilisent des **photos générées avec Magnific** (d'après le flow Citizen : main, téléphone, rue du Val-d'Oise), embarquées en WebP par le build (`prototype/src/onboarding/`, `tools/fetch_onboarding_photos.py`). L'interface n'est jamais dessinée dans l'image : une notification réelle (`HeroNotif`) est posée par-dessus.
 
 ## Branches et pull requests — une branche par phase
 

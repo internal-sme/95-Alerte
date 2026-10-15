@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Localisation refusée</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/56105b4e6b1f49154cdcad13fa33fc56">
+<link rel="stylesheet" href="/_blob/8e859344565c95e9e336c610da71d74f">
 </head>
 <body>
 <x-dc>
@@ -21,29 +21,32 @@ body{margin:0}
       <a class="btn btn-ghost btn-inline onb-skip" href="{{l.later}}">Plus tard</a>
     </div>
     <div class="scroll95">
-      <div class="onb-body">
-        <span class="spot tone-neutral" aria-hidden="true"><span class="ph i i-compass-duotone" aria-hidden="true"></span></span>
-        <h1 class="onb-title">{{title}}</h1>
+      <div class="auth-center">
+        <span class="spot spot-xl tone-neutral" aria-hidden="true"><span class="ph i i-compass-duotone" aria-hidden="true"></span></span>
+        <sc-if value="{{isUn}}" hint-placeholder-val="{{false}}"><h1 class="onb-title">Position introuvable pour le moment</h1></sc-if>
+        <sc-if value="{{notUn}}" hint-placeholder-val="{{true}}"><h1 class="onb-title">Localisation <mark class="hl">désactivée</mark></h1></sc-if>
         <p class="onb-text">{{text}}</p>
       </div>
     </div>
     <div class="screen-footer stack-footer">
       <a class="btn btn-primary btn-block" href="{{l.commune}}">Choisir ma commune</a>
-      <sc-if value="{{showHelp}}" hint-placeholder-val="{{true}}">
-        <a class="btn btn-ghost btn-block" href="{{l.help}}">Comment l'activer&nbsp;?</a>
-      </sc-if>
+      <sc-if value="{{notUn}}" hint-placeholder-val="{{true}}"><a class="btn btn-ghost btn-block" href="{{l.help}}">Comment l'activer&nbsp;?</a></sc-if>
     </div>
     <sc-if value="{{isHelp}}" hint-placeholder-val="{{false}}">
       <a class="bs-scrim" href="{{l.denied}}" aria-label="Fermer"></a>
-      <section class="bs" style="height: 360px" role="dialog" aria-modal="true" aria-label="Activer la localisation">
+      <section class="bs" style="height: 600px" role="dialog" aria-modal="true" aria-label="Activer la localisation">
         <span class="bs-handle"><span></span></span>
         <div class="bs-head"><h2>Activer la localisation</h2><a class="icon-btn flat" href="{{l.denied}}" aria-label="Fermer"><span class="ph i i-x" aria-hidden="true"></span></a></div>
         <div class="bs-body">
-          <ol class="steps-list">
-            <li><b>Ouvrez les Réglages</b> de votre téléphone.</li>
-            <li>Touchez <b>95 Alerte</b>, puis <b>Position</b>.</li>
-            <li>Choisissez <b>Pendant l'utilisation de l'app</b>.</li>
-          </ol>
+          <p class="onb-text" style="text-align: left; max-width: none">Dans les réglages, touchez <b>Position</b>, puis choisissez <b>Pendant l'utilisation de l'app</b>.</p>
+          <div class="settings-preview" aria-hidden="true">
+            <span class="sp-label">Exemple · Réglages du téléphone</span>
+            <span class="sp-row"><span class="sp-ico"><span class="ph ph-sm i i-navigation-arrow-fill" aria-hidden="true"></span></span>Position<span class="sp-end">Jamais<span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></span></span>
+            <span class="ph sp-arrow i i-caret-down" aria-hidden="true"></span>
+            <span class="sp-options"><span>Jamais</span><span>Demander la prochaine fois</span><span class="on">Pendant l'utilisation de l'app<span class="ph i i-check" aria-hidden="true"></span></span></span>
+          </div>
+          <a class="btn btn-primary btn-block" href="{{l.denied}}">Ouvrir les réglages</a>
+          <a class="btn btn-ghost btn-block" href="{{l.denied}}">Non merci</a>
         </div>
       </section>
     </sc-if>
@@ -57,10 +60,8 @@ class Component extends DCLogic {
     const st = this.props.state || 'denied';
     const un = st === 'unavailable';
     return {
-      theme: s ? 't-dark' : 't-light',
-      title: un ? 'Position introuvable pour le moment' : 'Localisation désactivée',
+      theme: s ? 't-dark' : 't-light', isUn: un, notUn: !un, isHelp: st === 'help',
       text: un ? 'Le téléphone ne trouve pas votre position. Choisissez votre commune : vous pourrez réessayer plus tard.' : 'Choisissez votre commune : vous verrez les mêmes alertes, sans les distances.',
-      showHelp: !un, isHelp: st === 'help',
       l: { later: 'Login' + s + '.dc.html', commune: 'Commune' + s + '.dc.html', help: 'LocationHelp' + s + '.dc.html', denied: 'Denied' + s + '.dc.html' }
     };
   }
