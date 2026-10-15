@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Votre commune</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/56105b4e6b1f49154cdcad13fa33fc56">
+<link rel="stylesheet" href="/_blob/0f50dfbb5686c3819ae3ebeecdaeffda">
 </head>
 <body>
 <x-dc>
@@ -62,7 +62,7 @@ class Component extends DCLogic {
       title: fromMap ? 'Changer de commune' : 'Votre commune',
       hasList: st === 'list' || st === 'search', showAround: st === 'list' && !fromMap, items: items,
       isNone: st === 'none', isOutside: st === 'outside',
-      l: { back: (fromMap ? 'MainNoPosition' : 'Location') + s + '.dc.html', pick: (fromMap ? 'Main' : 'Login') + s + '.dc.html' }
+      l: { back: (fromMap ? 'MainNoPosition' : 'Location') + s + '.dc.html', pick: (fromMap ? 'Main' : 'Prep') + s + '.dc.html' }
     };
   }
 }

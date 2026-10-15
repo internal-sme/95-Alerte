@@ -20,6 +20,10 @@
     {
       "id": "p2",
       "name": "Phase 2 · Onboarding et territoire"
+    },
+    {
+      "id": "p2b",
+      "name": "Phase 2b · Onboarding v2 (refonte)"
     }
   ],
   "boards": {
@@ -639,126 +643,108 @@
       "y": 0,
       "w": 390,
       "h": 844,
-      "title": "Onboarding · 1",
+      "title": "Présentation · 1",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Onboarding-dark.dc.html": {
       "x": 0,
       "y": 1200,
       "w": 390,
       "h": 844,
-      "title": "Onboarding · 1 (sombre)",
+      "title": "Présentation · 1 (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Onboarding2.dc.html": {
       "x": 470,
       "y": 0,
       "w": 390,
       "h": 844,
-      "title": "Onboarding · 2",
+      "title": "Présentation · 2",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Onboarding2-dark.dc.html": {
       "x": 470,
       "y": 1200,
       "w": 390,
       "h": 844,
-      "title": "Onboarding · 2 (sombre)",
+      "title": "Présentation · 2 (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Onboarding3.dc.html": {
       "x": 940,
       "y": 0,
       "w": 390,
       "h": 844,
-      "title": "Onboarding · 3",
+      "title": "Présentation · 3",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Onboarding3-dark.dc.html": {
       "x": 940,
       "y": 1200,
       "w": 390,
       "h": 844,
-      "title": "Onboarding · 3 (sombre)",
+      "title": "Présentation · 3 (sombre)",
       "is_interactive": true,
-      "page": "p2"
-    },
-    "Onboarding4.dc.html": {
-      "x": 1410,
-      "y": 0,
-      "w": 390,
-      "h": 844,
-      "title": "Onboarding · 4",
-      "is_interactive": true,
-      "page": "p2"
-    },
-    "Onboarding4-dark.dc.html": {
-      "x": 1410,
-      "y": 1200,
-      "w": 390,
-      "h": 844,
-      "title": "Onboarding · 4 (sombre)",
-      "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Location.dc.html": {
-      "x": 1880,
+      "x": 1410,
       "y": 0,
       "w": 390,
       "h": 844,
       "title": "Localisation · amorce",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Location-dark.dc.html": {
-      "x": 1880,
+      "x": 1410,
       "y": 1200,
       "w": 390,
       "h": 844,
       "title": "Localisation · amorce (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "LocationSystem.dc.html": {
-      "x": 2350,
+      "x": 1880,
       "y": 0,
       "w": 390,
       "h": 844,
-      "title": "Localisation · demande du téléphone",
+      "title": "Localisation · demande coachée",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "LocationSystem-dark.dc.html": {
+      "x": 1880,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Localisation · demande coachée (sombre)",
+      "is_interactive": true,
+      "page": "p2b"
+    },
+    "Detected.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Zone suivie · 5 km",
+      "is_interactive": true,
+      "page": "p2b"
+    },
+    "Detected-dark.dc.html": {
       "x": 2350,
       "y": 1200,
       "w": 390,
       "h": 844,
-      "title": "Localisation · demande du téléphone (sombre)",
+      "title": "Zone suivie · 5 km (sombre)",
       "is_interactive": true,
-      "page": "p2"
-    },
-    "Detected.dc.html": {
-      "x": 2820,
-      "y": 0,
-      "w": 390,
-      "h": 844,
-      "title": "Commune détectée",
-      "is_interactive": true,
-      "page": "p2"
-    },
-    "Detected-dark.dc.html": {
-      "x": 2820,
-      "y": 1200,
-      "w": 390,
-      "h": 844,
-      "title": "Commune détectée (sombre)",
-      "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Commune.dc.html": {
       "x": 3290,
@@ -779,22 +765,22 @@
       "page": "p2"
     },
     "Denied.dc.html": {
-      "x": 3760,
-      "y": 0,
+      "x": 1880,
+      "y": 2400,
       "w": 390,
       "h": 844,
       "title": "Localisation refusée",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Denied-dark.dc.html": {
-      "x": 3760,
-      "y": 1200,
+      "x": 1880,
+      "y": 3600,
       "w": 390,
       "h": 844,
       "title": "Localisation refusée (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "MainNoPosition.dc.html": {
       "x": 4230,
@@ -837,18 +823,18 @@
       "y": 2400,
       "w": 390,
       "h": 844,
-      "title": "Localisation · détail",
+      "title": "Localisation · comment elle est utilisée",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "LocationWhy-dark.dc.html": {
       "x": 0,
       "y": 3600,
       "w": 390,
       "h": 844,
-      "title": "Localisation · détail (sombre)",
+      "title": "Localisation · comment elle est utilisée (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Locating.dc.html": {
       "x": 470,
@@ -857,7 +843,7 @@
       "h": 844,
       "title": "Localisation · recherche",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Locating-dark.dc.html": {
       "x": 470,
@@ -866,7 +852,7 @@
       "h": 844,
       "title": "Localisation · recherche (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "CommuneSearch.dc.html": {
       "x": 940,
@@ -923,40 +909,94 @@
       "page": "p2"
     },
     "Unavailable.dc.html": {
-      "x": 2350,
+      "x": 2820,
       "y": 2400,
       "w": 390,
       "h": 844,
       "title": "Position introuvable",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "Unavailable-dark.dc.html": {
-      "x": 2350,
+      "x": 2820,
       "y": 3600,
       "w": 390,
       "h": 844,
       "title": "Position introuvable (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "LocationHelp.dc.html": {
-      "x": 2820,
+      "x": 2350,
       "y": 2400,
       "w": 390,
       "h": 844,
-      "title": "Activer la localisation",
+      "title": "Activer la localisation · réglages illustrés",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
     },
     "LocationHelp-dark.dc.html": {
-      "x": 2820,
+      "x": 2350,
       "y": 3600,
       "w": 390,
       "h": 844,
-      "title": "Activer la localisation (sombre)",
+      "title": "Activer la localisation · réglages illustrés (sombre)",
       "is_interactive": true,
-      "page": "p2"
+      "page": "p2b"
+    },
+    "Prep.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Préparation de la carte",
+      "is_interactive": true,
+      "page": "p2b"
+    },
+    "Prep-dark.dc.html": {
+      "x": 2820,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Préparation de la carte (sombre)",
+      "is_interactive": true,
+      "page": "p2b"
+    },
+    "Detected1.dc.html": {
+      "x": 940,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Zone suivie · 1 km",
+      "is_interactive": true,
+      "page": "p2b"
+    },
+    "Detected1-dark.dc.html": {
+      "x": 940,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Zone suivie · 1 km (sombre)",
+      "is_interactive": true,
+      "page": "p2b"
+    },
+    "Detected10.dc.html": {
+      "x": 1410,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Zone suivie · 10 km",
+      "is_interactive": true,
+      "page": "p2b"
+    },
+    "Detected10-dark.dc.html": {
+      "x": 1410,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Zone suivie · 10 km (sombre)",
+      "is_interactive": true,
+      "page": "p2b"
     }
   },
   "order": [
@@ -1034,8 +1074,6 @@
     "Onboarding2-dark.dc.html",
     "Onboarding3.dc.html",
     "Onboarding3-dark.dc.html",
-    "Onboarding4.dc.html",
-    "Onboarding4-dark.dc.html",
     "Location.dc.html",
     "Location-dark.dc.html",
     "LocationSystem.dc.html",
@@ -1063,7 +1101,13 @@
     "Unavailable.dc.html",
     "Unavailable-dark.dc.html",
     "LocationHelp.dc.html",
-    "LocationHelp-dark.dc.html"
+    "LocationHelp-dark.dc.html",
+    "Prep.dc.html",
+    "Prep-dark.dc.html",
+    "Detected1.dc.html",
+    "Detected1-dark.dc.html",
+    "Detected10.dc.html",
+    "Detected10-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -1179,7 +1223,48 @@
       "maxH": 560,
       "fill": "blue",
       "page": "p2",
-      "text": "Phase 2 · onboarding et territoire\n\nPlay sur « Onboarding · 1 » (ou sur « Démarrage », page Phase 1) : 4 écrans, « Suivant » ou toucher l'illustration, « Passer » mène à la localisation.\n\nLocalisation : « Autoriser » → demande du téléphone (simulée) → recherche → « Vous êtes à Pontoise » → connexion. « Ne pas autoriser » → localisation désactivée → choisir ma commune. « Plus tard » → connexion, la carte affiche alors « Position non définie ».\n\nCommune : liste, recherche, aucun résultat, hors zone (texte du CDC).\n\nDans la version React, le mode démo simule le refus et la position introuvable, et peut rejouer l'onboarding : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+      "text": "Phase 2 · territoire\n\nLe parcours d'onboarding (présentation, localisation, zone) a été refait : voir la page « Phase 2b · Onboarding v2 ».\n\nCette page garde le choix de la commune (liste, recherche, aucun résultat, hors zone), le changement de commune depuis la carte et la carte sans position (« Position non définie »)."
+    },
+    "p2bLight": {
+      "x": 0,
+      "y": -300,
+      "text": "Onboarding v2 · clair",
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "p2b"
+    },
+    "p2bDark": {
+      "x": 0,
+      "y": 900,
+      "text": "Onboarding v2 · sombre",
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "p2b"
+    },
+    "p2bStates": {
+      "x": 0,
+      "y": 2100,
+      "text": "États · clair",
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "p2b"
+    },
+    "p2bStatesDark": {
+      "x": 0,
+      "y": 3300,
+      "text": "États · sombre",
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "p2b"
+    },
+    "p2bHow": {
+      "x": 3330,
+      "y": 0,
+      "w": 340,
+      "maxH": 620,
+      "fill": "blue",
+      "page": "p2b",
+      "text": "Phase 2b · refonte de l'onboarding (benchmark Mobbin)\n\nPlay sur « Présentation · 1 » (ou « Démarrage », page Phase 1) : 3 pages, notification réelle posée sur le visuel (d'après le flow Citizen), mot-clé surligné.\n\nLocalisation : amorce allégée (Étape 1 sur 2) → demande coachée → recherche → zone suivie (Étape 2 sur 2, rayon 1 / 5 / 10 km) → préparation de la carte → connexion.\nRefus : choisir ma commune ou réglages illustrés.\n\nVisuels des 3 pages : photos générées avec Magnific (Pontoise, signalement d'un nid-de-poule, fête de quartier)."
     }
   },
   "designSystems": []

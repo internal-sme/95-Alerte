@@ -36,7 +36,7 @@ ICONS = [
     "trash-simple", "copy",
     # Prototype : barre d'état, démo, navigation
     "wifi-high", "cell-signal-full", "battery-full", "arrow-left", "squares-four",
-    "play", "fast-forward", "arrow-counter-clockwise", "path",
+    "play", "fast-forward", "arrow-counter-clockwise", "path", "circle",
 ]
 FILL = [
     "map-trifold", "list-bullets", "pulse", "user-circle", "bell", "arrow-fat-up",
