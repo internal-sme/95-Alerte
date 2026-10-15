@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Accueil · Carte</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/b662404cca4045c77f371318eee644b1">
+<link rel="stylesheet" href="/_blob/56105b4e6b1f49154cdcad13fa33fc56">
 </head>
 <body>
 <x-dc>
@@ -41,7 +41,7 @@ body{margin:0}
         <text class="label" x="80" y="176" text-anchor="middle">Osny</text>
         <text class="label water-label" x="344" y="198" text-anchor="middle">L'Oise</text>
       </svg>
-      <span class="me" style="left: 190px; top: 255px" role="img" aria-label="Vous êtes ici"></span>
+      <sc-if value="{{hasPos}}" hint-placeholder-val="{{true}}"><span class="me" style="left: 190px; top: 255px" role="img" aria-label="Vous êtes ici"></span></sc-if>
       <sc-for list="{{pins}}" as="p" hint-placeholder-count="6">
         <span class="map-pin" style="left: {{p.x}}px; top: {{p.y}}px">
           <button type="button" class="marker {{p.cls}}" aria-label="{{p.label}}" onClick="{{p.open}}" style="border: 0; background: none; padding: 0; cursor: pointer">
@@ -56,10 +56,13 @@ body{margin:0}
       </sc-if>
     </div>
     <div class="map-top">
-      <button class="search" type="button"><span class="ph i i-magnifying-glass" aria-hidden="true"></span>Rechercher une ville, une rue…</button>
+      <a class="search" href="{{l.commune}}"><span class="ph i i-magnifying-glass" aria-hidden="true"></span>{{searchLabel}}</a>
       <button class="icon-btn" type="button" aria-label="Notifications, 2 non lues"><span class="ph i i-bell" aria-hidden="true"></span><span class="badge-count" aria-hidden="true">2</span></button>
     </div>
-    <div class="map-pill"><button class="pill" type="button" onClick="{{openList}}"><span class="dot-new" aria-hidden="true"></span>3 nouvelles alertes</button></div>
+    <sc-if value="{{hasPos}}" hint-placeholder-val="{{true}}"><div class="map-pill"><button class="pill" type="button" onClick="{{openList}}"><span class="dot-new" aria-hidden="true"></span>3 nouvelles alertes</button></div></sc-if>
+    <sc-if value="{{noPos}}" hint-placeholder-val="{{false}}">
+      <a class="map-banner" href="{{l.commune}}"><span class="ph i i-map-pin" aria-hidden="true"></span><span><b>Position non définie</b>Choisissez votre commune pour voir les alertes proches.</span><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></a>
+    </sc-if>
     <button class="icon-btn map-locate" type="button" aria-label="Recentrer sur ma position" style="bottom: 168px"><span class="ph i i-crosshair" aria-hidden="true"></span></button>
 
     <sc-if value="{{noSel}}" hint-placeholder-val="{{true}}">
@@ -112,7 +115,7 @@ body{margin:0}
   </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"nopos":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
 var NEAR = [
   ['a1', 'Incendie', 'incident', 'fire', 'negative', 'Fumée importante visible rue Carnot', 'Pontoise', 1.08, 12, 'transmis', 24, 3, 8, true],
   ['a19', 'Incendie', 'incident', 'fire', 'negative', 'Fumée noire au-dessus de la gare', 'Pontoise', 1.09, 9, 'transmis', 11, 0, 3, false],
@@ -175,7 +178,9 @@ class Component extends DCLogic {
     }
     return {
       theme: s ? 't-dark' : 't-light',
-      l: { map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
+      hasPos: this.props.nopos !== true && this.props.nopos !== 'true', noPos: this.props.nopos === true || this.props.nopos === 'true',
+      searchLabel: (this.props.nopos === true || this.props.nopos === 'true') ? 'Rechercher une commune…' : 'Pontoise · changer de commune',
+      l: { commune: 'CommuneFromMap' + s + '.dc.html', map: 'Main' + s + '.dc.html', alerts: 'Alerts' + s + '.dc.html', report: 'Report' + s + '.dc.html', activity: 'Activity' + s + '.dc.html', profile: 'Profile' + s + '.dc.html' },
       pins: pins,
       showCluster: st.filter !== 'positive',
       near: near,

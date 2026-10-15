@@ -1061,7 +1061,7 @@ function MapScreen() {
   const closeSummary = () => { setSelectedId(null); setSnap("peek"); };
 
   return (
-    <div className="screen" style={{ overflow: "hidden" }}>
+    <div className="screen map-screen">
       <div className="map95" aria-label="Carte des alertes autour de Pontoise">
         {MAP_ART}
         {state.demo.permissionDenied || pos.source !== "gps" ? null : <span className="me" style={{ left: me.x, top: me.y }} role="img" aria-label="Vous êtes ici" />}
@@ -1863,9 +1863,9 @@ function GuestGate({ icon, title, text }) {
    « Plus tard » mènent toujours à une suite (choix manuel de la commune).
    ===================================================================== */
 const ONB_SLIDES = [
-  { icon: "map-trifold", title: "Que se passe-t-il autour de vous ?", text: "Incidents, travaux, bonnes nouvelles : le Val-d'Oise en direct, sur une carte." },
-  { icon: "megaphone", title: "Un problème ? Signalez-le.", text: "En quelques gestes, votre signalement part au service compétent." },
-  { icon: "hand-heart", tone: "positive", title: "Une bonne nouvelle ? Partagez-la aussi.", text: "Fête de quartier, entraide, nouveau commerce : le positif a toute sa place." },
+  { icon: "map-trifold", title: "Que se passe‑t‑il autour de vous ?", text: "Incidents, travaux, bonnes nouvelles : le Val-d'Oise en direct, sur une carte." },
+  { icon: "megaphone", title: "Un problème ? Signalez-le.", text: "En quelques gestes, votre signalement part au service compétent." },
+  { icon: "hand-heart", tone: "positive", title: "Une bonne nouvelle ? Partagez-la aussi.", text: "Fête de quartier, entraide, nouveau commerce : le positif a toute sa place." },
   { icon: "shield-check", title: "Votre territoire, votre vigilance.", text: "Confirmez les alertes utiles et suivez leur traitement par les services." },
 ];
 // Communes voisines hors Val-d'Oise : état « hors territoire » (PRD §10.3)
@@ -1926,7 +1926,7 @@ function SystemLocationPrompt({ onAnswer }) {
     <div className="modal-scrim" role="presentation">
       <div className="modal sys-prompt" role="alertdialog" aria-modal="true" aria-labelledby="sys-title" aria-describedby="sys-body">
         <Icon name="navigation-arrow-fill" className="sys-icon" />
-        <h2 id="sys-title">Autoriser « 95 Alerte » à utiliser votre position ?</h2>
+        <h2 id="sys-title">Autoriser « 95 Alerte » à utiliser votre position ?</h2>
         <p id="sys-body">Votre position sert à afficher les alertes proches de vous.</p>
         <div className="sys-actions">
           <button type="button" onClick={() => onAnswer("granted")}>Autoriser pendant l'utilisation</button>
@@ -1963,7 +1963,7 @@ function LocationPrimer() {
       <div className="screen-pad">
         <div className="auth-center compact">
           <Spot icon="map-pin-area" />
-          <h1 className="onb-title">Voir les alertes près de chez vous ?</h1>
+          <h1 className="onb-title">Voir les alertes près de chez vous ?</h1>
         </div>
         <Benefits items={[
           { icon: "map-pin", title: "Les alertes à moins de 5 km", text: "Positives et négatives, en direct." },
@@ -1971,7 +1971,7 @@ function LocationPrimer() {
           { icon: "crosshair", title: "Le lieu déjà rempli quand vous signalez", text: "Vous pourrez toujours le modifier." },
         ]} />
         <PrivacyNote>Votre position reste approximative par défaut. Elle n'est jamais affichée publiquement.</PrivacyNote>
-        <Button variant="ghost" className="btn-inline" icon={why ? "caret-down" : "caret-right"} aria-expanded={why} aria-controls="loc-why" onClick={() => setWhy(!why)}>Comment ma position est-elle utilisée ?</Button>
+        <Button variant="ghost" className="btn-inline" icon={why ? "caret-down" : "caret-right"} aria-expanded={why} aria-controls="loc-why" onClick={() => setWhy(!why)}>Comment ma position est-elle utilisée ?</Button>
         {why ? (
           <ul className="why-list" id="loc-why">
             <li>Elle sert à trier les alertes par distance et à proposer un lieu quand vous signalez.</li>
@@ -2025,7 +2025,7 @@ function CommunePicker({ onPick, onBack, title = "Votre commune" }) {
       <div className="screen-pad">
         <div className="field">
           <label htmlFor="commune-q" className="sr-only">Rechercher une commune</label>
-          <div className="search-field"><Icon name="magnifying-glass" /><input id="commune-q" className="input" type="search" placeholder="Rechercher une commune du Val-d'Oise" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+          <div className="search-field"><Icon name="magnifying-glass" /><input id="commune-q" className="input" type="search" placeholder="Rechercher une commune" aria-label="Rechercher une commune du Val-d'Oise" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} /></div>
         </div>
         <p className="sr-only" aria-live="polite">{outside ? "Hors territoire" : `${list.length} commune${list.length > 1 ? "s" : ""}`}</p>
         {outside ? (
@@ -2057,13 +2057,13 @@ function LocationDenied({ unavailable }) {
     <div className="screen auth onb">
       <OnboardingTop skipLabel="Plus tard" onSkip={() => dispatch({ type: "ONB_FINISH", permission: unavailable ? "granted" : "denied" })} />
       <div className="auth-center">
-        <Spot icon="compass" />
+        <Spot icon="compass" tone="neutral" />
         <h1 className="onb-title">{unavailable ? "Position introuvable pour le moment" : "Localisation désactivée"}</h1>
         <p className="onb-text">{unavailable ? "Le téléphone ne trouve pas votre position. Choisissez votre commune : vous pourrez réessayer plus tard." : "Choisissez votre commune : vous verrez les mêmes alertes, sans les distances."}</p>
       </div>
       <div className="screen-footer stack-footer">
         <Button block onClick={() => dispatch({ type: "ONB_GO", step: "commune" })}>Choisir ma commune</Button>
-        {unavailable ? null : <Button block variant="ghost" onClick={() => openSheet("location-help")}>Comment l'activer ?</Button>}
+        {unavailable ? null : <Button block variant="ghost" onClick={() => openSheet("location-help")}>Comment l'activer ?</Button>}
       </div>
     </div>
   );

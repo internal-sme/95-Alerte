@@ -33,7 +33,7 @@
 |---|---|---|---|
 | 0 | Fondations techniques et composants de base | — | ✅ Terminée |
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
-| 2 | Onboarding + territoire + localisation | UI-002→007 | ⬜ À faire |
+| 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ⬜ À faire |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ⬜ À faire |
 | 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
@@ -114,14 +114,14 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - **Amorce de localisation** avant la demande système : bénéfice, précision approximative par défaut, « Choisir manuellement », « Plus tard » (Greenlight, lululemon)
 - **Pas de demande de notifications** dans l'onboarding (reportée, cf. phases 5 et 6) (Transit)
 
-- [ ] **2.1** UI-002 **Présentation** rapide de 95 Alerte
-- [ ] **2.2** UI-003→005 **Onboarding en 4 écrans** : « Que se passe-t-il autour de vous ? » · « Un problème ? Signalez-le. » · « Une bonne nouvelle ? Partagez-la aussi. » · « Votre territoire, votre vigilance. » + CTA **Commencer** ; pagination par points, « Passer », balayage
-- [ ] **2.3** UI-006 **Choix du territoire** : recherche ou liste de communes du Val-d'Oise ; commune hors zone → « 95 Alerte n'est pas encore disponible dans cette zone. »
-- [ ] **2.4** UI-007 **Autorisation de localisation** : explication de l'usage, « Autoriser », « Choisir manuellement », « Plus tard » ; mention de la précision approximative par défaut
-- [ ] **2.5** États : permission refusée → choix manuel proposé ; localisation indisponible
-- [ ] **2.6** Enchaînement S1 : Splash → Onboarding → Localisation → Connexion → Accueil ; onboarding non rejoué une fois vu
+- [x] **2.1** UI-002 **Présentation** rapide de 95 Alerte
+- [x] **2.2** UI-003→005 **Onboarding en 4 écrans** : « Que se passe-t-il autour de vous ? » · « Un problème ? Signalez-le. » · « Une bonne nouvelle ? Partagez-la aussi. » · « Votre territoire, votre vigilance. » + CTA **Commencer** ; pagination par points, « Passer », balayage
+- [x] **2.3** UI-006 **Choix du territoire** : recherche ou liste de communes du Val-d'Oise ; commune hors zone → « 95 Alerte n'est pas encore disponible dans cette zone. »
+- [x] **2.4** UI-007 **Autorisation de localisation** : explication de l'usage, « Autoriser », « Choisir manuellement », « Plus tard » ; mention de la précision approximative par défaut
+- [x] **2.5** États : permission refusée → choix manuel proposé ; localisation indisponible
+- [x] **2.6** Enchaînement S1 : Splash → Onboarding → Localisation → Connexion → Accueil ; onboarding non rejoué une fois vu
 
-- [ ] **2.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+- [x] **2.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
 
 **Validation** : S1 complet de bout en bout jusqu'à l'accueil, avec localisation autorisée **et** refusée.
 
@@ -377,3 +377,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-15 | 1 | Décisions marque : logo vectorisé reçu (texte en tracés, plus de police à charger) ; démarrage sur **fond blanc** avec logo et halo jaune léger animé (fusion monday.com × Pangea) ; **fond blanc sur tous les écrans** (`--bg` `#FFFFFF`, gris neutres `--surface-2` `#F4F4F5` et `--border` `#E4E4E7`, carte en tons neutres) ; **option B validée** : tokens `--brand-yellow`, `--brand-yellow-ink`, `--on-brand-yellow`, `--brand-yellow-soft` (onglet actif, pastille « nouvelles alertes », fond des illustrations, halo du démarrage) ; le bleu reste la seule couleur d'action. DESIGN_SYSTEM.md §2.1 mis à jour. |
 | 2026-10-15 | 1 | Démarrage avec l'animation officielle du logo (`docs/brand/95-alerte-animation.gif`, intégrée par le build) : halo jaune seul (0,7 s) → animation du logo (3 s) → chargement (1,2 s) → transition « smart animate » : le logo glisse et se réduit jusqu'à sa place sur l'accueil, le halo s'efface, titre et boutons apparaissent. Délai splash → accueil porté de 1,6 s à 4,9 s. GIF fondu dans le halo en clair (fond blanc du GIF) ; en sombre et avec animations réduites, logo SVG à la place. Correctif : la pastille « Explorer sans compte » était recouverte par le bloc central (non cliquable). |
 | 2026-10-15 | 1 | **Phase 1 validée par l'utilisateur.** Avant la PR : illustrations maison remplacées par **Phosphor Duotone** (composant `Spot`, même bibliothèque que les icônes) ; **smart animate** entre les écrans (View Transitions API, éléments partagés : titre, barre d'étapes, bouton principal, barre d'onglets), règle ajoutée à AGENTS.md pour les phases suivantes ; revue des artefacts (68 planches, liens Play et imports vérifiés, aucun style obsolète). |
+| 2026-10-15 | 2 | Phase 2 terminée sur `phase/2-onboarding`. Démarrage → 4 diapositives (titres du CDC, illustrations Phosphor Duotone, pagination par points, « Passer », balayage et flèches du clavier, transitions *smart animate* du logo, du titre, de l'illustration et des points) → amorce de localisation (bénéfices, précision approximative, « Comment ma position est-elle utilisée ? », « Plus tard ») → demande du téléphone simulée → « Vous êtes à Pontoise » (ou « Ce n'est pas ma commune ») → connexion personnalisée avec la commune → carte. Refus : « Localisation désactivée » + choix de la commune + fiche « Activer la localisation » ; position introuvable (mode démo). Choix de commune : recherche, liste avec intercommunalité, aucun résultat, hors zone (« 95 Alerte n'est pas encore disponible dans cette zone. »). Carte sans position : bandeau « Position non définie », recherche « {commune} · changer de commune ». Onboarding non rejoué une fois vu (préférence), « Rejouer l'onboarding » dans le mode démo. Hypothèses à valider : localisation demandée avant la commune ; pas de carte « Bien démarrer » ; textes des diapositives rédigés à partir du CDC. Canevas : 36 planches (page « Phase 2 »). |

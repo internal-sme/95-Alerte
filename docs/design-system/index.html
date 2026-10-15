@@ -434,6 +434,7 @@ textarea.input{min-height:96px;resize:vertical}
 .spot .ph{width:60px;height:60px}
 .spot.tone-positive{background:var(--alert-positive-soft);color:var(--alert-positive)}
 .spot.tone-error{background:var(--alert-incident-soft);color:var(--alert-incident)}
+.spot.tone-neutral{background:var(--surface-2);color:var(--text-muted)}
 .recap{list-style:none;margin:0;padding:0 var(--s-4);display:grid;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)}
 .recap li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:var(--s-3);align-items:start;padding:var(--s-3) 0;border-bottom:1px solid var(--border)}
 .recap li:last-child{border-bottom:0}
@@ -464,8 +465,8 @@ textarea.input{min-height:96px;resize:vertical}
 .sys-prompt h2{margin:0;font:600 var(--fs-h3)/var(--lh-h3) var(--font)}
 .sys-prompt p{margin:0;color:var(--text-muted);font:400 var(--fs-sm)/var(--lh-sm) var(--font)}
 .sys-actions{display:grid;width:100%;margin-top:var(--s-2);border-top:1px solid var(--border)}
-.sys-actions button{min-height:var(--tap);border:0;border-bottom:1px solid var(--border);background:none;color:var(--primary);font:600 var(--fs-body)/1 var(--font);cursor:pointer}
-.sys-actions button:last-child{border-bottom:0}
+.sys-actions button,.sys-actions a{display:grid;place-items:center;min-height:var(--tap);border:0;border-bottom:1px solid var(--border);background:none;color:var(--primary);font:600 var(--fs-body)/1 var(--font);cursor:pointer}
+.sys-actions button:last-child,.sys-actions a:last-child{border-bottom:0}
 .sys-actions button:focus-visible{outline:2px solid var(--focus-ring);outline-offset:-2px}
 .sys-prompt .sys-note{font-size:var(--fs-caption)}
 .onb.detected{background:var(--map-land)}
@@ -996,6 +997,19 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
           <ul class="benefits"><li><span class="bi"><svg class="ph"><use href="#ph-seal-check"/></svg></span><span>Badge « Identité vérifiée »<small>Visible sur votre profil</small></span></li></ul>
           <p class="privacy-note"><svg class="ph"><use href="#ph-lock-simple"/></svg><span>Votre numéro n'est jamais affiché. Il sert uniquement à sécuriser votre compte.</span></p>
           <ul class="recap"><li><svg class="ph"><use href="#ph-check-circle-fill"/></svg><span><b>Compte créé</b><small>Vos alertes identifiées afficheront « Jean D. »</small></span></li><li class="pending"><svg class="ph"><use href="#ph-timer"/></svg><span><b>Vérification en cours</b><small>Généralement moins de 24 h</small></span></li></ul>
+        </div>
+        <div class="ds-box"><span class="ds-label">Onboarding et territoire (phase 2)</span>
+          <div class="row-wrap" style="gap:var(--s-4);align-items:center">
+            <span class="spot spot-xl" aria-hidden="true"><svg class="ph"><use href="#ph-map-trifold-duotone"/></svg></span>
+            <span class="spot tone-positive" aria-hidden="true"><svg class="ph"><use href="#ph-hand-heart-duotone"/></svg></span>
+            <span class="spot tone-neutral" aria-hidden="true"><svg class="ph"><use href="#ph-compass-duotone"/></svg></span>
+          </div>
+          <p class="ds-note">Spot XL (176 px) pour les diapositives ; Spot neutre pour la localisation refusée.</p>
+          <span class="dots" role="img" aria-label="Écran 2 sur 4"><i></i><i class="on"></i><i></i><i></i></span>
+          <div class="search-field"><svg class="ph"><use href="#ph-magnifying-glass"/></svg><input class="input" type="search" placeholder="Rechercher une commune" aria-label="Rechercher une commune du Val-d'Oise"></div>
+          <div class="list"><div class="list-item"><svg class="ph"><use href="#ph-map-pin"/></svg><span>Cergy<small class="li-sub">CA de Cergy-Pontoise</small></span><span class="val"><svg class="ph ph-sm"><use href="#ph-caret-right"/></svg></span></div></div>
+          <div style="position:relative;height:84px;background:var(--map-land);border-radius:var(--r-md)"><button type="button" class="map-banner" style="top:var(--s-3)"><svg class="ph"><use href="#ph-map-pin"/></svg><span><b>Position non définie</b>Choisissez votre commune pour voir les alertes proches.</span><svg class="ph ph-sm"><use href="#ph-caret-right"/></svg></button></div>
+          <div class="modal sys-prompt" style="max-width:320px"><svg class="ph sys-icon"><use href="#ph-navigation-arrow-fill"/></svg><h2>Autoriser « 95 Alerte » à utiliser votre position&nbsp;?</h2><p>Votre position sert à afficher les alertes proches de vous.</p><div class="sys-actions"><button type="button">Autoriser pendant l'utilisation</button><button type="button">Autoriser une fois</button><button type="button">Ne pas autoriser</button></div><p class="sys-note">Simulation de la demande du téléphone</p></div>
         </div>
       </div>
     </section>
