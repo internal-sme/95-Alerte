@@ -34,7 +34,7 @@
 | 0 | Fondations techniques et composants de base | — | ✅ Terminée |
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (internal-sme/95-Alerte#11) |
-| 3 | Accueil — carte interactive | UI-011 / HOME-01 | 🟨 En cours (branche `phase/3-carte`) |
+| 3 | Accueil — carte interactive | UI-011 / HOME-01 | ✅ Terminée (validée, PR vers `develop`) |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ⬜ À faire |
 | 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ⬜ À faire |
