@@ -35,7 +35,7 @@
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (internal-sme/95-Alerte#11) |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ✅ Terminée (validée, PR vers `develop`) |
-| 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | 🟨 En cours (branche `phase/4-liste-recherche`) |
+| 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (validée, PR vers `develop`) |
 | 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ⬜ À faire |
 | 7 | Commentaires + signalement de contenu | ALERT-04 | ⬜ À faire |
