@@ -1204,12 +1204,12 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
           <div style="position:relative;height:84px;background:var(--map-land);border-radius:var(--r-md)"><button type="button" class="map-banner" style="top:var(--s-3)"><svg class="ph"><use href="#ph-map-pin"/></svg><span><b>Position non définie</b>Choisissez votre commune pour voir les alertes proches.</span><svg class="ph ph-sm"><use href="#ph-caret-right"/></svg></button></div>
           <div class="modal sys-prompt" style="max-width:320px"><svg class="ph sys-icon"><use href="#ph-navigation-arrow-fill"/></svg><h2>Autoriser « 95 Alerte » à utiliser votre position&nbsp;?</h2><p>Votre position sert à afficher les alertes proches de vous.</p><div class="sys-actions"><button type="button">Autoriser pendant l'utilisation</button><button type="button">Autoriser une fois</button><button type="button">Ne pas autoriser</button></div><p class="sys-note">Simulation de la demande du téléphone</p></div>
         </div>
-        <div class="ds-box" style="grid-template-columns:minmax(0,1fr)"><span class="ds-label"><span class="ds-new">New</span>Carte (phase 3) · barre, niveau, contrôles</span>
+        <div class="ds-box" style="grid-template-columns:minmax(0,1fr)"><span class="ds-label">Carte (phase 3) · barre, niveau, contrôles</span>
           <div class="map-top"><button type="button" class="search"><svg class="ph" aria-hidden="true"><use href="#ph-magnifying-glass"/></svg><span>Pontoise<small> · commune, adresse</small></span></button><button type="button" class="icon-btn is-filter" aria-label="Filtres, 1 actif"><svg class="ph" aria-hidden="true"><use href="#ph-sliders-horizontal"/></svg><span class="badge-count">1</span></button></div>
           <div class="map-chips"><button type="button" class="chip" aria-pressed="true"><svg class="ph" aria-hidden="true"><use href="#ph-check"/></svg>Toutes</button><button type="button" class="chip" aria-pressed="false">Positives</button><button type="button" class="chip" aria-pressed="false">Négatives</button></div>
           <p class="ds-note">MapChips : puces sous la recherche, toujours visibles (E3). Le compteur du bouton Filtres est bleu : le rouge reste aux notifications.</p>
           <div class="map-level" style="position:static;max-width:none;justify-self:start"><span>Commune · Pontoise</span><span class="map-scale"><i style="width:56px"></i>2 km</span></div>
-          <p class="ds-note"><span class="ds-new">New</span>MapLevelTag : niveau de zoom (Département, Intercommunalité, Commune, Quartier) et lieu du centre visible, avec une échelle.</p>
+          <p class="ds-note">MapLevelTag : niveau de zoom (Département, Intercommunalité, Commune, Quartier) et lieu du centre visible, avec une échelle.</p>
           <div class="row-wrap" style="gap:var(--s-4);align-items:flex-end">
             <div class="map-controls" style="position:static">
               <button type="button" class="icon-btn" aria-label="Comprendre la carte"><svg class="ph" aria-hidden="true"><use href="#ph-info"/></svg></button>
@@ -1221,14 +1221,14 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
               <button type="button" class="view-toggle is-floating" style="position:static;transform:none;view-transition-name:none"><svg class="ph" aria-hidden="true"><use href="#ph-map-trifold"/></svg>Carte</button>
             </div>
           </div>
-          <p class="ds-note"><span class="ds-new">New</span>MapControls : légende, zoom +/−, recentrage, empilés à droite au-dessus du volet réduit. <span class="ds-new">New</span>ViewToggle : « Liste » dans l'en-tête du volet, « Carte » flottante sur la liste ; choix mémorisé.</p>
+          <p class="ds-note">MapControls : légende, zoom +/−, recentrage, empilés à droite au-dessus du volet réduit. ViewToggle : « Liste » dans l'en-tête du volet, « Carte » flottante sur la liste ; choix mémorisé.</p>
           <div style="display:grid;gap:var(--s-2);justify-items:center;padding:var(--s-3);border-radius:var(--r-md);background:var(--map-land)">
             <button type="button" class="pill"><svg class="ph" aria-hidden="true"><use href="#ph-arrows-clockwise"/></svg>Voir les alertes ici</button>
             <span class="pill is-info" role="status"><svg class="ph" aria-hidden="true"><use href="#ph-info"/></svg>95 Alerte n'est pas encore disponible dans cette zone.</span>
           </div>
           <p class="ds-note">Pilule contextuelle : une seule à la fois (hors territoire, puis « Voir les alertes ici », puis « n nouvelles alertes »).</p>
         </div>
-        <div class="ds-box" style="grid-template-columns:minmax(0,1fr)"><span class="ds-label"><span class="ds-new">New</span>Carte (phase 3) · fond, zones, regroupements</span>
+        <div class="ds-box" style="grid-template-columns:minmax(0,1fr)"><span class="ds-label">Carte (phase 3) · fond, zones, regroupements</span>
           <div class="map95 map-live lv-2" style="position:relative;height:200px;border-radius:var(--r-md);cursor:default">
             <svg class="map-geo" viewBox="0 0 320 200" width="100%" height="200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
               <path class="geo-dept" d="M-10 -10H250L230 80 260 210H-10Z"/>
@@ -1246,15 +1246,15 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
             <span class="map-pin" style="left:196px;top:120px"><span class="cluster c-s">5</span></span>
             <span class="map-pin" style="left:62px;top:60px"><span class="cluster c-m">12</span></span>
           </div>
-          <p class="ds-note">Fond du Val-d'Oise en kilomètres (communes IGN, quartiers fictifs à Cergy-Pontoise) ; hors département hachuré. <span class="ds-new">New</span>Zone suivie : cercle bleu en pointillés. <span class="ds-new">New</span>AreaShape : polygone à 16 % de la teinte de famille, contour pointillé, marqueur au centre. Vous êtes ici : point bleu et halo de précision. Regroupements : 3 tailles, se divisent au zoom.</p>
+          <p class="ds-note">Fond du Val-d'Oise en kilomètres (communes IGN, quartiers fictifs à Cergy-Pontoise) ; hors département hachuré. Zone suivie : cercle bleu en pointillés. AreaShape : polygone à 16 % de la teinte de famille, contour pointillé, marqueur au centre. Vous êtes ici : point bleu et halo de précision. Regroupements : 3 tailles, se divisent au zoom.</p>
           <ul class="legend-list">
             <li><span class="legend-mark"><span class="legend-swatch area fam-incident"></span></span><span><b>Alerte de zone</b>Inondation, travaux : la zone concernée est dessinée autour du marqueur.</span></li>
             <li><span class="legend-mark"><span class="legend-swatch zone"></span></span><span><b>Votre zone</b>Le rayon suivi (1, 5 ou 10 km).</span></li>
             <li><span class="legend-mark"><span class="legend-swatch outside"></span></span><span><b>Hors Val-d'Oise</b>95 Alerte n'est pas encore disponible dans cette zone.</span></li>
           </ul>
-          <p class="ds-note"><span class="ds-new">New</span>MapLegend : feuille « Comprendre la carte », ouverte par le bouton (i).</p>
+          <p class="ds-note">MapLegend : feuille « Comprendre la carte », ouverte par le bouton (i).</p>
         </div>
-        <div class="ds-box" style="grid-template-columns:minmax(0,1fr)"><span class="ds-label"><span class="ds-new">New</span>Carte (phase 3) · fiche de sélection, filtres, erreur</span>
+        <div class="ds-box" style="grid-template-columns:minmax(0,1fr)"><span class="ds-label">Carte (phase 3) · fiche de sélection, filtres, erreur</span>
           <div class="summary fam-incident">
             <div class="summary-head"><span class="badge badge-type fam-incident"><svg class="ph" aria-hidden="true"><use href="#ph-drop-fill"/></svg>Inondation</span><span class="badge badge-area"><svg class="ph" aria-hidden="true"><use href="#ph-polygon"/></svg>Zone</span><button type="button" class="icon-btn flat" aria-label="Fermer la fiche"><svg class="ph" aria-hidden="true"><use href="#ph-x"/></svg></button></div>
             <h3 class="summary-title">Chemin de halage inondé</h3>
@@ -1263,11 +1263,11 @@ footer{max-width:1200px;margin:64px auto 0;color:var(--text-muted);font:400 var(
             <div class="summary-actions"><div class="vote" role="group" aria-label="Votre avis sur ce signalement"><button class="up" type="button" aria-pressed="false" aria-label="Confirmer, 14 confirmations"><svg class="ph" aria-hidden="true"><use href="#ph-arrow-fat-up"/></svg> <span class="n">14</span></button><button class="down" type="button" aria-pressed="false" aria-label="Contester, 1 contestation"><svg class="ph" aria-hidden="true"><use href="#ph-arrow-fat-down"/></svg> <span class="n">1</span></button></div><span class="summary-comments"><svg class="ph" aria-hidden="true"><use href="#ph-chat-circle"/></svg>3 commentaires</span></div>
             <div class="summary-pager"><button type="button" class="icon-btn flat" aria-label="Alerte précédente"><svg class="ph" aria-hidden="true"><use href="#ph-caret-left"/></svg></button><span>8 sur 10 · balayez pour l'alerte voisine</span><button type="button" class="icon-btn flat" aria-label="Alerte suivante"><svg class="ph" aria-hidden="true"><use href="#ph-caret-right"/></svg></button></div>
           </div>
-          <p class="ds-note">AlertSummary (refonte) : quoi, où, depuis quand, par qui (« Jean D. » ou « Citoyen anonyme »), statut, votes et commentaires ; <span class="ds-new">New</span>SummaryPager : balayage, flèches et annonce « 8 sur 10 ».</p>
+          <p class="ds-note">AlertSummary (refonte) : quoi, où, depuis quand, par qui (« Jean D. » ou « Citoyen anonyme »), statut, votes et commentaires ; SummaryPager : balayage, flèches et annonce « 8 sur 10 ».</p>
           <div class="filter-row"><span class="filter-urgent" aria-hidden="true"><svg class="ph" aria-hidden="true"><use href="#ph-siren-fill"/></svg></span><label class="switch" for="ds-filter-urgent">Seulement les alertes urgentes<input id="ds-filter-urgent" type="checkbox"><span></span></label></div>
-          <p class="ds-note"><span class="ds-new">New</span>FilterRow : marqueur ou pictogramme + interrupteur, dans la feuille « Filtres ».</p>
+          <p class="ds-note">FilterRow : marqueur ou pictogramme + interrupteur, dans la feuille « Filtres ».</p>
           <div class="map-error" style="position:static;padding:var(--s-4);border:1px dashed var(--border);border-radius:var(--r-md)"><span class="spot tone-neutral" aria-hidden="true"><svg class="ph" aria-hidden="true"><use href="#ph-cloud-slash-duotone"/></svg></span><h2>Impossible de charger la carte.</h2><p>Vérifiez votre connexion. La liste des alertes reste disponible.</p><button type="button" class="btn btn-primary btn-block">Réessayer</button><button type="button" class="btn btn-secondary btn-block">Voir la liste</button></div>
-          <p class="ds-note"><span class="ds-new">New</span>MapError : texte du PRD, réessayer, et la liste en secours.</p>
+          <p class="ds-note">MapError : texte du PRD, réessayer, et la liste en secours.</p>
         </div>
       </div>
     </section>
