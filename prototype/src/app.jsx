@@ -451,6 +451,11 @@ function reducer(state, action) {
       const identity = action.identity === "result" ? ({ reussie: "verifiee", en_cours: "en_cours", manuelle: "en_cours" }[state.auth.idResult] || state.session.identity) : action.identity;
       return { ...state, session: { ...state.session, identity } };
     }
+    case "JUMP": { // panneau de démo « Écrans par phase » : ouvre directement un écran ou un état
+      const base = { ...state, sheet: null, modal: null, toasts: [], mapFocus: null, demo: { ...DEFAULT_DEMO, timeSpeed: state.demo.timeSpeed } };
+      const next = action.make(base);
+      return { ...next, nav: { ...next.nav, jump: Date.now() } };
+    }
     case "RESET":
       return { ...initialState(), prefs: state.prefs, session: state.session };
     default:
@@ -3475,6 +3480,134 @@ const STACK_SCREENS = {
 const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet } };
 
 /* =====================================================================
+   ÉCRANS PAR PHASE (panneau de démo) : ouvrir directement ce qui a été réalisé à chaque phase
+   Le prototype complet ne change pas : chaque bouton place l'app dans l'état de l'écran choisi.
+   ===================================================================== */
+const DEMO_GPS = { ...DEFAULT_POSITION, source: "gps", communeId: "pontoise", permission: "granted", radiusKm: 5 };
+const jumpApp = (s, o = {}) => ({
+  ...s,
+  prefs: { ...s.prefs, onboardingSeen: true, reportHintSeen: true, homeView: "map", ...(o.prefs || {}) },
+  session: { ...s.session, status: "in", user: o.guest ? null : USERS.me, identity: o.guest ? "non_verifiee" : "verifiee", method: o.guest ? "invite" : "demo", position: o.position || DEMO_GPS },
+  mapFilter: o.mapFilter || DEFAULT_FILTER,
+  listSort: o.listSort || "relevance",
+  nav: o.nav || { tab: "map", stack: [] },
+  sheet: o.sheet || null,
+  modal: o.modal || null,
+  demo: { ...s.demo, ...(o.demo || {}) },
+  mapFocus: o.mapFocus ? { ...o.mapFocus, key: Date.now() } : null,
+});
+const jumpOnb = (step, slide = 0, o = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: false }, session: { ...s.session, status: "onboarding", user: null, position: o.position || DEFAULT_POSITION }, onb: { step, slide, pending: o.pending } });
+const jumpAuth = (step, extra = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: true }, session: { ...s.session, status: "auth", user: null }, auth: { ...initialAuth(), step, ...extra } });
+const jumpStack = (id) => ({ tab: "map", stack: [{ id, params: {}, key: `${id}-jump` }] });
+const jumpSheet = (id, snap = "half") => ({ id, params: {}, snap });
+const CARNOT = SEED_ALERTS.find((a) => a.id === "a1");
+
+const PHASE_SCREENS = [
+  { n: 0, title: "Fondations techniques et composants", items: [
+    ["Bibliothèque de composants", (s) => jumpApp(s, { nav: jumpStack("components") })],
+    ["Bottom sheet (exemple)", (s) => jumpApp(s, { sheet: jumpSheet("demo-sheet") })],
+    ["Modale de confirmation", (s) => jumpApp(s, { modal: { title: "Supprimer cette alerte ?", body: "Elle ne sera plus visible. Cette action est définitive.", confirmLabel: "Supprimer", destructive: true } })],
+    ["Hors connexion", (s) => jumpApp(s, { demo: { offline: true } })],
+    ["Onglet Activité", (s) => jumpApp(s, { nav: { tab: "activity", stack: [] } })],
+    ["Onglet Profil", (s) => jumpApp(s, { nav: { tab: "profile", stack: [] } })],
+  ] },
+  { n: 1, title: "Démarrage et connexion", items: [
+    ["Démarrage (splash)", (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: true }, session: { ...s.session, status: "splash", user: null } })],
+    ["Connexion", jumpAuth("login")],
+    ["FranceConnect", jumpAuth("fc")],
+    ["FranceConnect · chargement", jumpAuth("fc-loading")],
+    ["FranceConnect · erreur", jumpAuth("fc-error")],
+    ["Se connecter par e-mail", jumpAuth("signin")],
+    ["Inscription · nom", jumpAuth("signup-info")],
+    ["Inscription · téléphone", jumpAuth("signup-phone")],
+    ["Inscription · e-mail", jumpAuth("signup-email")],
+    ["Inscription · identité", jumpAuth("signup-id")],
+    ["Statut de l'identité", jumpAuth("id-status", { idResult: "reussie" })],
+    ["Profil public", jumpAuth("profile")],
+    ["Inscription terminée", jumpAuth("done")],
+    ["Profil sans compte", (s) => jumpApp(s, { guest: true, nav: { tab: "profile", stack: [] } })],
+  ] },
+  { n: 2, title: "Onboarding et territoire", items: [
+    ["Présentation · 1", jumpOnb("slides", 0)],
+    ["Présentation · 2", jumpOnb("slides", 1)],
+    ["Présentation · 3", jumpOnb("slides", 2)],
+    ["Localisation (amorce)", jumpOnb("location")],
+    ["Zone suivie (rayon)", jumpOnb("detected", 0, { position: DEMO_GPS })],
+    ["Préparation de la carte", jumpOnb("prep", 0, { position: DEMO_GPS, pending: { communeId: "pontoise", source: "gps" } })],
+    ["Localisation refusée", jumpOnb("denied")],
+    ["Position introuvable", jumpOnb("unavailable")],
+    ["Choisir sa commune", jumpOnb("commune")],
+    ["Bien démarrer (accueil)", (s) => jumpApp(s, { prefs: { startHidden: false, startVoted: false, startReported: false } })],
+  ] },
+  { n: 3, title: "Accueil : carte interactive", items: [
+    ["Carte d'accueil", (s) => jumpApp(s)],
+    ["Alerte sélectionnée", (s) => jumpApp(s, { mapFocus: { kind: "alert", id: "a1" } })],
+    ["Alerte de zone", (s) => jumpApp(s, { mapFocus: { kind: "alert", id: "a30" } })],
+    ["Bascule en liste", (s) => jumpApp(s, { prefs: { homeView: "list" } })],
+    ["Comprendre la carte", (s) => jumpApp(s, { sheet: jumpSheet("map-legend") })],
+    ["Carte sans position", (s) => jumpApp(s, { position: DEFAULT_POSITION })],
+    ["Zone sans alerte", (s) => jumpApp(s, { demo: { emptyZone: true } })],
+    ["Erreur de chargement", (s) => jumpApp(s, { demo: { networkError: true } })],
+    ["Beaucoup d'alertes", (s) => jumpApp(s, { demo: { manyAlerts: true } })],
+  ] },
+  { n: 4, title: "Liste, recherche et filtres", items: [
+    ["Fil des alertes", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] } })],
+    ["Autour de moi (tri distance)", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, listSort: "distance" })],
+    ["Récentes", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, listSort: "recent" })],
+    ["Trier par", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, sheet: jumpSheet("list-sort") })],
+    ["Filtres", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, sheet: jumpSheet("map-filters", "full") })],
+    ["Filtré : Positives + Culture + 5 km", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, mapFilter: { ...DEFAULT_FILTER, type: "positive", categories: ["culture"], distance: 5 } })],
+    ["Aucun résultat filtré", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, mapFilter: { ...DEFAULT_FILTER, categories: ["sport"], period: "1h" } })],
+    ["Recherche", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [{ id: "search", params: {}, key: "search-jump" }] } })],
+    ["Lieu recherché sur la carte", (s) => jumpApp(s, { mapFocus: { kind: "place", placeKind: "lieu", label: CARNOT.street, sub: "Voie ou lieu · Pontoise", lat: CARNOT.lat, lng: CARNOT.lng, communeId: "pontoise", zoom: 120 } })],
+  ] },
+  { n: 5, title: "Fiche alerte et votes", items: [] },
+  { n: 6, title: "Création d'une alerte (+ Signaler)", items: [] },
+  { n: 7, title: "Commentaires et signalement de contenu", items: [] },
+  { n: 8, title: "Activité et notifications", items: [] },
+  { n: 9, title: "Profil, paramètres, aide, légal", items: [] },
+  { n: 10, title: "États transverses, recette et scénarios de test", items: [], scenarios: true },
+];
+/* Scénarios de test du PRD (§ scénarios) : jouables de bout en bout à la phase 10 */
+const TEST_SCENARIOS = [
+  ["S1", "Première utilisation"], ["S2", "Consultation"], ["S3", "Signalement positif"], ["S4", "Signalement négatif"], ["S5", "Interaction"],
+  ["S6", "Suppression"], ["S7", "Alerte proche"], ["S8", "Traitement"], ["S9", "Commentaire"], ["S10", "Signalement d'un contenu"],
+];
+
+function PhaseScreens({ onJump }) {
+  const { dispatch } = useStore();
+  const lastDone = PHASE_SCREENS.filter((p) => p.items.length).slice(-1)[0].n;
+  const [n, setN] = useState(lastDone);
+  const phase = PHASE_SCREENS[n];
+  return (
+    <section className="phase-screens" aria-labelledby="ps-title">
+      <p className="section-label" id="ps-title">Écrans par phase</p>
+      <div className="phase-tabs" role="group" aria-label="Choisir une phase">
+        {PHASE_SCREENS.map((p) => (
+          <button key={p.n} type="button" className={cx("phase-tab", !p.items.length && "is-todo")} aria-pressed={p.n === n} onClick={() => setN(p.n)}
+            aria-label={`Phase ${p.n} : ${p.title}${p.items.length ? "" : " (à venir)"}`}>{p.n}</button>
+        ))}
+      </div>
+      <p className="phase-name"><b>Phase {phase.n} · {phase.title}</b>{phase.items.length ? `${phase.items.length} écrans et états` : "À venir"}</p>
+      {phase.items.length ? (
+        <div className="list phase-list">
+          {phase.items.map(([label, make]) => (
+            <ListItem key={label} icon="play" label={label} onClick={() => { dispatch({ type: "JUMP", make }); onJump(); }} />
+          ))}
+        </div>
+      ) : phase.scenarios ? (
+        <Fragment>
+          <p className="demo-note">Les scénarios du PRD seront jouables de bout en bout à la dernière phase, une fois tous les écrans réalisés.</p>
+          <div className="list phase-list">
+            {TEST_SCENARIOS.map(([id, label]) => <ListItem key={id} icon="path" label={<Fragment>{id} · {label}<small className="li-sub">Phase 10</small></Fragment>} value="À venir" chevron={false} />)}
+          </div>
+        </Fragment>
+      ) : <p className="demo-note">Les écrans de cette phase apparaîtront ici dès qu'ils seront réalisés.</p>}
+    </section>
+  );
+}
+
+/* =====================================================================
    PANNEAU DE DÉMO (hors de l'app)
    ===================================================================== */
 function DemoPanel() {
@@ -3511,6 +3644,8 @@ function DemoPanel() {
           </div>
           <hr />
           <Button variant="secondary" icon="squares-four" onClick={() => { if (state.session.status !== "in") dispatch({ type: "LOGIN", method: "demo", identity: "verifiee" }); push("components"); setOpen(false); }}>Bibliothèque de composants</Button>
+          <hr />
+          <PhaseScreens onJump={() => setOpen(false)} />
           <Button variant="ghost" icon="arrow-counter-clockwise" onClick={() => confirm({ title: "Réinitialiser le prototype ?", body: "Les alertes, votes et commentaires reviennent à leur état de départ. Vos préférences d'affichage sont conservées.", confirmLabel: "Réinitialiser", onConfirm: () => { reset(); toast("Prototype réinitialisé."); } })}>Réinitialiser</Button>
         </aside>
       ) : null}
@@ -3597,7 +3732,7 @@ function App() {
               ) : (
               <Fragment>
               <main className="screen-area">
-                <TabScreen />
+                <TabScreen key={state.nav.jump || 0} />
                 {state.nav.stack.map((s) => {
                   const def = STACK_SCREENS[s.id];
                   const C = def.component;

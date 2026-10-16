@@ -34,7 +34,7 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 ## Livrables à chaque phase — deux versions, toujours
 
 Une phase n'est terminée que lorsque **les deux versions** sont à jour et publiées :
-1. **Prototype React** : `prototype/src/` → `python3 tools/build_prototype.py` → `prototype/index.html`, publié sur https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw.
+1. **Prototype React** : `prototype/src/` → `python3 tools/build_prototype.py` → `prototype/index.html`, publié sur https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw. Les écrans et états de la phase sont ajoutés au catalogue `PHASE_SCREENS` (panneau Démo › « Écrans par phase », un bouton par écran) ; la dernière phase y rend jouables les scénarios de test du PRD.
 2. **Canevas de preview** (type Design) : une planche `.dc.html` par nouvel écran ou état, en clair et en sombre, reliées entre elles pour le bouton Play, **sans cadre de téléphone** (les planches ne peuvent pas savoir si elles sont affichées sur le canevas ou en Play). Sources dans `prototype/canvas/`, publié sur https://claude.ai/artifact/Sd2XN1KjGF8LzZ1rtBfvm4 (voir `prototype/canvas/README.md`).
 
 ## Conception des écrans — à chaque phase
