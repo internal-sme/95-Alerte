@@ -161,7 +161,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - [x] **3.10** Les alertes expirées n'apparaissent pas sur la carte active
 - [x] **3.11** Pilule « n nouvelles alertes », polygones des alertes de zone, bulle d'aide sur le + au premier lancement ; feuille « Comprendre la carte » (légende)
 
-- [x] **3.C** Canevas de preview : page « Phase 3 · Carte interactive », 19 planches en clair et en sombre (accueil, volet, fiche, alerte voisine, alerte de zone, 3 niveaux de zoom, liste, légende, filtres ; chargement, déplacement, zone affichée, vide, erreur, beaucoup d'alertes, hors Val-d'Oise, sans position), reliées pour Play ; planches générées depuis le rendu du prototype ; feuille de style ré-téléversée (`/_blob/de0d8abfa9909648c4d74114c042874a`)
+- [x] **3.C** Canevas de preview : page « Phase 3 · Carte interactive », 19 planches en clair et en sombre (accueil, volet, fiche, alerte voisine, alerte de zone, 3 niveaux de zoom, liste, légende, filtres ; chargement, déplacement, zone affichée, vide, erreur, beaucoup d'alertes, hors Val-d'Oise, sans position), reliées pour Play ; planches générées depuis le rendu du prototype ; feuille de style ré-téléversée (`/_blob/e3d0578d8626d69187092229b05dae79`)
 
 **Validation** : S2 jouable jusqu'à la bottom sheet ; lisible en mode clair et sombre ; marqueurs distinguables sans la couleur.
 
@@ -177,15 +177,22 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - Filtres en sheet : **grille de catégories cochables** (Grab), chips période et distance, bouton « Voir 18 alertes » qui annonce le nombre de résultats
 - « Autour de moi » = liste triée par distance (Waze « Reports ahead »)
 
-- [ ] **4.1** Composant **AlertCard** : badges type/catégorie et statut, titre, lieu, distance, ancienneté, photo optionnelle, ⬆ ⬇ 💬, compteur d'expiration
-- [ ] **4.2** ALERT-01 **Liste** avec onglets **Toutes / Positives / Négatives**
-- [ ] **4.3** Fil : À proximité · Récentes · Populaires ; classement combinant proximité, récence, importance et engagement
-- [ ] **4.4** Écran **« Autour de moi »** : distance, catégorie, heure, importance, statut
-- [ ] **4.5** UI-012 **Recherche** : villes, quartiers, rues, événements, catégories ; suggestions, recherches récentes, « aucun résultat »
-- [ ] **4.6** **Panneau de filtres** (bottom sheet) : type, catégories (dynamiques), période (maintenant / 6 h / aujourd'hui / 24 h / personnalisée), distance (500 m → territoire) ; compteur de résultats, réinitialiser ; filtres partagés entre carte et liste
-- [ ] **4.7** États : skeletons, liste vide (« Aucune alerte dans cette zone… »), recherche sans résultat
+**Décisions validées par l'utilisateur (« vas-y » sur les recommandations du rapport `docs/benchmark/liste-refonte.html`)**
+- **F1** : « Autour de moi » = tri Distance du fil Alertes (intertitres par tranche), pas un écran séparé
+- **F2** : AlertCard compacte, vignette de 72 px à droite seulement s'il y a une photo
+- **F3** : la recherche montre un lieu sur la carte sans changer la zone suivie ; « Suivre cette zone » la change
+- **F4** : période en puces 1 h · 6 h · aujourd'hui · 24 h ; la période personnalisée viendra avec l'historique (phase 8)
+- **F5** : 5 recherches récentes au plus, sur l'appareil, effaçables
 
-- [ ] **4.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+- [x] **4.1** **AlertCard** compacte : famille, catégorie, « Urgent », ancienneté, titre (2 lignes), lieu et distance, vignette photo à droite, ⬆ ⬇ 💬, statut (dont « Expire dans … »)
+- [x] **4.2** ALERT-01 **Liste** : puces Toutes / Positives / Négatives partagées avec la carte, barre de recherche et Filtres collantes, compteur « n alertes »
+- [x] **4.3** Fil : À proximité · Récentes · Populaires (3 alertes chacune, « Tout voir »), puis le reste par pertinence (formule dans ARCHITECTURE.md) ; fin de fil « Vous êtes à jour »
+- [x] **4.4** **« Autour de moi »** = tri Distance (Moins de 1 km, 1 à 5 km, 5 à 10 km, au-delà) ; tri Récentes (dernière heure, 1 à 6 h, 6 à 24 h) ; feuille « Trier par »
+- [x] **4.5** UI-012 **Recherche** : 184 communes, quartiers, voies et lieux, alertes, catégories ; groupes, saisie en gras, insensible aux accents ; « Autour de moi », 5 recherches récentes effaçables ; « Aucun résultat pour « … » » ; hors territoire ; clavier (flèches, Entrée) ; un lieu centre la carte
+- [x] **4.6** **Panneau de filtres** : tri, type, catégories en grille (Négatives / Positives), période, distance (500 m → Val-d'Oise), urgentes ; « Voir n alertes » recalculé ; « Tout effacer » ; filtres actifs retirables ; partagés carte / liste
+- [x] **4.7** États : squelettes, « Aucune alerte dans cette zone. Revenez plus tard ou élargissez votre zone de recherche. », vide filtré (« Effacer les filtres »), recherche sans résultat
+
+- [x] **4.C** Canevas : page « Phase 4 · Liste, recherche et filtres », 16 planches en clair et en sombre reliées pour Play ; planches de la phase 3 régénérées (cartes compactes, recherche)
 
 **Validation** : filtrer « Positives + Culture + 5 km » donne le même résultat sur la carte et dans la liste ; la recherche d'une commune recentre la carte.
 
@@ -400,3 +407,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-15 | 3 | Retour utilisateur : la cloche sortait de l'écran avec une commune longue (« Franconville ») : la grille de l'en-tête s'élargissait au contenu ; elle tronque maintenant le libellé (« Franconville · rechercher »). Cohérence : l'onglet Alertes reprend les puces et la feuille Filtres de la carte (filtre partagé) ; la carte de l'onboarding (zone suivie, préparation) utilise le même fond réel que l'accueil ; planches du canevas mises à jour. |
 | 2026-10-15 | 3 | Correctif : la bibliothèque de composants plantait en exploration sans compte (aperçu « Signalé par … » lisant un utilisateur absent). L'aperçu utilise la personne fictive de démonstration et `publicName` accepte l'absence de compte. |
 | 2026-10-16 | 4 | PR de la phase 3 (internal-sme/95-Alerte#13) fusionnée ; branche `phase/4-liste-recherche` créée depuis `develop`, étiquettes « New » de la phase 3 retirées. Benchmark Mobbin de la liste, de la recherche et des filtres (`docs/benchmark/liste-refonte.html`, publié sur https://claude.ai/artifact/E5PPNXtVreNP2fhnQGjy5X) : 12 flows (Uber Eats, Places, Apple Store, Pangea, Skip, Beli, Mindtrip, Gojek, Tock et Hypelist, Citizen, Nextdoor, Swarm), états vides, matrice, 10 enseignements, audit, 8 écrans cibles, plan en 6 lots (L0 à L5, tâches 4.1 à 4.7). Décisions F1 à F5 en attente. |
+| 2026-10-16 | 4 | Phase 4 réalisée selon F1 à F5 : AlertCard compacte, fil en sections avec tri (Pertinence, Distance = Autour de moi, Récentes), feuille de filtres complète avec compteur, filtres actifs retirables, recherche sur tout le territoire (lieu centré sur la carte sans changer la zone suivie, récentes), états. Validation vérifiée : « Positives + Culture + 5 km » → 1 alerte sur la liste et sur la carte (alerte de démo ajoutée à Pontoise). Design System : composants étiquetés « New » ; ARCHITECTURE.md : filtre, tri, pertinence et recherche. |

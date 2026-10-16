@@ -175,6 +175,16 @@ prototype/index.html
 
 ---
 
+### Filtre, tri et recherche (phase 4)
+
+- **Un seul filtre** dans le store (`mapFilter` : type, catégories, période, distance, urgentes seulement), appliqué par `mapFilterMatch` à la carte comme à la liste : « Positives + Culture + 5 km » donne le même résultat partout. Seules les alertes actives et non expirées sont filtrées (règle des 24 h).
+- **Tri de la liste** (`listSort`) : Pertinence, Distance (« Autour de moi », décision F1), Récentes.
+- **Pertinence** = 0,4 × proximité + 0,3 × récence + 0,2 × importance + 0,1 × engagement, chaque terme entre 0 et 1 :
+  proximité = 1 − distance / 20 km (0,5 sans position) ; récence = 1 − âge / 24 h ; importance = 1 (critique), 0,6 (élevée), 0,3 (normale) ; engagement = (confirmations + commentaires) / 50, plafonné à 1.
+  Le fil affiche d'abord trois sections de trois alertes sans doublon (À proximité, Récentes, Populaires), puis le reste par pertinence.
+- **Recherche** : index local (communes et intercommunalités de `map-95.json`, quartiers fictifs, voies et lieux des alertes, alertes visibles, catégories), insensible aux accents et à la casse. Choisir un lieu centre la carte et liste ses alertes sans changer la zone suivie (F3) ; « Suivre cette zone » la change explicitement.
+- **Recherches récentes** : 5 au plus, dans les préférences locales (`localStorage`, dans un `try/catch`), effaçables, jamais transmises (F5).
+
 ## 7. Stack technique proposée (à valider)
 
 > Proposition à valider. Elle répond aux contraintes du CDC (carte au centre, données géospatiales, anonymat traçable, localisation sensible, accessibilité) et privilégie un **langage unique, TypeScript**, ainsi qu'un **hébergement en France**.

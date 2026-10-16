@@ -24,6 +24,10 @@
     {
       "id": "p3",
       "name": "Phase 3 · Carte interactive"
+    },
+    {
+      "id": "p4",
+      "name": "Phase 4 · Liste, recherche et filtres"
     }
   ],
   "boards": {
@@ -37,13 +41,13 @@
       "page": "p3"
     },
     "Alerts.dc.html": {
-      "x": 470,
+      "x": 0,
       "y": 0,
       "w": 390,
       "h": 844,
-      "title": "Alertes",
+      "title": "Alertes · fil (pertinence)",
       "is_interactive": true,
-      "page": "p0"
+      "page": "p4"
     },
     "Report.dc.html": {
       "x": 940,
@@ -82,13 +86,13 @@
       "page": "p3"
     },
     "Alerts-dark.dc.html": {
-      "x": 470,
+      "x": 0,
       "y": 1200,
       "w": 390,
       "h": 844,
-      "title": "Alertes (sombre)",
+      "title": "Alertes · fil (pertinence) (sombre)",
       "is_interactive": true,
-      "page": "p0"
+      "page": "p4"
     },
     "Report-dark.dc.html": {
       "x": 940,
@@ -127,13 +131,13 @@
       "page": "p0"
     },
     "AlertsEmpty.dc.html": {
-      "x": 470,
+      "x": 1410,
       "y": 2400,
       "w": 390,
       "h": 844,
-      "title": "État · Zone sans alerte",
+      "title": "Alertes · zone sans alerte",
       "is_interactive": true,
-      "page": "p0"
+      "page": "p4"
     },
     "Sheet.dc.html": {
       "x": 940,
@@ -1303,6 +1307,267 @@
       "title": "Hors Val-d'Oise (sombre)",
       "is_interactive": true,
       "page": "p3"
+    },
+    "AlertsDistance.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · autour de moi (distance)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsDistance-dark.dc.html": {
+      "x": 470,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · autour de moi (distance) (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsRecent.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · récentes",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsRecent-dark.dc.html": {
+      "x": 940,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · récentes (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsSort.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Trier par",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsSort-dark.dc.html": {
+      "x": 1410,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Trier par (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "Filters.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Filtres",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "Filters-dark.dc.html": {
+      "x": 1880,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Filtres (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "FiltersSet.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Filtres · Positives, Culture, 5 km",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "FiltersSet-dark.dc.html": {
+      "x": 2350,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Filtres · Positives, Culture, 5 km (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsFiltered.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes filtrées",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsFiltered-dark.dc.html": {
+      "x": 2820,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes filtrées (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "Search.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "Search-dark.dc.html": {
+      "x": 3290,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "SearchTyped.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche · saisie « car »",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "SearchTyped-dark.dc.html": {
+      "x": 3760,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche · saisie « car » (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "MapPlace.dc.html": {
+      "x": 4230,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Carte · lieu recherché",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "MapPlace-dark.dc.html": {
+      "x": 4230,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Carte · lieu recherché (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "SearchRecents.dc.html": {
+      "x": 4700,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche · récentes",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "SearchRecents-dark.dc.html": {
+      "x": 4700,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche · récentes (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsLoading.dc.html": {
+      "x": 0,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · chargement",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsLoading-dark.dc.html": {
+      "x": 0,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · chargement (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsEnd.dc.html": {
+      "x": 470,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · fin de fil",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsEnd-dark.dc.html": {
+      "x": 470,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · fin de fil (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsNoMatch.dc.html": {
+      "x": 940,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · aucun résultat filtré",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsNoMatch-dark.dc.html": {
+      "x": 940,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · aucun résultat filtré (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "AlertsEmpty-dark.dc.html": {
+      "x": 1410,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alertes · zone sans alerte (sombre)",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "SearchNone.dc.html": {
+      "x": 1880,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche · aucun résultat",
+      "is_interactive": true,
+      "page": "p4"
+    },
+    "SearchNone-dark.dc.html": {
+      "x": 1880,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Recherche · aucun résultat (sombre)",
+      "is_interactive": true,
+      "page": "p4"
     }
   },
   "order": [
@@ -1447,7 +1712,36 @@
     "MapMany.dc.html",
     "MapMany-dark.dc.html",
     "MapOutside.dc.html",
-    "MapOutside-dark.dc.html"
+    "MapOutside-dark.dc.html",
+    "AlertsDistance.dc.html",
+    "AlertsDistance-dark.dc.html",
+    "AlertsRecent.dc.html",
+    "AlertsRecent-dark.dc.html",
+    "AlertsSort.dc.html",
+    "AlertsSort-dark.dc.html",
+    "Filters.dc.html",
+    "Filters-dark.dc.html",
+    "FiltersSet.dc.html",
+    "FiltersSet-dark.dc.html",
+    "AlertsFiltered.dc.html",
+    "AlertsFiltered-dark.dc.html",
+    "Search.dc.html",
+    "Search-dark.dc.html",
+    "SearchTyped.dc.html",
+    "SearchTyped-dark.dc.html",
+    "MapPlace.dc.html",
+    "MapPlace-dark.dc.html",
+    "SearchRecents.dc.html",
+    "SearchRecents-dark.dc.html",
+    "AlertsLoading.dc.html",
+    "AlertsLoading-dark.dc.html",
+    "AlertsEnd.dc.html",
+    "AlertsEnd-dark.dc.html",
+    "AlertsNoMatch.dc.html",
+    "AlertsNoMatch-dark.dc.html",
+    "AlertsEmpty-dark.dc.html",
+    "SearchNone.dc.html",
+    "SearchNone-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -1605,6 +1899,47 @@
       "fill": "blue",
       "page": "p3",
       "text": "Phase 3 · carte interactive (rapport docs/benchmark/carte-refonte.html)\n\nPlay sur « Accueil · carte » : touchez un marqueur (incendie, Pontoise) pour la fiche, puis ‹ › pour l'alerte voisine ; le regroupement « 2 » ouvre l'alerte de zone (inondation, polygone) ; + / − passent du quartier à l'intercommunalité puis au département ; (i) ouvre la légende, le bouton Filtres la feuille de filtres, « Liste » la bascule ; le recentrage simule un déplacement (« Voir les alertes ici »).\n\nFond : 184 communes réelles (IGN), 12 intercommunalités, quartiers fictifs à Cergy-Pontoise ; hors département hachuré.\n\nVersion React complète (glisser, pincer, molette, clavier, mode démo) : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+    },
+    "p4Light": {
+      "x": 0,
+      "y": -300,
+      "text": "Liste, recherche et filtres · clair",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p4"
+    },
+    "p4Dark": {
+      "x": 0,
+      "y": 900,
+      "text": "Liste, recherche et filtres · sombre",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p4"
+    },
+    "p4States": {
+      "x": 0,
+      "y": 2100,
+      "text": "États · clair",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p4"
+    },
+    "p4StatesDark": {
+      "x": 0,
+      "y": 3300,
+      "text": "États · sombre",
+      "kind": "title1",
+      "maxW": 5090,
+      "page": "p4"
+    },
+    "p4How": {
+      "x": 2820,
+      "y": 2400,
+      "w": 340,
+      "maxH": 700,
+      "fill": "blue",
+      "page": "p4",
+      "text": "Phase 4 · liste, recherche et filtres (rapport docs/benchmark/liste-refonte.html)\n\nPlay sur « Alertes · fil » : « ⇅ Pertinence » ouvre le tri (Distance = Autour de moi), le bouton Filtres la feuille (Positives + Culture + 5 km → 1 alerte, même résultat sur la carte), la barre de recherche la recherche (« car » → rue Carnot → la carte se centre sur le lieu, « Suivre cette zone » / « Revenir à ma zone »).\n\nDécisions : F1 Autour de moi = tri Distance ; F2 vignette à droite ; F3 la recherche ne change pas la zone suivie ; F4 période 1 h · 6 h · aujourd'hui · 24 h ; F5 5 recherches récentes sur l'appareil.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
     }
   },
   "designSystems": []
