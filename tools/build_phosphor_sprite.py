@@ -39,6 +39,8 @@ ICONS = [
     "play", "fast-forward", "arrow-counter-clockwise", "path", "circle",
     # Carte (phase 3)
     "minus", "polygon", "arrows-out-simple",
+    # Liste, recherche et filtres (phase 4)
+    "arrows-down-up", "clock-counter-clockwise", "arrow-up",
 ]
 FILL = [
     "map-trifold", "list-bullets", "pulse", "user-circle", "bell", "arrow-fat-up",

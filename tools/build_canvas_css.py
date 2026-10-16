@@ -69,7 +69,8 @@ a.pill{text-decoration:none}
 .tap-through{display:flex;flex-direction:column;flex:1;color:inherit}
 /* Carte (phase 3) : écran plein cadre, volet avec sous-titre */
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto;background:var(--bg)}
-.map-screen{overflow:hidden}
+.map-screen{overflow:hidden;z-index:0}
+.stack-layer{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;background:var(--bg)}
 .bs-titles{flex:1;min-width:0}
 .bs-titles h2{margin:0;font:600 var(--fs-h3)/var(--lh-h3) var(--font)}
 .bs-titles p{margin:2px 0 0;color:var(--text-muted);font:400 var(--fs-caption)/1.4 var(--font)}
