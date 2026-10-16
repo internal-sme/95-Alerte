@@ -35,7 +35,7 @@
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (internal-sme/95-Alerte#11) |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ✅ Terminée (validée, PR vers `develop`) |
-| 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ⬜ À faire |
+| 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | 🟨 En cours (branche `phase/4-liste-recherche`) |
 | 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ⬜ À faire |
 | 7 | Commentaires + signalement de contenu | ALERT-04 | ⬜ À faire |
@@ -399,3 +399,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-15 | 3 | Phase 3 réalisée selon les recommandations E1–E5 du benchmark : carte SVG du Val-d'Oise (184 communes IGN, 12 intercommunalités, quartiers fictifs de Cergy-Pontoise) générée par `tools/build_map_95.py`, zoom à 4 niveaux, regroupements recalculés, alertes de zone, fiche avec balayage, liste mémorisée, filtres, légende, états. Design System : composants de carte étiquetés « New » ; étiquettes de la phase 2 retirées (fusionnée). Prototype et canevas publiés ; en attente de validation de l'utilisateur. |
 | 2026-10-15 | 3 | Retour utilisateur : la cloche sortait de l'écran avec une commune longue (« Franconville ») : la grille de l'en-tête s'élargissait au contenu ; elle tronque maintenant le libellé (« Franconville · rechercher »). Cohérence : l'onglet Alertes reprend les puces et la feuille Filtres de la carte (filtre partagé) ; la carte de l'onboarding (zone suivie, préparation) utilise le même fond réel que l'accueil ; planches du canevas mises à jour. |
 | 2026-10-15 | 3 | Correctif : la bibliothèque de composants plantait en exploration sans compte (aperçu « Signalé par … » lisant un utilisateur absent). L'aperçu utilise la personne fictive de démonstration et `publicName` accepte l'absence de compte. |
+| 2026-10-16 | 4 | PR de la phase 3 (internal-sme/95-Alerte#13) fusionnée ; branche `phase/4-liste-recherche` créée depuis `develop`, étiquettes « New » de la phase 3 retirées. Benchmark Mobbin de la liste, de la recherche et des filtres (`docs/benchmark/liste-refonte.html`, publié sur https://claude.ai/artifact/E5PPNXtVreNP2fhnQGjy5X) : 12 flows (Uber Eats, Places, Apple Store, Pangea, Skip, Beli, Mindtrip, Gojek, Tock et Hypelist, Citizen, Nextdoor, Swarm), états vides, matrice, 10 enseignements, audit, 8 écrans cibles, plan en 6 lots (L0 à L5, tâches 4.1 à 4.7). Décisions F1 à F5 en attente. |

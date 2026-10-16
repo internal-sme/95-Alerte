@@ -1,0 +1,440 @@
+<!-- Source du rapport : python3 tools/build_benchmark_refonte.py liste-refonte → docs/benchmark/liste-refonte.html -->
+<title>Liste, recherche et filtres</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/*TAILWIND*/
+</style>
+
+<header class="border-b border-line">
+  <div class="wrap grid gap-8 py-12 sm:py-16 lg:grid-cols-[1.25fr_1fr] lg:items-end">
+    <div class="grid gap-5">
+      <p class="eyebrow">95 Alerte · Benchmark Mobbin · phase 4 · octobre 2026</p>
+      <h1 class="text-4xl font-extrabold leading-[1.05] sm:text-6xl">Liste, recherche et filtres : <span class="hl">trouver vite, sans se perdre</span>.</h1>
+      <p class="lede">Nous avons passé en revue une vingtaine de flows iOS de recherche, de filtres, de tri et de fils locaux sur Mobbin, et en avons retenu douze. Pour chacun, le rapport détaille les points forts en patterns de design, en expérience utilisateur et en direction artistique. Il se termine par un audit de notre onglet Alertes, de la liste de l'accueil, de la feuille de filtres et de la recherche, puis par un plan de refonte aligné sur les tâches 4.1 à 4.7 de <span class="font-mono text-base">docs/task.md</span>.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="chip">12 flows retenus</span><span class="chip">20 flows analysés</span><span class="chip">40 écrans cités</span><span class="chip">Plan en 6 lots</span>
+      </div>
+    </div>
+    <nav class="card toc p-5 text-sm" aria-label="Sommaire">
+      <p class="eyebrow mb-3">Sommaire</p>
+      <ol class="grid gap-1.5">
+        <li><a href="#methode">1. Méthode et grille de lecture</a></li>
+        <li><a href="#flows">2. Les 12 flows</a></li>
+        <li><a href="#vides">3. Les états vides</a></li>
+        <li><a href="#matrice">4. Matrice des patterns</a></li>
+        <li><a href="#lecons">5. Dix enseignements</a></li>
+        <li><a href="#da">6. Direction artistique</a></li>
+        <li><a href="#audit">7. Audit de nos écrans</a></li>
+        <li><a href="#cible">8. Écrans cibles et états</a></li>
+        <li><a href="#plan">9. Plan de refonte détaillé</a></li>
+        <li><a href="#decisions">10. Décisions à prendre</a></li>
+      </ol>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="methode" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">01 · Méthode</p><h2 class="h2">Trois critères, une note sur 5</h2>
+    <p class="lede">Nous avons cherché sur Mobbin (iOS) des recherches avec suggestions et recherches récentes, des feuilles de filtres avec compteur de résultats, des grilles de catégories, des tris par distance, des fils d'actualité locale et des états sans résultat. La grille est la même que pour la carte et l'onboarding.</p></div>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="card p-5"><p class="font-display text-lg font-bold">Patterns de design</p><p class="mt-2 text-sm text-muted">La barre de recherche, les suggestions, les puces de filtre, la feuille de filtres, le tri, les sections du fil, la carte de liste et l'état vide.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Expérience utilisateur</p><p class="mt-2 text-sm text-muted">Trouver une alerte, un lieu ou une catégorie en quelques touchers ; savoir ce qu'un filtre change avant de le valider ; ne jamais rester bloqué sur un écran vide.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Direction artistique</p><p class="mt-2 text-sm text-muted">La densité de la liste, la hiérarchie typographique des cartes, la retenue des couleurs, la lisibilité en clair et en sombre.</p></div>
+  </div>
+  <p class="text-sm text-muted">Les images sont des aperçus Mobbin à basse résolution, avec leur mention « curated by Mobbin ». Chaque flow renvoie à sa page Mobbin. Rapports liés : <span class="font-mono">carte-refonte.html</span> (phase 3) et <span class="font-mono">benchmark-mobbin.html</span>.</p>
+</section>
+
+<section id="flows" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-10 py-14">
+    <div class="grid gap-3"><p class="eyebrow">02 · Les 12 flows</p><h2 class="h2">De la recherche au vide qui aide</h2>
+      <p class="lede">Uber Eats, Places, Apple Store, Pangea et Skip montrent la recherche : récentes, suggestions mêlées, carte recentrée. Beli, Mindtrip et Gojek montrent la feuille de filtres et son compteur. Tock et Hypelist font du tri une puce. Citizen et Nextdoor organisent un fil local. Swarm montre un vide qui nomme son levier.</p></div>
+
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">01</p><h3 class="text-2xl font-bold">Uber Eats · Recherche, puces de filtre et feuille « Appliquer »</h3><p class="text-sm text-muted">Livraison · <a href="https://mobbin.com/flows/52ac7424-2f24-40d0-94df-6413f17bd420">recherche</a>, <a href="https://mobbin.com/flows/e7ab42f1-5356-49cd-b5d4-2c31b181fdd9">filtres</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:ubereats-search}}" alt="Uber Eats : recherche vide avec recherches récentes en puces et catégories principales"><figcaption><b>Avant de taper</b>Récentes en puces, catégories en liste.</figcaption></figure>
+        <figure class="shot"><img src="{{img:ubereats-results}}" alt="Uber Eats : résultats « Chicken » avec onglets, puces Note, Prix, Tri et vignettes de catégories"><figcaption><b>Puces sous la recherche</b>Prix, Note, Tri : un toucher chacune.</figcaption></figure>
+        <figure class="shot"><img src="{{img:ubereats-sheet}}" alt="Uber Eats : feuille Prix avec quatre choix, bouton Apply et lien Reset"><figcaption><b>Une feuille par puce</b>Appliquer en noir, Réinitialiser en texte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:ubereats-filtered}}" alt="Uber Eats : puce active en noir, « 23 results » et bouton Reset"><figcaption><b>Le résultat se compte</b>« 23 results » et Reset à droite.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Puces de filtre horizontales sous la barre ; une puce active devient pleine.</li><li>Une feuille courte par puce, deux actions : Appliquer, Réinitialiser.</li><li>Ligne de résultat : « 23 results » + Reset.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Les recherches récentes évitent de retaper.</li><li>Le compteur de résultats confirme l'effet du filtre.</li><li>Réinitialiser est toujours à un toucher.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Noir réservé à l'état actif ; fond clair, cartes photo.</li><li>Typographie unique, puces arrondies cohérentes partout.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Les puces sous la recherche (déjà là en phase 3) et la ligne « 18 alertes · Effacer les filtres » quand un filtre est actif. Les recherches récentes en puces.</p><p><b>À éviter.</b> Les photos géantes en tête de carte : nos alertes ont rarement une photo, un bandeau vide coûte un écran.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">02</p><h3 class="text-2xl font-bold">Places · Suggestions mêlées et tri par distance</h3><p class="text-sm text-muted">Lieux · <a href="https://mobbin.com/flows/64e98700-11fe-4926-b935-60de08c0e195">recherche</a>, <a href="https://mobbin.com/flows/bfdd122b-c5d4-4c1d-9750-bbab54e2d53a">tri</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:places-suggest}}" alt="Places : en tapant « Cafe », suggestions de termes puis de lieux avec ville"><figcaption><b>Termes et lieux mêlés</b>Les termes d'abord, puis les lieux précis.</figcaption></figure>
+        <figure class="shot"><img src="{{img:places-result}}" alt="Places : la carte se recentre sur le lieu choisi, carte du lieu en bas"><figcaption><b>Choisir recentre</b>La carte va au lieu, la fiche monte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:places-sortsheet}}" alt="Places : feuille Trier par avec Distance et Récemment ajouté"><figcaption><b>Tri explicite</b>Deux choix, bouton radio.</figcaption></figure>
+        <figure class="shot"><img src="{{img:places-distance}}" alt="Places : liste triée par distance, regroupée sous « Los Angeles, CA »"><figcaption><b>Sections par lieu</b>Le tri par distance regroupe par ville.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Suggestions en deux familles : requêtes (flèche ↖) et lieux (flèche →).</li><li>Tri dans une puce « ⇅ Distance » qui ouvre une feuille.</li><li>Liste triée par distance avec intertitres de ville.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Choisir un lieu recentre la carte : l'utilisateur voit où il arrive.</li><li>Le tri annoncé dans la puce dit pourquoi l'ordre est celui-là.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Fond crème, police mono pour les métadonnées : très éditorial.</li><li>Vignettes carrées à gauche, texte sur trois lignes.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La recherche qui mêle communes, quartiers, rues et alertes, avec un type lisible. La puce de tri « Distance » qui ouvre une feuille. Les intertitres par commune en tri par distance.</p><p><b>À éviter.</b> La police mono pour tout le texte : chez nous, Inter partout, le mono reste au Design System.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">03</p><h3 class="text-2xl font-bold">Apple Store · Récentes, saisie surlignée, résultat principal</h3><p class="text-sm text-muted">Commerce · <a href="https://mobbin.com/flows/0f897724-24ac-485e-82e6-00c16dcce6dd">recherche</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:apple-recent}}" alt="Apple Store : Trouver les magasins proches, recherches récentes avec Effacer"><figcaption><b>Récentes effaçables</b>« Effacer » à droite du titre.</figcaption></figure>
+        <figure class="shot"><img src="{{img:apple-suggest}}" alt="Apple Store : suggestions avec le mot tapé « Store » en gras"><figcaption><b>Le mot tapé en gras</b>On voit pourquoi ça correspond.</figcaption></figure>
+        <figure class="shot"><img src="{{img:apple-result}}" alt="Apple Store : Top Result en carte, bascule Liste / Carte, autres résultats"><figcaption><b>Résultat principal</b>Liste / Carte au-dessus.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Raccourci « Trouver près de moi » en tête de recherche.</li><li>Correspondance en gras dans chaque suggestion.</li><li>Résultat principal en grande carte, puis « Plus de résultats ».</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Effacer les récentes respecte la vie privée.</li><li>Le surlignage rend la liste lisible en diagonale.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Liste système sobre, séparateurs fins, bleu iOS pour les actions.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> « Autour de moi » comme première ligne de la recherche vide. Le mot tapé en gras. Les recherches récentes effaçables (préférence locale, jamais transmise).</p><p><b>À éviter.</b> Le « Annuler » texte bleu iOS : nous gardons nos boutons du Design System (fermer = bouton icône ×).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">04</p><h3 class="text-2xl font-bold">Pangea Charging · Lieu recherché, carte recentrée</h3><p class="text-sm text-muted">Mobilité · <a href="https://mobbin.com/flows/c1c73804-e170-463e-b1a7-7d10f89143e2">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:pangea-map}}" alt="Pangea : carte avec beaucoup de marqueurs, puces Fastest et Cheapest, volet"><figcaption><b>Point de départ</b>Carte, puces, volet.</figcaption></figure>
+        <figure class="shot"><img src="{{img:pangea-recent}}" alt="Pangea : recherches récentes avec adresse complète sous chaque nom"><figcaption><b>Récentes avec adresse</b>Nom en gras, adresse en gris.</figcaption></figure>
+        <figure class="shot"><img src="{{img:pangea-result}}" alt="Pangea : lieu choisi au centre avec étoile et fiche en bas"><figcaption><b>Arrivée sur la carte</b>Le lieu au centre, la fiche dessous.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Récentes en liste avec icône de lieu et adresse.</li><li>Le champ garde le lieu choisi, avec × pour revenir.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Choisir un lieu = la carte s'y centre, sans changer d'écran.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Pictogramme de lieu noir, liste dense mais aérée.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Critère de validation de la phase : « la recherche d'une commune recentre la carte ». Le champ garde le lieu choisi, avec × pour revenir à ma zone.</p><p><b>À éviter.</b> Les récentes en double (même lieu trois fois) : dédoublonner.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">05</p><h3 class="text-2xl font-bold">Skip · Catégories dans la recherche, « près de vous »</h3><p class="text-sm text-muted">Livraison · <a href="https://mobbin.com/flows/de4ea821-ad40-43ee-b416-f2cdbdfc87e4">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:skip-search}}" alt="Skip : recherche « burgers » avec catégorie Burgers et section Lieux près de vous"><figcaption><b>Résultats groupés</b>Catégorie, puis lieux proches.</figcaption></figure>
+        <figure class="shot"><img src="{{img:skip-near}}" alt="Skip : liste « burgers » près de vous avec bouton flottant Trier"><figcaption><b>Tri flottant</b>« Sort » en pilule flottante.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Résultats groupés par type : catégorie, puis lieux proches, avec « Tout voir ».</li><li>Bouton « Trier » flottant en bas de liste.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Une requête peut viser une catégorie : on propose d'en faire un filtre.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Liste blanche, logos carrés, orange de marque en accent.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Taper « incendie » ou « voirie » propose la catégorie comme filtre, puis les alertes correspondantes. Les groupes avec « Tout voir ».</p><p><b>À éviter.</b> Le bouton flottant de tri, qui ferait concurrence au + Signaler : le tri reste en haut de liste.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">06</p><h3 class="text-2xl font-bold">Beli · Feuille de filtres, tri segmenté, vide utile</h3><p class="text-sm text-muted">Restaurants · <a href="https://mobbin.com/flows/8fcf91fb-835a-4947-8aac-7bcc740f141d">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:beli-list}}" alt="Beli : liste numérotée avec puces Ville, Ouvert maintenant et bouton Voir la carte"><figcaption><b>Puces + Voir la carte</b>Pilule carte flottante.</figcaption></figure>
+        <figure class="shot"><img src="{{img:beli-sheet}}" alt="Beli : feuille avec Trier par (segmenté), filtres en sections repliables, Apply (1)"><figcaption><b>Tri en tête de feuille</b>Score, Distance, Date.</figcaption></figure>
+        <figure class="shot"><img src="{{img:beli-sub}}" alt="Beli : section Good For dépliée avec cases et Apply (3)"><figcaption><b>Compteur dans le bouton</b>« Apply (3) ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:beli-empty}}" alt="Beli : No results, Try some different filters, bouton Clear filters"><figcaption><b>Vide qui aide</b>« Effacer les filtres ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Feuille unique : tri segmenté en haut, filtres en sections dessous.</li><li>Le bouton d'application porte le nombre de filtres actifs.</li><li>Vide : titre, conseil, bouton « Effacer les filtres ».</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'utilisateur sait combien de filtres il applique avant de valider.</li><li>Le vide ne laisse jamais dans une impasse.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Vert sapin de marque, contours fins, icônes au trait en tête de section.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La structure de notre feuille de filtres : Trier par (segmenté) → Type → Catégories → Période → Distance, et le bouton « Voir 18 alertes ». Le vide avec « Effacer les filtres ».</p><p><b>À éviter.</b> Les sections repliées par défaut : nos 4 blocs tiennent dépliés sur un écran.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">07</p><h3 class="text-2xl font-bold">Mindtrip · Distance en puces, « Afficher les lieux »</h3><p class="text-sm text-muted">Voyage · <a href="https://mobbin.com/flows/c1683f77-078c-4c6a-aef7-c1d6adadf29b">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:mindtrip-filters}}" alt="Mindtrip : feuille Filtres avec Distance 1, 3, 10, 30 miles en puces et bouton Show places"><figcaption><b>Distance en puces</b>1 · 3 · 10 · 30.</figcaption></figure>
+        <figure class="shot"><img src="{{img:mindtrip-result}}" alt="Mindtrip : carte filtrée, badge 1 sur le bouton filtres"><figcaption><b>Badge sur le bouton</b>Le filtre actif se voit.</figcaption></figure>
+        <figure class="shot"><img src="{{img:mindtrip-map}}" alt="Mindtrip : carte avec recherche et volet For you"><figcaption><b>Carte et volet</b>Recherche + filtres en haut.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Rayons en puces à choix unique.</li><li>Bouton principal au libellé d'action : « Afficher les lieux ».</li><li>Badge numérique sur l'icône filtres.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Pas de curseur : quatre valeurs suffisent et se touchent au pouce.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Noir et blanc, grands titres, aucune couleur superflue.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Distance en puces : 500 m · 1 km · 5 km · 10 km · Tout le Val-d'Oise. Le badge sur le bouton Filtres (déjà en phase 3).</p><p><b>À éviter.</b> Le curseur de distance (absent ici, mais tentant) : moins précis au pouce.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">08</p><h3 class="text-2xl font-bold">Gojek · Grille de catégories avec icônes</h3><p class="text-sm text-muted">Services · <a href="https://mobbin.com/flows/20cd9384-0c75-49c2-8231-25f10bd022a3">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:gojek-list}}" alt="Gojek : historique avec puces Date, Services, Méthodes"><figcaption><b>Puces de filtre</b>Date, Services, Méthodes.</figcaption></figure>
+        <figure class="shot"><img src="{{img:gojek-grid}}" alt="Gojek : feuille Filtrer par type de service, grille 4 colonnes d'icônes, Clear et Set filter"><figcaption><b>Grille cochable</b>Icône + libellé, coche sur la sélection.</figcaption></figure>
+        <figure class="shot"><img src="{{img:gojek-filtered}}" alt="Gojek : puce GoCar active en vert et bouton Reset filter"><figcaption><b>Puce active + reset</b>Le filtre se lit et s'annule.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Grille 4 colonnes d'icônes avec libellé, coche discrète sur la sélection.</li><li>Le filtre actif remonte en puce pleine dans la barre.</li><li>« Réinitialiser » en puce rouge au début de la barre.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Reconnaître une catégorie par son icône est plus rapide que lire une liste.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Pastilles de couleur par service, très lisibles mais très colorées.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 4.6 : la grille de catégories cochables, avec nos tuiles du Design System (forme + icône de famille), groupées Négatives / Positives.</p><p><b>À éviter.</b> Une couleur par catégorie : chez nous, la couleur est celle de la famille (4 teintes).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">09</p><h3 class="text-2xl font-bold">Tock et Hypelist · Le tri dans l'en-tête de liste</h3><p class="text-sm text-muted">Réservations, lieux · <a href="https://mobbin.com/flows/e4afd7ea-0423-4763-a48a-36ed0eea01f5">Tock</a>, <a href="https://mobbin.com/flows/cabce5b3-a3d0-411d-a41a-535d7ac1a035">Hypelist</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:tock-list}}" alt="Tock : liste avec recherche, ville et puce Trier par distance"><figcaption><b>« Trier par Distance »</b>Le tri est une puce.</figcaption></figure>
+        <figure class="shot"><img src="{{img:tock-sort}}" alt="Tock : menu Distance ou Pertinence sous la puce"><figcaption><b>Deux choix</b>Distance, Pertinence.</figcaption></figure>
+        <figure class="shot"><img src="{{img:hypelist-sort}}" alt="Hypelist : menu Popularité ou Distance sur la carte"><figcaption><b>Popularité / Distance</b>Le même tri en carte.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Le tri courant est écrit dans la puce : « Trier par Distance ».</li><li>Un menu court, deux ou trois choix.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Pas d'écran dédié « Autour de moi » : c'est le tri Distance de la même liste.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Puces à contour fin, menu flottant à ombre douce.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 4.4 « Autour de moi » = le fil trié par distance (Pertinence · Distance · Récentes), avec intertitres « Moins de 1 km », « 1 à 5 km ».</p><p><b>À éviter.</b> Un écran séparé qui duplique la liste et ses filtres.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">10</p><h3 class="text-2xl font-bold">Citizen · Fil « dernières 24 h » et fin de fil</h3><p class="text-sm text-muted">Sécurité publique · <a href="https://mobbin.com/flows/7fec47e7-219b-4a14-b464-1872b7bbcc95">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:citizen-feed}}" alt="Citizen : fil Nationwide, Past 24h, carte vidéo avec auteur, ancienneté, lieu et compteurs"><figcaption><b>Fenêtre de 24 h</b>« Past 24h » en tête.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-end}}" alt="Citizen : fin du fil « You're all caught up » et bouton Back to Top"><figcaption><b>Fin de fil</b>« Vous êtes à jour ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Portée et fenêtre de temps en en-tête : « Nationwide · Past 24h ».</li><li>Fin de fil explicite et retour en haut.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Annoncer la fin rassure : rien n'a été manqué (nos alertes expirent à 24 h).</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Sombre et dramatique : efficace pour la vidéo, trop anxiogène pour nous.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> « Vous êtes à jour » en fin de fil, avec « Revenir en haut ». La fenêtre de 24 h rappelée (règle R5).</p><p><b>À éviter.</b> Le ton sensationnel et le rouge dominant : rouge rare, positif visible.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">11</p><h3 class="text-2xl font-bold">Nextdoor · Actualités locales du quartier</h3><p class="text-sm text-muted">Voisinage · <a href="https://mobbin.com/flows/d5de0a4b-fabf-4bce-974c-fd4b58b705cd">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:nextdoor-home}}" alt="Nextdoor : en-tête Lower Allston, section Today's local news avec See more"><figcaption><b>Le quartier en titre</b>Portée lisible en un coup d'œil.</figcaption></figure>
+        <figure class="shot"><img src="{{img:nextdoor-news}}" alt="Nextdoor : liste des actualités locales en cartes"><figcaption><b>Cartes homogènes</b>Source, ancienneté, titre.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Section « Aujourd'hui près de chez vous » avec « Voir plus ».</li><li>Cartes homogènes : source, ancienneté, titre, actions.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>La portée géographique est le titre de l'écran.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Vert de marque discret, cartes à coins arrondis, beaucoup d'air.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Les sections du fil (À proximité · Récentes · Populaires) avec « Tout voir » et la portée en en-tête (« Pontoise · 5 km »).</p><p><b>À éviter.</b> Les publications sponsorisées intercalées.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">12</p><h3 class="text-2xl font-bold">Swarm · Filtre de dates et vide explicite</h3><p class="text-sm text-muted">Social · <a href="https://mobbin.com/flows/2199a1ba-a0da-4a5f-a674-a8554ff0c222">flow</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:swarm-list}}" alt="Swarm : liste Aujourd'hui avec bornes De et À"><figcaption><b>Bornes visibles</b>De … À … en haut.</figcaption></figure>
+        <figure class="shot"><img src="{{img:swarm-date}}" alt="Swarm : feuille calendrier Choisir une date, Réinitialiser, Valider"><figcaption><b>Calendrier en feuille</b>Pour une période personnalisée.</figcaption></figure>
+        <figure class="shot"><img src="{{img:swarm-empty}}" alt="Swarm : aucun check-in trouvé, essayez d'ajuster la période"><figcaption><b>Vide contextuel</b>Dit quoi changer.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Période affichée en deux bornes en tête de liste.</li><li>Calendrier en feuille, Réinitialiser en haut.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le vide nomme le levier : « ajustez la période ».</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Pictogrammes gris pour le vide, aucun drame.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le vide contextuel : il nomme le filtre en cause (« Aucune alerte dans les 6 dernières heures. Élargir à 24 h »).</p><p><b>À éviter.</b> Le calendrier pour des alertes qui expirent en 24 h : une période personnalisée n'a de sens que pour l'historique (phase 8).</p></div>
+    </article>
+  </div>
+</section>
+
+<section id="vides" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">03 · États vides</p><h2 class="h2">Le vide qui aide</h2><p class="lede">Cinq écrans « sans résultat ». Les meilleurs disent ce qui a été cherché, pourquoi rien ne sort, et proposent une seule issue.</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:satispay-empty}}" alt="Satispay : aucun résultat pour « Bo », essayez un autre mot ou explorez les catégories, grille de catégories"><figcaption><b>Satispay</b>La requête citée, puis les catégories. <a href="https://mobbin.com/screens/052a233c-8aa8-4385-bae5-b901b0394a9c">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:fiverr-empty}}" alt="Fiverr : illustration d'aquarium, essayez d'ajuster vos filtres, lien Effacer les filtres"><figcaption><b>Fiverr</b>« Effacer les filtres » en texte souligné. <a href="https://mobbin.com/screens/19725416-3f07-42c5-9eee-d924c433d1f9">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:quizlet-empty}}" alt="Quizlet : aucun résultat avec ces filtres, bouton Effacer les filtres"><figcaption><b>Quizlet</b>Le vide est imputé aux filtres. <a href="https://mobbin.com/screens/0230bbe1-bbd9-4605-96b2-0810ffd26bd4">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:todoist-empty}}" alt="Todoist : aucune correspondance pour « laundry », chercher dans les tâches terminées, affiner la recherche"><figcaption><b>Todoist</b>Deux pistes : élargir, affiner. <a href="https://mobbin.com/screens/8981c1bf-fc10-4a6b-a3e1-11c7b0416ec2">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:beli-empty}}" alt="Beli : No results, Try some different filters, bouton Clear filters"><figcaption><b>Beli</b>Titre, conseil, bouton. <a href="https://mobbin.com/flows/8fcf91fb-835a-4947-8aac-7bcc740f141d">flow</a></figcaption></figure>
+  </div>
+  <div class="take"><p><b>À reprendre.</b> Recherche : « Aucun résultat pour « … ». » + « Vérifiez l'orthographe ou cherchez une commune. » + les catégories. Liste filtrée : le filtre en cause nommé + « Effacer les filtres ». Zone vide : le texte du PRD + « Élargir à 10 km ».</p><p><b>À éviter.</b> Les illustrations décoratives (aquarium, chaussettes) : nos états utilisent le Spot Phosphor Duotone.</p></div>
+</section>
+
+<section id="matrice" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">04 · Matrice</p><h2 class="h2">Qui fait quoi</h2><p class="lede">● pattern maîtrisé · ○ présent mais partiel · vide si absent. La dernière ligne situe nos écrans actuels.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[860px] text-sm">
+      <caption class="sr-only">Patterns de liste, recherche et filtres par app</caption>
+      <thead class="bg-sunk text-left text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">App</th><th class="p-3">Récentes et raccourcis</th><th class="p-3">Résultats mêlés par type</th><th class="p-3">Puces de filtre</th><th class="p-3">Feuille + compteur</th><th class="p-3">Tri explicite</th><th class="p-3">Sections du fil</th><th class="p-3">Vide qui aide</th><th class="p-3">Recherche → carte</th></tr></thead>
+      <tbody class="divide-y divide-line text-center">
+        <tr><th class="p-3 text-left">Uber Eats</th><td>●</td><td>●</td><td>●</td><td>●</td><td>○</td><td>○</td><td>○</td><td></td></tr>
+        <tr><th class="p-3 text-left">Places</th><td></td><td>●</td><td>○</td><td></td><td>●</td><td>○</td><td></td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Apple Store</th><td>●</td><td>○</td><td></td><td></td><td></td><td>○</td><td></td><td>○</td></tr>
+        <tr><th class="p-3 text-left">Pangea Charging</th><td>○</td><td></td><td></td><td></td><td>○</td><td></td><td></td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Skip</th><td></td><td>●</td><td></td><td></td><td>○</td><td>○</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Beli</th><td></td><td></td><td>●</td><td>●</td><td>●</td><td></td><td>●</td><td></td></tr>
+        <tr><th class="p-3 text-left">Mindtrip</th><td></td><td></td><td>○</td><td>●</td><td></td><td></td><td></td><td>○</td></tr>
+        <tr><th class="p-3 text-left">Gojek</th><td></td><td></td><td>●</td><td>●</td><td></td><td></td><td>○</td><td></td></tr>
+        <tr><th class="p-3 text-left">Tock et Hypelist</th><td></td><td></td><td>○</td><td></td><td>●</td><td></td><td></td><td>○</td></tr>
+        <tr><th class="p-3 text-left">Citizen</th><td></td><td></td><td></td><td></td><td></td><td>●</td><td>○</td><td></td></tr>
+        <tr><th class="p-3 text-left">Nextdoor</th><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Swarm</th><td></td><td></td><td>○</td><td>○</td><td></td><td></td><td>●</td><td></td></tr>
+        <tr class="bg-brand/10 font-semibold"><th class="p-3 text-left">95 Alerte (aujourd'hui)</th><td></td><td></td><td>●</td><td>○</td><td></td><td>○</td><td>○</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-muted">Nos puces de filtre (phase 3) sont au niveau. Il nous manque l'essentiel de la phase : une recherche qui couvre tout le territoire, une feuille de filtres complète avec compteur, un tri explicite, un fil en sections et des vides qui aident.</p>
+  </div>
+</section>
+
+<section id="lecons" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">05 · Enseignements</p><h2 class="h2">Dix règles pour la liste et la recherche</h2></div>
+  <ol class="grid gap-4 sm:grid-cols-2">
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">01 · Uber Eats, Beli</p><p class="mt-1 font-display text-lg font-bold">Un seul filtre pour la carte et la liste</p><p class="mt-1 text-sm text-muted">Mêmes puces, même feuille, même résultat : la validation de la phase en dépend.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">02 · Beli, Mindtrip</p><p class="mt-1 font-display text-lg font-bold">Le compteur est le bouton</p><p class="mt-1 text-sm text-muted">« Voir 18 alertes » se recalcule à chaque choix ; zéro résultat se voit avant de valider.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">03 · Places, Skip</p><p class="mt-1 font-display text-lg font-bold">Une recherche pour tout le territoire</p><p class="mt-1 text-sm text-muted">Communes, quartiers, rues, alertes et catégories, groupés par type avec une icône.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">04 · Uber Eats, Apple Store</p><p class="mt-1 font-display text-lg font-bold">Avant de taper, déjà des réponses</p><p class="mt-1 text-sm text-muted">« Autour de moi », recherches récentes effaçables, catégories en raccourcis.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">05 · Apple Store</p><p class="mt-1 font-display text-lg font-bold">La saisie en gras dans chaque suggestion</p><p class="mt-1 text-sm text-muted">On lit en diagonale pourquoi un résultat correspond ; accents et majuscules ignorés.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">06 · Pangea, Places</p><p class="mt-1 font-display text-lg font-bold">Choisir un lieu recentre la carte</p><p class="mt-1 text-sm text-muted">Sans changer la zone suivie : on regarde ailleurs, on ne déménage pas.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">07 · Gojek</p><p class="mt-1 font-display text-lg font-bold">Les catégories se reconnaissent à l'icône</p><p class="mt-1 text-sm text-muted">Grille cochable de tuiles (forme + icône + libellé), groupée Négatives / Positives.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">08 · Mindtrip, Uber Eats</p><p class="mt-1 font-display text-lg font-bold">Peu de valeurs, en puces</p><p class="mt-1 text-sm text-muted">Distance et période en puces à choix unique ; pas de curseur ni de calendrier pour des alertes de 24 h.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">09 · Tock, Places, Hypelist</p><p class="mt-1 font-display text-lg font-bold">Le tri s'écrit</p><p class="mt-1 text-sm text-muted">« ⇅ Distance » dans une puce ; « Autour de moi » est un tri, pas un écran.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">10 · Beli, Swarm, Citizen</p><p class="mt-1 font-display text-lg font-bold">Un vide nomme son levier, un fil annonce sa fin</p><p class="mt-1 text-sm text-muted">« Effacer les filtres », « Élargir à 24 h » ; « Vous êtes à jour » en bas du fil.</p></li>
+  </ol>
+</section>
+
+<section id="da" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">06 · Direction artistique</p><h2 class="h2">« Vigilance lumineuse » appliquée à la liste</h2><p class="lede">Une liste dense mais aérée : trois cartes visibles au moins, la couleur réservée à la famille et au statut, et des intertitres qui structurent sans décorer.</p></div>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="card p-5"><p class="eyebrow">Carte compacte</p><div class="mt-3 rounded-xl border border-line p-3"><div class="flex gap-3"><span class="mt-0.5 h-5 w-5 flex-none rotate-45 rounded-[3px] bg-incident"></span><div class="min-w-0 flex-1"><p class="text-[11px] font-bold uppercase text-incident">Incendie <span class="font-normal normal-case text-muted">· il y a 12 min</span></p><p class="text-sm font-semibold leading-tight">Fumée importante rue Carnot</p><p class="text-xs text-muted">Pontoise · 2,1 km</p></div><span class="h-12 w-12 flex-none rounded-lg bg-sunk"></span></div><div class="mt-2 flex items-center justify-between text-xs text-muted"><span>⬆ 24 · ⬇ 3 · 8 commentaires</span><span class="rounded-full bg-primary/10 px-2 py-0.5 font-semibold text-primary">Transmise</span></div></div><p class="mt-3 text-sm text-muted">Vignette de 72 px à droite seulement s'il y a une photo ; titre sur deux lignes au plus.</p></div>
+    <div class="card p-5"><p class="eyebrow">Intertitres</p><div class="mt-3 grid gap-2"><div class="flex items-baseline justify-between"><p class="font-display text-lg font-bold">À proximité</p><span class="text-sm font-semibold text-primary">Tout voir</span></div><div class="h-10 rounded-lg bg-sunk"></div><div class="flex items-baseline justify-between"><p class="font-display text-lg font-bold">Récentes</p><span class="text-sm font-semibold text-primary">Tout voir</span></div><div class="h-10 rounded-lg bg-sunk"></div></div><p class="mt-3 text-sm text-muted">Titre de section en display, lien « Tout voir » en bouton tertiaire.</p></div>
+    <div class="card p-5"><p class="eyebrow">Puces</p><div class="mt-3 flex flex-wrap gap-2"><span class="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">✓ Positives</span><span class="rounded-full border border-line px-3 py-1 text-xs">⇅ Distance</span><span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">Culture ×</span><span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">5 km ×</span></div><p class="mt-3 text-sm text-muted">Type plein, tri contour, filtre actif teinté et retirable. Bleu primaire, jamais rouge.</p></div>
+    <div class="card p-5"><p class="eyebrow">Résultats de recherche</p><div class="mt-3 grid gap-2 text-sm"><p class="text-[11px] font-bold uppercase tracking-wider text-muted">Lieux</p><p>◉ Rue <b>Car</b>not, Pontoise</p><p class="text-[11px] font-bold uppercase tracking-wider text-muted">Alertes</p><p>◆ Fumée rue <b>Car</b>not</p></div><p class="mt-3 text-sm text-muted">Groupes en petites capitales, icône Phosphor par type, saisie en gras.</p></div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="eyebrow">Mouvement</p><p class="mt-2 text-sm">Les cartes entrent en squelette puis se remplissent. Le compteur du bouton « Voir n alertes » change sans saut de largeur. Retirer une puce de filtre fait glisser les cartes (smart animate). Animations réduites : changement direct.</p></div>
+    <div class="card p-5"><p class="eyebrow">Sombre</p><p class="mt-2 text-sm">Cartes sur la surface sombre existante, filet de 1 px ; les familles gardent leurs tokens sombres. La saisie en gras reste en texte principal, jamais en couleur.</p></div>
+    <div class="card p-5"><p class="eyebrow">Accessibilité</p><p class="mt-2 text-sm">Chaque carte annonce « Incendie, Urgent, Pontoise, 1,1 km, il y a 12 minutes, 24 confirmations ». Les suggestions forment une liste navigable aux flèches ; le compteur de résultats est annoncé (aria-live).</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="audit" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">07 · Audit</p><h2 class="h2">Nos écrans actuels</h2><p class="lede">Captures du prototype à la fin de la phase 3, au format 390 × 844. La base partagée avec la carte est bonne (puces, feuille de filtres, liste de la zone), mais l'onglet Alertes, la recherche et les filtres sont encore ceux de la phase 0.</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:ours-alerts}}" alt="95 Alerte : onglet Alertes, puces, carte avec grand bandeau photo vide"><figcaption><b>Onglet Alertes</b><span class="text-positive">+</span> Puces partagées avec la carte. <span class="text-incident">−</span> Le bandeau photo vide prend la moitié de la carte : une carte et demie par écran.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-alerts-scroll}}" alt="95 Alerte : onglet Alertes après défilement"><figcaption><b>Défilement</b><span class="text-incident">−</span> Deux sections seulement (moins de 5 km, ailleurs) ; ni tri ni « Populaires ».</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-filters}}" alt="95 Alerte : feuille Filtres avec quatre familles et interrupteurs"><figcaption><b>Filtres</b><span class="text-positive">+</span> Partagés avec la carte. <span class="text-incident">−</span> Familles seulement : ni catégories, ni période, ni distance ; le compteur est sous le pli.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-homelist}}" alt="95 Alerte : liste de l'accueil avec pilule Carte"><figcaption><b>Liste de l'accueil</b><span class="text-positive">+</span> Pilule « Carte ». <span class="text-incident">−</span> Même carte trop haute ; « Bien démarrer » repousse la première alerte.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-search}}" alt="95 Alerte : Changer de commune, liste des communes"><figcaption><b>Recherche</b><span class="text-incident">−</span> Ne cherche que des communes et change la zone suivie ; pas de récentes.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-search-typed}}" alt="95 Alerte : recherche Mont, deux communes"><figcaption><b>Saisie</b><span class="text-positive">+</span> Rapide. <span class="text-incident">−</span> La saisie n'est pas mise en évidence.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-search-none}}" alt="95 Alerte : Rue Carnot, aucune commune ne correspond"><figcaption><b>Sans résultat</b><span class="text-incident">−</span> « Rue Carnot » ne trouve rien alors qu'une alerte y est située.</figcaption></figure>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ce qu'on garde</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Puces Toutes / Positives / Négatives partagées</li><li>Filtre unique dans le store (carte = liste)</li><li>Liste de l'accueil et pilule « Carte »</li><li>AlertCard : famille, ancienneté, lieu, distance, votes, statut</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on refond</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>AlertCard compacte, vignette à droite</li><li>Onglet Alertes : fil en sections et tri</li><li>Feuille de filtres complète avec compteur</li><li>Recherche : tout le territoire, sans changer la zone</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on ajoute</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Recherches récentes et raccourcis</li><li>Puces de filtres actifs + « Effacer »</li><li>Tri Pertinence · Distance · Récentes</li><li>Vides qui aident, squelettes, fin de fil</li></ul></div>
+  </div>
+</section>
+
+<section id="cible" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">08 · Écrans cibles</p><h2 class="h2">Le fil, la recherche, les filtres et leurs états</h2><p class="lede">Huit esquisses. La barre de recherche et les puces restent identiques sur la carte et dans la liste.</p></div>
+  <div class="flex gap-5 overflow-x-auto pb-4" role="list">
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1"><div class="flex h-6 items-center gap-1 rounded-full border border-line bg-card px-2 text-[8px] text-muted">Rechercher une alerte, un lieu<span class="ml-auto">⚙</span></div><div class="flex gap-1"><span class="chipk on">Toutes</span><span class="chipk">Positives</span><span class="chipk">Négatives</span></div></div><div class="absolute inset-x-2 top-[68px] grid gap-1.5"><div class="flex items-center justify-between text-[8px]"><b class="text-ink">À proximité</b><span class="text-primary">Tout voir</span></div><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-incident">Incendie · 12 min</p><p class="text-[8px] font-semibold leading-tight text-ink">Fumée rue Carnot</p><p class="text-[7px] text-muted">Pontoise · 1,1 km · ⬆ 24</p></div><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-vigilance">Voirie · 1 h</p><p class="text-[8px] font-semibold leading-tight text-ink">Nid-de-poule chaussée</p><p class="text-[7px] text-muted">Saint-Ouen · 2,3 km</p></div><div class="flex items-center justify-between text-[8px]"><b class="text-ink">Récentes</b><span class="text-primary">Tout voir</span></div><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-positive">Événement · 25 min</p><p class="text-[8px] font-semibold leading-tight text-ink">Fête de quartier</p></div></div></div><p class="anno"><b>1 · Fil Alertes</b>Puces de type, sections À proximité · Récentes · Populaires, carte compacte (vignette à droite).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1"><div class="flex h-6 items-center gap-1 rounded-full border border-line bg-card px-2 text-[8px] text-muted">Rechercher une alerte, un lieu<span class="ml-auto">⚙</span></div><div class="flex gap-1"><span class="chipk on">Toutes</span><span class="chipk">Positives</span><span class="chipk">Négatives</span></div></div><div class="absolute inset-x-2 top-[68px] grid gap-1.5"><div class="flex items-center justify-between text-[8px] text-muted"><span>18 alertes</span><span class="rounded-full border border-line px-1.5 py-0.5">⇅ Distance</span></div><p class="text-[8px] font-bold text-ink">Moins de 1 km</p><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-vigilance">Voirie · 4 h</p><p class="text-[8px] font-semibold leading-tight text-ink">Banc cassé</p><p class="text-[7px] text-muted">Pontoise · 400 m</p></div><p class="text-[8px] font-bold text-ink">1 à 5 km</p><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-incident">Incendie · 12 min</p><p class="text-[8px] font-semibold leading-tight text-ink">Fumée rue Carnot</p><p class="text-[7px] text-muted">1,1 km</p></div><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-info">Travaux · 2 h</p><p class="text-[8px] font-semibold leading-tight text-ink">Chaussée fermée</p><p class="text-[7px] text-muted">3,0 km</p></div></div></div><p class="anno"><b>2 · Autour de moi</b>Le même fil trié par distance, intertitres par tranche (Tock, Places).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1.5"><div class="flex h-6 items-center rounded-full border-2 border-primary bg-card px-2 text-[8px] text-muted">Commune, rue, alerte…<span class="ml-auto">×</span></div><p class="text-[8px] text-primary">◎ Autour de moi · Pontoise</p><p class="text-[8px] font-bold text-ink">Recherches récentes <span class="float-right font-normal text-primary">Effacer</span></p><div class="flex flex-wrap gap-1"><span class="chipk">Cergy</span><span class="chipk">rue Carnot</span><span class="chipk">Inondation</span></div><p class="text-[8px] font-bold text-ink">Catégories</p><div class="grid grid-cols-3 gap-1"><span class="chipk justify-center">Incendie</span><span class="chipk justify-center">Voirie</span><span class="chipk justify-center">Culture</span><span class="chipk justify-center">Travaux</span><span class="chipk justify-center">Sport</span><span class="chipk justify-center">Propreté</span></div></div></div><p class="anno"><b>3 · Recherche vide</b>Autour de moi, récentes effaçables, catégories en raccourcis (Uber Eats, Apple).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1"><div class="flex h-6 items-center rounded-full border-2 border-primary bg-card px-2 text-[8px] text-ink">Car<span class="ml-auto text-muted">×</span></div><p class="mt-1 text-[7px] font-bold uppercase text-muted">Lieux</p><p class="text-[8px] text-ink">◉ <b>Car</b>not (rue), Pontoise</p><p class="text-[8px] text-ink">◉ <b>Car</b>reaux (quartier), Villiers-le-Bel</p><p class="mt-1 text-[7px] font-bold uppercase text-muted">Alertes</p><p class="text-[8px] text-ink">◆ Fumée rue <b>Car</b>not · 12 min</p><p class="text-[8px] text-ink">◆ <b>Car</b> accidentée bd de l'Oise</p><p class="mt-1 text-[7px] font-bold uppercase text-muted">Catégories</p><p class="text-[8px] text-ink">▲ Signalements « voirie »</p></div></div><p class="anno"><b>4 · Saisie</b>Résultats groupés par type, la saisie en gras ; choisir un lieu recentre la carte (Places, Skip).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5"><div class="flex h-6 items-center rounded-full border-2 border-primary bg-card px-2 text-[8px] text-ink">rue des Lilas<span class="ml-auto text-muted">×</span></div></div><div class="body items-center justify-center text-center"><span class="grid h-10 w-10 place-items-center rounded-full bg-sunk text-muted">⌕</span><p class="t mt-2">Aucun résultat pour « rue des Lilas »</p><p class="l mt-1">Vérifiez l'orthographe ou cherchez une commune.</p><span class="b2 !mt-3 w-full">Voir les catégories</span></div></div><p class="anno"><b>5 · Sans résultat</b>Nomme la requête, propose une issue (Satispay, Fiverr).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-ink/30"></div><div class="sheet"><div class="grab"></div><p class="t">Filtres</p><p class="l mt-1 font-semibold text-ink">Trier par</p><div class="mt-0.5 flex gap-1"><span class="chipk on">Pertinence</span><span class="chipk">Distance</span><span class="chipk">Récentes</span></div><p class="l mt-1 font-semibold text-ink">Catégories</p><div class="mt-0.5 grid grid-cols-4 gap-1"><span class="h-5 rounded bg-sunk"></span><span class="h-5 rounded bg-primary/20 ring-1 ring-primary"></span><span class="h-5 rounded bg-sunk"></span><span class="h-5 rounded bg-sunk"></span><span class="h-5 rounded bg-sunk"></span><span class="h-5 rounded bg-sunk"></span><span class="h-5 rounded bg-primary/20 ring-1 ring-primary"></span><span class="h-5 rounded bg-sunk"></span></div><p class="l mt-1 font-semibold text-ink">Période</p><div class="mt-0.5 flex flex-wrap gap-1"><span class="chipk">1 h</span><span class="chipk on">6 h</span><span class="chipk">Aujourd'hui</span><span class="chipk">24 h</span></div><p class="l mt-1 font-semibold text-ink">Distance</p><div class="mt-0.5 flex flex-wrap gap-1"><span class="chipk">1 km</span><span class="chipk on">5 km</span><span class="chipk">10 km</span><span class="chipk">95</span></div><span class="b1 !mt-2">Voir 18 alertes</span><span class="b3">Tout effacer</span></div></div><p class="anno"><b>6 · Filtres</b>Tri, catégories en grille, période et distance en puces, compteur dans le bouton (Beli, Gojek, Mindtrip).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1"><div class="flex h-6 items-center gap-1 rounded-full border border-line bg-card px-2 text-[8px] text-muted">Rechercher une alerte, un lieu<span class="ml-auto">⚙</span></div><div class="flex gap-1"><span class="chipk">Toutes</span><span class="chipk on">Positives</span><span class="chipk">Négatives</span></div></div><div class="absolute inset-x-2 top-[68px] grid gap-1.5"><div class="flex flex-wrap gap-1"><span class="chipk on">Culture ×</span><span class="chipk on">5 km ×</span></div><div class="flex justify-between text-[8px] text-muted"><span>3 alertes</span><span class="text-primary">Effacer les filtres</span></div><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-positive">Culture · 3 h</p><p class="text-[8px] font-semibold leading-tight text-ink">Concert au théâtre de verdure</p></div><div class="rounded-lg border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-positive">Culture · 1 j</p><p class="text-[8px] font-semibold leading-tight text-ink">Exposition à la médiathèque</p></div></div></div><p class="anno"><b>7 · Liste filtrée</b>Filtres actifs en puces retirables, compteur et « Effacer » (Uber Eats, Gojek). Même résultat sur la carte.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1"><div class="flex h-6 items-center gap-1 rounded-full border border-line bg-card px-2 text-[8px] text-muted">Rechercher une alerte, un lieu<span class="ml-auto">⚙</span></div><div class="flex gap-1"><span class="chipk on">Toutes</span><span class="chipk">Positives</span><span class="chipk">Négatives</span></div></div><div class="absolute inset-x-2 top-[68px] grid gap-1.5"><div class="h-2 w-1/3 rounded bg-line"></div><div class="h-12 rounded-lg bg-sunk"></div><div class="h-12 rounded-lg bg-sunk"></div><div class="h-12 rounded-lg bg-sunk"></div><p class="mt-2 text-center text-[8px] text-muted">Vous êtes à jour</p><span class="mx-auto rounded-full border border-line px-2 py-0.5 text-[8px] text-primary">Revenir en haut</span></div></div><p class="anno"><b>8 · Chargement et fin</b>Squelettes de cartes ; en bas, « Vous êtes à jour » (Citizen).</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="plan" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">09 · Plan</p><h2 class="h2">Refonte en six lots</h2><p class="lede">Chaque lot livre les deux versions (prototype React et canevas, en clair et en sombre). Il passe par la revue de direction artistique (390, 375, 430) et le test de bout en bout. Les nouveaux composants entrent d'abord dans le Design System, avec l'étiquette « New ».</p></div>
+  <div class="grid gap-4">
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L0 · Fondations · 1 j</p><h3 class="mt-1 text-xl font-bold">Composants de liste</h3><p class="mt-2 text-sm text-muted">Tâche 4.1</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">AlertCard</span> compacte : vignette 72 px à droite si photo, sinon rien</li><li><span class="tag">SortControl</span> puce « ⇅ Pertinence » + feuille</li><li><span class="tag">ActiveFilters</span> puces retirables + « n alertes · Effacer »</li><li><span class="tag">SearchField</span> et <span class="tag">SearchResultRow</span> (icône de type, saisie en gras)</li><li><span class="tag">FeedSection</span> intertitre + « Tout voir »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Section « Liste et recherche (phase 4) » dans le Design System, étiquetée « New »</li><li>AlertCard lisible en niveaux de gris : famille = forme + icône + libellé</li><li>Trois cartes au moins visibles à 390 × 844</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L1 · Fil · 2 j</p><h3 class="mt-1 text-xl font-bold">Onglet Alertes</h3><p class="mt-2 text-sm text-muted">Tâches 4.2, 4.3</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Puces Toutes / Positives / Négatives (partagées avec la carte)</li><li>Sections À proximité · Récentes · Populaires, 3 cartes + « Tout voir »</li><li>Score de pertinence : proximité 40 %, récence 30 %, importance 20 %, engagement 10 %</li><li>Portée en en-tête : « Pontoise · 5 km » ; fin de fil « Vous êtes à jour »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Les positives ont la même place que les négatives</li><li>Alertes expirées absentes (24 h)</li><li>Classement documenté dans ARCHITECTURE.md</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L2 · Autour de moi · 1 j</p><h3 class="mt-1 text-xl font-bold">Tri par distance</h3><p class="mt-2 text-sm text-muted">Tâche 4.4</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Tri Distance : intertitres « Moins de 1 km », « 1 à 5 km », « Au-delà »</li><li>Tri Récentes : intertitres « Dernière heure », « Aujourd'hui »</li><li>Chaque carte : distance, catégorie, heure, importance (Urgent), statut</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Le tri choisi reste affiché dans la puce</li><li>Sans position : tri Distance désactivé, explication</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L3 · Recherche · 2,5 j</p><h3 class="mt-1 text-xl font-bold">Tout le territoire</h3><p class="mt-2 text-sm text-muted">Tâche 4.5</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Index : 184 communes, 13 quartiers fictifs, rues des alertes, alertes, 19 catégories</li><li>Vide : Autour de moi, 5 recherches récentes (préférence locale, effaçables), catégories</li><li>Saisie : groupes Lieux · Alertes · Catégories, correspondance en gras, insensible aux accents</li><li>Choisir un lieu : la carte s'y recentre (zone affichée), sans changer la zone suivie</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>« Recherche d'une commune recentre la carte » (validation de la phase)</li><li>« Aucun résultat pour « … » » + issue</li><li>Clavier : flèches et Entrée dans les suggestions</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L4 · Filtres · 2 j</p><h3 class="mt-1 text-xl font-bold">Une feuille, deux écrans</h3><p class="mt-2 text-sm text-muted">Tâche 4.6</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Trier par · Type · Catégories (grille, groupes Négatives / Positives) · Période (1 h, 6 h, aujourd'hui, 24 h) · Distance (500 m → Val-d'Oise)</li><li>Bouton « Voir n alertes » recalculé à chaque choix ; « Tout effacer »</li><li>Filtre unique dans le store : carte et liste identiques</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>« Positives + Culture + 5 km » = même résultat sur la carte et dans la liste (validation)</li><li>Le compteur ne dépasse jamais l'écran (375 × 812)</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L5 · États · 1 j</p><h3 class="mt-1 text-xl font-bold">Tout prévoir</h3><p class="mt-2 text-sm text-muted">Tâche 4.7, 4.C</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Squelettes du fil et de la recherche</li><li>« Aucune alerte dans cette zone. Revenez plus tard ou élargissez votre zone de recherche. » (PRD §10.3)</li><li>Vide filtré : nomme le filtre en cause + « Effacer les filtres »</li><li>Hors connexion : fil en cache, recherche locale seulement</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Chaque état déclenchable par le mode démo</li><li>Planches du canevas en clair et en sombre</li></ul></div>
+        </div>
+      </article>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ordre et charge</p><p class="mt-2 text-sm text-muted">L0, puis L1 et L3 en parallèle, puis L2, L4 et L5 : environ 9,5 jours. Canevas (4.C) au fil des lots.</p></div>
+    <div class="card p-5"><p class="font-bold">Indicateurs (tests)</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Trouver « l'incendie rue Carnot » en 2 touchers depuis la carte</li><li>Filtrer « Positives + Culture + 5 km » : même résultat sur la carte et la liste</li><li>Trois cartes visibles à 390 × 844</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Risques</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Index de recherche trop lourd : communes et rues seulement en local</li><li>Score de pertinence opaque : le documenter et l'afficher (« Pourquoi cet ordre ? »)</li><li>Feuille trop longue à 375 × 812 : tri et type en haut, bouton fixe</li></ul></div>
+  </div>
+</section>
+
+<section id="decisions" class="border-t border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">10 · Décisions</p><h2 class="h2">Avant de démarrer</h2><p class="lede">Ces points touchent la navigation, le CDC ou le comportement de la recherche : selon AGENTS.md, ils demandent une validation.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="bg-sunk text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">#</th><th class="p-3">Question</th><th class="p-3">Recommandation</th><th class="p-3">Impact si non</th></tr></thead>
+      <tbody class="divide-y divide-line">
+        <tr><td class="p-3 font-mono">F1</td><td class="p-3">« Autour de moi » (tâche 4.4) : écran à part ou tri du fil ?</td><td class="p-3">Tri « Distance » du fil Alertes, avec intertitres par tranche (Tock, Places). Un seul écran, les mêmes filtres.</td><td class="p-3 text-muted">Un écran de plus qui duplique liste et filtres</td></tr>
+        <tr><td class="p-3 font-mono">F2</td><td class="p-3">Photo dans l'AlertCard : bandeau 16:9 ou vignette ?</td><td class="p-3">Vignette carrée de 72 px à droite, seulement s'il y a une photo ; le grand visuel reste pour la fiche (phase 5).</td><td class="p-3 text-muted">Une carte et demie par écran, bandeaux vides</td></tr>
+        <tr><td class="p-3 font-mono">F3</td><td class="p-3">La recherche de la carte change aujourd'hui la zone suivie : la garder ainsi ?</td><td class="p-3">Non : chercher un lieu recentre la carte et montre ses alertes (« zone affichée »), sans changer la zone suivie. Changer de zone reste dans le profil, avec un raccourci « Suivre cette zone » sur le résultat.</td><td class="p-3 text-muted">L'utilisateur perd sa zone à chaque recherche</td></tr>
+        <tr><td class="p-3 font-mono">F4</td><td class="p-3">Période « personnalisée » (CDC) alors que les alertes expirent à 24 h ?</td><td class="p-3">Puces 1 h · 6 h · Aujourd'hui · 24 h seulement ; la période personnalisée vient avec l'historique (phase 8).</td><td class="p-3 text-muted">Un calendrier qui ne renvoie jamais rien</td></tr>
+        <tr><td class="p-3 font-mono">F5</td><td class="p-3">Recherches récentes mémorisées sur l'appareil ?</td><td class="p-3">Oui, 5 au plus, en préférence locale (localStorage), effaçables d'un toucher ; jamais envoyées.</td><td class="p-3 text-muted">Retaper à chaque fois</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="wrap flex flex-wrap items-center justify-between gap-3 py-8 text-sm text-muted">
+    <p>95 Alerte · rapport généré par <span class="font-mono">tools/build_benchmark_refonte.py liste-refonte</span> · sources Mobbin (iOS), aperçus à basse résolution.</p>
+    <p>Rapports liés : <span class="font-mono">carte-refonte.html</span>, <span class="font-mono">benchmark-mobbin.html</span></p>
+  </div>
+</footer>
