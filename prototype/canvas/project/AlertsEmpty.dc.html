@@ -2,9 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>État · Zone sans alerte</title>
+<title>Alertes · zone sans alerte</title>
 <script src="./support.js"></script>
-<link rel="stylesheet" href="/_blob/de0d8abfa9909648c4d74114c042874a">
+<link rel="stylesheet" href="/_blob/e3d0578d8626d69187092229b05dae79">
 </head>
 <body>
 <x-dc>
@@ -14,39 +14,25 @@
 body{margin:0}
 </style>
 </helmet>
-<div class="a95 t-light" style="width: 390px; height: 844px">
-  <div class="screen95 scroll95">
-    <div class="screen-title row">
-      <div><h1>Alertes</h1><p>0 alerte active dans cette zone</p></div>
-      <button class="icon-btn flat" type="button" aria-label="Filtres"><span class="ph i i-sliders-horizontal" aria-hidden="true"></span></button>
-    </div>
-    <div class="screen-pad">
-      <div class="seg is-block" role="group" aria-label="Type d'alertes">
-        <button type="button" aria-pressed="true">Toutes</button>
-        <button type="button" aria-pressed="false">Positives</button>
-        <button type="button" aria-pressed="false">Négatives</button>
-      </div>
-      <div class="empty">
-        <span class="empty-ill"><span class="ph i i-map-trifold" aria-hidden="true" style="width: 32px; height: 32px"></span></span>
-        <h4>Aucune alerte dans cette zone.</h4>
-        <p>Revenez plus tard ou élargissez votre zone de recherche.</p>
-        <a class="btn btn-secondary" href="Alerts.dc.html">Élargir la zone</a>
-      </div>
-    </div>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95">
+<div class="screen feed"><div class="feed-top"><div class="screen-title"><h1>Alertes</h1><p>Pontoise · 5 km · dernières 24 h</p></div><div class="map-top"><a class="search" href="{{l.Search}}"><span class="ph i i-magnifying-glass" aria-hidden="true"></span><span>Rechercher<small> · alerte, lieu, catégorie</small></span></a><a class="icon-btn is-filter" aria-label="Filtres" href="{{l.Filters}}"><span class="ph i i-sliders-horizontal" aria-hidden="true"></span></a></div><div class="map-chips" role="group" aria-label="Type d'alertes"><button type="button" class="chip" aria-pressed="true"><span class="ph i i-check" aria-hidden="true"></span>Toutes</button><button type="button" class="chip" aria-pressed="false">Positives</button><button type="button" class="chip" aria-pressed="false">Négatives</button></div></div><div class="screen-pad feed-body"><div class="feed-bar"><span aria-live="polite"><b>0</b> alerte</span><button type="button" class="sort-chip" aria-label="Trier par : Pertinence. Modifier le tri"><span class="ph i i-arrows-down-up" aria-hidden="true"></span>Pertinence<span class="ph ph-sm i i-caret-down" aria-hidden="true"></span></button></div><div class="empty"><span class="empty-ill"><span class="ph i i-map-trifold" aria-hidden="true" style="width: 32px; height: 32px;"></span></span><h4>Aucune alerte dans cette zone.</h4><p>Revenez plus tard ou élargissez votre zone de recherche.</p></div></div></div>
   </div>
   <nav class="tabbar" aria-label="Navigation principale">
-    <a class="tab" href="Main.dc.html"><span class="ph i i-map-trifold" aria-hidden="true"></span>Carte</a>
-    <a class="tab" href="Alerts.dc.html" aria-current="page"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
-    <a class="tab tab-report" href="Report.dc.html" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
-    <a class="tab" href="Activity.dc.html"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
-    <a class="tab" href="Profile.dc.html"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
+    <a class="tab" href="{{l.Main}}" aria-current="page"><span class="ph i i-map-trifold-fill" aria-hidden="true"></span>Carte</a>
+    <a class="tab" href="{{l.Alerts}}"><span class="ph i i-list-bullets" aria-hidden="true"></span>Alertes</a>
+    <a class="tab tab-report" href="{{l.Report}}" aria-label="Signaler un événement"><span class="fab"><span class="ph i i-plus" aria-hidden="true"></span></span>Signaler</a>
+    <a class="tab" href="{{l.Activity}}"><span class="ph i i-pulse" aria-hidden="true"></span>Activité</a>
+    <a class="tab" href="{{l.Profile}}"><span class="ph i i-user-circle" aria-hidden="true"></span>Profil</a>
   </nav>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"dark": {"editor": "boolean", "default": false}, "$preview": {"width": 390, "height": 844}}'>
 class Component extends DCLogic {
   renderVals() {
-    return {};
+    const s = this.props.dark === true ? '-dark' : '';
+    const go = (n) => n + s + '.dc.html';
+    return { theme: s ? 't-dark' : 't-light', l: { Activity: go('Activity'), Alerts: go('Alerts'), Filters: go('Filters'), Main: go('Main'), Profile: go('Profile'), Report: go('Report'), Search: go('Search') } };
   }
 }
 </script>

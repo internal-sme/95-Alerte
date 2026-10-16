@@ -100,4 +100,13 @@ button{font-family:inherit}
 .lib-row{display:flex;flex-wrap:wrap;gap:var(--s-2);align-items:center}
 .lib-markers{display:flex;flex-wrap:wrap;gap:22px;align-items:center;padding:8px 4px 16px}
 .placeholder-phase{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font:600 var(--fs-caption)/1.2 var(--font)}
-
+/* Panneau de démo : écrans par phase */
+.phase-screens{display:grid;gap:var(--s-2)}
+.phase-tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.phase-tab{min-height:36px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font:600 var(--fs-sm)/1 var(--font);cursor:pointer;font-variant-numeric:tabular-nums}
+.phase-tab.is-todo{border-style:dashed;color:var(--text-muted)}
+.phase-tab[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.phase-tab:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+.phase-name{margin:0;display:grid;gap:2px;color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
+.phase-name b{color:var(--text);font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
+.phase-list .list-item{min-height:44px;font-size:var(--fs-sm)}

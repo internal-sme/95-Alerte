@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble les rapports « benchmark + refonte » (HTML autonome + Tailwind, publiables en artefact).
 
-Rapports : onboarding-refonte (phase 2, images screens/onboarding-v2/) et carte-refonte (phase 3, images screens/carte/).
+Rapports : onboarding-refonte (phase 2, screens/onboarding-v2/), carte-refonte (phase 3, screens/carte/) et liste-refonte (phase 4, screens/liste/).
 - Compile docs/benchmark/src/onboarding-refonte.css (feuille commune) avec Tailwind 3.4.17
   (config : docs/benchmark/src/tailwind.redesign.config.js, qui lit toutes les sources *-refonte.html).
 - Remplace chaque {{img:clé}} par l'image docs/benchmark/screens/<dossier>/<clé>.webp
@@ -10,7 +10,7 @@ Rapports : onboarding-refonte (phase 2, images screens/onboarding-v2/) et carte-
 Tailwind : variable d'environnement TAILWIND (chemin du binaire tailwindcss),
 sinon `npx --yes tailwindcss@3.4.17`.
 
-Usage : python3 tools/build_benchmark_refonte.py [onboarding-refonte|carte-refonte]
+Usage : python3 tools/build_benchmark_refonte.py [onboarding-refonte|carte-refonte|liste-refonte]
 """
 import base64
 import os
@@ -24,7 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BENCH = ROOT / "docs/benchmark"
 SRC = BENCH / "src"
-REPORTS = {"onboarding-refonte": "onboarding-v2", "carte-refonte": "carte"}
+REPORTS = {"onboarding-refonte": "onboarding-v2", "carte-refonte": "carte", "liste-refonte": "liste"}
 
 
 def tailwind_css() -> str:

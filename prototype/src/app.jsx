@@ -143,13 +143,14 @@ const ALERT_SEED = [
   ["a27", "evenement", "Inauguration de la nouvelle aire de jeux", "Ouverture officielle à 15 h, goûter offert aux enfants.", "roissy", "Village", "Rue de la Mairie", 150, "u7", 33, 0, 4, true, "transmis", "active"],
   ["a29", "travaux", "Chaussée fermée pour travaux de réseau", "Remplacement d'une canalisation : rue barrée, déviation par la rue de Liesse jusqu'à jeudi.", "saint-ouen-l-aumone", "Liesse", "Rue du Général-Leclerc", 130, "u9", 11, 0, 2, false, "pris_en_compte", "active"],
   ["a30", "inondation", "Chemin de halage inondé au pied de l'Axe Majeur", "L'Oise déborde sur le chemin de halage : passage impossible à pied et à vélo.", "cergy", "Axe Majeur", "Chemin de halage", 55, null, 14, 1, 3, true, "transmis", "active"],
+  ["a31", "culture", "Visite gratuite du musée Tavet-Delacour", "Visites guidées toutes les heures jusqu'à 17 h, entrée libre pour les habitants du Val-d'Oise.", "pontoise", "Centre", "Rue Lemercier", 150, "u3", 19, 0, 3, true, "transmis", "active"],
   ["a28", "eclairage", "Lampadaire clignotant (doublon)", "Supprimé par l'auteur : doublon d'une alerte existante.", "ermont", "Centre", "Avenue de la Gare", 600, "me", 0, 0, 0, false, "envoye", "supprimee"],
 ];
 
 /* Positions précises des alertes du secteur Cergy-Pontoise, dans leur quartier (fictif) de la carte */
 const ALERT_POSITIONS = {
   a1: [49.03559, 2.0938], a19: [49.03873, 2.08831], a25: [49.06237, 2.09532], a6: [49.05499, 2.13491], a26: [49.03928, 2.11338],
-  a2: [49.04381, 2.04605], a22: [49.0415, 2.06899], a4: [49.027, 2.07228], a17: [49.0668, 2.07512], a29: [49.03554, 2.14277], a30: [49.02386, 2.07913],
+  a2: [49.04381, 2.04605], a22: [49.0415, 2.06899], a4: [49.027, 2.07228], a17: [49.0668, 2.07512], a29: [49.03554, 2.14277], a30: [49.02386, 2.07913], a31: [49.0455, 2.0985],
 };
 /* Alertes de zone (inondation, travaux) : demi-largeur de la zone concernée, en km (tâche 3.11) */
 const ALERT_AREAS = { a30: 0.55, a29: 0.3, a9: 0.45, a14: 0.35 };
@@ -340,7 +341,9 @@ function initialState() {
     comments: SEED_COMMENTS,
     notifications: SEED_NOTIFICATIONS,
     nav: { tab: "map", stack: [] },
-    mapFilter: { type: "all", hidden: [], urgentOnly: false },
+    mapFilter: DEFAULT_FILTER,
+    listSort: "relevance",
+    mapFocus: null,
     sheet: null,
     modal: null,
     toasts: [],
@@ -375,6 +378,18 @@ function reducer(state, action) {
       return { ...state, prefs: { ...state.prefs, [action.key]: action.value } };
     case "SET_MAP_FILTER":
       return { ...state, mapFilter: { ...state.mapFilter, ...action.patch } };
+    case "RESET_MAP_FILTER":
+      return { ...state, mapFilter: DEFAULT_FILTER };
+    case "SET_LIST_SORT":
+      return { ...state, listSort: action.sort };
+    case "MAP_FOCUS": // recherche : un lieu ou une alerte à montrer sur la carte (F3 : la zone suivie ne change pas)
+      return { ...state, mapFocus: { ...action.focus, key: Date.now() }, nav: { tab: "map", stack: [] }, prefs: { ...state.prefs, homeView: "map" } };
+    case "CLEAR_MAP_FOCUS":
+      return { ...state, mapFocus: null };
+    case "ADD_RECENT": { // F5 : 5 recherches récentes au plus, sur l'appareil seulement
+      const list = (state.prefs.recentSearches || []).filter((r) => r.label !== action.item.label);
+      return { ...state, prefs: { ...state.prefs, recentSearches: [action.item, ...list].slice(0, 5) } };
+    }
     case "SET_DEMO":
       return { ...state, demo: { ...state.demo, [action.key]: action.value } };
     case "VOTE": {
@@ -435,6 +450,11 @@ function reducer(state, action) {
     case "SET_IDENTITY": {
       const identity = action.identity === "result" ? ({ reussie: "verifiee", en_cours: "en_cours", manuelle: "en_cours" }[state.auth.idResult] || state.session.identity) : action.identity;
       return { ...state, session: { ...state.session, identity } };
+    }
+    case "JUMP": { // panneau de démo « Écrans par phase » : ouvre directement un écran ou un état
+      const base = { ...state, sheet: null, modal: null, toasts: [], mapFocus: null, demo: { ...DEFAULT_DEMO, timeSpeed: state.demo.timeSpeed } };
+      const next = action.make(base);
+      return { ...next, nav: { ...next.nav, jump: Date.now() } };
     }
     case "RESET":
       return { ...initialState(), prefs: state.prefs, session: state.session };
@@ -715,12 +735,13 @@ function AlertCard({ alert, onOpen, showStatus }) {
   const commune = COMMUNE_BY_ID[alert.communeId].name;
   const status = alertStatus(alert, now, showStatus);
   const ago = fmtRelative(now - alert.createdAt);
-  const aria = `${cat.label}. ${alert.title}. ${commune}${dist ? `, ${dist}` : ""}, ${ago}. ${alert.votesUp} confirmations, ${alert.commentsCount} commentaires.`;
+  const urgent = cat.priority === "critique";
+  const aria = `${cat.label}${urgent ? ", Urgent" : ""}. ${alert.title}. ${commune}${dist ? `, ${dist}` : ""}, ${ago}. ${alert.votesUp} confirmations, ${alert.commentsCount} commentaires.`;
   return (
     <button type="button" className={cx("alert-card", `fam-${cat.family}`)} onClick={onOpen} aria-label={aria}>
       <Marker family={cat.family} icon={cat.icon} />
       <span className="ac-main" aria-hidden="true">
-        <span className="ac-eyebrow"><b>{cat.label}</b><span>{ago}</span></span>
+        <span className="ac-eyebrow"><b>{cat.label}</b>{urgent ? <span className="ac-urgent">Urgent</span> : null}<span>{ago}</span></span>
         <h4>{alert.title}</h4>
         <span className="meta"><Icon name="map-pin" className="ph-sm" /><span>{commune}{dist ? ` · ${dist}` : ""}</span></span>
       </span>
@@ -1177,7 +1198,7 @@ let lastMapView = null; // vue conservée entre deux visites de l'onglet Carte (
 let lastMapZone = null;
 let mapLoadedOnce = false;
 
-const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect, zone, me, sheetMode, peek, loading, onViewChange, error }, ref) {
+const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect, zone, me, place, sheetMode, peek, loading, onViewChange, error }, ref) {
   const box = useRef(null);
   const [size, setSize] = useState(null);
   const zoneKey = zone ? `${zone.center.lat},${zone.center.lng},${zone.radiusKm}` : "none";
@@ -1278,6 +1299,16 @@ const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect
       animateTo(viewFor(p.x, p.y, Math.max(v ? v.s : 0, MAP_LEVELS[2].min + 8), bottom), "program", bottom);
     },
     zoomBy,
+    // Recherche (F3) : centre la carte sur un lieu, volet à mi-hauteur ; renvoie la zone qui sera affichée
+    focusPlace: (p, scale) => {
+      if (!size) return null;
+      const k = projectKm(p);
+      const s = Math.min(MAP_MAX_S, scale);
+      const bottom = size.h * 0.5;
+      const v = viewFor(k.x, k.y, s, bottom);
+      animateTo(v, "recenter", bottom);
+      return { x0: v.cx - size.w / 2 / s, x1: v.cx + size.w / 2 / s, y0: v.cy + (MAP_INSET_TOP - size.h / 2) / s, y1: v.cy + (size.h - bottom - size.h / 2) / s };
+    },
     bounds: () => {
       const v = viewRef.current;
       if (!v || !size) return null;
@@ -1413,6 +1444,7 @@ const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect
         </svg>
       ) : null}
       {labels.map((l) => <span key={l.key} className={cx("map-label", l.cls)} style={{ left: l.x, top: l.y }} aria-hidden="true">{l.text}</span>)}
+      {ready && place ? (() => { const k = projectKm(place); const p = toScreen(k.x, k.y); return <span className="place-pin" style={{ left: p.x, top: p.y }} role="img" aria-label={`Lieu recherché : ${place.label}`}><Icon name="map-pin-fill" /></span>; })() : null}
       {meScreen ? (
         <span className="me-wrap" style={{ left: meScreen.x, top: meScreen.y }} role="img" aria-label="Vous êtes ici">
           <span className="me-accuracy" style={{ width: Math.max(28, 0.15 * v.s * 2), height: Math.max(28, 0.15 * v.s * 2) }} />
@@ -1569,34 +1601,149 @@ function MapLegendSheet() {
   );
 }
 
-const MAP_FAMILIES = ["incident", "vigilance", "positive", "info"];
-function MapFiltersSheet() {
+/* =====================================================================
+   FILTRES ET TRI (phase 4) : un seul filtre dans le store, partagé par la carte et la liste
+   ===================================================================== */
+const DEFAULT_FILTER = { type: "all", categories: [], period: "all", distance: null, urgentOnly: false };
+const PERIODS = [{ v: "1h", l: "1 h", ms: HOUR }, { v: "6h", l: "6 h", ms: 6 * HOUR }, { v: "today", l: "Aujourd'hui" }, { v: "24h", l: "24 h", ms: 24 * HOUR }];
+const DISTANCES = [{ v: 0.5, l: "500 m" }, { v: 1, l: "1 km" }, { v: 5, l: "5 km" }, { v: 10, l: "10 km" }, { v: null, l: "Tout le Val-d'Oise" }];
+const SORTS = [
+  { v: "relevance", l: "Pertinence", d: "Proximité, récence, importance et confirmations" },
+  { v: "distance", l: "Distance", d: "Les plus proches d'abord (Autour de moi)" },
+  { v: "recent", l: "Récentes", d: "Les plus récentes d'abord" },
+];
+
+function mapFilterMatch(f, a, pos, now) {
+  const cat = CATEGORY_BY_ID[a.categoryId];
+  if (f.type !== "all" && cat.type !== f.type) return false;
+  if (f.categories.length && !f.categories.includes(cat.id)) return false;
+  if (f.urgentOnly && cat.priority !== "critique") return false;
+  if (f.period !== "all") {
+    const p = PERIODS.find((x) => x.v === f.period);
+    const since = p.ms ? now - p.ms : new Date(now).setHours(0, 0, 0, 0);
+    if (a.createdAt < since) return false;
+  }
+  if (f.distance && pos && pos.source !== "default" && haversineKm(pos, a) > f.distance) return false;
+  return true;
+}
+const activeFilterCount = (f) => f.categories.length + (f.period !== "all" ? 1 : 0) + (f.distance ? 1 : 0) + (f.urgentOnly ? 1 : 0);
+
+/* Alertes visibles (actives, non expirées) qui passent le filtre courant */
+function useFilteredAlerts() {
+  const { state } = useStore();
+  const now = useNow();
+  const alerts = useVisibleAlerts();
+  const pos = state.session.position;
+  return useMemo(() => alerts.filter((a) => mapFilterMatch(state.mapFilter, a, pos, now)), [alerts, state.mapFilter, pos, now]);
+}
+
+/* Pertinence (tâche 4.3) : proximité 40 %, récence 30 %, importance 20 %, engagement 10 % */
+const IMPORTANCE = { critique: 1, elevee: 0.6, normale: 0.3 };
+function relevance(a, pos, now) {
+  const prox = pos && pos.source !== "default" ? Math.max(0, 1 - haversineKm(pos, a) / 20) : 0.5;
+  const recency = Math.max(0, 1 - (now - a.createdAt) / ALERT_TTL);
+  const engagement = Math.min(1, (a.votesUp + a.commentsCount) / 50);
+  return 0.4 * prox + 0.3 * recency + 0.2 * IMPORTANCE[CATEGORY_BY_ID[a.categoryId].priority] + 0.1 * engagement;
+}
+
+function FiltersSheet() {
   const { state, dispatch } = useStore();
   const { closeSheet } = useActions();
+  const now = useNow();
   const alerts = useVisibleAlerts();
   const f = state.mapFilter;
+  const pos = state.session.position;
+  const hasPos = pos.source !== "default";
   const set = (patch) => dispatch({ type: "SET_MAP_FILTER", patch });
-  const count = alerts.filter((a) => mapFilterMatch(f, a)).length;
-  const examples = { incident: "fire", vigilance: "traffic-cone", positive: "hand-heart", info: "megaphone" };
+  const count = alerts.filter((a) => mapFilterMatch(f, a, pos, now)).length;
+  const toggleCat = (id) => set({ categories: f.categories.includes(id) ? f.categories.filter((x) => x !== id) : [...f.categories, id] });
+  const cats = (type) => CATEGORIES.filter((c) => c.type === type && (f.type === "all" || f.type === type));
   return (
     <Fragment>
-      <p className="section-label">Familles d'alertes</p>
-      {MAP_FAMILIES.map((fam) => (
-        <div key={fam} className="filter-row">
-          <Marker family={fam} icon={examples[fam]} />
-          <Switch id={`filter-${fam}`} label={FAMILY_LABEL[fam]} checked={!f.hidden.includes(fam)} onChange={(on) => set({ hidden: on ? f.hidden.filter((x) => x !== fam) : [...f.hidden, fam] })} />
+      <section className="filter-group" aria-labelledby="fg-sort">
+        <h3 id="fg-sort">Trier la liste par</h3>
+        <SegmentedControl block label="Trier la liste par" value={state.listSort} onChange={(v) => dispatch({ type: "SET_LIST_SORT", sort: v })} options={SORTS.map((o) => ({ value: o.v, label: o.l }))} />
+      </section>
+      <section className="filter-group" aria-labelledby="fg-type">
+        <h3 id="fg-type">Type</h3>
+        <TypeChips />
+      </section>
+      {["negative", "positive"].map((t) => cats(t).length ? (
+        <section key={t} className="filter-group" aria-labelledby={`fg-${t}`}>
+          <h3 id={`fg-${t}`}>{t === "negative" ? "Catégories · Négatives" : "Catégories · Positives"}</h3>
+          <div className="cat-grid is-compact">{cats(t).map((c) => <CategoryTile key={c.id} category={c} selected={f.categories.includes(c.id)} onClick={() => toggleCat(c.id)} />)}</div>
+        </section>
+      ) : null)}
+      <section className="filter-group" aria-labelledby="fg-period">
+        <h3 id="fg-period">Période</h3>
+        <div className="chip-row" role="group" aria-labelledby="fg-period">
+          <Chip selected={f.period === "all"} onClick={() => set({ period: "all" })}>Toutes</Chip>
+          {PERIODS.map((p) => <Chip key={p.v} selected={f.period === p.v} onClick={() => set({ period: p.v })}>{p.l}</Chip>)}
         </div>
-      ))}
-      <p className="section-label">Priorité</p>
-      <div className="filter-row">
-        <span className="filter-urgent" aria-hidden="true"><Icon name="siren-fill" /></span>
-        <Switch id="filter-urgent" label="Seulement les alertes urgentes" checked={f.urgentOnly} onChange={(on) => set({ urgentOnly: on })} />
-      </div>
-      <div className="lib-row">
-        <Button block onClick={closeSheet}>{count ? `Afficher ${count} alerte${count > 1 ? "s" : ""}` : "Aucune alerte avec ces filtres"}</Button>
-        <button type="button" className="btn btn-tertiary" onClick={() => set({ type: "all", hidden: [], urgentOnly: false })}>Tout réinitialiser</button>
+      </section>
+      <section className="filter-group" aria-labelledby="fg-dist">
+        <h3 id="fg-dist">Distance</h3>
+        {hasPos ? (
+          <div className="chip-row" role="group" aria-labelledby="fg-dist">
+            {DISTANCES.map((d) => <Chip key={d.l} selected={f.distance === d.v} onClick={() => set({ distance: d.v })}>{d.l}</Chip>)}
+          </div>
+        ) : <p className="demo-note">Choisissez votre commune pour filtrer par distance.</p>}
+      </section>
+      <section className="filter-group">
+        <div className="filter-row">
+          <span className="filter-urgent" aria-hidden="true"><Icon name="siren-fill" /></span>
+          <Switch id="filter-urgent" label="Seulement les alertes urgentes" checked={f.urgentOnly} onChange={(on) => set({ urgentOnly: on })} />
+        </div>
+      </section>
+      <div className="filter-footer">
+        <Button block onClick={closeSheet} aria-live="polite">{count ? `Voir ${count} alerte${count > 1 ? "s" : ""}` : "Aucune alerte avec ces filtres"}</Button>
+        <button type="button" className="btn btn-tertiary" onClick={() => dispatch({ type: "RESET_MAP_FILTER" })}>Tout effacer</button>
       </div>
     </Fragment>
+  );
+}
+
+/* Tri de la liste (F1 : « Autour de moi » = tri Distance) */
+function SortSheet() {
+  const { state, dispatch } = useStore();
+  const { closeSheet } = useActions();
+  const hasPos = state.session.position.source !== "default";
+  return (
+    <div className="sort-list" role="radiogroup" aria-label="Trier la liste par">
+      {SORTS.map((o) => {
+        const disabled = o.v === "distance" && !hasPos;
+        return (
+          <RadioCard key={o.v} name="list-sort" value={o.v} checked={state.listSort === o.v} onChange={(v) => { if (!disabled) { dispatch({ type: "SET_LIST_SORT", sort: v }); closeSheet(); } }}
+            icon={o.v === "distance" ? "navigation-arrow" : o.v === "recent" ? "clock" : "star"} title={o.l} description={disabled ? "Choisissez votre commune pour trier par distance." : o.d} />
+        );
+      })}
+    </div>
+  );
+}
+function SortControl() {
+  const { state } = useStore();
+  const { openSheet } = useActions();
+  const cur = SORTS.find((o) => o.v === state.listSort);
+  return <button type="button" className="sort-chip" onClick={() => openSheet("list-sort", {}, "half")} aria-label={`Trier par : ${cur.l}. Modifier le tri`}><Icon name="arrows-down-up" />{cur.l}<Icon name="caret-down" className="ph-sm" /></button>;
+}
+
+/* Filtres actifs en puces retirables + « Effacer les filtres » (Uber Eats, Gojek) */
+function ActiveFilters() {
+  const { state, dispatch } = useStore();
+  const f = state.mapFilter;
+  const set = (patch) => dispatch({ type: "SET_MAP_FILTER", patch });
+  const items = [
+    ...f.categories.map((id) => ({ k: id, l: CATEGORY_BY_ID[id].label, off: () => set({ categories: f.categories.filter((x) => x !== id) }) })),
+    f.period !== "all" ? { k: "period", l: `Moins de ${PERIODS.find((p) => p.v === f.period).l}`.replace("Moins de Aujourd'hui", "Aujourd'hui"), off: () => set({ period: "all" }) } : null,
+    f.distance ? { k: "dist", l: `${DISTANCES.find((d) => d.v === f.distance).l} autour`, off: () => set({ distance: null }) } : null,
+    f.urgentOnly ? { k: "urgent", l: "Urgentes", off: () => set({ urgentOnly: false }) } : null,
+  ].filter(Boolean);
+  if (!items.length) return null;
+  return (
+    <div className="active-filters" role="group" aria-label="Filtres actifs">
+      {items.map((it) => <button key={it.k} type="button" className="chip is-active" onClick={it.off} aria-label={`Retirer le filtre ${it.l}`}>{it.l}<Icon name="x" /></button>)}
+      <button type="button" className="btn btn-tertiary" onClick={() => dispatch({ type: "RESET_MAP_FILTER" })}>Effacer les filtres</button>
+    </div>
   );
 }
 
@@ -1614,13 +1761,8 @@ function TypeChips() {
 function FilterButton({ flat }) {
   const { state } = useStore();
   const { openSheet } = useActions();
-  const n = state.mapFilter.hidden.length + (state.mapFilter.urgentOnly ? 1 : 0);
-  return <IconButton icon="sliders-horizontal" className={cx("is-filter", flat && "flat")} label={`Filtres${n ? `, ${n} actif${n > 1 ? "s" : ""}` : ""}`} badge={n || null} onClick={() => openSheet("map-filters", {}, "half")} />;
-}
-
-function mapFilterMatch(f, a) {
-  const cat = CATEGORY_BY_ID[a.categoryId];
-  return (f.type === "all" || cat.type === f.type) && !f.hidden.includes(cat.family) && (!f.urgentOnly || cat.priority === "critique");
+  const n = activeFilterCount(state.mapFilter);
+  return <IconButton icon="sliders-horizontal" className={cx("is-filter", flat && "flat")} label={`Filtres${n ? `, ${n} actif${n > 1 ? "s" : ""}` : ""}`} badge={n || null} onClick={() => openSheet("map-filters", {}, "full")} />;
 }
 
 /* =====================================================================
@@ -1643,6 +1785,7 @@ function MapScreen() {
   const [snap, setSnap] = useState("peek");
   const [selectedId, setSelectedId] = useState(null);
   const [area, setArea] = useState(null); // « Voir les alertes ici » : zone affichée au lieu de la zone suivie
+  const [place, setPlace] = useState(null); // lieu choisi dans la recherche (F3)
   const [viewInfo, setViewInfo] = useState(null);
   const [newSeen, setNewSeen] = useState(false);
   const [loading, setLoading] = useState(!mapLoadedOnce);
@@ -1655,12 +1798,13 @@ function MapScreen() {
     return () => clearTimeout(t);
   }, [loading]);
 
-  const events = useMemo(() => dedupeEvents(all.filter((a) => mapFilterMatch(f, a))), [all, f]);
+  const events = useMemo(() => dedupeEvents(all.filter((a) => mapFilterMatch(f, a, pos, now))), [all, f, pos, now]);
   const inArea = (a) => { const k = projectKm(a); return k.x >= area.x0 && k.x <= area.x1 && k.y >= area.y0 && k.y <= area.y1; };
   const listing = useMemo(() => {
     const scoped = area ? events.filter(inArea) : hasZone ? events.filter((a) => haversineKm(pos, a) <= radius) : events;
-    return hasZone ? scoped.map((a) => ({ a, km: haversineKm(pos, a) })).sort((x, y) => x.km - y.km).map((x) => x.a) : scoped.sort((x, y) => y.createdAt - x.createdAt);
-  }, [events, area, hasZone, pos, radius]);
+    const from = place || (hasZone ? pos : null); // un lieu recherché : les plus proches de ce lieu d'abord
+    return from ? scoped.map((a) => ({ a, km: haversineKm(from, a) })).sort((x, y) => x.km - y.km).map((x) => x.a) : scoped.sort((x, y) => y.createdAt - x.createdAt);
+  }, [events, area, hasZone, pos, radius, place]);
   const fresh = hasZone && !area ? listing.filter((a) => now - a.createdAt < HOUR) : [];
 
   const selected = selectedId ? all.find((a) => a.id === selectedId) : null;
@@ -1696,6 +1840,7 @@ function MapScreen() {
   const moved = viewInfo && viewInfo.moved;
   const recenter = () => {
     setArea(null);
+    setPlace(null);
     setSelectedId(null);
     setSnap("peek");
     map.current?.recenter();
@@ -1709,7 +1854,28 @@ function MapScreen() {
     setViewInfo((vi) => ({ ...vi, moved: false }));
     setSnap("half");
   };
-  const widen = () => { dispatch({ type: "SET_RADIUS", km: 10 }); setArea(null); toast("Zone élargie à 10 km."); };
+  const widen = () => { dispatch({ type: "SET_RADIUS", km: 10 }); setArea(null); setPlace(null); toast("Zone élargie à 10 km."); };
+  const followPlace = () => {
+    dispatch({ type: "SET_COMMUNE", communeId: place.communeId, source: "commune", coords: { lat: place.lat, lng: place.lng } });
+    toast(`Zone suivie : ${place.label}.`);
+    setPlace(null);
+    setArea(null);
+  };
+  // Venue de la recherche ou de la liste : un lieu à montrer, une alerte à ouvrir, ou le retour à ma zone
+  const focus = state.mapFocus;
+  useEffect(() => {
+    if (!focus) return undefined;
+    const t = setTimeout(() => {
+      if (focus.kind === "alert") select(focus.id);
+      else if (focus.kind === "home") recenter();
+      else {
+        const b = map.current?.focusPlace(focus, focus.zoom || 40);
+        if (b) { setArea(b); setPlace(focus); setSelectedId(null); setSnap("half"); }
+      }
+      dispatch({ type: "CLEAR_MAP_FOCUS" });
+    }, 80);
+    return () => clearTimeout(t);
+  }, [focus && focus.key]);
   const retry = () => { setRetrying(true); setTimeout(() => { setRetrying(false); toast("Toujours impossible de charger la carte.", { tone: "error", actionLabel: "OK" }); }, 900); };
   // Carte ⇄ liste : « smart animate » (la barre de recherche, les puces et la bascule se déforment, le reste se fond)
   const setView = (v) => {
@@ -1718,28 +1884,29 @@ function MapScreen() {
   };
 
   const level = viewInfo ? viewInfo.level : 0;
-  const place = viewInfo ? viewInfo.place : { inside: true };
+  const viewPlace = viewInfo ? viewInfo.place : { inside: true };
   const sheetH = selected ? (snap === "full" ? "full" : "selection") : snap;
 
   // Une seule pilule contextuelle à la fois : hors territoire > voir ici > nouvelles alertes
   let pill = null;
   if (homeView === "map" && !state.demo.networkError && !loading && !selected) {
-    if (viewInfo && !place.inside) pill = <span className="pill is-info" role="status"><Icon name="info" />95 Alerte n'est pas encore disponible dans cette zone.</span>;
+    if (viewInfo && !viewPlace.inside) pill = <span className="pill is-info" role="status"><Icon name="info" />95 Alerte n'est pas encore disponible dans cette zone.</span>;
     else if (moved) pill = <button type="button" className="pill" onClick={searchHere}><Icon name="arrows-clockwise" />Voir les alertes ici</button>;
     else if (fresh.length && !newSeen) pill = <Pill onClick={() => { setNewSeen(true); setSnap("half"); }}>{fresh.length} nouvelle{fresh.length > 1 ? "s" : ""} alerte{fresh.length > 1 ? "s" : ""}</Pill>;
   }
 
   const unread = state.notifications.filter((n) => !n.read).length;
-  const title = area ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} dans cette zone`
+  const title = place ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} · ${place.label}`
+    : area ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} dans cette zone`
     : hasZone ? (listing.length ? `${listing.length} alerte${listing.length > 1 ? "s" : ""} dans votre zone` : "Aucun événement dans cette zone.")
     : `${listing.length} alertes dans le Val-d'Oise`;
-  const subtitle = area ? "Zone affichée sur la carte" : hasZone ? `Rayon ${radius} km · mis à jour à l'instant` : "Choisissez une zone pour voir les alertes proches";
+  const subtitle = place ? place.sub : area ? "Zone affichée sur la carte" : hasZone ? `Rayon ${radius} km · mis à jour à l'instant` : "Choisissez une zone pour voir les alertes proches";
 
   const header = (
     <div className="map-top-wrap">
       <div className="map-top">
-        <button type="button" className="search" onClick={() => push("commune")}>
-          <Icon name="magnifying-glass" /><span>{pos.communeId ? <Fragment>{COMMUNE_BY_ID[pos.communeId].name}<small> · rechercher</small></Fragment> : <Fragment>Rechercher<small> · commune, adresse</small></Fragment>}</span>
+        <button type="button" className="search" onClick={() => push("search")}>
+          <Icon name="magnifying-glass" /><span>{place ? <Fragment>{place.label}<small> · {place.sub}</small></Fragment> : pos.communeId ? <Fragment>{COMMUNE_BY_ID[pos.communeId].name}<small> · rechercher</small></Fragment> : <Fragment>Rechercher<small> · commune, rue, alerte</small></Fragment>}</span>
         </button>
         <FilterButton />
         <IconButton icon="bell" label="Notifications" badge={unread || null} onClick={() => toast("Le centre de notifications arrive bientôt.")} />
@@ -1766,10 +1933,10 @@ function MapScreen() {
 
   return (
     <div className="screen map-screen">
-      <LiveMap ref={map} alerts={events} selectedId={selectedId} onSelect={select} zone={zone} me={showMe ? pos : null}
+      <LiveMap ref={map} alerts={events} selectedId={selectedId} onSelect={select} zone={zone} me={showMe ? pos : null} place={place}
         sheetMode={sheetH} peek={PEEK} loading={loading} error={state.demo.networkError} onViewChange={onViewChange} />
       {header}
-      {!state.demo.networkError && viewInfo ? <MapLevelTag text={levelText(level, place)} scale={viewInfo.s} /> : null}
+      {!state.demo.networkError && viewInfo ? <MapLevelTag text={levelText(level, viewPlace)} scale={viewInfo.s} /> : null}
       {!hasZone ? (
         <button type="button" className="map-banner" onClick={() => push("commune")}><Icon name="map-pin" /><span><b>Position non définie</b>Choisissez votre commune pour voir les alertes proches.</span><Icon name="caret-right" className="ph-sm" /></button>
       ) : pill ? <div className="map-pill">{pill}</div> : null}
@@ -1798,8 +1965,13 @@ function MapScreen() {
         <BottomSheet snap={snap} peek={PEEK} onSnap={setSnap} dismissible={false}
           title={loading ? <Skeleton height={20} width="62%" /> : title} subtitle={loading ? <Skeleton height={12} width="44%" /> : subtitle}
           headerAction={<ViewToggle view="map" onChange={setView} />}>
-          {area ? <button type="button" className="btn btn-tertiary" style={{ justifySelf: "start" }} onClick={recenter}>Revenir à ma zone</button> : null}
-          {state.session.status === "in" && !loading && listing.length ? <StartChecklist onConfirm={() => setSnap("half")} /> : null}
+          {area ? (
+            <div className="sheet-actions">
+              {place && place.communeId ? <button type="button" className="btn btn-tertiary" onClick={followPlace}>Suivre cette zone</button> : null}
+              <button type="button" className="btn btn-tertiary" onClick={recenter}>Revenir à ma zone</button>
+            </div>
+          ) : null}
+          {state.session.status === "in" && !loading && listing.length && !area ? <StartChecklist onConfirm={() => setSnap("half")} /> : null}
           {loading ? (
             <Fragment><Skeleton height={96} radius="var(--r-md)" /><Skeleton height={96} radius="var(--r-md)" /></Fragment>
           ) : listing.length === 0 ? (
@@ -1811,29 +1983,261 @@ function MapScreen() {
   );
 }
 
-function AlertsScreen() {
-  const { state } = useStore();
-  const { toast } = useActions();
-  const alerts = useVisibleAlerts();
-  const pos = state.session.position;
-  const list = alerts.filter((a) => mapFilterMatch(state.mapFilter, a));
-  const near = list.filter((a) => haversineKm(pos, a) <= zoneRadius(state)).sort((a, b) => haversineKm(pos, a) - haversineKm(pos, b));
-  const rest = list.filter((a) => haversineKm(pos, a) > zoneRadius(state)).sort((a, b) => b.createdAt - a.createdAt).slice(0, 10);
-  const open = () => toast("La fiche alerte complète arrive bientôt.");
+/* =====================================================================
+   RECHERCHE (phase 4, tâche 4.5) : communes, quartiers, lieux, alertes et catégories
+   F3 : choisir un lieu montre ses alertes sur la carte sans changer la zone suivie.
+   F5 : 5 recherches récentes au plus, gardées sur l'appareil (préférences), effaçables.
+   ===================================================================== */
+const foldChar = (ch) => { const n = ch.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); return /^[a-z0-9]$/.test(n) ? n : " "; };
+const fold = (s) => [...s].map(foldChar).join(""); // même longueur que la chaîne d'origine (pour surligner)
+const foldQuery = (s) => fold(s).replace(/\s+/g, " ").trim();
+const kmToLatLng = (x, y) => ({ lat: PROJ.lat0 - y / PROJ.ky, lng: PROJ.lng0 + x / PROJ.kx });
+const PLACE_ICON = { commune: "map-pin", quartier: "polygon", lieu: "path" };
+const PLACE_RANK = { commune: 0, quartier: 1, lieu: 2 };
+
+let SEARCH_PLACES = null;
+function searchPlaces() {
+  if (SEARCH_PLACES) return SEARCH_PLACES;
+  const byName = Object.fromEntries(COMMUNES.map((c) => [foldQuery(c.name), c]));
+  const nameByCode = {};
+  const out = [];
+  (MAP95 ? MAP95.communes : []).forEach((c) => {
+    nameByCode[c.code] = c.name;
+    const known = byName[foldQuery(c.name)];
+    out.push({ kind: "commune", label: c.name, sub: GEO.epci[c.epci]?.name || "Val-d'Oise", ...kmToLatLng(c.c[0], c.c[1]), communeId: known ? known.id : null, zoom: 34 });
+  });
+  (MAP95 ? MAP95.quartiers : []).forEach((q) => {
+    const cn = nameByCode[q.commune];
+    const known = byName[foldQuery(cn)];
+    out.push({ kind: "quartier", label: q.name, sub: `Quartier · ${cn}`, ...kmToLatLng(q.c[0], q.c[1]), communeId: known ? known.id : null, zoom: 80 });
+  });
+  const seen = new Set();
+  SEED_ALERTS.forEach((a) => {
+    const k = a.street + a.communeId;
+    if (!a.street || seen.has(k)) return;
+    seen.add(k);
+    out.push({ kind: "lieu", label: a.street, sub: `Voie ou lieu · ${COMMUNE_BY_ID[a.communeId].name}`, lat: a.lat, lng: a.lng, communeId: a.communeId, zoom: 120 });
+  });
+  SEARCH_PLACES = out;
+  return out;
+}
+
+function Hl({ text, q }) {
+  const i = q ? fold(text).indexOf(q) : -1;
+  if (i < 0) return text;
+  return <Fragment>{text.slice(0, i)}<b>{text.slice(i, i + q.length)}</b>{text.slice(i + q.length)}</Fragment>;
+}
+
+function SearchRow({ icon, marker, label, sub, q, onClick }) {
   return (
-    <div className="screen">
-      <div className="screen-title row">
-        <div><h1>Alertes</h1><p>{alerts.length} alertes actives dans le Val-d'Oise</p></div>
-        <FilterButton flat />
-      </div>
-      <div className="screen-pad">
-        <TypeChips />
-        {list.length === 0 ? (
-          <EmptyState title="Aucune alerte dans cette zone." action={<Button variant="secondary" onClick={() => toast("Zone élargie à tout le Val-d'Oise.")}>Élargir la zone</Button>}>Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
+    <button type="button" className="search-row" onClick={onClick}>
+      {marker || <span className="sr-ico" aria-hidden="true"><Icon name={icon} /></span>}
+      <span className="sr-text"><span className="sr-label"><Hl text={label} q={q} /></span>{sub ? <small>{sub}</small> : null}</span>
+      <Icon name="caret-right" className="ph-sm" />
+    </button>
+  );
+}
+
+function SearchScreen() {
+  const { state, dispatch } = useStore();
+  const { pop, toast } = useActions();
+  const visible = useVisibleAlerts();
+  const now = useNow();
+  const [q, setQ] = useState("");
+  const box = useRef(null);
+  const input = useRef(null);
+  useEffect(() => { input.current?.focus(); }, []);
+  const nq = foldQuery(q);
+  const pos = state.session.position;
+  const recents = state.prefs.recentSearches || [];
+
+  const places = nq ? searchPlaces().filter((p) => fold(p.label).includes(nq))
+    .sort((a, b) => (fold(b.label).startsWith(nq) - fold(a.label).startsWith(nq)) || (PLACE_RANK[a.kind] - PLACE_RANK[b.kind]) || a.label.localeCompare(b.label, "fr")).slice(0, 6) : [];
+  const alerts = nq ? dedupeEvents(visible).filter((a) => [a.title, a.street, COMMUNE_BY_ID[a.communeId].name, CATEGORY_BY_ID[a.categoryId].label].some((t) => t && fold(t).includes(nq))).slice(0, 5) : [];
+  const cats = nq ? CATEGORIES.filter((c) => fold(c.label).includes(nq)).slice(0, 3) : [];
+  const total = places.length + alerts.length + cats.length;
+  const outside = nq && total === 0 ? OUT_OF_ZONE.find((n) => fold(n).includes(nq)) : null;
+
+  const remember = (item) => dispatch({ type: "ADD_RECENT", item });
+  const goPlace = (p) => { remember({ ...p, kind: p.kind }); dispatch({ type: "MAP_FOCUS", focus: { ...p, kind: "place", placeKind: p.kind } }); };
+  const goAlert = (a) => { remember({ kind: "alerte", label: a.title, id: a.id }); dispatch({ type: "MAP_FOCUS", focus: { kind: "alert", id: a.id } }); };
+  const goCat = (c) => {
+    remember({ kind: "categorie", label: c.label, id: c.id });
+    dispatch({ type: "SET_MAP_FILTER", patch: { type: "all", categories: [c.id] } });
+    dispatch({ type: "SET_TAB", tab: "alerts" });
+    toast(`Filtre : ${c.label}.`);
+  };
+  const goRecent = (r) => {
+    if (r.kind === "alerte") { const a = visible.find((x) => x.id === r.id); if (a) goAlert(a); else toast("Cette alerte n'est plus visible.", { tone: "error", actionLabel: "OK" }); return; }
+    if (r.kind === "categorie") { goCat(CATEGORY_BY_ID[r.id]); return; }
+    goPlace(r);
+  };
+  const first = () => (places[0] ? goPlace(places[0]) : alerts[0] ? goAlert(alerts[0]) : cats[0] ? goCat(cats[0]) : null);
+  const onKeyDown = (e) => {
+    const rows = [...(box.current?.querySelectorAll(".search-row, .search-recent .chip") || [])];
+    const i = rows.indexOf(document.activeElement);
+    if (e.key === "ArrowDown") { e.preventDefault(); rows[Math.min(rows.length - 1, i + 1)]?.focus(); }
+    if (e.key === "ArrowUp") { e.preventDefault(); if (i <= 0) input.current?.focus(); else rows[i - 1]?.focus(); }
+  };
+  const catChips = (
+    <div className="chip-row">{CATEGORIES.map((c) => <Chip key={c.id} icon={c.icon} onClick={() => goCat(c)}>{c.label}</Chip>)}</div>
+  );
+
+  return (
+    <div className="screen search-screen" onKeyDown={onKeyDown}>
+      <header className="search-header">
+        <IconButton icon="caret-left" label="Retour" className="flat" onClick={pop} />
+        <div className="search-field">
+          <Icon name="magnifying-glass" />
+          <input ref={input} className="input" type="search" placeholder="Commune, rue, alerte…" aria-label="Rechercher une commune, une rue, une alerte ou une catégorie"
+            autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") first(); }} />
+          {q ? <IconButton icon="x" label="Effacer la saisie" className="flat sf-clear" onClick={() => { setQ(""); input.current?.focus(); }} /> : null}
+        </div>
+      </header>
+      <p className="sr-only" aria-live="polite">{nq ? `${total} résultat${total > 1 ? "s" : ""}` : ""}</p>
+      <div className="screen-pad search-body" ref={box}>
+        {!nq ? (
+          <Fragment>
+            {pos.source !== "default" ? <SearchRow icon="crosshair" label={`Autour de moi · ${COMMUNE_BY_ID[pos.communeId]?.name || "ma position"}`} sub="Revenir à votre zone sur la carte" onClick={() => dispatch({ type: "MAP_FOCUS", focus: { kind: "home" } })} /> : null}
+            {recents.length ? (
+              <section className="search-group search-recent" aria-labelledby="sg-recent">
+                <div className="sg-head"><h2 id="sg-recent">Recherches récentes</h2><button type="button" className="btn btn-tertiary" onClick={() => dispatch({ type: "SET_PREF", key: "recentSearches", value: [] })}>Effacer</button></div>
+                <div className="chip-row">{recents.map((r) => <Chip key={r.kind + r.label} icon="clock-counter-clockwise" onClick={() => goRecent(r)}>{r.label}</Chip>)}</div>
+              </section>
+            ) : null}
+            <section className="search-group" aria-labelledby="sg-cats"><div className="sg-head"><h2 id="sg-cats">Catégories</h2></div>{catChips}</section>
+          </Fragment>
+        ) : outside ? (
+          <EmptyState icon="map-trifold" title="95 Alerte n'est pas encore disponible dans cette zone.">{outside} est hors du Val-d'Oise.</EmptyState>
+        ) : total === 0 ? (
+          <Fragment>
+            <EmptyState icon="magnifying-glass" title={`Aucun résultat pour « ${q.trim()} »`}>Vérifiez l'orthographe ou cherchez une commune.</EmptyState>
+            <section className="search-group" aria-labelledby="sg-cats2"><div className="sg-head"><h2 id="sg-cats2">Parcourir les catégories</h2></div>{catChips}</section>
+          </Fragment>
         ) : (
           <Fragment>
-            {near.length ? <section className="list-section"><h2 className="section-label">À moins de {zoneRadius(state)} km</h2>{near.map((a) => <AlertCard key={a.id} alert={a} onOpen={open} />)}</section> : null}
-            {rest.length ? <section className="list-section"><h2 className="section-label">Ailleurs dans le Val-d'Oise</h2>{rest.map((a) => <AlertCard key={a.id} alert={a} onOpen={open} />)}</section> : null}
+            {places.length ? <section className="search-group" aria-labelledby="sg-places"><div className="sg-head"><h2 id="sg-places">Lieux</h2></div>
+              {places.map((p) => <SearchRow key={p.kind + p.label + p.sub} icon={PLACE_ICON[p.kind]} label={p.label} sub={p.sub} q={nq} onClick={() => goPlace(p)} />)}</section> : null}
+            {alerts.length ? <section className="search-group" aria-labelledby="sg-alerts"><div className="sg-head"><h2 id="sg-alerts">Alertes</h2></div>
+              {alerts.map((a) => { const c = CATEGORY_BY_ID[a.categoryId]; return <SearchRow key={a.id} marker={<Marker family={c.family} icon={c.icon} />} label={a.title} sub={`${c.label} · ${COMMUNE_BY_ID[a.communeId].name} · ${fmtRelative(now - a.createdAt)}`} q={nq} onClick={() => goAlert(a)} />; })}</section> : null}
+            {cats.length ? <section className="search-group" aria-labelledby="sg-cats3"><div className="sg-head"><h2 id="sg-cats3">Catégories</h2></div>
+              {cats.map((c) => <SearchRow key={c.id} marker={<Marker family={c.family} icon={c.icon} />} label={c.label} sub="Filtrer la liste sur cette catégorie" q={nq} onClick={() => goCat(c)} />)}</section> : null}
+          </Fragment>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================================
+   FIL DE L'ONGLET ALERTES (phase 4) : sections, tri, filtres partagés avec la carte
+   ===================================================================== */
+let feedLoadedOnce = false;
+
+function FeedSection({ title, count, onAll, children }) {
+  return (
+    <section className="feed-section" aria-label={title}>
+      <div className="feed-head">
+        <h2>{title}{count != null ? <small> · {count}</small> : null}</h2>
+        {onAll ? <button type="button" className="btn btn-tertiary" onClick={onAll}>Tout voir</button> : null}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function FeedEnd({ onTop }) {
+  return (
+    <div className="feed-end">
+      <Icon name="check-circle" />
+      <p><b>Vous êtes à jour.</b>Les alertes disparaissent 24 h après leur publication.</p>
+      <button type="button" className="btn btn-tertiary" onClick={onTop}>Revenir en haut</button>
+    </div>
+  );
+}
+
+function feedGroups(list, sort, ctx) {
+  const { pos, now, hasPos, radius } = ctx;
+  const km = (a) => haversineKm(pos, a);
+  if (sort === "distance") {
+    const sorted = [...list].sort((a, b) => km(a) - km(b));
+    return [["Moins de 1 km", 0, 1], ["1 à 5 km", 1, 5], ["5 à 10 km", 5, 10], ["Au-delà de 10 km", 10, Infinity]]
+      .map(([t, lo, hi]) => ({ t, items: sorted.filter((a) => km(a) >= lo && km(a) < hi) }));
+  }
+  if (sort === "recent") {
+    const sorted = [...list].sort((a, b) => b.createdAt - a.createdAt);
+    const age = (a) => now - a.createdAt;
+    return [["Dernière heure", 0, HOUR], ["1 à 6 h", HOUR, 6 * HOUR], ["6 à 24 h", 6 * HOUR, Infinity]]
+      .map(([t, lo, hi]) => ({ t, items: sorted.filter((a) => age(a) >= lo && age(a) < hi) }));
+  }
+  // Pertinence : trois sections de trois alertes (sans doublon), puis le reste classé par score
+  const used = new Set();
+  const take = (arr) => arr.filter((a) => !used.has(a.id)).slice(0, 3).map((a) => { used.add(a.id); return a; });
+  const near = hasPos ? take(list.filter((a) => km(a) <= radius).sort((a, b) => km(a) - km(b))) : [];
+  const recent = take([...list].sort((a, b) => b.createdAt - a.createdAt));
+  const popular = take([...list].sort((a, b) => (b.votesUp + b.commentsCount) - (a.votesUp + a.commentsCount)));
+  const rest = list.filter((a) => !used.has(a.id)).sort((a, b) => relevance(b, pos, now) - relevance(a, pos, now));
+  return [
+    { t: "À proximité", items: near, all: "distance" },
+    { t: "Récentes", items: recent, all: "recent" },
+    { t: "Populaires", items: popular },
+    { t: "Toutes les autres", items: rest },
+  ];
+}
+
+function AlertsScreen() {
+  const { state, dispatch } = useStore();
+  const { push } = useActions();
+  const now = useNow();
+  const all = useVisibleAlerts();
+  const list = useFilteredAlerts();
+  const ref = useRef(null);
+  const [loading, setLoading] = useState(!feedLoadedOnce);
+  useEffect(() => {
+    if (!loading) return undefined;
+    const t = setTimeout(() => { setLoading(false); feedLoadedOnce = true; }, 700);
+    return () => clearTimeout(t);
+  }, [loading]);
+  const pos = state.session.position;
+  const hasPos = pos.source !== "default";
+  const sort = state.listSort === "distance" && !hasPos ? "relevance" : state.listSort;
+  const f = state.mapFilter;
+  const filtered = f.type !== "all" || activeFilterCount(f) > 0;
+  const radius = zoneRadius(state);
+  const groups = feedGroups(list, sort, { pos, now, hasPos, radius }).filter((g) => g.items.length);
+  const open = (a) => dispatch({ type: "MAP_FOCUS", focus: { kind: "alert", id: a.id } }); // la fiche complète arrive en phase 5
+  const top = () => ref.current?.scrollTo({ top: 0, behavior: motionReduced() ? "auto" : "smooth" });
+  const scope = hasPos ? `${COMMUNE_BY_ID[pos.communeId]?.name || "Ma position"} · ${radius} km` : "Tout le Val-d'Oise";
+  return (
+    <div className="screen feed" ref={ref}>
+      <div className="feed-top">
+        <div className="screen-title"><h1>Alertes</h1><p>{scope} · dernières 24 h</p></div>
+        <div className="map-top">
+          <button type="button" className="search" onClick={() => push("search")}><Icon name="magnifying-glass" /><span>Rechercher<small> · alerte, lieu, catégorie</small></span></button>
+          <FilterButton />
+        </div>
+        <TypeChips />
+      </div>
+      <div className="screen-pad feed-body">
+        <div className="feed-bar">
+          <span aria-live="polite">{loading ? "Chargement…" : <Fragment><b>{list.length}</b> alerte{list.length > 1 ? "s" : ""}{filtered ? " avec ces filtres" : ""}</Fragment>}</span>
+          <SortControl />
+        </div>
+        <ActiveFilters />
+        {loading ? (
+          <Fragment><Skeleton height={14} width="40%" /><Skeleton height={104} radius="var(--r-md)" /><Skeleton height={104} radius="var(--r-md)" /><Skeleton height={104} radius="var(--r-md)" /></Fragment>
+        ) : all.length === 0 ? (
+          <EmptyState title="Aucune alerte dans cette zone.">Revenez plus tard ou élargissez votre zone de recherche.</EmptyState>
+        ) : list.length === 0 ? (
+          <EmptyState icon="sliders-horizontal" title="Aucune alerte avec ces filtres." action={<Button variant="secondary" onClick={() => dispatch({ type: "RESET_MAP_FILTER" })}>Effacer les filtres</Button>}>Retirez un filtre, élargissez la période ou la distance.</EmptyState>
+        ) : (
+          <Fragment>
+            {groups.map((g) => (
+              <FeedSection key={g.t} title={g.t} count={sort === "relevance" ? null : g.items.length} onAll={g.all && !(g.all === "distance" && !hasPos) ? () => { dispatch({ type: "SET_LIST_SORT", sort: g.all }); top(); } : null}>
+                {g.items.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => open(a)} />)}
+              </FeedSection>
+            ))}
+            <FeedEnd onTop={top} />
           </Fragment>
         )}
       </div>
@@ -3071,8 +3475,137 @@ const STACK_SCREENS = {
   components: { component: ComponentsScreen },
   "verify-identity": { component: VerifyIdentityScreen, modal: true },
   commune: { component: CommuneScreen, modal: true },
+  search: { component: SearchScreen, modal: true },
 };
-const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: MapFiltersSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet } };
+const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet } };
+
+/* =====================================================================
+   ÉCRANS PAR PHASE (panneau de démo) : ouvrir directement ce qui a été réalisé à chaque phase
+   Le prototype complet ne change pas : chaque bouton place l'app dans l'état de l'écran choisi.
+   ===================================================================== */
+const DEMO_GPS = { ...DEFAULT_POSITION, source: "gps", communeId: "pontoise", permission: "granted", radiusKm: 5 };
+const jumpApp = (s, o = {}) => ({
+  ...s,
+  prefs: { ...s.prefs, onboardingSeen: true, reportHintSeen: true, homeView: "map", ...(o.prefs || {}) },
+  session: { ...s.session, status: "in", user: o.guest ? null : USERS.me, identity: o.guest ? "non_verifiee" : "verifiee", method: o.guest ? "invite" : "demo", position: o.position || DEMO_GPS },
+  mapFilter: o.mapFilter || DEFAULT_FILTER,
+  listSort: o.listSort || "relevance",
+  nav: o.nav || { tab: "map", stack: [] },
+  sheet: o.sheet || null,
+  modal: o.modal || null,
+  demo: { ...s.demo, ...(o.demo || {}) },
+  mapFocus: o.mapFocus ? { ...o.mapFocus, key: Date.now() } : null,
+});
+const jumpOnb = (step, slide = 0, o = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: false }, session: { ...s.session, status: "onboarding", user: null, position: o.position || DEFAULT_POSITION }, onb: { step, slide, pending: o.pending } });
+const jumpAuth = (step, extra = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: true }, session: { ...s.session, status: "auth", user: null }, auth: { ...initialAuth(), step, ...extra } });
+const jumpStack = (id) => ({ tab: "map", stack: [{ id, params: {}, key: `${id}-jump` }] });
+const jumpSheet = (id, snap = "half") => ({ id, params: {}, snap });
+const CARNOT = SEED_ALERTS.find((a) => a.id === "a1");
+
+const PHASE_SCREENS = [
+  { n: 0, title: "Fondations techniques et composants", items: [
+    ["Bibliothèque de composants", (s) => jumpApp(s, { nav: jumpStack("components") })],
+    ["Bottom sheet (exemple)", (s) => jumpApp(s, { sheet: jumpSheet("demo-sheet") })],
+    ["Modale de confirmation", (s) => jumpApp(s, { modal: { title: "Supprimer cette alerte ?", body: "Elle ne sera plus visible. Cette action est définitive.", confirmLabel: "Supprimer", destructive: true } })],
+    ["Hors connexion", (s) => jumpApp(s, { demo: { offline: true } })],
+    ["Onglet Activité", (s) => jumpApp(s, { nav: { tab: "activity", stack: [] } })],
+    ["Onglet Profil", (s) => jumpApp(s, { nav: { tab: "profile", stack: [] } })],
+  ] },
+  { n: 1, title: "Démarrage et connexion", items: [
+    ["Démarrage (splash)", (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: true }, session: { ...s.session, status: "splash", user: null } })],
+    ["Connexion", jumpAuth("login")],
+    ["FranceConnect", jumpAuth("fc")],
+    ["FranceConnect · chargement", jumpAuth("fc-loading")],
+    ["FranceConnect · erreur", jumpAuth("fc-error")],
+    ["Se connecter par e-mail", jumpAuth("signin")],
+    ["Inscription · nom", jumpAuth("signup-info")],
+    ["Inscription · téléphone", jumpAuth("signup-phone")],
+    ["Inscription · e-mail", jumpAuth("signup-email")],
+    ["Inscription · identité", jumpAuth("signup-id")],
+    ["Statut de l'identité", jumpAuth("id-status", { idResult: "reussie" })],
+    ["Profil public", jumpAuth("profile")],
+    ["Inscription terminée", jumpAuth("done")],
+    ["Profil sans compte", (s) => jumpApp(s, { guest: true, nav: { tab: "profile", stack: [] } })],
+  ] },
+  { n: 2, title: "Onboarding et territoire", items: [
+    ["Présentation · 1", jumpOnb("slides", 0)],
+    ["Présentation · 2", jumpOnb("slides", 1)],
+    ["Présentation · 3", jumpOnb("slides", 2)],
+    ["Localisation (amorce)", jumpOnb("location")],
+    ["Zone suivie (rayon)", jumpOnb("detected", 0, { position: DEMO_GPS })],
+    ["Préparation de la carte", jumpOnb("prep", 0, { position: DEMO_GPS, pending: { communeId: "pontoise", source: "gps" } })],
+    ["Localisation refusée", jumpOnb("denied")],
+    ["Position introuvable", jumpOnb("unavailable")],
+    ["Choisir sa commune", jumpOnb("commune")],
+    ["Bien démarrer (accueil)", (s) => jumpApp(s, { prefs: { startHidden: false, startVoted: false, startReported: false } })],
+  ] },
+  { n: 3, title: "Accueil : carte interactive", items: [
+    ["Carte d'accueil", (s) => jumpApp(s)],
+    ["Alerte sélectionnée", (s) => jumpApp(s, { mapFocus: { kind: "alert", id: "a1" } })],
+    ["Alerte de zone", (s) => jumpApp(s, { mapFocus: { kind: "alert", id: "a30" } })],
+    ["Bascule en liste", (s) => jumpApp(s, { prefs: { homeView: "list" } })],
+    ["Comprendre la carte", (s) => jumpApp(s, { sheet: jumpSheet("map-legend") })],
+    ["Carte sans position", (s) => jumpApp(s, { position: DEFAULT_POSITION })],
+    ["Zone sans alerte", (s) => jumpApp(s, { demo: { emptyZone: true } })],
+    ["Erreur de chargement", (s) => jumpApp(s, { demo: { networkError: true } })],
+    ["Beaucoup d'alertes", (s) => jumpApp(s, { demo: { manyAlerts: true } })],
+  ] },
+  { n: 4, title: "Liste, recherche et filtres", items: [
+    ["Fil des alertes", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] } })],
+    ["Autour de moi (tri distance)", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, listSort: "distance" })],
+    ["Récentes", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, listSort: "recent" })],
+    ["Trier par", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, sheet: jumpSheet("list-sort") })],
+    ["Filtres", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, sheet: jumpSheet("map-filters", "full") })],
+    ["Filtré : Positives + Culture + 5 km", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, mapFilter: { ...DEFAULT_FILTER, type: "positive", categories: ["culture"], distance: 5 } })],
+    ["Aucun résultat filtré", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [] }, mapFilter: { ...DEFAULT_FILTER, categories: ["sport"], period: "1h" } })],
+    ["Recherche", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [{ id: "search", params: {}, key: "search-jump" }] } })],
+    ["Lieu recherché sur la carte", (s) => jumpApp(s, { mapFocus: { kind: "place", placeKind: "lieu", label: CARNOT.street, sub: "Voie ou lieu · Pontoise", lat: CARNOT.lat, lng: CARNOT.lng, communeId: "pontoise", zoom: 120 } })],
+  ] },
+  { n: 5, title: "Fiche alerte et votes", items: [] },
+  { n: 6, title: "Création d'une alerte (+ Signaler)", items: [] },
+  { n: 7, title: "Commentaires et signalement de contenu", items: [] },
+  { n: 8, title: "Activité et notifications", items: [] },
+  { n: 9, title: "Profil, paramètres, aide, légal", items: [] },
+  { n: 10, title: "États transverses, recette et scénarios de test", items: [], scenarios: true },
+];
+/* Scénarios de test du PRD (§ scénarios) : jouables de bout en bout à la phase 10 */
+const TEST_SCENARIOS = [
+  ["S1", "Première utilisation"], ["S2", "Consultation"], ["S3", "Signalement positif"], ["S4", "Signalement négatif"], ["S5", "Interaction"],
+  ["S6", "Suppression"], ["S7", "Alerte proche"], ["S8", "Traitement"], ["S9", "Commentaire"], ["S10", "Signalement d'un contenu"],
+];
+
+function PhaseScreens({ onJump }) {
+  const { dispatch } = useStore();
+  const lastDone = PHASE_SCREENS.filter((p) => p.items.length).slice(-1)[0].n;
+  const [n, setN] = useState(lastDone);
+  const phase = PHASE_SCREENS[n];
+  return (
+    <section className="phase-screens" aria-labelledby="ps-title">
+      <p className="section-label" id="ps-title">Écrans par phase</p>
+      <div className="phase-tabs" role="group" aria-label="Choisir une phase">
+        {PHASE_SCREENS.map((p) => (
+          <button key={p.n} type="button" className={cx("phase-tab", !p.items.length && "is-todo")} aria-pressed={p.n === n} onClick={() => setN(p.n)}
+            aria-label={`Phase ${p.n} : ${p.title}${p.items.length ? "" : " (à venir)"}`}>{p.n}</button>
+        ))}
+      </div>
+      <p className="phase-name"><b>Phase {phase.n} · {phase.title}</b>{phase.items.length ? `${phase.items.length} écrans et états` : "À venir"}</p>
+      {phase.items.length ? (
+        <div className="list phase-list">
+          {phase.items.map(([label, make]) => (
+            <ListItem key={label} icon="play" label={label} onClick={() => { dispatch({ type: "JUMP", make }); onJump(); }} />
+          ))}
+        </div>
+      ) : phase.scenarios ? (
+        <Fragment>
+          <p className="demo-note">Les scénarios du PRD seront jouables de bout en bout à la dernière phase, une fois tous les écrans réalisés.</p>
+          <div className="list phase-list">
+            {TEST_SCENARIOS.map(([id, label]) => <ListItem key={id} icon="path" label={<Fragment>{id} · {label}<small className="li-sub">Phase 10</small></Fragment>} value="À venir" chevron={false} />)}
+          </div>
+        </Fragment>
+      ) : <p className="demo-note">Les écrans de cette phase apparaîtront ici dès qu'ils seront réalisés.</p>}
+    </section>
+  );
+}
 
 /* =====================================================================
    PANNEAU DE DÉMO (hors de l'app)
@@ -3111,6 +3644,8 @@ function DemoPanel() {
           </div>
           <hr />
           <Button variant="secondary" icon="squares-four" onClick={() => { if (state.session.status !== "in") dispatch({ type: "LOGIN", method: "demo", identity: "verifiee" }); push("components"); setOpen(false); }}>Bibliothèque de composants</Button>
+          <hr />
+          <PhaseScreens onJump={() => setOpen(false)} />
           <Button variant="ghost" icon="arrow-counter-clockwise" onClick={() => confirm({ title: "Réinitialiser le prototype ?", body: "Les alertes, votes et commentaires reviennent à leur état de départ. Vos préférences d'affichage sont conservées.", confirmLabel: "Réinitialiser", onConfirm: () => { reset(); toast("Prototype réinitialisé."); } })}>Réinitialiser</Button>
         </aside>
       ) : null}
@@ -3197,7 +3732,7 @@ function App() {
               ) : (
               <Fragment>
               <main className="screen-area">
-                <TabScreen />
+                <TabScreen key={state.nav.jump || 0} />
                 {state.nav.stack.map((s) => {
                   const def = STACK_SCREENS[s.id];
                   const C = def.component;
