@@ -143,6 +143,7 @@ Objectif : un **prototype interactif haute fidélité** de l'app citoyenne couvr
 | Format | **Un fichier HTML unique** publié en artefact (`prototype/index.html`) |
 | UI | React 18.3.1 + ReactDOM via `cdnjs.cloudflare.com`, JSX transpilé dans le navigateur par `@babel/standalone@7.26.4` (`cdn.jsdelivr.net/npm/`) |
 | Sources | `prototype/src/app.jsx`, `app.css`, `phosphor-sprite.svg` + CSS de `docs/design-system/index.html`, assemblés en un seul fichier par `tools/build_prototype.py` |
+| Code source React | `apps/prototype-web` : même prototype en projet **Vite 5 + React 18 + TypeScript** (un fichier par composant, store et modèle de données typés), qui lit les mêmes CSS, sprite et ressources ; converti depuis `app.jsx` par `tools/prototype_to_vite/` ; parité vérifiée sur les 94 écrans des phases 0 à 6 (voir `apps/prototype-web/README.md`) |
 | Styles | CSS inline avec les variables de `DESIGN_SYSTEM.md` (clair/sombre via `prefers-color-scheme` et `data-theme`) |
 | Icônes | **Phosphor Icons** en sprite SVG intégré (`@phosphor-icons/core@2.1.1`, généré par `tools/build_phosphor_sprite.py`), correspondances dans `DESIGN_SYSTEM.md` §5 |
 | Carte | **Carte simulée en SVG** du territoire (contour du Val-d'Oise, communes principales, quartiers fictifs), avec pan/zoom, 4 niveaux, clustering calculé côté client, hors-zone grisé. Aucune tuile externe. |

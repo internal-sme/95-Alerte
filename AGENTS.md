@@ -92,6 +92,12 @@ npx serve prototype                # ou : python3 -m http.server -d prototype 80
 # icônes : npm pack @phosphor-icons/core@2.1.1 && tar xzf phosphor-icons-core-2.1.1.tgz
 #          python3 tools/build_phosphor_sprite.py package/assets > prototype/src/phosphor-sprite.svg
 ```
+Code source React (Vite + TypeScript), même prototype en modules : voir `apps/prototype-web/README.md`.
+```bash
+cd apps/prototype-web && npm install && npm run dev   # http://localhost:5173
+npm run typecheck && npm run build
+tools/prototype_to_vite/convert.sh                     # reconvertit src/ depuis prototype/src/app.jsx
+```
 Les commandes de l'application de production (pnpm + Turborepo) seront fixées à l'initialisation du monorepo ; stack proposée dans ARCHITECTURE §7.
 
 ## Boundaries — demander avant de
