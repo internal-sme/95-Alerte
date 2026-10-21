@@ -38,7 +38,7 @@
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (internal-sme/95-Alerte#15) |
 | 5 | Fiche alerte + votes | ALERT-03 | ✅ Terminée (validée, PR vers `develop`) |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ✅ Terminée (validée, PR vers `develop`) |
-| 7 | Commentaires + signalement de contenu | ALERT-04 | 🟨 En cours (réalisée, en attente de validation) |
+| 7 | Commentaires + signalement de contenu | ALERT-04 | ✅ Terminée (validée, PR vers `develop`) |
 | 8 | Activité + notifications | PROFILE-01, UI-013 | ⬜ À faire |
 | 9 | Profil, paramètres, aide, légal | UI-014→024 | ⬜ À faire |
 | 10 | États transverses, finitions, recette, publication | UI-025→029 | ⬜ À faire |
@@ -448,3 +448,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-21 | 6 | Tâche 6.12 validée par l'utilisateur ; PR `phase/6-camera-reelle` → `develop`. |
 | 2026-10-21 | 7 | PR de la tâche 6.12 (internal-sme/95-Alerte#25) fusionnée ; branche `phase/7-commentaires` créée depuis `develop`. Benchmark Mobbin des commentaires et du signalement de contenu (`docs/benchmark/commentaires-refonte.html`, publié sur https://claude.ai/artifact/E2ASVJa6P6WQV3dNRUDc1U) : 12 flows (Nextdoor, Glassdoor, Coursera, Flo, komoot, YouTube, Digg, The New York Times, BeReal / Sora, Bluesky / Handshake, Weverse / Reddit / Realtor.com, Strava / Vrbo / Fable), états, matrice, 10 enseignements, audit, 8 écrans cibles, plan en 6 lots (tâches 7.1 à 7.6, 7.C). Décisions I1 à I6 en attente ; aucun développement avant validation. |
 | 2026-10-21 | 7 | Phase 7 réalisée selon I1 à I6 sur `phase/7-commentaires` : écran Commentaires (fil, réponses d'un niveau, identité choisie, suppression, masqué par la modération, états), signalement d'une alerte ou d'un commentaire (motif, confirmer, merci), règles de la communauté. Démo › Écrans par phase : 25 écrans ; canevas : 25 planches (page « Phase 7 ») ; React + TypeScript : `screens/comments/` (7 composants typés). Étiquette « New » de CameraState retirée (6.12 fusionnée). En attente de validation de l'utilisateur. |
+| 2026-10-21 | 7 | Phase 7 validée par l'utilisateur ; PR `phase/7-commentaires` → `develop`. Point reporté : « Mes commentaires » dans Activité (phase 8). |
