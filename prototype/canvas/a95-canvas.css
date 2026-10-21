@@ -851,6 +851,41 @@ mark.hl{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--brand
 .alert-card .ac-photo img{width:100%;height:100%;object-fit:cover;display:block}
 @media (prefers-reduced-motion: reduce){.detail-photo,.detail-thumbs :is(button,a){transition:none}}
 
+/* Fond de carte satellite (tâche 5.12) : images Copernicus Sentinel-2 sous les couches ; libellés clairs sur halo sombre */
+.map95.is-sat,.zone-map.is-sat{background:#24302A}
+.map-live.is-sat{background-image:none}
+.geo-sat image{image-rendering:auto}
+.geo-sat-mask{fill:rgba(15,23,42,.5)}
+.is-sat :is(.geo-dept,.geo-forest,.geo-lake,.geo-water,.geo-road-case){display:none}
+.is-sat .geo-road{stroke:rgba(255,236,170,.55)}
+.is-sat .geo-communes path{stroke:rgba(255,255,255,.4)}
+.is-sat .geo-quartiers path{stroke:rgba(255,255,255,.35)}
+.is-sat .geo-epci path{stroke:rgba(255,255,255,.6)}
+.is-sat .geo-dept-line{stroke:rgba(255,255,255,.9);stroke-width:2}
+.is-sat .geo-zone{fill:rgba(255,255,255,.08);stroke:#fff}
+.is-sat .map-label,.map-live.is-sat .map-label{color:#fff;text-shadow:0 0 2px rgba(0,0,0,.85),0 0 5px rgba(0,0,0,.6),0 1px 8px rgba(0,0,0,.5)}
+.is-sat .map-label.lbl-dept{color:rgba(255,255,255,.85)}
+.is-sat .map-label.lbl-water{color:#BFE6FF}
+.zone-map.is-sat .zone-ring{border-color:#fff;background:rgba(255,255,255,.08)}
+/* Choix du fond de carte : deux vignettes vivantes (Polarsteps, Flighty) */
+.map-style-choice{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2);width:100%}
+.map-style-opt{position:relative;display:grid;align-content:start;border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--surface);overflow:hidden;cursor:pointer}
+.map-style-opt input{position:absolute;opacity:0;pointer-events:none}
+.map-style-opt.is-selected{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+.map-style-opt:focus-within{outline:2px solid var(--focus-ring);outline-offset:2px}
+.ms-thumb{position:relative;display:block;height:88px;overflow:hidden;border-bottom:1px solid var(--border)}
+.ms-thumb .zone-map{pointer-events:none}
+.ms-thumb .me{width:12px;height:12px;border-width:2px}
+.ms-text{display:grid;gap:2px;padding:var(--s-2) var(--s-3) var(--s-3)}
+.ms-text b{font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
+.ms-text small{color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
+.ms-check{position:absolute;top:var(--s-2);right:var(--s-2);z-index:4;display:none;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--primary);color:var(--on-primary)}
+.ms-check .ph{width:14px;height:14px}
+.map-style-opt.is-selected .ms-check{display:grid}
+.onb-mapstyle .detected-panel{z-index:5;gap:var(--s-3)}
+.onb-mapstyle .ms-thumb{height:72px}
+.onb-mapstyle .detected-panel .step-progress{justify-self:stretch}
+
 
 /* ============ ÉCRANS DU PROTOTYPE ============ */
 .a95{position:relative;overflow:hidden;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font:400 var(--fs-body)/var(--lh-body) var(--font);-webkit-font-smoothing:antialiased;box-sizing:border-box}
@@ -999,6 +1034,8 @@ a.pill{text-decoration:none}
 .i-bell-slash{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M53.92,34.62A8,8,0,1,0,42.08,45.38L58.82,63.8A79.59,79.59,0,0,0,48,104c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.8a40,40,0,0,0,78.4,0h15.44l19.44,21.38a8,8,0,1,0,11.84-10.76ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a63.65,63.65,0,0,1,6.26-27.62L168.09,184Zm166-4.73a8.13,8.13,0,0,1-2.93.55,8,8,0,0,1-7.44-5.08C196.35,156.19,192,129.75,192,104A64,64,0,0,0,96.43,48.31a8,8,0,0,1-7.9-13.91A80,80,0,0,1,208,104c0,35.35,8.05,58.59,10.52,64.88A8,8,0,0,1,214,179.25Z%22/%3E%3C/svg%3E")}
 .i-images{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M216,40H72A16,16,0,0,0,56,56V72H40A16,16,0,0,0,24,88V200a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V184h16a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM72,56H216v62.75l-10.07-10.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L72,109.37ZM184,200H40V88H56v80a16,16,0,0,0,16,16H184Zm32-32H72V132l36-36,49.66,49.66a8,8,0,0,0,11.31,0L194.63,120,216,141.38V168ZM160,84a12,12,0,1,1,12,12A12,12,0,0,1,160,84Z%22/%3E%3C/svg%3E")}
 .i-caret-up{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M213.66,165.66a8,8,0,0,1-11.32,0L128,91.31,53.66,165.66a8,8,0,0,1-11.32-11.32l80-80a8,8,0,0,1,11.32,0l80,80A8,8,0,0,1,213.66,165.66Z%22/%3E%3C/svg%3E")}
+.i-stack{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M230.91,172A8,8,0,0,1,228,182.91l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,36,169.09l92,53.65,92-53.65A8,8,0,0,1,230.91,172ZM220,121.09l-92,53.65L36,121.09A8,8,0,0,0,28,134.91l96,56a8,8,0,0,0,8.06,0l96-56A8,8,0,1,0,220,121.09ZM24,80a8,8,0,0,1,4-6.91l96-56a8,8,0,0,1,8.06,0l96,56a8,8,0,0,1,0,13.82l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,24,80Zm23.88,0L128,126.74,208.12,80,128,33.26Z%22/%3E%3C/svg%3E")}
+.i-globe-hemisphere-west{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm88,104a87.62,87.62,0,0,1-6.4,32.94l-44.7-27.49a15.92,15.92,0,0,0-6.24-2.23l-22.82-3.08a16.11,16.11,0,0,0-16,7.86h-8.72l-3.8-7.86a15.91,15.91,0,0,0-11-8.67l-8-1.73L96.14,104h16.71a16.06,16.06,0,0,0,7.73-2l12.25-6.76a16.62,16.62,0,0,0,3-2.14l26.91-24.34A15.93,15.93,0,0,0,166,49.1l-.36-.65A88.11,88.11,0,0,1,216,128ZM143.31,41.34,152,56.9,125.09,81.24,112.85,88H96.14a16,16,0,0,0-13.88,8l-8.73,15.23L63.38,84.19,74.32,58.32a87.87,87.87,0,0,1,69-17ZM40,128a87.53,87.53,0,0,1,8.54-37.8l11.34,30.27a16,16,0,0,0,11.62,10l21.43,4.61L96.74,143a16.09,16.09,0,0,0,14.4,9h1.48l-7.23,16.23a16,16,0,0,0,2.86,17.37l.14.14L128,205.94l-1.94,10A88.11,88.11,0,0,1,40,128Zm102.58,86.78,1.13-5.81a16.09,16.09,0,0,0-4-13.9,1.85,1.85,0,0,1-.14-.14L120,174.74,133.7,144l22.82,3.08,45.72,28.12A88.18,88.18,0,0,1,142.58,214.78Z%22/%3E%3C/svg%3E")}
 .i-map-trifold-fill{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M228.92,49.69a8,8,0,0,0-6.86-1.45L160.93,63.52,99.58,32.84a8,8,0,0,0-5.52-.6l-64,16A8,8,0,0,0,24,56V200a8,8,0,0,0,9.94,7.76l61.13-15.28,61.35,30.68A8.15,8.15,0,0,0,160,224a8,8,0,0,0,1.94-.24l64-16A8,8,0,0,0,232,200V56A8,8,0,0,0,228.92,49.69ZM96,176a8,8,0,0,0-1.94.24L40,189.75V62.25L95.07,48.48l.93.46Zm120,17.75-55.07,13.77-.93-.46V80a8,8,0,0,0,1.94-.23L216,66.25Z%22/%3E%3C/svg%3E")}
 .i-list-bullets-fill{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM68,188a12,12,0,1,1,12-12A12,12,0,0,1,68,188Zm0-48a12,12,0,1,1,12-12A12,12,0,0,1,68,140Zm0-48A12,12,0,1,1,80,80,12,12,0,0,1,68,92Zm124,92H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Zm0-48H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Zm0-48H104a8,8,0,0,1,0-16h88a8,8,0,0,1,0,16Z%22/%3E%3C/svg%3E")}
 .i-pulse-fill{--m:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22%3E%3Cpath d=%22M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm-8,96H188.64L159,188a8,8,0,0,1-6.95,4h-.46a8,8,0,0,1-6.89-4.84L103,89.92,79,132a8,8,0,0,1-7,4H48a8,8,0,0,1,0-16H67.36L97.05,68a8,8,0,0,1,14.3.82L153,166.08l24-42.05a8,8,0,0,1,6.95-4h24a8,8,0,0,1,0,16Z%22/%3E%3C/svg%3E")}

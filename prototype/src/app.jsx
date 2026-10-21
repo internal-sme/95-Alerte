@@ -313,7 +313,7 @@ function cx(...parts) {
    STORE — état unique (useReducer)
    ===================================================================== */
 const PREFS_KEY = "95alerte:prefs";
-const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false, homeView: "map" };
+const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false, homeView: "map", mapStyle: "plan" };
 const DEFAULT_DEMO = { offline: false, permissionDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 function initialAuth() {
@@ -1151,6 +1151,26 @@ const GEO_LAYERS = MAP95 ? (
   </Fragment>
 ) : null;
 
+/* Vue satellite (tâche 5.12) : images Copernicus Sentinel-2 (10 m, 4 juin 2023) posées dans le même repère en km
+   que les couches vectorielles ; hors du Val-d'Oise, un voile garde la frontière lisible. Rien n'est chargé à l'exécution. */
+const SAT95 = (typeof window !== "undefined" && window.SAT_95) || null;
+const SAT_SOURCE = "Image Copernicus Sentinel-2, 2023";
+const SAT_LAYERS = SAT95 && MAP95 ? (
+  <g className="geo-sat">
+    {["dept", "sector"].map((k) => <image key={k} href={SAT95[k].href} x={SAT95[k].x} y={SAT95[k].y} width={SAT95[k].w} height={SAT95[k].h} preserveAspectRatio="none" />)}
+    <path className="geo-sat-mask" fillRule="evenodd" d={`M-60 -60H140V110H-60Z ${MAP95.dept}`} />
+  </g>
+) : null;
+const MAP_STYLES = [
+  { value: "plan", label: "Plan", description: "Simple et lisible : communes, routes, alertes bien contrastées" },
+  { value: "satellite", label: "Satellite", description: "Vue aérienne réelle, avec les noms des lieux par-dessus" },
+];
+/* Fond choisi (préférence locale) ; « satellite » seulement si les images sont embarquées */
+function useSatellite(force) {
+  const { state } = useStore();
+  return !!SAT_LAYERS && (force || state.prefs.mapStyle) === "satellite";
+}
+
 /* Libellés selon le niveau, sans chevauchement (les plus peuplés d'abord) */
 function mapLabels(level, toScreen, w, h, topInset = MAP_INSET_TOP - 16) {
   if (!MAP95) return [];
@@ -1211,6 +1231,7 @@ let lastMapZone = null;
 let mapLoadedOnce = false;
 
 const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect, zone, me, place, sheetMode, peek, loading, onViewChange, error }, ref) {
+  const sat = useSatellite();
   const box = useRef(null);
   const [size, setSize] = useState(null);
   const zoneKey = zone ? `${zone.center.lat},${zone.center.lng},${zone.radiusKm}` : "none";
@@ -1443,12 +1464,13 @@ const LiveMap = React.forwardRef(function LiveMap({ alerts, selectedId, onSelect
   };
 
   return (
-    <div ref={box} className={cx("map95", "map-live", `lv-${level}`, error && "is-error")} tabIndex={0} role="region"
+    <div ref={box} className={cx("map95", "map-live", `lv-${level}`, error && "is-error", sat && "is-sat")} tabIndex={0} role="region"
       aria-label="Carte des alertes. Flèches pour déplacer la carte, plus et moins pour zoomer."
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onKeyDown={onKeyDown} onDoubleClick={onDoubleClick}>
       {ready && !error ? (
         <svg className="map-geo" width={size.w} height={size.h} aria-hidden="true">
           <g transform={`translate(${size.w / 2 - v.cx * v.s} ${size.h / 2 - v.cy * v.s}) scale(${v.s})`}>
+            {sat ? SAT_LAYERS : null}
             {GEO_LAYERS}
             {zone ? <circle className="geo-zone" cx={projectKm(zone.center).x} cy={projectKm(zone.center).y} r={zone.radiusKm} /> : null}
             {loading ? null : alerts.filter((a) => a.areaKm).map((a) => <path key={a.id} className={cx("area-shape", `fam-${CATEGORY_BY_ID[a.categoryId].family}`, a.id === selectedId && "is-selected")} d={areaPath(a)} />)}
@@ -1498,10 +1520,11 @@ function MapLevelTag({ text, scale }) {
   );
 }
 
-function MapControls({ onZoomIn, onZoomOut, onLocate, onLegend, bottom, locateLabel }) {
+function MapControls({ onZoomIn, onZoomOut, onLocate, onLegend, onLayers, bottom, locateLabel }) {
   return (
     <div className="map-controls" style={{ bottom }}>
       <IconButton icon="info" label="Comprendre la carte" onClick={onLegend} />
+      {onLayers ? <IconButton icon="stack" label="Fond de carte" onClick={onLayers} /> : null}
       <div className="mc-zoom" role="group" aria-label="Zoom">
         <IconButton icon="plus" label="Zoomer" onClick={onZoomIn} />
         <IconButton icon="minus" label="Dézoomer" onClick={onZoomOut} />
@@ -1608,7 +1631,7 @@ function MapLegendSheet() {
       <ul className="legend-list">
         {rows.map((r) => <li key={r.t}><span className="legend-mark">{r.m}</span><span><b>{r.t}</b>{r.d}</span></li>)}
       </ul>
-      <p className="demo-note">Contours des communes : IGN (ADMIN EXPRESS). Quartiers de Cergy, Pontoise, Saint-Ouen-l'Aumône et Osny : découpage fictif pour la démonstration.</p>
+      <p className="demo-note">Contours des communes : IGN (ADMIN EXPRESS). Quartiers de Cergy, Pontoise, Saint-Ouen-l'Aumône et Osny : découpage fictif pour la démonstration. Vue satellite : images Copernicus Sentinel-2 (4 juin 2023), données libres.</p>
       <Banner tone="info" icon="siren" title="95 Alerte n'est pas un service de secours.">En cas d'urgence, appelez le 112.</Banner>
     </Fragment>
   );
@@ -1964,7 +1987,7 @@ function MapScreen() {
         </div>
       ) : (
         sheetH === "peek" ? (
-          <MapControls bottom={PEEK + 12} onLegend={() => openSheet("map-legend", {}, "half")}
+          <MapControls bottom={PEEK + 12} onLegend={() => openSheet("map-legend", {}, "half")} onLayers={SAT_LAYERS ? () => openSheet("map-style", {}, "half") : null}
             onZoomIn={() => map.current?.zoomBy(2)} onZoomOut={() => map.current?.zoomBy(0.5)} onLocate={recenter}
             locateLabel={showMe ? "Recentrer sur ma position" : "Recentrer sur ma zone"} />
         ) : null
@@ -2315,6 +2338,7 @@ function ProfileScreen() {
           <h2 className="section-label">Affichage</h2>
           <div className="list">
             <div className="list-block"><span className="lb-label">Thème</span><SegmentedControl block label="Thème" value={state.prefs.theme} onChange={(v) => setPref("theme", v)} options={[{ value: "light", label: "Clair", icon: "sun" }, { value: "system", label: "Auto", icon: "circle-half" }, { value: "dark", label: "Sombre", icon: "moon" }]} /></div>
+            {SAT_LAYERS ? <div className="list-block"><span className="lb-label">Fond de carte</span><MapStyleChoice center={state.session.position} /></div> : null}
             <div className="list-block"><span className="lb-label">Taille du texte</span><SegmentedControl block label="Taille du texte" value={state.prefs.textScale} onChange={(v) => setPref("textScale", v)} options={[100, 130, 160, 200].map((v) => ({ value: v, label: `${v} %` }))} /></div>
             <div className="list-block switch-row"><Switch id="pref-contrast" label="Contraste élevé" checked={state.prefs.highContrast} onChange={(v) => setPref("highContrast", v)} /></div>
             <div className="list-block switch-row"><Switch id="pref-motion" label="Réduire les animations" checked={state.prefs.reduceMotion} onChange={(v) => setPref("reduceMotion", v)} /></div>
@@ -3011,7 +3035,7 @@ const ONB_SLIDES = [
 ];
 // Photos générées (Magnific, d'après le flow Citizen) : embarquées par le build si présentes, sinon fragment de carte
 const ONB_PHOTOS = (typeof window !== "undefined" && window.ONB_PHOTOS) || {};
-const ONB_STEPS = 2; // Étape 1 : position · Étape 2 : zone suivie
+const ONB_STEPS = 3; // Étape 1 : position · Étape 2 : zone suivie · Étape 3 : fond de carte (tâche 5.12)
 const ZONE_RADII = [1, 5, 10];
 const PX_PER_KM = MAP_VIEW.ky / 111; // ≈ 43,8 px par km sur la carte illustrée
 // Communes voisines hors Val-d'Oise : état « hors territoire » (PRD §10.3)
@@ -3046,8 +3070,9 @@ function OnboardingTop({ onSkip, skipLabel = "Passer", logoRef, onMedia }) {
 }
 
 /* Zone suivie : carte illustrée mise à l'échelle autour de la position, cercle du rayon, alertes de la zone */
-function ZoneMap({ center, radiusKm, height, pins = true, label = true, stagger = false }) {
+function ZoneMap({ center, radiusKm, height, pins = true, label = true, stagger = false, ring = true, mapStyle }) {
   const alerts = useVisibleAlerts();
+  const sat = useSatellite(mapStyle);
   const ref = useRef(null);
   const [box, setBox] = useState({ w: 390, h: height || 844 });
   useLayoutEffect(() => { const el = ref.current; if (el) setBox({ w: el.clientWidth, h: el.clientHeight }); }, []);
@@ -3061,16 +3086,16 @@ function ZoneMap({ center, radiusKm, height, pins = true, label = true, stagger 
   const level = levelOf(s);
   const inZone = alerts.filter((a) => haversineKm(center, a) <= radiusKm);
   return (
-    <div className="zone-map" ref={ref} aria-hidden="true">
-      <div className={cx("map95", "map-live", "is-static", `lv-${level}`)}>
+    <div className={cx("zone-map", sat && "is-sat")} ref={ref} aria-hidden="true">
+      <div className={cx("map95", "map-live", "is-static", `lv-${level}`, sat && "is-sat")}>
         {MAP95 ? (
           <svg className="map-geo" width={box.w} height={box.h}>
-            <g className="zm-geo" style={{ transform: `translate(${cx0 - c.x * s}px, ${cy0 - c.y * s}px) scale(${s})` }}>{GEO_LAYERS}</g>
+            <g className="zm-geo" style={{ transform: `translate(${cx0 - c.x * s}px, ${cy0 - c.y * s}px) scale(${s})` }}>{sat ? SAT_LAYERS : null}{GEO_LAYERS}</g>
           </svg>
         ) : MAP_ART}
         {mapLabels(level, toScreen, box.w, box.h, 0).map((l) => <span key={l.key} className={cx("map-label", l.cls)} style={{ left: l.x, top: l.y }}>{l.text}</span>)}
       </div>
-      <span className="zone-ring" style={{ left: cx0, top: cy0, width: ringPx * 2, height: ringPx * 2 }}>{label ? <span className="zr-label">{radiusKm} km</span> : null}</span>
+      {ring ? <span className="zone-ring" style={{ left: cx0, top: cy0, width: ringPx * 2, height: ringPx * 2 }}>{label ? <span className="zr-label">{radiusKm} km</span> : null}</span> : null}
       {pins ? dedupeEvents(inZone).slice(0, 8).map((a, i) => {
         const k = projectKm(a);
         const p = toScreen(k.x, k.y);
@@ -3211,10 +3236,58 @@ function CommuneDetected() {
         <h1 className="onb-title">Vous êtes à {commune.name}</h1>
         <p className="onb-text">{near} alerte{near > 1 ? "s" : ""} dans votre zone de {r} km.</p>
         <SegmentedControl block label="Rayon de votre zone" value={r} onChange={(v) => dispatch({ type: "SET_RADIUS", km: v })} options={ZONE_RADII.map((k) => ({ value: k, label: `${k} km` }))} />
-        <Button block onClick={() => dispatch({ type: "ONB_GO", step: "prep", pending: { communeId: commune.id, source: "gps", coords: gps } })}>Continuer</Button>
+        <Button block onClick={() => dispatch({ type: "ONB_GO", step: "map-style", pending: { communeId: commune.id, source: "gps", coords: gps } })}>Continuer</Button>
         <Button block variant="ghost" onClick={() => dispatch({ type: "ONB_GO", step: "commune" })}>Ce n'est pas ma commune</Button>
       </div>
     </div>
+  );
+}
+
+/* Tâche 5.12 : choisir son fond de carte (Polarsteps, Flighty) ; la carte derrière change en direct */
+function MapStyleChoice({ center }) {
+  const { state, dispatch } = useStore();
+  const value = state.prefs.mapStyle || "plan";
+  return (
+    <div className="map-style-choice" role="radiogroup" aria-label="Fond de carte">
+      {MAP_STYLES.map((o) => (
+        <label key={o.value} className={cx("map-style-opt", value === o.value && "is-selected")}>
+          <input type="radio" name="map-style" value={o.value} checked={value === o.value} onChange={() => dispatch({ type: "SET_PREF", key: "mapStyle", value: o.value })} />
+          <span className="ms-thumb"><ZoneMap center={center} radiusKm={0.8} height={88} pins={false} label={false} ring={false} mapStyle={o.value} /></span>
+          <span className="ms-text"><b>{o.label}</b><small>{o.description}</small></span>
+          <span className="ms-check" aria-hidden="true"><Icon name="check" /></span>
+        </label>
+      ))}
+    </div>
+  );
+}
+
+function OnboardingMapStyle() {
+  const { state, dispatch } = useStore();
+  const p = state.onb.pending || {};
+  const c = p.communeId ? COMMUNE_BY_ID[p.communeId] : null;
+  const center = p.coords || (c ? { lat: c.lat, lng: c.lng } : DEFAULT_POSITION);
+  return (
+    <div className="screen auth onb detected onb-zone onb-mapstyle">
+      <ZoneMap center={center} radiusKm={zoneRadius(state)} />
+      <div className="detected-panel">
+        <StepProgress step={3} total={ONB_STEPS} />
+        <h1 className="onb-title">Quelle carte préférez-vous ?</h1>
+        <p className="onb-text">Les alertes s'affichent de la même façon sur les deux.</p>
+        <MapStyleChoice center={center} />
+        <p className="demo-note">Modifiable à tout moment : Profil › Affichage › Fond de carte.</p>
+        <Button block onClick={() => dispatch({ type: "ONB_GO", step: "prep" })}>Continuer</Button>
+      </div>
+    </div>
+  );
+}
+
+function MapStyleSheet() {
+  const { state } = useStore();
+  return (
+    <Fragment>
+      <MapStyleChoice center={state.session.position} />
+      <p className="demo-note">Satellite : {SAT_SOURCE} (Copernicus, données libres). Le choix est gardé sur cet appareil.</p>
+    </Fragment>
   );
 }
 
@@ -3276,7 +3349,7 @@ function CommunePicker({ onPick, onBack, title = "Votre commune" }) {
 function OnboardingCommune() {
   const { state, dispatch } = useStore();
   const back = () => dispatch({ type: "ONB_GO", step: state.session.position.permission === "denied" ? "denied" : "location" });
-  return <CommunePicker onBack={back} onPick={(c, source) => dispatch({ type: "ONB_GO", step: "prep", pending: { communeId: c.id, source } })} />;
+  return <CommunePicker onBack={back} onPick={(c, source) => dispatch({ type: "ONB_GO", step: "map-style", pending: { communeId: c.id, source } })} />;
 }
 
 /* Refus ou position introuvable : jamais bloquant, jamais rouge ; l'alternative passe en action principale */
@@ -3329,7 +3402,7 @@ function LocationHelpSheet() {
 }
 
 const ONB_SCREENS = {
-  slides: OnboardingSlides, location: LocationPrimer, detected: CommuneDetected, commune: OnboardingCommune, prep: OnboardingPrep,
+  slides: OnboardingSlides, location: LocationPrimer, detected: CommuneDetected, commune: OnboardingCommune, "map-style": OnboardingMapStyle, prep: OnboardingPrep,
   denied: () => <LocationDenied />, unavailable: () => <LocationDenied unavailable />,
 };
 function OnboardingFlow() {
@@ -3517,6 +3590,7 @@ function stepTimes(alert) {
    zone dessinée pour les alertes de zone, halo flou quand la catégorie n'affiche que le quartier (CDC §78) */
 function AlertMiniMap({ alert, height = 232 }) {
   const { state } = useStore();
+  const sat = useSatellite();
   const ref = useRef(null);
   const [w, setW] = useState(390);
   useLayoutEffect(() => { if (ref.current) setW(ref.current.clientWidth); }, []);
@@ -3531,11 +3605,12 @@ function AlertMiniMap({ alert, height = 232 }) {
   const me = pos.source !== "default" ? (() => { const k = projectKm(pos); return toScreen(k.x, k.y); })() : null;
   const fuzzy = cat.precision === "quartier" && !alert.areaKm;
   return (
-    <div className="zone-map alert-map" ref={ref} aria-hidden="true">
-      <div className={cx("map95", "map-live", "is-static", `lv-${level}`)}>
+    <div className={cx("zone-map", "alert-map", sat && "is-sat")} ref={ref} aria-hidden="true">
+      <div className={cx("map95", "map-live", "is-static", `lv-${level}`, sat && "is-sat")}>
         {MAP95 ? (
           <svg className="map-geo" width={w} height={height}>
             <g className="zm-geo" style={{ transform: `translate(${cx0 - c.x * s}px, ${cy0 - c.y * s}px) scale(${s})` }}>
+              {sat ? SAT_LAYERS : null}
               {GEO_LAYERS}
               {alert.areaKm ? <path className={cx("area-shape", `fam-${cat.family}`, "is-selected")} d={areaPath(alert)} /> : null}
             </g>
@@ -3993,6 +4068,7 @@ const STACK_SCREENS = {
   "photo-viewer": { component: PhotoViewer, modal: true },
 };
 const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet },
+  "map-style": { title: "Fond de carte", component: MapStyleSheet },
   "alert-timeline": { title: "Suivi du traitement", subtitle: (p, st) => { const a = st.alerts.find((x) => x.id === p.id); return a ? routeAlert(a).name : null; }, component: TimelineSheet },
   follow: { title: "Être prévenu ?", subtitle: (p, st) => (st.follows[p.id] ? "Vous suivez cette alerte" : "Choisissez ce qui vous sera notifié"), component: FollowSheet },
   "sign-in": { title: (p) => SIGN_IN_REASONS[p.reason || "vote"].title, component: SignInSheet },
@@ -4106,6 +4182,12 @@ const PHASE_SCREENS = [
     ["Chargement", (s) => jumpApp(s, { nav: jumpAlert("a1", { demo: "loading" }) })],
     ["Erreur de chargement", (s) => jumpApp(s, { nav: jumpAlert("a1"), demo: { networkError: true } })],
     ["Hors connexion", (s) => jumpApp(s, { nav: jumpAlert("a6"), demo: { offline: true } })],
+    ["Onboarding · choix de la carte", jumpOnb("map-style", 0, { position: DEMO_GPS, pending: { communeId: "pontoise", source: "gps", coords: { lat: 49.05388, lng: 2.09924 } } })],
+    ["Carte satellite", (s) => jumpApp(s, { prefs: { mapStyle: "satellite" } })],
+    ["Carte satellite · alerte sélectionnée", (s) => jumpApp(s, { prefs: { mapStyle: "satellite" }, mapFocus: { kind: "alert", id: "a30" } })],
+    ["Fiche · mini-carte satellite", (s) => jumpApp(s, { prefs: { mapStyle: "satellite" }, nav: jumpAlert("a1") })],
+    ["Fond de carte (depuis la carte)", (s) => jumpApp(s, { sheet: jumpSheet("map-style") })],
+    ["Profil · fond de carte", (s) => jumpApp(s, { nav: { tab: "profile", stack: [] } })],
   ] },
   { n: 6, title: "Création d'une alerte (+ Signaler)", items: [] },
   { n: 7, title: "Commentaires et signalement de contenu", items: [] },

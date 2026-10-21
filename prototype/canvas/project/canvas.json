@@ -1986,6 +1986,132 @@
       "title": "Voter sans compte (sombre)",
       "is_interactive": true,
       "page": "p5"
+    },
+    "OnbMapStyle.dc.html": {
+      "x": 0,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (plan)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "OnbMapStyle-dark.dc.html": {
+      "x": 0,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (plan) (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "OnbMapStyleSat.dc.html": {
+      "x": 470,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (satellite)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "OnbMapStyleSat-dark.dc.html": {
+      "x": 470,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (satellite) (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheet.dc.html": {
+      "x": 940,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · plan",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheet-dark.dc.html": {
+      "x": 940,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · plan (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheetSat.dc.html": {
+      "x": 1410,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · satellite",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheetSat-dark.dc.html": {
+      "x": 1410,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · satellite (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapSatellite.dc.html": {
+      "x": 1880,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Carte satellite",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapSatellite-dark.dc.html": {
+      "x": 1880,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Carte satellite (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailSatellite.dc.html": {
+      "x": 2350,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · mini-carte satellite",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailSatellite-dark.dc.html": {
+      "x": 2350,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · mini-carte satellite (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "ProfileMapStyle.dc.html": {
+      "x": 2820,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Profil · fond de carte",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "ProfileMapStyle-dark.dc.html": {
+      "x": 2820,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Profil · fond de carte (sombre)",
+      "is_interactive": true,
+      "page": "p5"
     }
   },
   "order": [
@@ -2205,7 +2331,21 @@
     "DetailOffline.dc.html",
     "DetailOffline-dark.dc.html",
     "DetailGuest.dc.html",
-    "DetailGuest-dark.dc.html"
+    "DetailGuest-dark.dc.html",
+    "OnbMapStyle.dc.html",
+    "OnbMapStyle-dark.dc.html",
+    "OnbMapStyleSat.dc.html",
+    "OnbMapStyleSat-dark.dc.html",
+    "MapStyleSheet.dc.html",
+    "MapStyleSheet-dark.dc.html",
+    "MapStyleSheetSat.dc.html",
+    "MapStyleSheetSat-dark.dc.html",
+    "MapSatellite.dc.html",
+    "MapSatellite-dark.dc.html",
+    "DetailSatellite.dc.html",
+    "DetailSatellite-dark.dc.html",
+    "ProfileMapStyle.dc.html",
+    "ProfileMapStyle-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -2445,6 +2585,31 @@
       "fill": "blue",
       "page": "p5",
       "text": "Phase 5 · fiche alerte et votes (rapport docs/benchmark/fiche-refonte.html)\n\nPlay sur « Fiche · nid-de-poule » : Confirmer enregistre le vote (retoucher le retire), Suivre ouvre « Être prévenu ? » au premier suivi, Partager montre ce qui est partagé, « Voir le suivi du traitement » la timeline, ⋯ le menu. « Fiche · incendie urgent » mène à « Situation urgente ? » et aux doublons ; « Fiche · mon alerte » à la suppression confirmée.\n\nDécisions : G1 fiche en écran empilé (smart animate du type et du titre depuis le résumé) ; G2 un vote modifiable, retirable ; G3 112, 18, 17, 15, 114 et un seul bouton rouge ; G4 photos Magnific (mini-carte sans photo) ; G5 expirée en lecture seule ; G6 aperçu des commentaires.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+    },
+    "p5Map": {
+      "x": 0,
+      "y": 4500,
+      "text": "Tâche 5.12 · fond de carte plan ou satellite · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5MapDark": {
+      "x": 0,
+      "y": 5700,
+      "text": "Tâche 5.12 · fond de carte · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5MapHow": {
+      "x": 3290,
+      "y": 4800,
+      "w": 340,
+      "maxH": 700,
+      "fill": "blue",
+      "page": "p5",
+      "text": "Tâche 5.12 · choisir son fond de carte\n\nOnboarding, étape 3 sur 3 : « Quelle carte préférez-vous ? », Plan ou Satellite ; la carte derrière change en direct. Ensuite : Profil › Affichage › Fond de carte, ou le bouton « calques » de la carte.\n\nSatellite : images Copernicus Sentinel-2 du 4 juin 2023 (10 m par pixel, données libres), posées sous les communes, routes et libellés. Google Earth ne peut pas être intégré au prototype : les artefacts bloquent les scripts, images et cadres de Google, et ses conditions interdisent de stocker ses images. En production, l'app pourra utiliser la vue satellite du SDK Google Maps (clé et facturation) ou les orthophotos IGN."
     }
   },
   "designSystems": []

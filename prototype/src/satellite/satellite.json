@@ -1,0 +1,23 @@
+{
+ "source": "Contient des données Copernicus Sentinel modifiées 2023 (Sentinel-2 L2A, 4 juin 2023)",
+ "dept": {
+  "x": -0.36,
+  "y": -0.5900000000000001,
+  "w": 74.53,
+  "h": 39.44,
+  "px": [
+   2981,
+   1578
+  ]
+ },
+ "sector": {
+  "x": 24.0,
+  "y": 13.0,
+  "w": 20.0,
+  "h": 15.0,
+  "px": [
+   2000,
+   1500
+  ]
+ }
+}

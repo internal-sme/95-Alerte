@@ -43,6 +43,8 @@ ICONS = [
     "arrows-down-up", "clock-counter-clockwise", "arrow-up",
     # Fiche alerte (phase 5)
     "whatsapp-logo", "chat-text", "link", "bell-ringing", "bell-slash", "images", "caret-up",
+    # Fond de carte (tâche 5.12)
+    "stack", "globe-hemisphere-west",
 ]
 FILL = [
     "map-trifold", "list-bullets", "pulse", "user-circle", "bell", "arrow-fat-up",

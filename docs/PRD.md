@@ -70,6 +70,7 @@ Contexte d'usage : smartphone, **utilisation à une main, en mobilité**, consul
   3. « Une bonne nouvelle ? Partagez-la aussi. »
   4. « Votre territoire, votre vigilance. » — CTA **Commencer**
 - Choix du territoire (UI-006) et demande de géolocalisation **facultative** (UI-007).
+- **Choix du fond de carte** (ajout phase 5, tâche 5.12) : « Quelle carte préférez-vous ? » Plan ou Satellite, modifiable à tout moment dans les paramètres.
 
 ### F-02 · Connexion et identité (§8, §9, §43)
 - **FranceConnect** : « Continuer avec FranceConnect », avec une explication de la sécurisation de l'identité.
@@ -86,6 +87,7 @@ Contexte d'usage : smartphone, **utilisation à une main, en mobilité**, consul
 - **Ma position** : point « Vous êtes ici ». L'app fonctionne aussi avec une position choisie manuellement.
 - Tap sur un marqueur → **bottom sheet** de résumé (catégorie, ville, ancienneté, extrait, votes, commentaires, « Voir le détail »).
 - Barre de recherche en haut ; accès aux notifications et au profil.
+- **Fond de carte** Plan ou Satellite (bouton calques), même affichage des alertes sur les deux.
 
 ### F-04 · Recherche (§45) — UI-012
 - Recherche par ville, quartier, rue, événement, catégorie.
