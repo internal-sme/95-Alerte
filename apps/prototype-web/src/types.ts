@@ -64,7 +64,7 @@ export interface Alert extends LatLng {
   votesDown: number;
   commentsCount: number;
   hasPhoto: boolean;
-  /** Clés des photos (prototype/src/alertes/<clé>.webp) */
+  /** Photos : clés des photos de démonstration (prototype/src/alertes/<clé>.webp) ou photos prises avec l'appareil photo (data URL) */
   photos?: string[];
   transmission: TransmissionStep;
   status: AlertStatus;
@@ -72,13 +72,28 @@ export interface Alert extends LatLng {
   areaKm: number | null;
 }
 
+/** Commentaire d'une alerte (F-10). Le nom public suit la règle des alertes : « Jean D. » ou « Citoyen anonyme » (I1). */
 export interface Comment {
   id: string;
   authorId: string;
   anonymous: boolean;
   body: string;
-  ageMin: number;
+  /** Commentaires de démonstration : âge en minutes au lancement */
+  ageMin?: number;
+  /** Commentaires publiés pendant la session : horodatage */
+  createdAt?: number;
+  /** Réponse : identifiant du commentaire racine (un seul niveau, I3) */
   parentId?: string;
+  /** Supprimé par son auteur (avec des réponses) ou masqué par la modération */
+  status?: "deleted" | "moderated";
+}
+
+/** Motif d'un signalement de contenu (F-11) */
+export type ReportReason = "faux" | "offensant" | "dangereux" | "spam" | "illegal" | "categorie" | "lieu" | "doublon" | "autre";
+
+/** Signalement envoyé : clé « alert:<id> » ou « comment:<alerte>:<commentaire> » (I5 : un par contenu et par personne) */
+export interface ContentReport {
+  reason: ReportReason;
 }
 
 export interface Notification {
@@ -103,7 +118,10 @@ export interface Position extends LatLng {
 /* ---- Signalement (phase 6) ---- */
 export interface DraftPhoto {
   id: string;
-  key: string;
+  /** Photo de démonstration (prototype/src/alertes/<clé>.webp) */
+  key: string | null;
+  /** Photo prise avec l'appareil photo (data URL JPEG) */
+  src?: string | null;
   status: "uploading" | "done" | "error";
   progress: number;
 }
@@ -117,6 +135,9 @@ export interface DraftPlace extends LatLng {
   quartier?: string;
   street?: string | null;
 }
+
+/** États de l'écran caméra : vraie caméra (getUserMedia) ou caméra simulée */
+export type CameraMode = "detecting" | "asking" | "live" | "denied" | "unavailable" | "simulated";
 
 export type ReportStep = "type" | "category" | "place" | "description" | "photo" | "identity" | "preview" | "publishing" | "done" | "error" | "refused";
 
@@ -132,7 +153,8 @@ export interface Draft {
   photos: DraftPhoto[];
   identity: Identity | null;
   saved?: boolean;
-  camera?: boolean;
+  /** Ouvrir la caméra à l'arrivée sur l'étape ; une chaîne force un état (démo) : « asking », « denied »… */
+  camera?: boolean | CameraMode;
   publishedId?: string;
 }
 
@@ -148,6 +170,8 @@ export interface Prefs {
   mapStyle: "plan" | "satellite";
   /** Dernier choix d'identité au signalement (H3) */
   lastIdentity?: Identity;
+  /** Dernière identité choisie pour commenter (I1) */
+  lastCommentIdentity?: Identity;
   /** Niveau de suivi proposé, et opt-in déjà demandé (phase 5) */
   followLevel?: FollowLevel;
   followAsked?: boolean;
@@ -161,6 +185,8 @@ export interface Prefs {
 export interface DemoFlags {
   offline: boolean;
   permissionDenied: boolean;
+  /** Mode démo : l'appareil photo est refusé */
+  cameraDenied: boolean;
   gpsUnavailable: boolean;
   networkError: boolean;
   emptyZone: boolean;
@@ -201,6 +227,7 @@ export interface AppState {
   listSort: string;
   mapFocus: any;
   draft: Draft | null;
+  reports: Record<string, ContentReport>;
   sheet: { id: string; params?: Record<string, any>; [key: string]: any } | null;
   modal: any;
   toasts: Toast[];

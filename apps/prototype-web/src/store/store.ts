@@ -1,7 +1,8 @@
 import { createContext, useContext, useMemo, type Dispatch } from "react";
 import type { Action, AppState } from "@/types";
-import { BOOT_TIME, COMMUNE_BY_ID, SEED_ALERTS, SEED_COMMENTS, SEED_NOTIFICATIONS, USERS, generateManyAlerts } from "@/data/seed";
+import { BOOT_TIME, COMMUNE_BY_ID, SEED_ALERTS, SEED_NOTIFICATIONS, USERS, generateManyAlerts } from "@/data/seed";
 import { DEFAULT_FILTER } from "@/filters/filters";
+import { seedThread } from "@/screens/comments/comments";
 import { storage } from "@/utils/index";
 
 /* =====================================================================
@@ -12,7 +13,7 @@ export const PREFS_KEY = "95alerte:prefs";
 
 export const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false, homeView: "map", mapStyle: "plan" };
 
-export const DEFAULT_DEMO = { offline: false, permissionDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
+export const DEFAULT_DEMO = { offline: false, permissionDenied: false, cameraDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 export function initialAuth() {
   return {
@@ -37,7 +38,8 @@ export function initialState(): AppState {
     alerts: SEED_ALERTS,
     votes: { a4: 1, a8: 1 },
     follows: { a1: "all" }, // niveau de suivi : « all » (tout changement), « status » (traitement seul), « none » (sans notification)
-    comments: SEED_COMMENTS,
+    comments: {}, // fils de commentaires par alerte, créés à la demande depuis seedThread (phase 7)
+    reports: {}, // signalements de contenu envoyés : « alert:a1 » ou « comment:a1:c3 » → { reason } (phase 7, I5)
     notifications: SEED_NOTIFICATIONS,
     nav: { tab: "map", stack: [] },
     mapFilter: DEFAULT_FILTER,
@@ -70,6 +72,25 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...state, modal: action.modal };
     case "CLOSE_MODAL":
       return { ...state, modal: null };
+    case "ADD_COMMENT": { // 7.2 : le compteur de l'alerte suit, partout (fiche, carte, liste)
+      const alert = state.alerts.find((a) => a.id === action.alertId);
+      const list = state.comments[alert.id] || seedThread(alert);
+      return {
+        ...state,
+        comments: { ...state.comments, [alert.id]: [...list, action.comment] },
+        alerts: state.alerts.map((a) => (a.id === alert.id ? { ...a, commentsCount: a.commentsCount + 1 } : a)),
+        prefs: { ...state.prefs, lastCommentIdentity: action.comment.anonymous ? "anonymous" : "profile" },
+      };
+    }
+    case "DELETE_COMMENT": { // 7.3 : avec des réponses, une ligne « Commentaire supprimé » garde leur contexte
+      const alert = state.alerts.find((a) => a.id === action.alertId);
+      const list = state.comments[alert.id] || seedThread(alert);
+      const hasReplies = list.some((c) => c.parentId === action.commentId && c.status !== "deleted");
+      const next = hasReplies ? list.map((c) => (c.id === action.commentId ? { ...c, status: "deleted" as const, body: "" } : c)) : list.filter((c) => c.id !== action.commentId);
+      return { ...state, comments: { ...state.comments, [alert.id]: next }, alerts: state.alerts.map((a) => (a.id === alert.id ? { ...a, commentsCount: Math.max(0, a.commentsCount - 1) } : a)) };
+    }
+    case "REPORT_CONTENT": // 7.4, 7.5 : un signalement par contenu et par personne ; le contenu reste visible (I5)
+      return { ...state, reports: { ...state.reports, [action.key]: { reason: action.reason } } };
     case "TOAST":
       return { ...state, toasts: [{ id: ++toastSeq, ...action.toast }] }; // un seul toast à la fois : le dernier remplace le précédent
     case "DISMISS_TOAST":

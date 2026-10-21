@@ -123,3 +123,14 @@ s = (R/'store/store.ts').read_text()
 s = s.replace('import { createContext, useContext, useMemo } from "react";', 'import { createContext, useContext, useMemo, type Dispatch } from "react";\nimport type { Action, AppState } from "@/types";', 1)
 (R/'store/store.ts').write_text(s)
 edit('screens/auth/SignupInfoScreen.tsx', [('const [errors, setErrors] = useState({});', 'const [errors, setErrors] = useState<Record<string, string | null>>({});')])
+
+# Caméra réelle : Permissions Policy (API Chrome, absente des types du DOM)
+edit('screens/report/report.ts', [('  const policy = document.permissionsPolicy || document.featurePolicy;',
+  '  const doc = document as Document & { permissionsPolicy?: { allowsFeature(feature: string): boolean }; featurePolicy?: { allowsFeature(feature: string): boolean } };\n  const policy = doc.permissionsPolicy || doc.featurePolicy;')])
+
+# Phase 7 : statuts de commentaire typés
+edit('store/store.ts', [('{ ...c, status: "deleted", body: "" }', '{ ...c, status: "deleted" as const, body: "" }')])
+edit('demo/catalog.ts', [('  const mine = { ...MY_COMMENT, createdAt: Date.now() - 2 * MIN, ...patch };', '  const mine: Comment = { ...MY_COMMENT, createdAt: Date.now() - 2 * MIN, ...patch };')])
+s = (R/'demo/catalog.ts').read_text()
+s = s.replace('\n/* =====', '\nimport type { Comment } from "@/types";\n\n/* =====', 1); (R/'demo/catalog.ts').write_text(s)
+edit('screens/comments/ReportContentScreen.tsx', [('onChange={setReason}', 'onChange={(v) => setReason(v as ReportReason)}')])

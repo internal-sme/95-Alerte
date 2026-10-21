@@ -201,6 +201,7 @@ const SEED_COMMENTS = {
   a1: [
     { id: "c1", authorId: "u2", anonymous: false, body: "Les pompiers arrivent, on entend les sirènes depuis la place.", ageMin: 8 },
     { id: "c2", authorId: "u5", anonymous: true, body: "Merci pour l'info, je passe par Saint-Martin.", ageMin: 4, parentId: "c1" },
+    { id: "c7", authorId: "u8", anonymous: false, body: "", ageMin: 6, status: "moderated" }, // masqué par la modération (7.6) : le texte n'est jamais affiché
   ],
   a3: [{ id: "c3", authorId: "u7", anonymous: false, body: "Le service est passé ce midi, tout est propre maintenant.", ageMin: 90 }],
   a4: [
@@ -314,7 +315,7 @@ function cx(...parts) {
    ===================================================================== */
 const PREFS_KEY = "95alerte:prefs";
 const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false, homeView: "map", mapStyle: "plan" };
-const DEFAULT_DEMO = { offline: false, permissionDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
+const DEFAULT_DEMO = { offline: false, permissionDenied: false, cameraDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 function initialAuth() {
   return {
@@ -339,7 +340,8 @@ function initialState() {
     alerts: SEED_ALERTS,
     votes: { a4: 1, a8: 1 },
     follows: { a1: "all" }, // niveau de suivi : « all » (tout changement), « status » (traitement seul), « none » (sans notification)
-    comments: SEED_COMMENTS,
+    comments: {}, // fils de commentaires par alerte, créés à la demande depuis seedThread (phase 7)
+    reports: {}, // signalements de contenu envoyés : « alert:a1 » ou « comment:a1:c3 » → { reason } (phase 7, I5)
     notifications: SEED_NOTIFICATIONS,
     nav: { tab: "map", stack: [] },
     mapFilter: DEFAULT_FILTER,
@@ -372,6 +374,25 @@ function reducer(state, action) {
       return { ...state, modal: action.modal };
     case "CLOSE_MODAL":
       return { ...state, modal: null };
+    case "ADD_COMMENT": { // 7.2 : le compteur de l'alerte suit, partout (fiche, carte, liste)
+      const alert = state.alerts.find((a) => a.id === action.alertId);
+      const list = state.comments[alert.id] || seedThread(alert);
+      return {
+        ...state,
+        comments: { ...state.comments, [alert.id]: [...list, action.comment] },
+        alerts: state.alerts.map((a) => (a.id === alert.id ? { ...a, commentsCount: a.commentsCount + 1 } : a)),
+        prefs: { ...state.prefs, lastCommentIdentity: action.comment.anonymous ? "anonymous" : "profile" },
+      };
+    }
+    case "DELETE_COMMENT": { // 7.3 : avec des réponses, une ligne « Commentaire supprimé » garde leur contexte
+      const alert = state.alerts.find((a) => a.id === action.alertId);
+      const list = state.comments[alert.id] || seedThread(alert);
+      const hasReplies = list.some((c) => c.parentId === action.commentId && c.status !== "deleted");
+      const next = hasReplies ? list.map((c) => (c.id === action.commentId ? { ...c, status: "deleted", body: "" } : c)) : list.filter((c) => c.id !== action.commentId);
+      return { ...state, comments: { ...state.comments, [alert.id]: next }, alerts: state.alerts.map((a) => (a.id === alert.id ? { ...a, commentsCount: Math.max(0, a.commentsCount - 1) } : a)) };
+    }
+    case "REPORT_CONTENT": // 7.4, 7.5 : un signalement par contenu et par personne ; le contenu reste visible (I5)
+      return { ...state, reports: { ...state.reports, [action.key]: { reason: action.reason } } };
     case "TOAST":
       return { ...state, toasts: [{ id: ++toastSeq, ...action.toast }] }; // un seul toast à la fois : le dernier remplace le précédent
     case "DISMISS_TOAST":
@@ -833,18 +854,33 @@ function CategoryTile({ category, selected, onClick }) {
   );
 }
 
-function CommentItem({ comment, reply, readOnly }) {
+const commentTime = (c) => c.createdAt ?? BOOT_TIME - c.ageMin * MIN;
+function CommentItem({ comment, reply, readOnly, mine, isAuthor, highlight, onReply, onMenu }) {
   const now = useNow();
+  if (comment.status === "deleted" || comment.status === "moderated") {
+    return (
+      <div className={cx("comment-line", reply && "reply")} role="note">
+        <Icon name={comment.status === "moderated" ? "prohibit" : "trash"} />
+        {comment.status === "moderated" ? "Ce commentaire a été masqué par la modération." : "Commentaire supprimé par son auteur."}
+      </div>
+    );
+  }
   const author = publicAuthor(comment);
+  const when = fmtRelative(now - commentTime(comment));
   return (
-    <div className={cx("comment", reply && "reply")}>
+    <article className={cx("comment", reply && "reply", mine && "is-mine", highlight && "is-new")} aria-label={`Commentaire de ${author.name}${mine ? " (vous)" : ""}, ${when}`}>
       <span className={cx("avatar", author.anonymous && "anon")} aria-hidden="true">{author.anonymous ? <Icon name="detective" /> : author.initials}</span>
       <div>
-        <div className="who">{author.name} <time>{fmtRelative(now - (BOOT_TIME - comment.ageMin * MIN))}</time></div>
+        <div className="who">{author.name}{mine ? " (vous)" : ""}{isAuthor ? <span className="comment-badge">Auteur</span> : null} <time>{when}</time></div>
         <p>{comment.body}</p>
-        {readOnly ? null : <div className="acts"><button type="button">Répondre</button><button type="button">Signaler</button></div>}
+        {readOnly ? null : (
+          <div className="acts">
+            <button type="button" onClick={onReply}><Icon name="arrow-bend-up-left" className="ph-sm" />Répondre</button>
+            <IconButton icon="dots-three" label={`Options du commentaire de ${author.name}`} className="flat comment-more" onClick={onMenu} />
+          </div>
+        )}
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -2643,19 +2679,99 @@ function StepDescription({ d, set, next }) {
 
 /* 6.6 : photos simulées (H5) — caméra avec consigne, galerie fictive, envoi avec progression, erreur et réessai */
 const demoGallery = () => Object.keys(PHOTO_ALT); // photos de démonstration (définies avec la fiche, phase 5)
-function CameraOverlay({ photoKey, onShoot, onClose }) {
+/* Vraie caméra quand l'appareil en a une (getUserMedia) : le navigateur demande l'autorisation.
+   Sans caméra, ou si la page n'y a pas droit (ex. artefact intégré sans droit caméra), caméra simulée. */
+async function detectCamera() {
+  const md = navigator.mediaDevices;
+  if (!md || !md.getUserMedia || !window.isSecureContext) return "none";
+  const policy = document.permissionsPolicy || document.featurePolicy;
+  if (policy && policy.allowsFeature && !policy.allowsFeature("camera")) return "none";
+  try {
+    const devices = await md.enumerateDevices();
+    return devices.some((dev) => dev.kind === "videoinput") ? "available" : "none";
+  } catch (e) {
+    return "none";
+  }
+}
+const CAMERA_MAX_SIDE = 1600; // photo réduite avant l'envoi (la capture d'écran du flux ne contient aucune métadonnée de position)
+function captureFrame(video) {
+  const k = Math.min(1, CAMERA_MAX_SIDE / Math.max(video.videoWidth, video.videoHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(video.videoWidth * k);
+  canvas.height = Math.round(video.videoHeight * k);
+  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.85);
+}
+const CAMERA_STATES = {
+  asking: { icon: "camera", title: "Autorisez l'accès à l'appareil photo", text: "Votre navigateur vous demande l'autorisation. L'appareil photo sert uniquement à photographier votre signalement." },
+  denied: { icon: "camera-slash", title: "Accès à l'appareil photo refusé", text: "Pour prendre une photo, autorisez l'appareil photo dans les réglages de votre navigateur. Vous pouvez aussi choisir une photo dans la galerie." },
+  unavailable: { icon: "camera-slash", title: "Appareil photo indisponible", text: "Il est peut-être utilisé par une autre application. Réessayez, ou choisissez une photo dans la galerie." },
+};
+function CameraOverlay({ photoKey, onShoot, onClose, onGallery, forced }) {
+  const { state } = useStore();
+  const [mode, setMode] = useState(forced || "detecting"); // detecting · asking · live · denied · unavailable · simulated
+  const [attempt, setAttempt] = useState(0);
+  const video = useRef(null);
+  const stream = useRef(null);
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+  useEffect(() => {
+    if (forced) return undefined;
+    let cancelled = false;
+    (async () => {
+      if (state.demo.cameraDenied) { setMode("denied"); return; }
+      if ((await detectCamera()) !== "available") { if (!cancelled) setMode("simulated"); return; }
+      if (cancelled) return;
+      setMode("asking");
+      try {
+        const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+        if (cancelled) { s.getTracks().forEach((t) => t.stop()); return; }
+        stream.current = s;
+        setMode("live");
+      } catch (e) {
+        if (cancelled) return;
+        if (e.name === "NotAllowedError" || e.name === "SecurityError") setMode("denied");
+        else if (e.name === "NotFoundError" || e.name === "OverconstrainedError" || e.name === "NotSupportedError") setMode("simulated");
+        else setMode("unavailable");
+      }
+    })();
+    return () => { cancelled = true; if (stream.current) { stream.current.getTracks().forEach((t) => t.stop()); stream.current = null; } };
+  }, [forced, attempt, state.demo.cameraDenied]);
+  useEffect(() => {
+    if (mode === "live" && video.current && stream.current) { video.current.srcObject = stream.current; video.current.play().catch(() => {}); }
+  }, [mode]);
+  const shoot = () => {
+    if (mode === "live") { const v = video.current; if (v && v.videoWidth) onShoot({ src: captureFrame(v) }); return; }
+    onShoot({ key: photoKey });
+  };
+  const info = CAMERA_STATES[mode];
+  const canShoot = mode === "live" || mode === "simulated";
   return (
-    <div className="camera" role="dialog" aria-modal="true" aria-label="Appareil photo (simulé)">
-      {ALERT_PHOTOS[photoKey] ? <img src={ALERT_PHOTOS[photoKey]} alt="" className="camera-view" /> : <span className="camera-view" />}
-      <p className="camera-tip"><Icon name="info" />Photographiez le problème ou le lieu. Évitez les visages et les plaques d'immatriculation.</p>
+    <div className="camera" role="dialog" aria-modal="true" aria-label={mode === "simulated" ? "Appareil photo (simulé)" : "Appareil photo"}>
+      {mode === "live" ? <video ref={video} className="camera-view" autoPlay playsInline muted aria-label="Aperçu de l'appareil photo" /> : null}
+      {mode === "simulated" ? (ALERT_PHOTOS[photoKey] ? <img src={ALERT_PHOTOS[photoKey]} alt="" className="camera-view" /> : <span className="camera-view" />) : null}
+      {canShoot ? (
+        <p className="camera-tip"><Icon name="info" /><span>Photographiez le problème ou le lieu. Évitez les visages et les plaques d'immatriculation.{mode === "simulated" ? <small>Aucun appareil photo accessible ici : photo de démonstration.</small> : null}</span></p>
+      ) : null}
+      {info ? (
+        <div className="camera-state" role={mode === "asking" ? "status" : "alert"}>
+          <Spot icon={info.icon} tone="neutral" />
+          <h2>{info.title}</h2>
+          <p>{info.text}</p>
+          {mode === "denied" || mode === "unavailable" ? (
+            <div className="camera-actions">
+              {mode === "unavailable" ? <Button block icon="arrows-clockwise" onClick={() => { setMode("detecting"); setAttempt((n) => n + 1); }}>Réessayer</Button> : null}
+              <Button block variant={mode === "unavailable" ? "secondary" : "primary"} icon="image" onClick={onGallery}>Choisir dans la galerie</Button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       <div className="camera-bar">
         <button type="button" className="btn btn-tertiary camera-cancel" onClick={onClose}>Annuler</button>
-        <button type="button" className="shutter" aria-label="Prendre la photo" onClick={onShoot}><span /></button>
+        {canShoot ? <button type="button" className="shutter" aria-label="Prendre la photo" onClick={shoot}><span /></button> : <span />}
         <span className="camera-spacer" />
       </div>
     </div>
@@ -2664,7 +2780,7 @@ function CameraOverlay({ photoKey, onShoot, onClose }) {
 function PhotoThumb({ ph, onRemove, onRetry }) {
   return (
     <div className={cx("photo-thumb", ph.status === "error" && "is-error")}>
-      {ALERT_PHOTOS[ph.key] ? <img src={ALERT_PHOTOS[ph.key]} alt={PHOTO_ALT[ph.key]} /> : null}
+      {ph.src ? <img src={ph.src} alt="Photo prise avec l'appareil photo" /> : ALERT_PHOTOS[ph.key] ? <img src={ALERT_PHOTOS[ph.key]} alt={PHOTO_ALT[ph.key]} /> : null}
       {ph.status === "uploading" ? <span className="pt-progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={ph.progress} aria-label="Envoi de la photo"><i style={{ width: `${ph.progress}%` }} /><small>{ph.progress < 40 ? "Compression…" : `Envoi ${ph.progress} %`}</small></span> : null}
       {ph.status === "error" ? <button type="button" className="pt-retry" onClick={onRetry}><Icon name="arrows-clockwise" />Réessayer</button> : null}
       <IconButton icon="x" label="Retirer la photo" className="pt-remove" onClick={onRemove} />
@@ -2674,13 +2790,13 @@ function PhotoThumb({ ph, onRemove, onRetry }) {
 function StepPhoto({ d, next }) {
   const { state, dispatch } = useStore();
   const { toast, openSheet } = useActions();
-  const [camera, setCamera] = useState(!!d.camera);
+  const [camera, setCamera] = useState(d.camera || false); // true : ouvrir la caméra ; « asking », « denied »… : état forcé (démo)
   useEffect(() => { if (d.camera) dispatch({ type: "DRAFT_SET", patch: { camera: false } }); }, []);
   const photos = d.photos;
   const uploading = photos.some((ph) => ph.status === "uploading");
   const cat = CATEGORY_BY_ID[d.categoryId];
   const suggested = demoGallery().find((k) => { const id = k.split("-")[0]; const a = SEED_ALERTS.find((x) => x.id === id); return a && a.categoryId === d.categoryId; }) || demoGallery()[0];
-  const add = (key) => { if (photos.length >= MAX_PHOTOS) return; dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key, status: "uploading", progress: 0 } }); };
+  const add = (shot) => { if (photos.length >= MAX_PHOTOS) return; dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key: shot.key || null, src: shot.src || null, status: "uploading", progress: 0 } }); };
   // Envoi simulé : compression puis envoi ; échec si le mode démo « erreur réseau » est actif
   useEffect(() => {
     if (!uploading) return undefined;
@@ -2710,10 +2826,10 @@ function StepPhoto({ d, next }) {
             <Button variant="secondary" icon="image" onClick={() => openSheet("report-gallery", {})}>Choisir dans la galerie</Button>
           </div>
         ) : <p className="report-lead">{MAX_PHOTOS} photos au plus : retirez-en une pour en ajouter une autre.</p>}
-        <p className="demo-note">Prototype : l'appareil photo et la galerie sont simulés avec des photos de démonstration.</p>
+        <p className="demo-note">Prototype : l'appareil photo de l'appareil est utilisé s'il est accessible, sinon simulé ; la galerie montre des photos de démonstration.</p>
       </div>
       <ReportFooter><Button block disabled={uploading} onClick={next}>{uploading ? "Envoi en cours…" : photos.length ? "Continuer" : "Continuer sans photo"}</Button></ReportFooter>
-      {camera ? <CameraOverlay photoKey={suggested} onClose={() => setCamera(false)} onShoot={() => { add(suggested); setCamera(false); }} /> : null}
+      {camera ? <CameraOverlay photoKey={suggested} forced={typeof camera === "string" ? camera : null} onClose={() => setCamera(false)} onGallery={() => { setCamera(false); openSheet("report-gallery", {}); }} onShoot={(shot) => { add(shot); setCamera(false); }} /> : null}
     </Fragment>
   );
 }
@@ -2764,7 +2880,7 @@ function draftAlert(d, now, id = "draft") {
   return {
     id, categoryId: d.categoryId, title: d.title.trim(), description: (d.description || "").trim(), communeId: p.communeId, quartier: p.quartier, street: p.street || "",
     lat: p.lat, lng: p.lng, createdAt: now, expiresAt: now + ALERT_TTL, authorId: ME_ID, anonymous: d.identity === "anonymous",
-    votesUp: 0, votesDown: 0, commentsCount: 0, hasPhoto: d.photos.length > 0, photos: d.photos.filter((ph) => ph.status === "done").map((ph) => ph.key),
+    votesUp: 0, votesDown: 0, commentsCount: 0, hasPhoto: d.photos.length > 0, photos: d.photos.filter((ph) => ph.status === "done").map((ph) => ph.src || ph.key),
     transmission: "transmis", status: "active", duplicateGroup: null, areaKm: null,
   };
 }
@@ -4143,7 +4259,8 @@ const PHOTO_ALT = {
   "a30-1": "Chemin de halage recouvert par l'Oise, banc à moitié dans l'eau",
 };
 function alertPhotos(alert) {
-  if (alert.photos) return alert.photos.filter((k) => ALERT_PHOTOS[k]).map((k, i) => ({ id: `${alert.id}-${i}`, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
+  // alert.photos : clés des photos de démonstration ou photos prises avec l'appareil photo (data URL)
+  if (alert.photos) return alert.photos.map((k, i) => (k.startsWith("data:") ? { id: `${alert.id}-${i}`, src: k, alt: "Photo jointe au signalement" } : { id: `${alert.id}-${i}`, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] })).filter((ph) => ph.src);
   return Object.keys(PHOTO_ALT).filter((k) => k.startsWith(`${alert.id}-`) && ALERT_PHOTOS[k]).map((k) => ({ id: k, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
 }
 
@@ -4322,6 +4439,8 @@ const SIGN_IN_REASONS = {
   vote: { title: "Connectez-vous pour voter", text: "Confirmer ou contester un signalement demande un compte : un seul avis par personne et par alerte." },
   report: { title: "Connectez-vous pour signaler", text: "Un compte permet de transmettre votre signalement au bon service et d'en suivre le traitement. Vous pourrez publier anonymement." },
   follow: { title: "Connectez-vous pour suivre", text: "Avec un compte, vous êtes prévenu du traitement de l'alerte et la retrouvez dans votre activité." },
+  comment: { title: "Connectez-vous pour commenter", text: "Un compte garde la discussion utile : un nom public pour chaque commentaire, que vous pouvez supprimer à tout moment. Vous pourrez commenter anonymement." },
+  flag: { title: "Connectez-vous pour signaler un contenu", text: "Un compte évite les signalements abusifs. Votre signalement reste confidentiel : l'auteur ne saura pas qui l'a signalé." },
 };
 function SignInSheet({ reason = "vote" }) {
   const { dispatch } = useStore();
@@ -4374,9 +4493,9 @@ function ShareSheet({ id }) {
 }
 
 /* Menu ⋯ : une ligne d'explication par action, la suppression isolée et confirmée (Bluesky, Handshake) */
-function MenuRow({ icon, label, help, onClick, destructive, more }) {
+function MenuRow({ icon, label, help, onClick, destructive, more, disabled }) {
   return (
-    <button type="button" className={cx("menu-row", destructive && "is-destructive")} onClick={onClick}>
+    <button type="button" className={cx("menu-row", destructive && "is-destructive")} onClick={onClick} disabled={disabled}>
       <Icon name={icon} />
       <span><b>{label}</b>{help ? <small>{help}</small> : null}</span>
       {more ? <Icon name="caret-right" className="ph-sm" /> : null}
@@ -4385,7 +4504,7 @@ function MenuRow({ icon, label, help, onClick, destructive, more }) {
 }
 function AlertMenuSheet({ id }) {
   const { state, dispatch } = useStore();
-  const { closeSheet, toast, confirm } = useActions();
+  const { closeSheet, toast, confirm, push, openSheet } = useActions();
   const alert = state.alerts.find((a) => a.id === id);
   if (!alert) return null;
   const mine = state.session.user && alert.authorId === ME_ID && !alert.anonymous;
@@ -4402,8 +4521,12 @@ function AlertMenuSheet({ id }) {
   return (
     <div className="menu-list">
       <MenuRow icon="link" label="Copier le lien" help="Pour le coller dans un message" onClick={copy} />
-      <MenuRow icon="flag" label="Signaler cette alerte" help="Fausse, offensante, mauvaise catégorie ou mauvais lieu…" more
-        onClick={() => { closeSheet(); toast("Le signalement d'un contenu arrive avec la modération (phase 7).", { tone: "info" }); }} />
+      {state.reports[`alert:${alert.id}`] ? (
+        <MenuRow icon="flag" label="Alerte signalée" help="Merci : la modération va l'examiner." disabled />
+      ) : (
+        <MenuRow icon="flag" label="Signaler cette alerte" help="Fausse, offensante, mauvaise catégorie ou mauvais lieu…" more
+          onClick={() => (state.session.user ? push("report-content", { kind: "alert", alertId: alert.id }) : openSheet("sign-in", { reason: "flag" }))} />
+      )}
       {mine ? (
         <Fragment>
           <hr />
@@ -4414,18 +4537,18 @@ function AlertMenuSheet({ id }) {
   );
 }
 
-/* Aperçu des commentaires (G6) : lecture seule ; écrire et répondre arrivent en phase 7 */
+/* Aperçu des commentaires (G6) : les 2 derniers, en lecture seule ; le fil complet s'ouvre dans l'écran Commentaires (I2) */
 function CommentsPreview({ alert }) {
   const { state } = useStore();
-  const { toast } = useActions();
-  const list = (state.comments[alert.id] || []).filter((c) => !c.parentId).sort((a, b) => a.ageMin - b.ageMin).slice(0, 2);
+  const { push } = useActions();
+  const list = threadOf(state, alert).filter((c) => !c.parentId && !c.status).sort((a, b) => commentTime(b) - commentTime(a)).slice(0, 2).reverse();
   const n = alert.commentsCount;
   return (
     <section className="detail-section" aria-labelledby="dt-comments">
       <h2 id="dt-comments">Commentaires{n ? <small> · {n}</small> : null}</h2>
       {n === 0 ? <p className="detail-hint">Aucun commentaire pour le moment. <b>Soyez le premier à réagir.</b></p> : null}
       {list.map((c) => <CommentItem key={c.id} comment={c} readOnly />)}
-      {n ? <Button variant="secondary" block onClick={() => toast("La discussion complète arrive avec les commentaires (phase 7).", { tone: "info" })}>Voir {n > 1 ? `les ${n} commentaires` : "le commentaire"}</Button> : null}
+      <Button variant="secondary" block icon={n ? undefined : "chat-circle"} onClick={() => push("comments", { id: alert.id, compose: !n })}>{n ? `Voir ${n > 1 ? `les ${n} commentaires` : "le commentaire"}` : "Commenter"}</Button>
     </section>
   );
 }
@@ -4631,6 +4754,380 @@ function PhotoViewer({ id, index = 0 }) {
   );
 }
 
+/* =====================================================================
+   PHASE 7 — Commentaires et signalement de contenu (ALERT-04, F-10, F-11 ; rapport docs/benchmark/commentaires-refonte.html, I1 à I6)
+   ===================================================================== */
+const COMMENT_MAX = 500;
+const COMMENT_PAGE = 10;
+// Commentaires de démonstration qui complètent chaque fil jusqu'au compteur de l'alerte (personnes fictives)
+const COMMENT_POOL = {
+  negative: ["Je confirme, je suis passé devant il y a peu.", "Toujours d'actualité à l'instant.", "Merci pour l'info, je fais un détour.", "Prudence en passant, ce n'est pas balisé.",
+    "Même constat de mon côté.", "C'est la deuxième fois cette semaine.", "Merci d'avoir signalé, j'allais le faire.", "Ça s'est amélioré depuis ce matin.", "Les enfants passent par là pour aller à l'école, attention."],
+  positive: ["Super initiative, merci !", "On y sera avec les enfants.", "C'est jusqu'à quelle heure ?", "Merci pour le partage.", "Très bonne ambiance l'an dernier.",
+    "Bravo aux bénévoles.", "Faut-il apporter quelque chose ?", "Je relaie autour de moi.", "Belle idée pour le quartier."],
+  reply: ["Merci, c'est noté.", "D'accord avec vous.", "Oui, j'ai vu la même chose.", "Bonne question, je ne sais pas.", "Merci pour la précision."],
+};
+function seedThread(alert) {
+  const out = [...(SEED_COMMENTS[alert.id] || [])];
+  const pool = COMMENT_POOL[CATEGORY_BY_ID[alert.categoryId].type];
+  const age = Math.max(2, Math.round((BOOT_TIME - alert.createdAt) / MIN));
+  const seed = [...alert.id].reduce((h, ch) => h + ch.charCodeAt(0), 0);
+  let k = 0;
+  let lastRoot = (out.find((c) => !c.parentId && !c.status) || {}).id;
+  while (out.length < alert.commentsCount) {
+    const reply = k % 3 === 2 && lastRoot;
+    const id = `${alert.id}-g${k}`;
+    out.push({
+      id, authorId: `u${((seed + k * 3) % 10) + 1}`, anonymous: k % 4 === 1,
+      body: reply ? COMMENT_POOL.reply[(seed + k) % COMMENT_POOL.reply.length] : pool[(seed + k) % pool.length],
+      ageMin: Math.max(1, Math.round(age * (1 - (k + 1) / (alert.commentsCount + 1)))), parentId: reply ? lastRoot : undefined,
+    });
+    if (!reply) lastRoot = id;
+    k += 1;
+  }
+  return out;
+}
+const threadOf = (state, alert) => state.comments[alert.id] || seedThread(alert);
+
+/* I6 : règles de la communauté, en attendant le centre d'aide (phase 9) */
+const COMMUNITY_RULES = [
+  ["chat-circle", "Restez courtois", "Pas d'insulte, de moquerie ni d'attaque personnelle."],
+  ["eye", "Tenez-vous aux faits", "Ce que vous avez vu, où et quand."],
+  ["lock-simple", "Aucune donnée personnelle", "Ni nom complet, ni téléphone, ni plaque d'immatriculation, ni adresse."],
+  ["warning", "Ne mettez personne en danger", "N'incitez pas à se rendre sur place ni à gêner les secours."],
+  ["flag", "Signalez plutôt que répondre", "Un contenu pose problème ? Signalez-le : la modération l'examinera."],
+];
+function RulesSheet() {
+  return (
+    <Fragment>
+      <ul className="rules-list">
+        {COMMUNITY_RULES.map(([icon, title, text]) => <li key={title}><Icon name={icon} /><span><b>{title}</b><small>{text}</small></span></li>)}
+      </ul>
+      <p className="sheet-lead">Les contenus qui ne respectent pas ces règles sont masqués par la modération de 95 Alerte.</p>
+    </Fragment>
+  );
+}
+
+/* I1 : même règle que les alertes, choisie dans le champ ; le dernier choix est repris */
+function CommentIdentitySheet() {
+  const { state, dispatch } = useStore();
+  const { closeSheet } = useActions();
+  const value = state.prefs.lastCommentIdentity || "profile";
+  const pick = (v) => { dispatch({ type: "SET_PREF", key: "lastCommentIdentity", value: v }); closeSheet(); };
+  return (
+    <div className="radio-list" role="radiogroup" aria-label="Commenter en tant que">
+      <RadioCard name="comment-identity" value="profile" icon="user-circle" checked={value === "profile"} onChange={pick}
+        title="Avec mon profil" description={<Fragment>Les autres verront : <strong>{publicName(state.session.user)}</strong></Fragment>} />
+      <RadioCard name="comment-identity" value="anonymous" icon="detective" iconTone="muted" checked={value === "anonymous"} onChange={pick}
+        title="Anonymement" description={<Fragment>Les autres verront : <strong>Citoyen anonyme</strong>. La plateforme peut retrouver l'auteur en cas d'abus.</Fragment>} />
+    </div>
+  );
+}
+
+/* 7.3, 7.5 : menu d'un commentaire (Nextdoor) — répondre, signaler, supprimer le sien */
+function CommentMenuSheet({ alertId, commentId, onReply }) {
+  const { state, dispatch } = useStore();
+  const { closeSheet, confirm, toast, push, openSheet } = useActions();
+  const alert = state.alerts.find((a) => a.id === alertId);
+  const comment = alert ? threadOf(state, alert).find((c) => c.id === commentId) : null;
+  if (!comment) return null;
+  const mine = !!state.session.user && comment.authorId === ME_ID;
+  const reported = state.reports[`comment:${alertId}:${commentId}`];
+  const remove = () => {
+    closeSheet();
+    confirm({
+      title: "Supprimer ce commentaire ?", body: "Il ne sera plus visible. Les réponses restent. Cette action est définitive.",
+      confirmLabel: "Supprimer", destructive: true,
+      onConfirm: () => { dispatch({ type: "DELETE_COMMENT", alertId, commentId }); toast("Commentaire supprimé."); },
+    });
+  };
+  return (
+    <div className="menu-list">
+      <MenuRow icon="arrow-bend-up-left" label="Répondre" help="Votre réponse s'affiche sous ce commentaire" onClick={() => { closeSheet(); onReply?.(); }} />
+      {mine ? null : reported ? <MenuRow icon="flag" label="Commentaire signalé" help="Merci : la modération va l'examiner." disabled /> : (
+        <MenuRow icon="flag" label="Signaler ce commentaire" help="Offensant, faux, spam, données personnelles…" more
+          onClick={() => (state.session.user ? push("report-content", { kind: "comment", alertId, commentId }) : openSheet("sign-in", { reason: "flag" }))} />
+      )}
+      {mine ? (
+        <Fragment>
+          <hr />
+          <MenuRow icon="trash" label="Supprimer mon commentaire" help="Il disparaîtra pour tout le monde" destructive onClick={remove} />
+        </Fragment>
+      ) : null}
+    </div>
+  );
+}
+
+/* 7.2 : champ collé en bas (Nextdoor), identité dans le champ (Glassdoor), « En réponse à » (Coursera) */
+function Composer({ alert, replyTo, onCancelReply, onPosted, draftText = "", submitted }) {
+  const { state, dispatch } = useStore();
+  const { openSheet, toast } = useActions();
+  const now = useNow();
+  const user = state.session.user;
+  const [text, setText] = useState(draftText);
+  const [error, setError] = useState(null);
+  const [sending, setSending] = useState(false);
+  const field = useRef(null);
+  const anonymous = (state.prefs.lastCommentIdentity || "profile") === "anonymous";
+  const name = anonymous ? "Citoyen anonyme" : publicName(user);
+  const grow = () => { const el = field.current; if (!el) return; el.style.height = "auto"; el.style.height = `${Math.min(el.scrollHeight, 112)}px`; };
+  useLayoutEffect(grow, [text]);
+  useEffect(() => { if (replyTo) field.current?.focus(); }, [replyTo]);
+  const check = (body) => {
+    if (PERSONAL_DATA.test(body)) return "Retirez le numéro de téléphone, la plaque ou l'adresse e-mail : ces informations ne doivent pas être publiées.";
+    return null;
+  };
+  useEffect(() => { if (submitted) setError(check(text)); }, []);
+  const submit = () => {
+    const body = text.trim();
+    if (!body || sending) return;
+    const err = check(body);
+    if (err) { setError(err); field.current?.focus(); return; }
+    if (state.demo.networkError) { setError("Impossible de publier votre commentaire. Vérifiez votre connexion."); return; }
+    setSending(true);
+    const parentId = replyTo ? replyTo.parentId || replyTo.id : undefined;
+    setTimeout(() => {
+      const id = `k${Date.now().toString(36)}`;
+      dispatch({ type: "ADD_COMMENT", alertId: alert.id, comment: { id, authorId: ME_ID, anonymous, body, createdAt: now, parentId } });
+      setSending(false); setText(""); setError(null);
+      toast("Commentaire publié.");
+      onPosted(id);
+    }, motionReduced() ? 0 : 350);
+  };
+  const replyName = replyTo ? publicAuthor(replyTo).name : null;
+  return (
+    <div className="composer">
+      {replyTo ? (
+        <p className="composer-reply"><Icon name="arrow-bend-up-left" className="ph-sm" /><span>En réponse à <b>{replyName}</b></span>
+          <IconButton icon="x" label="Ne plus répondre" className="flat" onClick={onCancelReply} /></p>
+      ) : null}
+      <div className="composer-row">
+        <textarea ref={field} id="cm-text" className="input" rows={1} maxLength={COMMENT_MAX} value={text} disabled={sending}
+          placeholder={replyTo ? "Votre réponse…" : "Ajouter un commentaire…"} aria-label={replyTo ? `Votre réponse à ${replyName}` : "Votre commentaire"}
+          aria-invalid={error ? true : undefined} aria-describedby={error ? "cm-err" : undefined}
+          onChange={(e) => { setText(e.target.value); if (error) setError(null); }}
+          onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submit(); }} />
+        <IconButton icon="arrow-up" label={replyTo ? "Publier la réponse" : "Publier le commentaire"} className="composer-send" disabled={!text.trim() || sending} onClick={submit} />
+      </div>
+      {error ? <span className="err" id="cm-err" role="alert"><Icon name="warning-fill" className="ph-sm" />{error}</span> : null}
+      <div className="composer-meta">
+        <button type="button" className="composer-identity" onClick={() => openSheet("comment-identity", {})}>Commenter en tant que <b>{name}</b><Icon name="caret-down" className="ph-sm" /></button>
+        {text.length > 400 ? <span aria-live="polite">{text.length}/{COMMENT_MAX}</span> : null}
+      </div>
+    </div>
+  );
+}
+
+/* 7.1 : l'écran Commentaires (I2) — règle en tête (NYT), réponses d'un niveau repliées au-delà de deux (I3), champ en bas */
+function CommentsScreen({ id, compose, replyTo: replyToId, highlight: highlightId, draftText, submitted, view }) {
+  const { state } = useStore();
+  const { openSheet, push } = useActions();
+  const now = useNow();
+  const alert = state.alerts.find((a) => a.id === id);
+  const [phase, setPhase] = useState(view || "loading");
+  const [attempt, setAttempt] = useState(0);
+  const [limit, setLimit] = useState(COMMENT_PAGE);
+  const [open, setOpen] = useState({});
+  const [replyTo, setReplyTo] = useState(() => (replyToId && alert ? threadOf(state, alert).find((c) => c.id === replyToId) || null : null));
+  const [highlight, setHighlight] = useState(highlightId || null);
+  const body = useRef(null);
+  useEffect(() => {
+    if (view) return undefined;
+    setPhase("loading");
+    const t = setTimeout(() => setPhase(state.demo.networkError ? "error" : "ready"), motionReduced() ? 0 : 450);
+    return () => clearTimeout(t);
+  }, [attempt]);
+  useEffect(() => { if (compose && phase === "ready") document.getElementById("cm-text")?.focus(); }, [phase]);
+  useEffect(() => {
+    if (!highlight || phase !== "ready") return undefined;
+    const el = body.current?.querySelector(".comment.is-new");
+    el?.scrollIntoView({ block: "nearest", behavior: motionReduced() ? "auto" : "smooth" });
+    const t = setTimeout(() => setHighlight(null), 2400);
+    return () => clearTimeout(t);
+  }, [highlight, phase]);
+  if (!alert) return <DetailState icon="link-break" title="Cette alerte n'est plus disponible">Elle a peut-être été supprimée par son auteur.</DetailState>;
+  const list = threadOf(state, alert);
+  const roots = list.filter((c) => !c.parentId).sort((a, b) => commentTime(a) - commentTime(b));
+  const repliesOf = (rid) => list.filter((c) => c.parentId === rid).sort((a, b) => commentTime(a) - commentTime(b));
+  const shown = roots.slice(0, limit);
+  const user = state.session.user;
+  const expired = alertLifecycle(alert, now) === "expiree";
+  const isAuthor = (c) => !alert.anonymous && !c.anonymous && c.authorId === alert.authorId; // I1 : jamais sur une alerte anonyme
+  const item = (c, reply) => (
+    <CommentItem key={c.id} comment={c} reply={reply} mine={!!user && c.authorId === ME_ID} isAuthor={isAuthor(c)} highlight={c.id === highlight}
+      readOnly={expired} onReply={() => (user ? setReplyTo(c) : openSheet("sign-in", { reason: "comment" }))}
+      onMenu={() => openSheet("comment-menu", { alertId: alert.id, commentId: c.id, onReply: () => (user ? setReplyTo(c) : openSheet("sign-in", { reason: "comment" })) })} />
+  );
+  let footer;
+  if (expired) footer = <div className="composer is-note"><Icon name="timer" />Cette alerte a expiré : les commentaires sont fermés.</div>;
+  else if (!user) footer = <div className="composer is-note"><Button block variant="secondary" icon="sign-in" onClick={() => openSheet("sign-in", { reason: "comment" })}>Se connecter pour commenter</Button></div>;
+  else if (state.demo.offline) footer = <div className="composer is-note"><Icon name="wifi-slash" />Commenter nécessite une connexion.</div>;
+  else footer = <Composer key={replyTo ? replyTo.id : "root"} alert={alert} replyTo={replyTo} onCancelReply={() => setReplyTo(null)} draftText={draftText} submitted={submitted}
+    onPosted={(cid) => { setReplyTo(null); setLimit(Infinity); setHighlight(cid); }} />;
+  return (
+    <div className="screen comments-screen">
+      <ScreenHeader title={`Commentaires${alert.commentsCount ? ` · ${alert.commentsCount}` : ""}`} />
+      <div className="comments-body" ref={body}>
+        <button type="button" className="comments-context" onClick={() => push("alert", { id: alert.id })}>
+          <Marker family={CATEGORY_BY_ID[alert.categoryId].family} icon={CATEGORY_BY_ID[alert.categoryId].icon} />
+          <span><b>{alert.title}</b><small>{displayPlace(alert)}</small></span>
+        </button>
+        <p className="comments-rules"><Icon name="shield-check" /><span>Restez courtois et utile. Les commentaires sont modérés.<button type="button" className="btn btn-tertiary btn-inline" onClick={() => openSheet("community-rules", {})}>Règles de la communauté</button></span></p>
+        {phase === "loading" ? (
+          <div className="comments-list" aria-busy="true" aria-label="Chargement des commentaires">
+            {[0, 1, 2].map((i) => <div key={i} className="comment"><Skeleton width={36} height={36} radius="50%" /><div style={{ display: "grid", gap: 6 }}><Skeleton height={12} width="40%" /><Skeleton height={14} width="90%" /></div></div>)}
+          </div>
+        ) : phase === "error" ? (
+          <div className="comments-empty" role="alert">
+            <Spot icon="cloud-slash" tone="neutral" />
+            <h2>Impossible de charger les commentaires.</h2>
+            <p>Vérifiez votre connexion, puis réessayez.</p>
+            <Button variant="secondary" icon="arrows-clockwise" onClick={() => setAttempt((n) => n + 1)}>Réessayer</Button>
+          </div>
+        ) : roots.length === 0 ? (
+          <div className="comments-empty">
+            <Spot icon="chat-circle-dots" tone="neutral" />
+            <h2>Aucun commentaire pour le moment.</h2>
+            <p><b>Soyez le premier à réagir.</b></p>
+          </div>
+        ) : (
+          <div className="comments-list">
+            {shown.map((c) => {
+              const replies = repliesOf(c.id);
+              const visible = open[c.id] ? replies : replies.slice(0, 2);
+              return (
+                <div key={c.id} className="comment-thread">
+                  {item(c, false)}
+                  {visible.map((r) => item(r, true))}
+                  {replies.length > 2 && !open[c.id] ? (
+                    <button type="button" className="btn btn-tertiary btn-inline comment-more-replies" onClick={() => setOpen({ ...open, [c.id]: true })}>
+                      Voir {replies.length - 2 > 1 ? `${replies.length - 2} réponses de plus` : "1 réponse de plus"}
+                    </button>
+                  ) : null}
+                </div>
+              );
+            })}
+            {roots.length > limit ? <Button variant="secondary" block onClick={() => setLimit(limit + COMMENT_PAGE)}>Voir plus de commentaires ({roots.length - limit})</Button> : null}
+          </div>
+        )}
+      </div>
+      {phase === "error" ? null : footer}
+    </div>
+  );
+}
+
+/* 7.4, 7.5 : signaler un contenu — motif → confirmer → merci (I4) ; le contenu reste visible (I5) */
+const REPORT_REASONS = [
+  { id: "faux", label: (k) => (k === "alert" ? "Contenu faux ou faux signalement" : "Information fausse"), help: "Inventé, exagéré ou trompeur." },
+  { id: "offensant", label: () => "Offensant ou inapproprié", help: "Insulte, moquerie, propos choquants." },
+  { id: "dangereux", label: () => "Information dangereuse", help: "Incite à se mettre en danger ou à gêner les secours." },
+  { id: "spam", label: () => "Spam ou publicité", help: "Message répété, sans rapport, commercial." },
+  { id: "illegal", label: () => "Contenu illégal", help: "Menace, haine, données personnelles d'un tiers." },
+  { id: "categorie", label: () => "Mauvaise catégorie", help: "Ce n'est pas le bon type d'événement.", alertOnly: true },
+  { id: "lieu", label: () => "Mauvaise localisation", help: "L'événement n'est pas à cet endroit.", alertOnly: true },
+  { id: "doublon", label: () => "Doublon", help: "Le même événement est déjà signalé.", alertOnly: true },
+  { id: "autre", label: () => "Autre", help: "Précisez à l'étape suivante." },
+];
+function ReasonOption({ name, value, checked, onChange, label, help }) {
+  return (
+    <label className={cx("reason-option", checked && "is-checked")}>
+      <input type="radio" name={name} value={value} checked={checked} onChange={() => onChange(value)} />
+      <span><b>{label}</b><small>{help}</small></span>
+      <span className="rc-dot" />
+    </label>
+  );
+}
+function ReportContentScreen({ kind, alertId, commentId, step: initialStep = "reason", reason: initialReason = null, note: initialNote = "" }) {
+  const { state, dispatch } = useStore();
+  const { pop, openSheet, push } = useActions();
+  const [step, setStep] = useState(initialStep);
+  const [reason, setReason] = useState(initialReason);
+  const [note, setNote] = useState(initialNote);
+  const alert = state.alerts.find((a) => a.id === alertId);
+  const comment = kind === "comment" && alert ? threadOf(state, alert).find((c) => c.id === commentId) : null;
+  const key = kind === "comment" ? `comment:${alertId}:${commentId}` : `alert:${alertId}`;
+  const reasons = REPORT_REASONS.filter((r) => kind === "alert" || !r.alertOnly);
+  const what = kind === "comment" ? "ce commentaire" : "cette alerte";
+  const send = () => {
+    setStep("sending");
+    setTimeout(() => {
+      if (state.demo.networkError) { setStep("error"); return; }
+      dispatch({ type: "REPORT_CONTENT", key, reason });
+      setStep("done");
+    }, motionReduced() ? 0 : 800);
+  };
+  const back = () => (step === "confirm" ? setStep("reason") : pop());
+  const r = REPORT_REASONS.find((x) => x.id === reason);
+  return (
+    <div className="screen report-flow report-content">
+      <header className="screen-header">
+        {step === "reason" || step === "confirm" ? <IconButton icon="caret-left" label={step === "confirm" ? "Revenir au motif" : "Retour"} onClick={back} /> : <span />}
+        <h1>Signaler</h1>
+        {step === "sending" ? <span /> : <IconButton icon="x" label="Fermer" onClick={pop} />}
+      </header>
+      {step === "reason" ? (
+        <Fragment>
+          <div className="screen-pad report-body">
+            <h2 className="question">Pourquoi signalez-vous {what} ?</h2>
+            <p className="report-lead">Choisissez le motif le plus proche : la modération vérifiera l'ensemble des règles.</p>
+            <div className="reason-list" role="radiogroup" aria-label="Motif du signalement">
+              {reasons.map((x) => <ReasonOption key={x.id} name="report-reason" value={x.id} checked={reason === x.id} onChange={setReason} label={x.label(kind)} help={x.help} />)}
+            </div>
+            <PrivacyNote>Votre signalement est confidentiel : l'auteur ne saura pas qui l'a signalé.</PrivacyNote>
+          </div>
+          <ReportFooter>
+            {reason === "dangereux" ? <SafetyNote onClick={() => push("emergency", { id: alertId })} /> : null}
+            <Button block disabled={!reason} onClick={() => setStep("confirm")}>Continuer</Button>
+          </ReportFooter>
+        </Fragment>
+      ) : step === "confirm" ? (
+        <Fragment>
+          <div className="screen-pad report-body">
+            <h2 className="question">Confirmer le signalement</h2>
+            <div className="report-recap">
+              <small>{kind === "comment" ? `Commentaire de ${publicAuthor(comment).name}` : "Alerte"}</small>
+              <p>{kind === "comment" ? `« ${comment.body} »` : alert.title}</p>
+            </div>
+            <dl className="preview-list">
+              <div className="preview-row"><dt>Motif</dt><dd>{r.label(kind)}</dd><Button variant="tertiary" className="btn-inline" onClick={() => setStep("reason")} aria-label="Modifier : motif">Modifier</Button></div>
+            </dl>
+            <Field id="rc-note" label="Précision (facultatif)" textarea rows={3} max={300} value={note} placeholder={reason === "autre" ? "Dites-nous ce qui ne va pas…" : "Ce qui vous a alerté…"}
+              help="N'indiquez aucune donnée personnelle." onChange={(e) => setNote(e.target.value)} />
+            <p className="report-lead"><Icon name="shield-check" className="ph-sm" /> Envoyé à l'équipe de modération de 95 Alerte.</p>
+          </div>
+          <ReportFooter note={state.demo.offline ? "Envoi impossible hors connexion." : null}>
+            <Button block icon="flag" disabled={state.demo.offline} onClick={send}>Envoyer le signalement</Button>
+          </ReportFooter>
+        </Fragment>
+      ) : step === "sending" ? (
+        <div className="report-outcome" role="status" aria-live="polite"><span className="spinner big" aria-hidden="true" /><h2>Envoi du signalement…</h2></div>
+      ) : step === "error" ? (
+        <Fragment>
+          <div className="report-outcome" role="alert">
+            <Spot icon="cloud-slash" tone="neutral" />
+            <h2>Impossible d'envoyer le signalement. Vérifiez votre connexion.</h2>
+            <p>Votre motif est gardé : réessayez dans un instant.</p>
+          </div>
+          <ReportFooter>
+            <Button block icon="arrows-clockwise" onClick={send}>Réessayer</Button>
+            <Button block variant="secondary" onClick={() => setStep("confirm")}>Revenir au récapitulatif</Button>
+          </ReportFooter>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <div className="report-outcome is-done">
+            <Spot icon="flag" tone="neutral" />
+            <h2 role="status">Merci pour votre signalement</h2>
+            <p>L'équipe de modération de 95 Alerte va examiner {what}. S'il ne respecte pas les règles de la communauté, il sera masqué. L'auteur ne saura pas qui l'a signalé.</p>
+            <Button variant="tertiary" onClick={() => openSheet("community-rules", {})}>Règles de la communauté</Button>
+          </div>
+          <ReportFooter><Button block onClick={pop}>Terminé</Button></ReportFooter>
+        </Fragment>
+      )}
+    </div>
+  );
+}
+
 const TAB_SCREENS = { map: MapScreen, alerts: AlertsScreen, activity: ActivityScreen, profile: ProfileScreen };
 const STACK_SCREENS = {
   report: { component: ReportScreen, modal: true },
@@ -4641,6 +5138,8 @@ const STACK_SCREENS = {
   alert: { component: AlertDetail, modal: true },
   emergency: { component: EmergencyScreen, modal: true },
   "photo-viewer": { component: PhotoViewer, modal: true },
+  comments: { component: CommentsScreen, modal: true },
+  "report-content": { component: ReportContentScreen, modal: true },
 };
 const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet },
   "map-style": { title: "Fond de carte", component: MapStyleSheet },
@@ -4650,6 +5149,9 @@ const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: De
   "sign-in": { title: (p) => SIGN_IN_REASONS[p.reason || "vote"].title, component: SignInSheet },
   share: { title: "Partager l'alerte", component: ShareSheet },
   "alert-menu": { title: "Options", component: AlertMenuSheet },
+  "comment-menu": { title: "Commentaire", subtitle: (p, st) => { const a = st.alerts.find((x) => x.id === p.alertId); const c = a ? threadOf(st, a).find((x) => x.id === p.commentId) : null; return c && !c.status ? publicAuthor(c).name : null; }, component: CommentMenuSheet },
+  "comment-identity": { title: "Commenter en tant que", component: CommentIdentitySheet },
+  "community-rules": { title: "Règles de la communauté", component: RulesSheet },
 };
 
 /* =====================================================================
@@ -4683,6 +5185,20 @@ const jumpReport = (s, patch = {}, o = {}) => {
   const draft = { step: "type", type: "negative", categoryId: "incendie", place: reverseGeocode(k.x, k.y), title: "Incendie rue Carnot",
     description: "Fumée noire au-dessus des toits, odeur de brûlé jusqu'à la gare.", photos: [{ id: "ph-1", key: "a1-1", status: "done", progress: 100 }], identity: "anonymous", ...patch };
   return { ...jumpApp(s, { nav: jumpStack("report"), sheet: o.sheet, modal: o.modal, demo: o.demo }), draft };
+};
+
+/* Phase 7 : le fil de l'incendie rue Carnot (a1), ouvert depuis sa fiche */
+const MY_COMMENT = { id: "k-demo", authorId: ME_ID, anonymous: false, body: "La rue Carnot est fermée côté gare, passez par la rue Thiers." };
+const withMyComment = (s, patch = {}, extra = []) => {
+  const mine = { ...MY_COMMENT, createdAt: Date.now() - 2 * MIN, ...patch };
+  return { comments: { a1: [...seedThread(CARNOT), mine, ...extra] }, alerts: s.alerts.map((a) => (a.id === "a1" ? { ...a, commentsCount: CARNOT.commentsCount + 1 + extra.length - (mine.status === "deleted" ? 1 : 0) } : a)) };
+};
+const jumpComments = (s, params = {}, o = {}) => {
+  const id = o.id || "a1";
+  const screen = o.screen || "comments";
+  const stack = [{ id: "alert", params: { id }, key: `alert-${id}-jump` }, { id: screen, params: { id, ...params }, key: `${screen}-jump-${Date.now()}` }];
+  const base = jumpApp(s, { guest: o.guest, nav: { tab: "map", stack }, sheet: o.sheet, modal: o.modal, demo: o.demo, alerts: o.alerts });
+  return { ...base, comments: o.comments || {}, reports: o.reports || {}, prefs: { ...base.prefs, lastCommentIdentity: "profile" } };
 };
 
 const PHASE_SCREENS = [
@@ -4780,7 +5296,11 @@ const PHASE_SCREENS = [
     ["Lieu hors du Val-d'Oise", (s) => jumpReport(s, { step: "place", title: "", place: { inside: false, lat: 49.2, lng: 1.45 } })],
     ["Étape 4 · Description (titre proposé)", (s) => jumpReport(s, { step: "description", title: "", description: "" })],
     ["Étape 5 · Photo", (s) => jumpReport(s, { step: "photo", photos: [] })],
-    ["Caméra (simulée)", (s) => jumpReport(s, { step: "photo", photos: [], camera: true })],
+    ["Caméra (réelle si disponible, sinon simulée)", (s) => jumpReport(s, { step: "photo", photos: [], camera: true })],
+    ["Caméra simulée (aucun appareil photo)", (s) => jumpReport(s, { step: "photo", photos: [], camera: "simulated" })],
+    ["Caméra : autorisation demandée", (s) => jumpReport(s, { step: "photo", photos: [], camera: "asking" })],
+    ["Caméra : accès refusé", (s) => jumpReport(s, { step: "photo", photos: [], camera: "denied" })],
+    ["Caméra : indisponible", (s) => jumpReport(s, { step: "photo", photos: [], camera: "unavailable" })],
     ["Galerie", (s) => jumpReport(s, { step: "photo", photos: [] }, { sheet: jumpSheet("report-gallery") })],
     ["Photos en cours d'envoi", (s) => jumpReport(s, { step: "photo", photos: [{ id: "ph-1", key: "a1-1", status: "done", progress: 100 }, { id: "ph-2", key: "a1-2", status: "uploading", progress: 40 }] })],
     ["Échec de l'envoi d'une photo", (s) => jumpReport(s, { step: "photo", photos: [{ id: "ph-1", key: "a1-1", status: "error", progress: 60 }] }, { demo: { networkError: true } })],
@@ -4794,7 +5314,33 @@ const PHASE_SCREENS = [
     ["Reprendre un brouillon", (s) => jumpReport(s, { step: "photo", saved: true })],
     ["Signaler sans compte", (s) => jumpApp(s, { guest: true, sheet: jumpSheet("sign-in", "half", { reason: "report" }) })],
   ] },
-  { n: 7, title: "Commentaires et signalement de contenu", items: [] },
+  { n: 7, title: "Commentaires et signalement de contenu", items: [
+    ["Commentaires (fil)", (s) => jumpComments(s)],
+    ["Chargement des commentaires", (s) => jumpComments(s, { view: "loading" })],
+    ["Erreur de chargement", (s) => jumpComments(s, { view: "error" })],
+    ["Aucun commentaire", (s) => jumpComments(s, {}, { id: "a6", alerts: s.alerts.map((a) => (a.id === "a6" ? { ...a, commentsCount: 0 } : a)), comments: { a6: [] } })],
+    ["Répondre à un commentaire", (s) => jumpComments(s, { replyTo: "c1" })],
+    ["Commentaire publié", (s) => ({ ...jumpComments(s, { highlight: MY_COMMENT.id }, withMyComment(s)), toasts: [{ id: Date.now(), text: "Commentaire publié.", tone: "success" }] })],
+    ["Commenter en tant que…", (s) => jumpComments(s, {}, { sheet: jumpSheet("comment-identity") })],
+    ["Donnée personnelle refusée", (s) => jumpComments(s, { draftText: "Le conducteur de la AB-123-CD bloque la rue, appelez-moi au 06 12 34 56 78.", submitted: true })],
+    ["Menu d'un commentaire", (s) => jumpComments(s, {}, { sheet: jumpSheet("comment-menu", "half", { alertId: "a1", commentId: "c1" }) })],
+    ["Menu de mon commentaire", (s) => jumpComments(s, {}, { ...withMyComment(s), sheet: jumpSheet("comment-menu", "half", { alertId: "a1", commentId: MY_COMMENT.id }) })],
+    ["Supprimer : confirmation", (s) => jumpComments(s, {}, { ...withMyComment(s), modal: { title: "Supprimer ce commentaire ?", body: "Il ne sera plus visible. Les réponses restent. Cette action est définitive.", confirmLabel: "Supprimer", destructive: true } })],
+    ["Commentaire supprimé (avec réponses)", (s) => jumpComments(s, {}, withMyComment(s, { status: "deleted", body: "", parentId: undefined }, [{ id: "k-rep", authorId: "u3", anonymous: false, body: "Merci, je fais le tour par la rue Thiers.", parentId: MY_COMMENT.id, createdAt: Date.now() - MIN }]))],
+    ["Commentaire masqué par la modération", (s) => jumpComments(s, { highlight: "c7" })],
+    ["Commentaires sans compte", (s) => jumpComments(s, {}, { guest: true })],
+    ["Commentaires hors connexion", (s) => jumpComments(s, {}, { demo: { offline: true } })],
+    ["Alerte expirée : commentaires fermés", (s) => jumpComments(s, {}, { id: "a23" })],
+    ["Règles de la communauté", (s) => jumpComments(s, {}, { sheet: jumpSheet("community-rules") })],
+    ["Signaler l'alerte · motif", (s) => jumpComments(s, { kind: "alert", alertId: "a1" }, { screen: "report-content" })],
+    ["Signaler · information dangereuse", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "dangereux" }, { screen: "report-content" })],
+    ["Signaler · confirmer", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "faux", step: "confirm", note: "Je suis devant la gare : aucune fumée." }, { screen: "report-content" })],
+    ["Signaler · envoi impossible", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "faux", step: "error" }, { screen: "report-content", demo: { networkError: true } })],
+    ["Signaler · merci", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "faux", step: "done" }, { screen: "report-content", reports: { "alert:a1": { reason: "faux" } } })],
+    ["Signaler un commentaire", (s) => jumpComments(s, { kind: "comment", alertId: "a1", commentId: "c1" }, { screen: "report-content" })],
+    ["Alerte déjà signalée (menu ⋯)", (s) => ({ ...jumpApp(s, { nav: jumpAlert("a1"), sheet: jumpSheet("alert-menu", "half", { id: "a1" }) }), reports: { "alert:a1": { reason: "faux" } } })],
+    ["Signaler sans compte", (s) => jumpComments(s, {}, { guest: true, sheet: jumpSheet("sign-in", "half", { reason: "flag" }) })],
+  ] },
   { n: 8, title: "Activité et notifications", items: [] },
   { n: 9, title: "Profil, paramètres, aide, légal", items: [] },
   { n: 10, title: "États transverses, recette et scénarios de test", items: [], scenarios: true },
@@ -4856,6 +5402,7 @@ function DemoPanel() {
           <hr />
           <Switch id="demo-offline" label="Hors connexion" checked={d.offline} onChange={(v) => setDemo("offline", v)} />
           <Switch id="demo-perm" label="Localisation refusée" checked={d.permissionDenied} onChange={(v) => setDemo("permissionDenied", v)} />
+          <Switch id="demo-camera" label="Appareil photo refusé" checked={d.cameraDenied} onChange={(v) => setDemo("cameraDenied", v)} />
           <Switch id="demo-gps" label="Position introuvable" checked={d.gpsUnavailable} onChange={(v) => setDemo("gpsUnavailable", v)} />
           <Switch id="demo-error" label="Erreur réseau" checked={d.networkError} onChange={(v) => setDemo("networkError", v)} />
           <Switch id="demo-empty" label="Zone sans alerte" checked={d.emptyZone} onChange={(v) => setDemo("emptyZone", v)} />

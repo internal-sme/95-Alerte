@@ -39,6 +39,8 @@ export const SIGN_IN_REASONS = {
   vote: { title: "Connectez-vous pour voter", text: "Confirmer ou contester un signalement demande un compte : un seul avis par personne et par alerte." },
   report: { title: "Connectez-vous pour signaler", text: "Un compte permet de transmettre votre signalement au bon service et d'en suivre le traitement. Vous pourrez publier anonymement." },
   follow: { title: "Connectez-vous pour suivre", text: "Avec un compte, vous êtes prévenu du traitement de l'alerte et la retrouvez dans votre activité." },
+  comment: { title: "Connectez-vous pour commenter", text: "Un compte garde la discussion utile : un nom public pour chaque commentaire, que vous pouvez supprimer à tout moment. Vous pourrez commenter anonymement." },
+  flag: { title: "Connectez-vous pour signaler un contenu", text: "Un compte évite les signalements abusifs. Votre signalement reste confidentiel : l'auteur ne saura pas qui l'a signalé." },
 };
 
 /* 5.8 : écran « Situation urgente ? » (PRD F-17, G3) — numéros en clair, lieu à dicter, un seul bouton rouge */

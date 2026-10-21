@@ -24,7 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BENCH = ROOT / "docs/benchmark"
 SRC = BENCH / "src"
-REPORTS = {"onboarding-refonte": "onboarding-v2", "carte-refonte": "carte", "liste-refonte": "liste", "fiche-refonte": "fiche", "signalement-refonte": "signalement"}
+REPORTS = {"onboarding-refonte": "onboarding-v2", "carte-refonte": "carte", "liste-refonte": "liste", "fiche-refonte": "fiche", "signalement-refonte": "signalement", "commentaires-refonte": "commentaires"}
 
 
 def tailwind_css() -> str:
