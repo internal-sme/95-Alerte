@@ -41,6 +41,8 @@ ICONS = [
     "minus", "polygon", "arrows-out-simple",
     # Liste, recherche et filtres (phase 4)
     "arrows-down-up", "clock-counter-clockwise", "arrow-up",
+    # Fiche alerte (phase 5)
+    "whatsapp-logo", "chat-text", "link", "bell-ringing", "bell-slash", "images", "caret-up",
 ]
 FILL = [
     "map-trifold", "list-bullets", "pulse", "user-circle", "bell", "arrow-fat-up",
@@ -49,11 +51,13 @@ FILL = [
     "hand-heart", "mask-happy", "soccer-ball", "calendar-star", "barricade", "lightbulb",
     "dots-three", "drop", "tree", "megaphone", "info", "warning", "siren", "star",
     "paper-plane-tilt", "squares-four", "navigation-arrow",
+    "bell-ringing", "phone",
 ]
 
 # Illustrations ponctuelles (écrans de confirmation, états) : Phosphor Duotone, même bibliothèque que l'interface
 DUOTONE = ["envelope-open", "hand-waving", "seal-check", "map-trifold", "identification-card", "shield-check",
-           "megaphone", "hand-heart", "map-pin-area", "compass", "cloud-slash"]
+           "megaphone", "hand-heart", "map-pin-area", "compass", "cloud-slash",
+           "siren", "trash", "eye-slash", "link-break"]
 
 
 def inner(svg: str) -> str:

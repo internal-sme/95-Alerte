@@ -262,7 +262,8 @@ function haversineKm(a, b) {
 }
 
 function fmtDistance(km) {
-  if (km < 1) return `${Math.max(50, Math.round((km * 1000) / 50) * 50)} m`;
+  const m = Math.round((km * 1000) / 50) * 50; // 0,99 km s'arrondit à « 1,0 km », jamais « 1000 m »
+  if (m < 1000) return `${Math.max(50, m)} m`;
   return `${km.toFixed(1).replace(".", ",")} km`;
 }
 
@@ -337,7 +338,7 @@ function initialState() {
     auth: initialAuth(),
     alerts: SEED_ALERTS,
     votes: { a4: 1, a8: 1 },
-    follows: { a1: true },
+    follows: { a1: "all" }, // niveau de suivi : « all » (tout changement), « status » (traitement seul), « none » (sans notification)
     comments: SEED_COMMENTS,
     notifications: SEED_NOTIFICATIONS,
     nav: { tab: "map", stack: [] },
@@ -371,7 +372,7 @@ function reducer(state, action) {
     case "CLOSE_MODAL":
       return { ...state, modal: null };
     case "TOAST":
-      return { ...state, toasts: [...state.toasts.slice(-2), { id: ++toastSeq, ...action.toast }] };
+      return { ...state, toasts: [{ id: ++toastSeq, ...action.toast }] }; // un seul toast à la fois : le dernier remplace le précédent
     case "DISMISS_TOAST":
       return { ...state, toasts: state.toasts.filter((t) => t.id !== action.id) };
     case "SET_PREF":
@@ -409,6 +410,15 @@ function reducer(state, action) {
       const prefs = next === 1 && !state.prefs.startVoted ? { ...state.prefs, startVoted: true } : state.prefs;
       return { ...state, alerts, prefs, votes: { ...state.votes, [action.alertId]: next } };
     }
+    case "FOLLOW": // F-13 : suivre une alerte ; le premier choix devient le niveau proposé ensuite (5.11)
+      return { ...state, follows: { ...state.follows, [action.alertId]: action.level }, prefs: { ...state.prefs, followAsked: true, followLevel: action.level } };
+    case "UNFOLLOW": {
+      const follows = { ...state.follows };
+      delete follows[action.alertId];
+      return { ...state, follows };
+    }
+    case "DELETE_ALERT": // R : l'auteur peut supprimer son alerte (confirmation obligatoire, PRD §10.2)
+      return { ...state, alerts: state.alerts.map((a) => (a.id === action.alertId ? { ...a, status: "supprimee" } : a)) };
     case "SPLASH_DONE":
       return state.prefs.onboardingSeen
         ? { ...state, session: { ...state.session, status: "auth" }, auth: { ...state.auth, step: "login" } }
@@ -745,7 +755,7 @@ function AlertCard({ alert, onOpen, showStatus }) {
         <h4>{alert.title}</h4>
         <span className="meta"><Icon name="map-pin" className="ph-sm" /><span>{commune}{dist ? ` · ${dist}` : ""}</span></span>
       </span>
-      {alert.hasPhoto ? <span className="ac-photo" aria-hidden="true"><Icon name="image" /></span> : null}
+      {alert.hasPhoto ? <span className="ac-photo" aria-hidden="true">{alertPhotos(alert)[0] ? <img src={alertPhotos(alert)[0].src} alt="" /> : <Icon name="image" />}</span> : null}
       <span className="ac-foot" aria-hidden="true">
         <span className="stats">
           <span><Icon name="arrow-fat-up" />{alert.votesUp}</span>
@@ -758,21 +768,23 @@ function AlertCard({ alert, onOpen, showStatus }) {
   );
 }
 
-function VoteBar({ alert, compact }) {
+/* F-09 : un vote par alerte, modifiable ; retoucher le même bouton retire le vote (G2) */
+function VoteBar({ alert, compact, closed }) {
   const { state } = useStore();
-  const { vote, toast } = useActions();
+  const { vote, toast, openSheet } = useActions();
   const current = state.votes[alert.id] || 0;
+  const disabled = closed || state.demo.offline;
   const onVote = (v) => {
-    if (state.demo.offline) { toast("Vote impossible hors connexion.", { tone: "error" }); return; }
-    if (!state.session.user) { toast("Connectez-vous pour confirmer ou contester une alerte."); return; }
+    if (!state.session.user) { openSheet("sign-in", { reason: "vote" }); return; }
     vote(alert.id, v);
+    toast(current === 0 ? "Merci, votre vote est enregistré." : current === v ? "Vote retiré." : "Vote modifié.");
   };
   return (
     <div className="vote" role="group" aria-label="Votre avis sur ce signalement">
-      <button className="up" type="button" aria-pressed={current === 1} onClick={() => onVote(1)} aria-label={`Confirmer, ${alert.votesUp} confirmations`}>
+      <button className="up" type="button" disabled={disabled} aria-pressed={current === 1} onClick={() => onVote(1)} aria-label={`Confirmer, ${alert.votesUp} confirmations`}>
         <Icon name={current === 1 ? "arrow-fat-up-fill" : "arrow-fat-up"} />{compact ? null : "Confirmer"} <span className="n">{alert.votesUp}</span>
       </button>
-      <button className="down" type="button" aria-pressed={current === -1} onClick={() => onVote(-1)} aria-label={`Contester, ${alert.votesDown} contestations`}>
+      <button className="down" type="button" disabled={disabled} aria-pressed={current === -1} onClick={() => onVote(-1)} aria-label={`Contester, ${alert.votesDown} contestations`}>
         <Icon name={current === -1 ? "arrow-fat-down-fill" : "arrow-fat-down"} />{compact ? null : "Contester"} <span className="n">{alert.votesDown}</span>
       </button>
     </div>
@@ -786,7 +798,7 @@ function Timeline({ steps, currentIndex }) {
         const done = i < currentIndex || (i === currentIndex && s.final);
         const current = i === currentIndex && !s.final;
         return (
-          <li key={s.id} className={cx(done && "done", current && "current")}>
+          <li key={s.id} className={cx(done && "done", current && "current")} aria-current={current ? "step" : undefined}>
             <span className="dot">{done ? <Icon name="check" /> : current ? <Icon name="arrows-clockwise" /> : null}</span>
             <span><b>{s.label}</b>{s.detail ? <small>{s.detail}</small> : null}</span>
           </li>
@@ -805,7 +817,7 @@ function CategoryTile({ category, selected, onClick }) {
   );
 }
 
-function CommentItem({ comment, reply }) {
+function CommentItem({ comment, reply, readOnly }) {
   const now = useNow();
   const author = publicAuthor(comment);
   return (
@@ -814,7 +826,7 @@ function CommentItem({ comment, reply }) {
       <div>
         <div className="who">{author.name} <time>{fmtRelative(now - (BOOT_TIME - comment.ageMin * MIN))}</time></div>
         <p>{comment.body}</p>
-        <div className="acts"><button type="button">Répondre</button><button type="button">Signaler</button></div>
+        {readOnly ? null : <div className="acts"><button type="button">Répondre</button><button type="button">Signaler</button></div>}
       </div>
     </div>
   );
@@ -964,7 +976,7 @@ function ToastHost({ hasTabbar }) {
     <div className={cx("toast-host", !hasTabbar && "no-tabbar")}>
       <div aria-live="polite" style={{ display: "contents" }}>
         {state.toasts.filter((t) => t.tone !== "error").map((t) => (
-          <div key={t.id} className="toast" role="status"><Icon name="check-circle-fill" />{t.text}</div>
+          <div key={t.id} className={cx("toast", t.tone === "info" && "is-info")} role="status"><Icon name={t.tone === "info" ? "info-fill" : "check-circle-fill"} />{t.text}</div>
         ))}
       </div>
       <div aria-live="assertive" style={{ display: "contents" }}>
@@ -1522,7 +1534,8 @@ function alertStatus(alert, now, showStatus) {
 /* Fiche de sélection (tâche 3.7) : quoi, où, depuis quand, par qui, combien ; balayage vers l'alerte voisine */
 function AlertSummary({ alert, onClose, index, total, onStep }) {
   const { state } = useStore();
-  const { toast } = useActions();
+  const { push } = useActions();
+  const shared = state.nav.stack.length === 0; // smart animate vers la fiche : un seul élément porte chaque nom
   const now = useNow();
   const cat = CATEGORY_BY_ID[alert.categoryId];
   const pos = state.session.position;
@@ -1546,12 +1559,12 @@ function AlertSummary({ alert, onClose, index, total, onStep }) {
   return (
     <div className={cx("summary", `fam-${cat.family}`)} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onKeyDown={onKeyDown}>
       <div className="summary-head">
-        <TypeBadge category={cat} />
+        <span style={shared ? { viewTransitionName: "alert-type" } : undefined}><TypeBadge category={cat} /></span>
         {alert.areaKm ? <span className="badge badge-area"><Icon name="polygon" />Zone</span> : null}
         <span className="demo-note">{fmtRelative(now - alert.createdAt)}</span>
         <IconButton icon="x" label="Fermer la fiche" className="flat" onClick={onClose} />
       </div>
-      <h3 className="summary-title">{alert.title}</h3>
+      <h3 className="summary-title" style={shared ? { viewTransitionName: "alert-title" } : undefined}>{alert.title}</h3>
       <p className="summary-meta"><Icon name="map-pin" className="ph-sm" /><span>{displayPlace(alert)}{dist}</span></p>
       <div className="summary-by">
         <span className={cx("avatar", author.anonymous && "anon")} aria-hidden="true">{author.anonymous ? <Icon name="detective" /> : author.initials}</span>
@@ -1564,7 +1577,7 @@ function AlertSummary({ alert, onClose, index, total, onStep }) {
         <VoteBar alert={alert} compact />
         <span className="summary-comments"><Icon name="chat-circle" />{alert.commentsCount} commentaire{alert.commentsCount > 1 ? "s" : ""}</span>
       </div>
-      <Button block onClick={() => toast("La fiche alerte complète arrive bientôt.")}>Voir le détail</Button>
+      <Button block onClick={() => push("alert", { id: alert.id })}>Voir le détail</Button>
       {total > 1 ? (
         <div className="summary-pager">
           <IconButton icon="caret-left" label="Alerte précédente" className="flat" onClick={() => onStep(-1)} />
@@ -1924,7 +1937,7 @@ function MapScreen() {
           {state.session.status === "in" ? <StartChecklist onConfirm={() => {}} /> : null}
           {listing.length === 0 ? (
             <EmptyState title="Aucun événement dans cette zone." action={radius < 10 && hasZone ? <Button variant="secondary" onClick={widen}>Élargir à 10 km</Button> : null}>Élargissez la zone ou revenez plus tard.</EmptyState>
-          ) : listing.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => toast("La fiche alerte complète arrive bientôt.")} />)}
+          ) : listing.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => push("alert", { id: a.id })} />)}
         </div>
         <ViewToggle view="list" floating onChange={setView} />
       </div>
@@ -2205,7 +2218,7 @@ function AlertsScreen() {
   const filtered = f.type !== "all" || activeFilterCount(f) > 0;
   const radius = zoneRadius(state);
   const groups = feedGroups(list, sort, { pos, now, hasPos, radius }).filter((g) => g.items.length);
-  const open = (a) => dispatch({ type: "MAP_FOCUS", focus: { kind: "alert", id: a.id } }); // la fiche complète arrive en phase 5
+  const open = (a) => push("alert", { id: a.id }); // S2 : de la liste à la fiche en un toucher
   const top = () => ref.current?.scrollTo({ top: 0, behavior: motionReduced() ? "auto" : "smooth" });
   const scope = hasPos ? `${COMMUNE_BY_ID[pos.communeId]?.name || "Ma position"} · ${radius} km` : "Tout le Val-d'Oise";
   return (
@@ -2247,11 +2260,11 @@ function AlertsScreen() {
 
 function ActivityScreen() {
   const { state } = useStore();
-  const { toast, push } = useActions();
+  const { push } = useActions();
   const [tab, setTab] = useState("mine");
   const mine = state.session.user ? state.alerts.filter((a) => a.authorId === ME_ID && a.status !== "supprimee").sort((a, b) => b.createdAt - a.createdAt) : [];
   const followed = state.alerts.filter((a) => state.follows[a.id]);
-  const open = () => toast("Le suivi détaillé arrive bientôt.");
+  const open = (a) => push("alert", { id: a.id });
   return (
     <div className="screen">
       <div className="screen-title"><h1>Activité</h1><p>Vos signalements et leur suivi par les services</p></div>
@@ -2260,11 +2273,11 @@ function ActivityScreen() {
         {!state.session.user ? (
           <GuestGate icon="pulse" title="Retrouvez ici votre activité" text="Connectez-vous pour suivre vos alertes, vos commentaires et les alertes que vous suivez." />
         ) : tab === "mine" ? (
-          mine.length ? mine.map((a) => <AlertCard key={a.id} alert={a} showStatus onOpen={open} />)
+          mine.length ? mine.map((a) => <AlertCard key={a.id} alert={a} showStatus onOpen={() => open(a)} />)
             : <EmptyState icon="plus" title="Vous n'avez encore publié aucune alerte." action={<Button onClick={() => push("report")}>Signaler un événement</Button>} />
         ) : tab === "comments" ? (
           <EmptyState icon="chat-circle" title="Aucun commentaire pour le moment.">Vos commentaires et les réponses reçues apparaîtront ici.</EmptyState>
-        ) : followed.length ? followed.map((a) => <AlertCard key={a.id} alert={a} onOpen={open} />)
+        ) : followed.length ? followed.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => open(a)} />)
           : <EmptyState icon="bookmark-simple" title="Aucune alerte suivie.">Suivez une alerte pour être prévenu de son traitement.</EmptyState>}
       </div>
     </div>
@@ -3357,7 +3370,7 @@ function CommuneScreen() {
 
 function ComponentsScreen() {
   const { state } = useStore();
-  const { toast, confirm, openSheet } = useActions();
+  const { toast, confirm, openSheet, push } = useActions();
   const now = useNow();
   const [chips, setChips] = useState({ culture: true });
   const [seg, setSeg] = useState("map");
@@ -3436,7 +3449,7 @@ function ComponentsScreen() {
         </section>
 
         <section className="lib-section"><p className="section-label">Alert Card · Vote · Expiration</p>
-          <AlertCard alert={sample} onOpen={() => toast("La fiche alerte arrive en phase 5.")} />
+          <AlertCard alert={sample} onOpen={() => push("alert", { id: sample.id })} />
           <VoteBar alert={state.alerts.find((a) => a.id === "a4")} />
           <ExpirationCounter alert={sample} />
           <ExpirationCounter alert={state.alerts.find((a) => a.id === "a22")} />
@@ -3469,6 +3482,505 @@ function DemoSheetContent() {
   );
 }
 
+/* =====================================================================
+   FICHE ALERTE (phase 5) — comprendre, puis réagir (rapport docs/benchmark/fiche-refonte.html, G1 à G6)
+   ===================================================================== */
+/* G4 : photos de démonstration générées avec Magnific (rues du Val-d'Oise, personne d'identifiable),
+   embarquées par tools/build_prototype.py depuis prototype/src/alertes/<id>-<n>.webp. Sans photo : mini-carte. */
+const ALERT_PHOTOS = (typeof window !== "undefined" && window.ALERT_PHOTOS) || {};
+const PHOTO_ALT = {
+  "a1-1": "Fumée noire au-dessus des immeubles, vue depuis la rue près de la gare de Pontoise",
+  "a1-2": "Fumée grise qui s'échappe du toit d'un immeuble ancien, rue Carnot",
+  "a4-1": "Bénévoles vus de dos, gants aux mains, qui remplissent des sacs sur la pelouse du parc",
+  "a6-1": "Nid-de-poule rempli d'eau au milieu de la chaussée",
+  "a8-1": "Chêne tombé en travers de la voie de droite, voitures à l'arrêt derrière",
+  "a30-1": "Chemin de halage recouvert par l'Oise, banc à moitié dans l'eau",
+};
+function alertPhotos(alert) {
+  return Object.keys(PHOTO_ALT).filter((k) => k.startsWith(`${alert.id}-`) && ALERT_PHOTOS[k]).map((k) => ({ id: k, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
+}
+
+const isEmergencyCategory = (cat) => cat.family === "incident"; // incendie, accident, sécurité, inondation : rappel d'urgence (PRD F-17)
+const shareCode = (id) => { let h = 7; for (const ch of id) h = (h * 131 + ch.charCodeAt(0)) % 1679616; return h.toString(36).toUpperCase().padStart(4, "7"); };
+const shareUrl = (alert) => `https://95alerte.fr/a/${shareCode(alert.id)}`; // lien fictif : ni auteur, ni position de l'utilisateur
+const fmtDelay = (h) => (h < 48 ? `${h} h` : `${Math.round(h / 24)} jours`);
+
+/* Horodatage simulé des étapes atteintes, entre la publication et l'ouverture de l'app */
+const STEP_SHARE = [0, 0.04, 0.35, 0.6, 0.85, 0.95];
+function stepTimes(alert) {
+  const idx = TRANSMISSION_STEPS.findIndex((st) => st.id === alert.transmission);
+  const age = Math.max(MIN, BOOT_TIME - alert.createdAt);
+  return TRANSMISSION_STEPS.map((st, i) => (i <= idx ? alert.createdAt + Math.max(i ? MIN : 0, age * STEP_SHARE[i]) : null));
+}
+
+/* Mini-carte de la fiche : même fond que l'accueil, centrée sur l'alerte, au niveau de la rue ;
+   zone dessinée pour les alertes de zone, halo flou quand la catégorie n'affiche que le quartier (CDC §78) */
+function AlertMiniMap({ alert, height = 232 }) {
+  const { state } = useStore();
+  const ref = useRef(null);
+  const [w, setW] = useState(390);
+  useLayoutEffect(() => { if (ref.current) setW(ref.current.clientWidth); }, []);
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const s = alert.areaKm ? Math.min(150, (Math.min(w, height) * 0.36) / alert.areaKm) : 150;
+  const c = projectKm(alert);
+  const cx0 = w / 2;
+  const cy0 = height * 0.58;
+  const toScreen = (x, y) => ({ x: cx0 + (x - c.x) * s, y: cy0 + (y - c.y) * s });
+  const level = levelOf(s);
+  const pos = state.session.position;
+  const me = pos.source !== "default" ? (() => { const k = projectKm(pos); return toScreen(k.x, k.y); })() : null;
+  const fuzzy = cat.precision === "quartier" && !alert.areaKm;
+  return (
+    <div className="zone-map alert-map" ref={ref} aria-hidden="true">
+      <div className={cx("map95", "map-live", "is-static", `lv-${level}`)}>
+        {MAP95 ? (
+          <svg className="map-geo" width={w} height={height}>
+            <g className="zm-geo" style={{ transform: `translate(${cx0 - c.x * s}px, ${cy0 - c.y * s}px) scale(${s})` }}>
+              {GEO_LAYERS}
+              {alert.areaKm ? <path className={cx("area-shape", `fam-${cat.family}`, "is-selected")} d={areaPath(alert)} /> : null}
+            </g>
+          </svg>
+        ) : MAP_ART}
+        {mapLabels(level, toScreen, w, height, 56).map((l) => <span key={l.key} className={cx("map-label", l.cls)} style={{ left: l.x, top: l.y }}>{l.text}</span>)}
+      </div>
+      {fuzzy ? <span className="precision-halo" style={{ left: cx0, top: cy0 }} /> : null}
+      {me && me.x > 12 && me.x < w - 12 && me.y > 12 && me.y < height - 12 ? <span className="me" style={{ left: me.x, top: me.y }} /> : null}
+      <span className="map-pin" style={{ left: cx0, top: cy0 }}><Marker family={cat.family} icon={cat.icon} selected critical={cat.priority === "critique"} /></span>
+    </div>
+  );
+}
+
+/* Rappel d'urgence (catégories critiques) : ouvre l'écran « Situation urgente ? » */
+function EmergencyNote({ onClick }) {
+  return (
+    <button type="button" className="emergency-note" onClick={onClick}>
+      <Icon name="siren-fill" />
+      <span><b>Situation urgente ?</b>95 Alerte ne prévient pas les secours. Appelez le 112.</span>
+      <Icon name="caret-right" className="ph-sm" />
+    </button>
+  );
+}
+
+/* Progression du traitement en une ligne : 6 segments, l'étape atteinte, sa position */
+function StatusProgress({ index, total }) {
+  return (
+    <div className="status-progress" aria-hidden="true">
+      {Array.from({ length: total }, (_, i) => <i key={i} className={cx(i <= index && "on", i === index && "now")} />)}
+    </div>
+  );
+}
+
+function ServiceCard({ alert, onTimeline }) {
+  const route = routeAlert(alert);
+  const idx = Math.max(0, TRANSMISSION_STEPS.findIndex((st) => st.id === alert.transmission));
+  const step = TRANSMISSION_STEPS[idx];
+  const at = stepTimes(alert)[idx];
+  return (
+    <section className="service-card" aria-labelledby="svc-title">
+      <div className="svc-head">
+        <span className="svc-ico" aria-hidden="true"><Icon name="buildings" /></span>
+        <div><h2 id="svc-title">{idx === 0 ? "Signalement envoyé" : "Transmis au service compétent"}</h2><p>{route.name}</p></div>
+      </div>
+      <StatusProgress index={idx} total={TRANSMISSION_STEPS.length} />
+      <p className="svc-step"><b>{step.label}</b> · étape {idx + 1} sur {TRANSMISSION_STEPS.length}{at ? ` · ${fmtClock(at)}` : ""}</p>
+      {route.delayHours ? <p className="svc-delay">Délai habituel indiqué par le service : {fmtDelay(route.delayHours)}</p> : null}
+      <Button variant="tertiary" className="btn-inline" onClick={onTimeline}>Voir le suivi du traitement</Button>
+    </section>
+  );
+}
+
+/* 5.6 : timeline Envoyé → Transmis → Pris en compte → En traitement → Traité → Clôturé (feuille) */
+function StatusTimeline({ alert }) {
+  const idx = Math.max(0, TRANSMISSION_STEPS.findIndex((st) => st.id === alert.transmission));
+  const times = stepTimes(alert);
+  return (
+    <ol className="timeline status-timeline">
+      {TRANSMISSION_STEPS.map((st, i) => (
+        <li key={st.id} className={cx(i <= idx && "done", i === idx && "now")} aria-current={i === idx ? "step" : undefined}>
+          <span className="dot">{i <= idx ? <Icon name="check" /> : null}</span>
+          <span className="tl-text"><b>{st.label}</b>{i === idx ? <small>Étape actuelle</small> : i > idx ? <small>À venir</small> : null}</span>
+          {times[i] ? <time>{fmtClock(times[i])}</time> : <span />}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function TimelineSheet({ id }) {
+  const { state } = useStore();
+  const alert = state.alerts.find((a) => a.id === id);
+  if (!alert) return null;
+  const route = routeAlert(alert);
+  return (
+    <Fragment>
+      <StatusTimeline alert={alert} />
+      {route.delayHours ? <p className="demo-note">Délai habituel indiqué par le service : {fmtDelay(route.delayHours)}. Il peut varier selon la situation.</p> : null}
+      <p className="demo-note">Le service met à jour les étapes. Suivez l'alerte pour être prévenu de chaque changement.</p>
+    </Fragment>
+  );
+}
+
+/* 5.11 : au premier « Suivre », choisir ce qui sera notifié (Strava, Google Photos) */
+const FOLLOW_LEVELS = [
+  { value: "all", icon: "bell-ringing", title: "Pour tout changement", description: "Commentaires, statut du traitement, expiration" },
+  { value: "status", icon: "buildings", title: "Seulement le traitement", description: "Transmise, prise en compte, traitée" },
+  { value: "none", icon: "bell-slash", title: "Non merci", description: "L'alerte reste dans vos alertes suivies, sans notification" },
+];
+const FOLLOW_TOAST = {
+  all: "Vous suivez cette alerte. Vous serez prévenu de tout changement.",
+  status: "Vous suivez cette alerte. Vous serez prévenu de son traitement.",
+  none: "Alerte ajoutée à vos alertes suivies, sans notification.",
+};
+function FollowSheet({ id }) {
+  const { state, dispatch } = useStore();
+  const { closeSheet, toast } = useActions();
+  const current = state.follows[id];
+  const [level, setLevel] = useState(current || state.prefs.followLevel || "all");
+  return (
+    <Fragment>
+      <div className="radio-list" role="radiogroup" aria-label="Notifications pour cette alerte">
+        {FOLLOW_LEVELS.map((o) => <RadioCard key={o.value} name="follow-level" value={o.value} checked={level === o.value} onChange={setLevel} icon={o.icon} iconTone={o.value === "none" ? "muted" : "primary"} title={o.title} description={o.description} />)}
+      </div>
+      <PrivacyNote icon="gear">Modifiable à tout moment depuis la fiche ou les réglages de notifications.</PrivacyNote>
+      <div className="sheet-actions">
+        <Button block onClick={() => { dispatch({ type: "FOLLOW", alertId: id, level }); closeSheet(); toast(FOLLOW_TOAST[level]); }}>{current ? "Enregistrer" : "Suivre cette alerte"}</Button>
+        {current ? <Button variant="tertiary" onClick={() => { dispatch({ type: "UNFOLLOW", alertId: id }); closeSheet(); toast("Vous ne suivez plus cette alerte."); }}>Ne plus suivre</Button> : null}
+      </div>
+    </Fragment>
+  );
+}
+
+function FollowButton({ alert }) {
+  const { state, dispatch } = useStore();
+  const { openSheet, toast } = useActions();
+  const level = state.follows[alert.id];
+  const onClick = () => {
+    if (!state.session.user) { openSheet("sign-in", { reason: "follow" }); return; }
+    if (level || !state.prefs.followAsked) { openSheet("follow", { id: alert.id }); return; }
+    const next = state.prefs.followLevel || "all";
+    dispatch({ type: "FOLLOW", alertId: alert.id, level: next });
+    toast(FOLLOW_TOAST[next]);
+  };
+  return (
+    <Button variant="secondary" icon={level === "none" ? "bell-slash" : level ? "bell-ringing-fill" : "bell"} aria-pressed={!!level} onClick={onClick} disabled={state.demo.offline}>
+      {level ? "Suivie" : "Suivre"}
+    </Button>
+  );
+}
+
+/* Invité : expliquer pourquoi se connecter, au lieu d'un toast sans issue (audit phase 5) */
+const SIGN_IN_REASONS = {
+  vote: { title: "Connectez-vous pour voter", text: "Confirmer ou contester un signalement demande un compte : un seul avis par personne et par alerte." },
+  follow: { title: "Connectez-vous pour suivre", text: "Avec un compte, vous êtes prévenu du traitement de l'alerte et la retrouvez dans votre activité." },
+};
+function SignInSheet({ reason = "vote" }) {
+  const { dispatch } = useStore();
+  const { closeSheet } = useActions();
+  return (
+    <Fragment>
+      <p className="sheet-lead">{SIGN_IN_REASONS[reason].text}</p>
+      <PrivacyNote>Votre nom public reste « Jean D. » ou « Citoyen anonyme » : jamais votre e-mail ni votre téléphone.</PrivacyNote>
+      <div className="sheet-actions">
+        <Button block icon="sign-in" onClick={() => dispatch({ type: "LOGOUT" })}>Se connecter</Button>
+        <Button variant="tertiary" onClick={closeSheet}>Plus tard</Button>
+      </div>
+    </Fragment>
+  );
+}
+
+/* 5.7 : partage simulé ; l'aperçu montre exactement ce qui part (Medium, Lex) */
+function ShareSheet({ id }) {
+  const { state } = useStore();
+  const { closeSheet, toast } = useActions();
+  const now = useNow();
+  const alert = state.alerts.find((a) => a.id === id);
+  if (!alert) return null;
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const left = alert.expiresAt - now;
+  const url = shareUrl(alert);
+  const copy = () => {
+    try { navigator.clipboard?.writeText(url).catch(() => {}); } catch (e) { /* presse-papiers indisponible : le lien reste affiché */ }
+    closeSheet();
+    toast("Lien copié.");
+  };
+  const simulated = (via) => { closeSheet(); toast(`Partage par ${via} simulé : aucun message n'est envoyé depuis le prototype.`, { tone: "info" }); };
+  return (
+    <Fragment>
+      <div className={cx("share-card", `fam-${cat.family}`)}>
+        <TypeBadge category={cat} />
+        <b>{alert.title}</b>
+        <span>{COMMUNE_BY_ID[alert.communeId].name} · {left > 0 ? `visible encore ${fmtRemaining(left)}` : "alerte expirée"}</span>
+        <span className="share-url">{url.replace("https://", "")}</span>
+      </div>
+      <div className="share-actions">
+        <button type="button" onClick={copy}><span><Icon name="link" /></span>Copier le lien</button>
+        <button type="button" onClick={() => simulated("SMS")}><span><Icon name="chat-text" /></span>SMS</button>
+        <button type="button" onClick={() => simulated("WhatsApp")}><span><Icon name="whatsapp-logo" /></span>WhatsApp</button>
+        <button type="button" onClick={() => simulated("une autre application")}><span><Icon name="dots-three" /></span>Plus…</button>
+      </div>
+      <PrivacyNote>Le lien ne contient aucune donnée personnelle : ni l'auteur, ni votre position.</PrivacyNote>
+    </Fragment>
+  );
+}
+
+/* Menu ⋯ : une ligne d'explication par action, la suppression isolée et confirmée (Bluesky, Handshake) */
+function MenuRow({ icon, label, help, onClick, destructive, more }) {
+  return (
+    <button type="button" className={cx("menu-row", destructive && "is-destructive")} onClick={onClick}>
+      <Icon name={icon} />
+      <span><b>{label}</b>{help ? <small>{help}</small> : null}</span>
+      {more ? <Icon name="caret-right" className="ph-sm" /> : null}
+    </button>
+  );
+}
+function AlertMenuSheet({ id }) {
+  const { state, dispatch } = useStore();
+  const { closeSheet, toast, confirm } = useActions();
+  const alert = state.alerts.find((a) => a.id === id);
+  if (!alert) return null;
+  const mine = state.session.user && alert.authorId === ME_ID && !alert.anonymous;
+  const copy = () => { try { navigator.clipboard?.writeText(shareUrl(alert)).catch(() => {}); } catch (e) { /* sans presse-papiers */ } closeSheet(); toast("Lien copié."); };
+  const remove = () => {
+    closeSheet();
+    confirm({
+      title: "Supprimer cette alerte ?",
+      body: "Elle ne sera plus visible sur la carte ni dans la liste. Le service déjà saisi en est informé. Cette action est définitive.",
+      confirmLabel: "Supprimer", destructive: true,
+      onConfirm: () => { dispatch({ type: "DELETE_ALERT", alertId: alert.id }); toast("Votre alerte a été supprimée."); },
+    });
+  };
+  return (
+    <div className="menu-list">
+      <MenuRow icon="link" label="Copier le lien" help="Pour le coller dans un message" onClick={copy} />
+      <MenuRow icon="flag" label="Signaler cette alerte" help="Fausse, offensante, mauvaise catégorie ou mauvais lieu…" more
+        onClick={() => { closeSheet(); toast("Le signalement d'un contenu arrive avec la modération (phase 7).", { tone: "info" }); }} />
+      {mine ? (
+        <Fragment>
+          <hr />
+          <MenuRow icon="trash" label="Supprimer mon alerte" help="Elle disparaîtra pour tout le monde" destructive onClick={remove} />
+        </Fragment>
+      ) : null}
+    </div>
+  );
+}
+
+/* Aperçu des commentaires (G6) : lecture seule ; écrire et répondre arrivent en phase 7 */
+function CommentsPreview({ alert }) {
+  const { state } = useStore();
+  const { toast } = useActions();
+  const list = (state.comments[alert.id] || []).filter((c) => !c.parentId).sort((a, b) => a.ageMin - b.ageMin).slice(0, 2);
+  const n = alert.commentsCount;
+  return (
+    <section className="detail-section" aria-labelledby="dt-comments">
+      <h2 id="dt-comments">Commentaires{n ? <small> · {n}</small> : null}</h2>
+      {n === 0 ? <p className="detail-hint">Aucun commentaire pour le moment. <b>Soyez le premier à réagir.</b></p> : null}
+      {list.map((c) => <CommentItem key={c.id} comment={c} readOnly />)}
+      {n ? <Button variant="secondary" block onClick={() => toast("La discussion complète arrive avec les commentaires (phase 7).", { tone: "info" })}>Voir {n > 1 ? `les ${n} commentaires` : "le commentaire"}</Button> : null}
+    </section>
+  );
+}
+
+/* États sans contenu (supprimée, modérée, introuvable, erreur) : Spot Phosphor Duotone, une issue */
+function DetailState({ icon, title, children, actions }) {
+  const { pop } = useActions();
+  return (
+    <div className="screen detail-screen">
+      <ScreenHeader title="Alerte" onBack={pop} />
+      <div className="detail-state">
+        <Spot icon={icon} tone="neutral" />
+        <h2>{title}</h2>
+        <p>{children}</p>
+        {actions}
+      </div>
+    </div>
+  );
+}
+
+function DetailSkeleton() {
+  const { pop } = useActions();
+  return (
+    <div className="screen detail-screen" aria-busy="true" aria-label="Chargement de l'alerte">
+      <div className="detail-hero"><Skeleton height="100%" radius={0} /><div className="detail-top"><IconButton icon="caret-left" label="Retour" onClick={pop} /></div></div>
+      <div className="detail-body">
+        <Skeleton height={24} width="40%" radius={12} />
+        <Skeleton height={28} width="90%" />
+        <Skeleton height={16} width="70%" />
+        <Skeleton height={44} radius={12} />
+        <Skeleton height={64} />
+        <Skeleton height={48} radius={12} />
+      </div>
+    </div>
+  );
+}
+
+function AlertDetail({ id, demo }) {
+  const { state, dispatch } = useStore();
+  const { pop, push, openSheet } = useActions();
+  const now = useNow();
+  const alert = state.alerts.find((a) => a.id === id);
+  const backToMap = () => dispatch({ type: "SET_TAB", tab: "map" });
+  if (demo === "loading") return <DetailSkeleton />;
+  if (demo === "error" || state.demo.networkError) {
+    return (
+      <DetailState icon="cloud-slash" title="Impossible de charger cette alerte." actions={<div className="sheet-actions"><Button block icon="arrows-clockwise" onClick={() => dispatch({ type: "SET_DEMO", key: "networkError", value: false })}>Réessayer</Button><Button variant="secondary" block onClick={pop}>Retour</Button></div>}>
+        Vérifiez votre connexion, puis réessayez.
+      </DetailState>
+    );
+  }
+  if (!alert || alert.status === "supprimee" || alert.status === "moderee") {
+    const reason = !alert ? "Le lien est peut-être incorrect, ou l'alerte a été retirée."
+      : alert.status === "moderee" ? "Elle a été retirée par la modération : elle ne respectait pas les règles de la communauté."
+      : alert.authorId === ME_ID && state.session.user ? "Vous l'avez supprimée. Le service déjà saisi en a été informé."
+      : "Son auteur l'a supprimée.";
+    return (
+      <DetailState icon={alert?.status === "moderee" ? "eye-slash" : alert ? "trash" : "link-break"} title="Cette alerte n'est plus disponible" actions={<Button block onClick={backToMap}>Retour à la carte</Button>}>{reason}</DetailState>
+    );
+  }
+  const cat = CATEGORY_BY_ID[alert.categoryId];
+  const life = alertLifecycle(alert, now);
+  const expired = life === "expiree";
+  const pos = state.session.position;
+  const dist = pos.source !== "default" ? ` · ${fmtDistance(haversineKm(pos, alert))}` : "";
+  const author = publicAuthor(alert);
+  const mine = state.session.user && alert.authorId === ME_ID && !alert.anonymous;
+  const photos = alertPhotos(alert);
+  const dups = alert.duplicateGroup ? state.alerts.filter((a) => a.duplicateGroup === alert.duplicateGroup && a.id !== alert.id && a.status === "active" && a.expiresAt > now) : [];
+  const urgent = cat.priority === "critique";
+  return (
+    <div className={cx("screen", "detail-screen", `fam-${cat.family}`, expired && "is-expired")}>
+      <div className="detail-hero">
+        {photos.length ? (
+          <button type="button" className="detail-photo" onClick={() => push("photo-viewer", { id: alert.id, index: 0 })} aria-label={`Agrandir la photo${photos.length > 1 ? ` 1 sur ${photos.length}` : ""} : ${photos[0].alt}`}>
+            <img src={photos[0].src} alt="" />
+            {photos.length > 1 ? <span className="photo-count"><Icon name="images" />1 / {photos.length}</span> : null}
+          </button>
+        ) : <AlertMiniMap alert={alert} />}
+        <div className="detail-top">
+          <IconButton icon="caret-left" label="Retour" onClick={pop} />
+          <IconButton icon="dots-three" label="Plus d'actions" onClick={() => openSheet("alert-menu", { id: alert.id }, "half")} />
+        </div>
+      </div>
+      <article className="detail-body" aria-labelledby="dt-title">
+        <div className="detail-eyebrow">
+          <span style={{ viewTransitionName: "alert-type" }}><TypeBadge category={cat} /></span>
+          {urgent ? <span className="ac-urgent">Urgent</span> : null}
+          {alert.areaKm ? <span className="badge badge-area"><Icon name="polygon" />Zone</span> : null}
+          {alertStatus(alert, now, true)}
+        </div>
+        <h1 id="dt-title" className="detail-title" style={{ viewTransitionName: "alert-title" }}>{alert.title}</h1>
+        <ul className="detail-meta">
+          <li><Icon name="map-pin" className="ph-sm" /><span>{displayPlace(alert)}{dist}</span></li>
+          <li><Icon name="clock" className="ph-sm" /><span>Publiée {fmtRelative(now - alert.createdAt)} · {fmtClock(alert.createdAt)}</span></li>
+          {alert.areaKm ? <li><Icon name="polygon" className="ph-sm" /><span>Zone d'environ {fmtDistance(alert.areaKm * 2)} de large</span></li> : null}
+        </ul>
+        {expired ? null : <ExpirationCounter alert={alert} />}
+        {expired ? <Banner tone="offline" icon="clock" title="Cette alerte a expiré.">Elle n'est plus visible sur la carte ni dans la liste. Les votes sont fermés.</Banner> : null}
+        {isEmergencyCategory(cat) && !expired ? <EmergencyNote onClick={() => push("emergency", { id: alert.id })} /> : null}
+        {dups.length ? (
+          <div className="dup-box">
+            <Banner tone="info" icon="copy">Ces alertes semblent concerner le même événement.</Banner>
+            {dups.map((d) => { const dc = CATEGORY_BY_ID[d.categoryId]; return (
+              <button key={d.id} type="button" className="search-row" onClick={() => push("alert", { id: d.id })}>
+                <Marker family={dc.family} icon={dc.icon} />
+                <span className="sr-text"><span className="sr-label">{d.title}</span><small>{fmtRelative(now - d.createdAt)} · {fmtDistance(haversineKm(alert, d))} de celle-ci</small></span>
+                <Icon name="caret-right" className="ph-sm" />
+              </button>
+            ); })}
+          </div>
+        ) : null}
+        <p className="detail-desc">{alert.description}</p>
+        {photos.length > 1 ? (
+          <div className="detail-thumbs">
+            {photos.map((ph, i) => <button key={ph.id} type="button" onClick={() => push("photo-viewer", { id: alert.id, index: i })} aria-label={`Agrandir la photo ${i + 1} sur ${photos.length} : ${ph.alt}`}><img src={ph.src} alt="" /></button>)}
+          </div>
+        ) : null}
+        <p className="detail-by">
+          <span className={cx("avatar", author.anonymous && "anon")} aria-hidden="true">{author.anonymous ? <Icon name="detective" /> : author.initials}</span>
+          <span>Signalé par <b>{author.name}</b>{mine ? " (vous)" : ""}</span>
+        </p>
+        <section className="detail-section" aria-labelledby="dt-vote">
+          <h2 id="dt-vote">Ce signalement vous semble-t-il exact ?</h2>
+          <VoteBar alert={alert} closed={expired} />
+          <p className="detail-hint">{expired ? "Les votes sont fermés : l'alerte a expiré." : state.demo.offline ? "Vote impossible hors connexion." : "Un seul avis par alerte, modifiable à tout moment."}</p>
+        </section>
+        <div className="detail-actions">
+          <FollowButton alert={alert} />
+          <Button variant="secondary" icon="share-network" onClick={() => openSheet("share", { id: alert.id })}>Partager</Button>
+        </div>
+        <ServiceCard alert={alert} onTimeline={() => openSheet("alert-timeline", { id: alert.id })} />
+        <CommentsPreview alert={alert} />
+      </article>
+    </div>
+  );
+}
+
+/* 5.8 : écran « Situation urgente ? » (PRD F-17, G3) — numéros en clair, lieu à dicter, un seul bouton rouge */
+const EMERGENCY_NUMBERS = [
+  ["112", "Numéro d'urgence européen", "Depuis n'importe quel téléphone"],
+  ["18", "Pompiers", "Incendie, accident, personne en danger"],
+  ["17", "Police secours", "Agression, danger immédiat"],
+  ["15", "SAMU", "Urgence médicale"],
+  ["114", "Par SMS", "Personnes sourdes, malentendantes ou ne pouvant pas parler"],
+];
+function EmergencyScreen({ id }) {
+  const { state } = useStore();
+  const alert = id ? state.alerts.find((a) => a.id === id) : null;
+  return (
+    <div className="screen emergency-screen">
+      <ScreenHeader title="" close />
+      <div className="screen-pad emergency-body">
+        <Spot icon="siren" tone="neutral" />
+        <h1>Situation urgente ?</h1>
+        <p className="lead">95 Alerte n'est pas un remplacement des services d'urgence. En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés.</p>
+        <ul className="emergency-numbers" aria-label="Numéros d'urgence">
+          {EMERGENCY_NUMBERS.map(([n, label, help]) => <li key={n}><b className="num">{n}</b><span><b>{label}</b><small>{help}</small></span></li>)}
+        </ul>
+        {alert ? <p className="emergency-place"><Icon name="map-pin" /><span><b>Lieu à indiquer</b>{displayPlace(alert)}</span></p> : null}
+      </div>
+      <div className="screen-footer">
+        <a className="btn btn-destructive btn-block" href="tel:112"><Icon name="phone-fill" />Appeler le 112</a>
+        <p className="footer-note">Ouvre le clavier de votre téléphone : l'appel n'est jamais lancé sans vous.</p>
+      </div>
+    </div>
+  );
+}
+
+/* 5.3 : visionneuse plein écran — balayage, flèches, Échap ; texte alternatif lu et affiché */
+function PhotoViewer({ id, index = 0 }) {
+  const { state } = useStore();
+  const { pop } = useActions();
+  const alert = state.alerts.find((a) => a.id === id);
+  const photos = alert ? alertPhotos(alert) : [];
+  const [i, setI] = useState(index);
+  const start = useRef(null);
+  const go = (d) => setI((v) => Math.min(photos.length - 1, Math.max(0, v + d)));
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") pop(); if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [photos.length]);
+  if (!photos.length) return <DetailState icon="images" title="Photo indisponible">Cette photo n'a pas pu être chargée.</DetailState>;
+  const ph = photos[i];
+  return (
+    <div className="photo-viewer" role="dialog" aria-modal="true" aria-label={`Photo ${i + 1} sur ${photos.length}`}
+      onPointerDown={(e) => { start.current = e.clientX; }} onPointerUp={(e) => { if (start.current != null && Math.abs(e.clientX - start.current) > 56) go(e.clientX < start.current ? 1 : -1); start.current = null; }}>
+      <div className="pv-top">
+        <span aria-live="polite">{i + 1} sur {photos.length}</span>
+        <IconButton icon="x" label="Fermer la photo" onClick={pop} />
+      </div>
+      <img src={ph.src} alt={ph.alt} />
+      <p className="pv-caption">{ph.alt}</p>
+      {photos.length > 1 ? (
+        <div className="pv-nav">
+          <IconButton icon="caret-left" label="Photo précédente" onClick={() => go(-1)} disabled={i === 0} />
+          <PageDots count={photos.length} index={i} />
+          <IconButton icon="caret-right" label="Photo suivante" onClick={() => go(1)} disabled={i === photos.length - 1} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 const TAB_SCREENS = { map: MapScreen, alerts: AlertsScreen, activity: ActivityScreen, profile: ProfileScreen };
 const STACK_SCREENS = {
   report: { component: ReportScreen, modal: true },
@@ -3476,8 +3988,17 @@ const STACK_SCREENS = {
   "verify-identity": { component: VerifyIdentityScreen, modal: true },
   commune: { component: CommuneScreen, modal: true },
   search: { component: SearchScreen, modal: true },
+  alert: { component: AlertDetail, modal: true },
+  emergency: { component: EmergencyScreen, modal: true },
+  "photo-viewer": { component: PhotoViewer, modal: true },
 };
-const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet } };
+const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet },
+  "alert-timeline": { title: "Suivi du traitement", subtitle: (p, st) => { const a = st.alerts.find((x) => x.id === p.id); return a ? routeAlert(a).name : null; }, component: TimelineSheet },
+  follow: { title: "Être prévenu ?", subtitle: (p, st) => (st.follows[p.id] ? "Vous suivez cette alerte" : "Choisissez ce qui vous sera notifié"), component: FollowSheet },
+  "sign-in": { title: (p) => SIGN_IN_REASONS[p.reason || "vote"].title, component: SignInSheet },
+  share: { title: "Partager l'alerte", component: ShareSheet },
+  "alert-menu": { title: "Options", component: AlertMenuSheet },
+};
 
 /* =====================================================================
    ÉCRANS PAR PHASE (panneau de démo) : ouvrir directement ce qui a été réalisé à chaque phase
@@ -3495,11 +4016,14 @@ const jumpApp = (s, o = {}) => ({
   modal: o.modal || null,
   demo: { ...s.demo, ...(o.demo || {}) },
   mapFocus: o.mapFocus ? { ...o.mapFocus, key: Date.now() } : null,
+  votes: o.votes || s.votes,
+  alerts: o.alerts || s.alerts,
 });
 const jumpOnb = (step, slide = 0, o = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: false }, session: { ...s.session, status: "onboarding", user: null, position: o.position || DEFAULT_POSITION }, onb: { step, slide, pending: o.pending } });
 const jumpAuth = (step, extra = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: true }, session: { ...s.session, status: "auth", user: null }, auth: { ...initialAuth(), step, ...extra } });
 const jumpStack = (id) => ({ tab: "map", stack: [{ id, params: {}, key: `${id}-jump` }] });
-const jumpSheet = (id, snap = "half") => ({ id, params: {}, snap });
+const jumpSheet = (id, snap = "half", params = {}) => ({ id, params, snap });
+const jumpAlert = (id, params = {}) => ({ tab: "map", stack: [{ id: "alert", params: { id, ...params }, key: `alert-${id}-jump` }] });
 const CARNOT = SEED_ALERTS.find((a) => a.id === "a1");
 
 const PHASE_SCREENS = [
@@ -3561,7 +4085,28 @@ const PHASE_SCREENS = [
     ["Recherche", (s) => jumpApp(s, { nav: { tab: "alerts", stack: [{ id: "search", params: {}, key: "search-jump" }] } })],
     ["Lieu recherché sur la carte", (s) => jumpApp(s, { mapFocus: { kind: "place", placeKind: "lieu", label: CARNOT.street, sub: "Voie ou lieu · Pontoise", lat: CARNOT.lat, lng: CARNOT.lng, communeId: "pontoise", zoom: 120 } })],
   ] },
-  { n: 5, title: "Fiche alerte et votes", items: [] },
+  { n: 5, title: "Fiche alerte et votes", items: [
+    ["Fiche alerte (incendie, urgent)", (s) => jumpApp(s, { nav: jumpAlert("a1") })],
+    ["Fiche d'un événement positif", (s) => jumpApp(s, { nav: jumpAlert("a31") })],
+    ["Fiche d'une alerte de zone", (s) => jumpApp(s, { nav: jumpAlert("a30") })],
+    ["Visionneuse photo", (s) => jumpApp(s, { nav: { tab: "map", stack: [...jumpAlert("a1").stack, { id: "photo-viewer", params: { id: "a1", index: 0 }, key: "pv-jump" }] } })],
+    ["Vote enregistré (modifiable)", (s) => jumpApp(s, { nav: jumpAlert("a6"), votes: { ...s.votes, a6: 1 }, alerts: s.alerts.map((a) => (a.id === "a6" ? { ...a, votesUp: a.votesUp + 1 } : a)) })],
+    ["Voter sans compte", (s) => jumpApp(s, { guest: true, nav: jumpAlert("a6"), sheet: jumpSheet("sign-in", "half", { reason: "vote" }) })],
+    ["Suivi du traitement", (s) => jumpApp(s, { nav: jumpAlert("a6"), sheet: jumpSheet("alert-timeline", "half", { id: "a6" }) })],
+    ["Suivre : être prévenu ?", (s) => jumpApp(s, { nav: jumpAlert("a6"), prefs: { followAsked: false }, sheet: jumpSheet("follow", "full", { id: "a6" }) })],
+    ["Partager l'alerte", (s) => jumpApp(s, { nav: jumpAlert("a6"), sheet: jumpSheet("share", "full", { id: "a6" }) })],
+    ["Menu ⋯ (mon alerte)", (s) => jumpApp(s, { nav: jumpAlert("a25"), sheet: jumpSheet("alert-menu", "half", { id: "a25" }) })],
+    ["Supprimer : confirmation", (s) => jumpApp(s, { nav: jumpAlert("a25"), modal: { title: "Supprimer cette alerte ?", body: "Elle ne sera plus visible sur la carte ni dans la liste. Le service déjà saisi en est informé. Cette action est définitive.", confirmLabel: "Supprimer", destructive: true, onConfirm: () => {} } })],
+    ["Situation urgente ?", (s) => jumpApp(s, { nav: { tab: "map", stack: [...jumpAlert("a1").stack, { id: "emergency", params: { id: "a1" }, key: "em-jump" }] } })],
+    ["Doublons", (s) => jumpApp(s, { nav: jumpAlert("a19") })],
+    ["Expire bientôt", (s) => jumpApp(s, { nav: jumpAlert("a22") })],
+    ["Alerte expirée", (s) => jumpApp(s, { nav: jumpAlert("a24") })],
+    ["Alerte supprimée", (s) => jumpApp(s, { nav: jumpAlert("a28") })],
+    ["Alerte modérée", (s) => jumpApp(s, { nav: jumpAlert("a11"), alerts: s.alerts.map((a) => (a.id === "a11" ? { ...a, status: "moderee" } : a)) })],
+    ["Chargement", (s) => jumpApp(s, { nav: jumpAlert("a1", { demo: "loading" }) })],
+    ["Erreur de chargement", (s) => jumpApp(s, { nav: jumpAlert("a1"), demo: { networkError: true } })],
+    ["Hors connexion", (s) => jumpApp(s, { nav: jumpAlert("a6"), demo: { offline: true } })],
+  ] },
   { n: 6, title: "Création d'une alerte (+ Signaler)", items: [] },
   { n: 7, title: "Commentaires et signalement de contenu", items: [] },
   { n: 8, title: "Activité et notifications", items: [] },
@@ -3724,7 +4269,7 @@ function App() {
                 <main className="screen-area">
                   {state.session.status === "splash" ? <SplashScreen /> : state.session.status === "onboarding" ? <OnboardingFlow /> : <AuthFlow />}
                   {sheetDef ? (
-                    <BottomSheet modal snap={state.sheet.snap} title={sheetDef.title} onSnap={(s) => dispatch({ type: "SNAP_SHEET", snap: s })} onClose={() => dispatch({ type: "CLOSE_SHEET" })}>
+                    <BottomSheet modal snap={state.sheet.snap} title={typeof sheetDef.title === "function" ? sheetDef.title(state.sheet.params) : sheetDef.title} subtitle={sheetDef.subtitle?.(state.sheet.params, state)} onSnap={(s) => dispatch({ type: "SNAP_SHEET", snap: s })} onClose={() => dispatch({ type: "CLOSE_SHEET" })}>
                       <sheetDef.component {...state.sheet.params} />
                     </BottomSheet>
                   ) : null}
@@ -3739,7 +4284,7 @@ function App() {
                   return <div key={s.key} className={cx("stack-layer", def.modal && "is-modal")}><C {...s.params} /></div>;
                 })}
                 {sheetDef ? (
-                  <BottomSheet modal snap={state.sheet.snap} title={sheetDef.title} onSnap={(s) => dispatch({ type: "SNAP_SHEET", snap: s })} onClose={() => dispatch({ type: "CLOSE_SHEET" })}>
+                  <BottomSheet modal snap={state.sheet.snap} title={typeof sheetDef.title === "function" ? sheetDef.title(state.sheet.params) : sheetDef.title} subtitle={sheetDef.subtitle?.(state.sheet.params, state)} onSnap={(s) => dispatch({ type: "SNAP_SHEET", snap: s })} onClose={() => dispatch({ type: "CLOSE_SHEET" })}>
                     <sheetDef.component {...state.sheet.params} />
                   </BottomSheet>
                 ) : null}

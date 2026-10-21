@@ -9,6 +9,8 @@ Sources :
   - docs/brand/95-alerte-animation.gif → animation du logo au démarrage (data URI, window.SPLASH_GIF)
   - prototype/src/onboarding/slide-{1,2,3}.webp → photos des pages de présentation (window.ONB_PHOTOS),
     générées avec Magnific d'après le flow Citizen ; si un fichier manque, la page montre la carte illustrée
+  - prototype/src/alertes/<alerte>-<n>.webp → photos des alertes de démonstration (window.ALERT_PHOTOS, phase 5,
+    Magnific, recadrées par tools/fetch_alert_photos.py) ; sans photo, la fiche montre la mini-carte
   - prototype/src/map-95.json → géométrie de la carte du Val-d'Oise (window.MAP_95, tools/build_map_95.py)
 
 Usage : python3 tools/build_prototype.py
@@ -45,6 +47,8 @@ def main() -> None:
     gif = base64.b64encode((ROOT / "docs/brand/95-alerte-animation.gif").read_bytes()).decode()
     photos = {n: "data:image/webp;base64," + base64.b64encode(f.read_bytes()).decode()
               for n in (1, 2, 3) if (f := SRC / f"onboarding/slide-{n}.webp").exists()}
+    alert_photos = {f.stem: "data:image/webp;base64," + base64.b64encode(f.read_bytes()).decode()
+                    for f in sorted((SRC / "alertes").glob("*.webp"))}
     geo = (SRC / "map-95.json").read_text(encoding="utf-8")
     page = f"""<title>95 Alerte</title>
 <!-- Fichier généré par tools/build_prototype.py : modifier prototype/src/ puis relancer le script. -->
@@ -56,7 +60,7 @@ def main() -> None:
 </style>
 {sprite}
 <div id="root"><div class="boot">Chargement de 95 Alerte…</div></div>
-<script>window.SPLASH_GIF = "data:image/gif;base64,{gif}"; window.ONB_PHOTOS = {json.dumps(photos)}; window.MAP_95 = {geo};</script>
+<script>window.SPLASH_GIF = "data:image/gif;base64,{gif}"; window.ONB_PHOTOS = {json.dumps(photos)}; window.ALERT_PHOTOS = {json.dumps(alert_photos)}; window.MAP_95 = {geo};</script>
 <script src="{REACT}"></script>
 <script src="{REACT_DOM}"></script>
 <script src="{BABEL}"></script>
