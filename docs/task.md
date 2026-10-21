@@ -36,7 +36,7 @@
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (internal-sme/95-Alerte#11) |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ✅ Terminée (validée, PR vers `develop`) |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (internal-sme/95-Alerte#15) |
-| 5 | Fiche alerte + votes | ALERT-03 | 🟨 En validation |
+| 5 | Fiche alerte + votes | ALERT-03 | ✅ Terminée (validée, PR vers `develop`) |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ⬜ À faire |
 | 7 | Commentaires + signalement de contenu | ALERT-04 | ⬜ À faire |
 | 8 | Activité + notifications | PROFILE-01, UI-013 | ⬜ À faire |
@@ -422,3 +422,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-21 | 5 | Phase 5 réalisée selon G1 à G6 : fiche alerte (écran empilé, smart animate depuis le résumé), votes avec question, service et timeline, suivre (opt-in au premier suivi), partager, menu ⋯ et suppression confirmée, écran « Situation urgente ? », doublons, états (chargement, erreur, hors connexion, expirée, supprimée, modérée). Audit corrigé : vote invité → feuille de connexion, un seul toast à la fois (ton info), « 1000 m » → « 1,0 km ». 6 photos générées avec Magnific ; leur téléchargement est bloqué par le réseau de l'environnement (`pikaso.cdnpk.net`) : la fiche montre la mini-carte en attendant. Démo › Écrans par phase : 20 écrans et états ; canevas : 23 planches. |
 | 2026-10-21 | 5 | Nouvelle tâche 5.12 demandée par l'utilisateur : choix du fond de carte Plan / Satellite (onboarding étape 3 sur 3, Profil, bouton calques de la carte). Google Earth testé : impossible dans un artefact (scripts, images et cadres Google bloqués, clé d'API, conditions d'utilisation) ; vue satellite construite à partir des images libres Copernicus Sentinel-2 (AWS Open Data, accessibles depuis l'environnement), 2 niveaux (département 25 m, Cergy-Pontoise 10 m), embarquées en WebP (1,4 Mo). Démo › Écrans par phase : 6 écrans de plus ; canevas : 7 planches de plus. |
 | 2026-10-21 | 5 | Accès réseau ouvert par l'utilisateur : les 6 photos Magnific sont importées (incendie gare et rue Carnot, nettoyage du parc, nid-de-poule, arbre tombé, halage inondé) ; fiche, vignettes de la liste et visionneuse les affichent. Canevas : planches de la fiche et de la liste régénérées avec les photos (ressources du canevas). |
+| 2026-10-21 | 5 | Phase 5 validée par l'utilisateur ; PR `phase/5-fiche-alerte` → `develop`. |
