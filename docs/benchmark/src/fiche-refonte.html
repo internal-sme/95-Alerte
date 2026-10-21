@@ -1,0 +1,447 @@
+<!-- Source du rapport : python3 tools/build_benchmark_refonte.py fiche-refonte → docs/benchmark/fiche-refonte.html -->
+<title>Fiche alerte et votes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/*TAILWIND*/
+</style>
+
+<header class="border-b border-line">
+  <div class="wrap grid gap-8 py-12 sm:py-16 lg:grid-cols-[1.25fr_1fr] lg:items-end">
+    <div class="grid gap-5">
+      <p class="eyebrow">95 Alerte · Benchmark Mobbin · phase 5 · octobre 2026</p>
+      <h1 class="text-4xl font-extrabold leading-[1.05] sm:text-6xl">Fiche alerte et votes : <span class="hl">comprendre, puis réagir</span>.</h1>
+      <p class="lede">Nous avons passé en revue une trentaine de flows iOS sur Mobbin : fiches d'incident, suivi de statut, votes, abonnements, partage, menus d'actions, écrans d'urgence et visionneuses de photos. Nous en avons retenu douze. Pour chacun, le rapport détaille les points forts en patterns de design, en expérience utilisateur et en direction artistique. Il se termine par un audit de notre résumé d'alerte sur la carte (il n'existe pas encore de fiche complète), puis par un plan de refonte aligné sur les tâches 5.1 à 5.11 de <span class="font-mono text-base">docs/task.md</span>.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="chip">12 flows retenus</span><span class="chip">31 flows analysés</span><span class="chip">53 écrans cités</span><span class="chip">Plan en 6 lots</span>
+      </div>
+    </div>
+    <nav class="card toc p-5 text-sm" aria-label="Sommaire">
+      <p class="eyebrow mb-3">Sommaire</p>
+      <ol class="grid gap-1.5">
+        <li><a href="#methode">1. Méthode et grille de lecture</a></li>
+        <li><a href="#flows">2. Les 12 flows</a></li>
+        <li><a href="#etats">3. Expirée, supprimée, indisponible</a></li>
+        <li><a href="#matrice">4. Matrice des patterns</a></li>
+        <li><a href="#lecons">5. Dix enseignements</a></li>
+        <li><a href="#da">6. Direction artistique</a></li>
+        <li><a href="#audit">7. Audit de nos écrans</a></li>
+        <li><a href="#cible">8. Écrans cibles et états</a></li>
+        <li><a href="#plan">9. Plan de refonte détaillé</a></li>
+        <li><a href="#decisions">10. Décisions à prendre</a></li>
+      </ol>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="methode" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">01 · Méthode</p><h2 class="h2">Trois critères, une note sur 5</h2>
+    <p class="lede">Nous avons cherché sur Mobbin (iOS) les fiches d'incident et de publication, le suivi de statut (stepper et timeline), les votes haut / bas, l'abonnement à une publication, les feuilles de partage, les menus d'actions avec suppression, les écrans d'urgence, les visionneuses de photos et les contenus devenus indisponibles. La grille est la même que pour les phases 2 à 4.</p></div>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="card p-5"><p class="font-display text-lg font-bold">Patterns de design</p><p class="mt-2 text-sm text-muted">L'en-tête de fiche, le badge de statut, la timeline, le bouton de vote, la feuille de suivi, la feuille de partage, le menu ⋯, l'écran d'urgence, la visionneuse.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Expérience utilisateur</p><p class="mt-2 text-sm text-muted">Comprendre une alerte en trois secondes, savoir si elle est traitée, réagir en un toucher et changer d'avis, ne jamais confondre l'app avec les secours.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Direction artistique</p><p class="mt-2 text-sm text-muted">La hiérarchie de l'en-tête, la retenue du rouge, la place du média, la lisibilité de la timeline en clair et en sombre.</p></div>
+  </div>
+  <p class="text-sm text-muted">Les images sont des aperçus Mobbin à basse résolution, avec leur mention « curated by Mobbin ». Chaque flow renvoie à sa page Mobbin. Rapports liés : <span class="font-mono">liste-refonte.html</span> (phase 4), <span class="font-mono">carte-refonte.html</span> (phase 3) et <span class="font-mono">benchmark-mobbin.html</span>.</p>
+</section>
+
+<section id="flows" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-10 py-14">
+    <div class="grid gap-3"><p class="eyebrow">02 · Les 12 flows</p><h2 class="h2">De la fiche à l'écran d'urgence</h2>
+      <p class="lede">Citizen et Nextdoor donnent l'ordre de lecture d'une fiche. talabat, 7-Eleven, sweetgreen et Superpower montrent le suivi d'un traitement. Digg, QUITTR, IMDb et Google Photos montrent un vote qui se change. Reddit, Strava et Particle règlent le suivi. Lex, X et Medium partagent sans exposer. Bluesky, Handshake et Amazon rangent le menu ⋯. inDrive et Waymo isolent l'urgence, Orb et Bond affichent les photos.</p></div>
+
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">01</p><h3 class="text-2xl font-bold">Citizen · Fiche incident et fil de mises à jour</h3><p class="text-sm text-muted">Sécurité publique · <a href="https://mobbin.com/flows/4944675e-1183-4631-8577-53bcb9ec7fd9">fiche incident</a>, <a href="https://mobbin.com/flows/0df2eecc-cc48-458e-aab0-7428b1b1d963">danger</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:citizen-card}}" alt="Citizen : carte d'incident avec vidéo, auteur, ancienneté, lieu, titre et compteurs"><figcaption><b>Le média d'abord</b>Titre, lieu, ancienneté sous la vidéo.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-updates}}" alt="Citizen : fil de mises à jour horodatées sous la vidéo, extraits audio"><figcaption><b>Mises à jour datées</b>Chaque fait nouveau a son heure.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-official}}" alt="Citizen : message officiel du gouverneur intégré au fil de l'incident"><figcaption><b>Source officielle</b>Mise en avant, mais dans le même fil.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-timeline}}" alt="Citizen : section Timeline avec trois entrées horodatées"><figcaption><b>La timeline</b>Du plus récent au plus ancien.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Ordre de lecture : média → titre → lieu et ancienneté → fil de mises à jour.</li><li>Timeline verticale horodatée, du plus récent au plus ancien.</li><li>Barre d'actions à droite : cœur, partage, discussion.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On comprend « ce qui se passe maintenant » avant de lire le détail.</li><li>Une source officielle est distinguée sans quitter la fiche.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Fond noir, vidéo plein cadre, rouge omniprésent : très anxiogène.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> L'ordre de lecture (média, titre, lieu, puis le reste) et la timeline datée. La distinction visuelle d'une mise à jour venant du service.</p><p><b>À éviter.</b> Le cœur pour réagir et le ton dramatique : nos votes mesurent la perception (Confirmer / Contester), pas l'adhésion.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">02</p><h3 class="text-2xl font-bold">Nextdoor · Alerte de zone et statut « Résolu »</h3><p class="text-sm text-muted">Voisinage · <a href="https://mobbin.com/flows/b4aa8013-89af-41d4-8412-af2ac0b42c59">voir une alerte</a>, <a href="https://mobbin.com/flows/6b4f645a-feed-47a4-9c48-e6dbb4b24f9a">alertes</a>, <a href="https://mobbin.com/flows/f2e0310e-3db2-4ff5-94bf-c056533b7d79">publication</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:nextdoor-list}}" alt="Nextdoor : liste Alerts in Boston, puces Safety, Outages, cartes avec badge Resolved"><figcaption><b>Statut dans la carte</b>« ✓ Resolved » en haut à droite.</figcaption></figure>
+        <figure class="shot"><img src="{{img:nextdoor-polygon}}" alt="Nextdoor : mini-carte avec polygone jaune de la zone, puis détail Power Outage Resolved"><figcaption><b>Mini-carte de zone</b>La zone concernée, puis la fiche.</figcaption></figure>
+        <figure class="shot"><img src="{{img:nextdoor-detail}}" alt="Nextdoor : fiche Power Outage, source officielle, mises à jour datées, commentaires vides"><figcaption><b>Source et mises à jour</b>Service émetteur sous le titre.</figcaption></figure>
+        <figure class="shot"><img src="{{img:nextdoor-post}}" alt="Nextdoor : détail de publication, réactions, partage, menu et commentaires"><figcaption><b>Barre d'actions</b>Réagir, partager, ⋯ sur une ligne.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Mini-carte en tête, avec la zone dessinée.</li><li>Statut du traitement en badge texte + icône dans le titre.</li><li>Source officielle sous le titre, avec son logo.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le statut « Résolu » répond à la première question : est-ce encore d'actualité ?</li><li>Commentaires vides : « Be the first to comment ».</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Fond blanc, vert discret, badges gris : apaisé, lisible.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La mini-carte en tête (avec la zone pour inondations et travaux), le statut en badge dans l'en-tête, « Transmis à Service Voirie · Ville de Pontoise » sous le titre.</p><p><b>À éviter.</b> Le texte brut collé (« [Update 7/18 01:13PM] ») : nos mises à jour vont dans la timeline, une ligne par étape.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">03</p><h3 class="text-2xl font-bold">talabat · Timeline verticale horodatée en feuille</h3><p class="text-sm text-muted">Livraison · <a href="https://mobbin.com/flows/4e7b08af-e03b-4b10-b6e1-0df2544df3b5">suivi</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:talabat-card}}" alt="talabat : carte « Arrives in 15-30 mins », stepper horizontal, étape courante"><figcaption><b>Résumé en une carte</b>Délai, étape, phrase d'état.</figcaption></figure>
+        <figure class="shot"><img src="{{img:talabat-sheet}}" alt="talabat : feuille « Here's how your order is going », étapes faites et à venir"><figcaption><b>Le détail en feuille</b>Étapes passées cochées, futures grisées.</figcaption></figure>
+        <figure class="shot"><img src="{{img:talabat-timeline}}" alt="talabat : timeline avec heures 12:46 à 12:58 et étapes restantes"><figcaption><b>Une heure par étape</b>L'heure à droite de chaque étape.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Deux niveaux : résumé (étape courante + délai) puis timeline complète.</li><li>Étapes faites cochées et horodatées, étapes futures en gris sans heure.</li><li>La ligne qui relie les étapes est pleine jusqu'à l'étape courante.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On voit ce qui a été fait, quand, et ce qui reste à faire.</li><li>Les étapes futures donnent la suite du parcours sans rien promettre.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Orange de marque réservé à l'étape courante ; le reste en gris.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Notre timeline Envoyé → Transmis → Pris en compte → En traitement → Traité → Clôturé : heure à droite, étapes futures grisées, couleur réservée à l'étape courante. Le résumé d'une ligne en haut de la fiche.</p><p><b>À éviter.</b> Un délai chiffré qu'on ne maîtrise pas : seulement « délai habituel » si le service le fournit.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">04</p><h3 class="text-2xl font-bold">7-Eleven, sweetgreen, Superpower · Stepper horizontal et délai indicatif</h3><p class="text-sm text-muted">Commerce, santé · <a href="https://mobbin.com/flows/75ceff1c-eb0a-4d6e-a24d-9685d25b07e4">7-Eleven</a>, <a href="https://mobbin.com/flows/8720624a-0226-44d0-bcf4-83db685bbf61">sweetgreen</a>, <a href="https://mobbin.com/flows/c243c11b-edef-45b4-83ee-9f2b2cafa36b">Superpower</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:seven-status}}" alt="7-Eleven : Order Status, stepper Order placed, In progress, Ready, Picked up, fenêtre horaire"><figcaption><b>Quatre étapes</b>Libellés sous chaque point.</figcaption></figure>
+        <figure class="shot"><img src="{{img:sweetgreen-status}}" alt="sweetgreen : Order received, stepper Received, Preparing, Ready, Delivering, carte"><figcaption><b>Stepper + carte</b>L'étape et le lieu ensemble.</figcaption></figure>
+        <figure class="shot"><img src="{{img:superpower-status}}" alt="Superpower : We're analyzing your sample, résultats sous 5 à 7 jours, Scheduled, Processing, Results ready"><figcaption><b>Délai indicatif</b>« Résultats sous 5 à 7 jours ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Stepper horizontal compact : 3 à 5 étapes, libellé court sous chaque point.</li><li>Délai donné comme une fourchette, jamais comme une promesse.</li><li>Phrase d'état en clair au-dessus (« Nous préparons votre commande »).</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'état tient sur une ligne ; le détail n'est utile qu'à la demande.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Vert ou noir pour l'avancement, gris pour la suite ; pas d'icônes superflues.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le résumé horizontal sur la carte de la liste et le résumé de la carte (phase 3), la phrase d'état en clair, la fourchette « Délai habituel : 2 à 5 jours ouvrés » quand le service la donne.</p><p><b>À éviter.</b> Six libellés sous six points à 375 px : le résumé horizontal ne montre que l'étape courante et sa position (3 sur 6).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">05</p><h3 class="text-2xl font-bold">Digg, QUITTR · Vote haut / bas avec compteur</h3><p class="text-sm text-muted">Social · <a href="https://mobbin.com/flows/a11bae5c-e620-4db3-ae4c-78431de924ad">Digg</a>, <a href="https://mobbin.com/flows/831a4e6e-eee0-429d-99e7-478364f99d00">QUITTR</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:digg-post}}" alt="Digg : flèches haut et bas avec compteur 37, Save et Share"><figcaption><b>Deux flèches, un score</b>Score net entre les flèches.</figcaption></figure>
+        <figure class="shot"><img src="{{img:digg-voted}}" alt="Digg : flèche haut remplie en jaune, compteur 67"><figcaption><b>Vote rempli</b>La flèche se remplit, le compteur monte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:quittr-post}}" alt="QUITTR : vote haut en pastille ronde, compteur 497 sous la flèche"><figcaption><b>Vote en pastille</b>Une seule flèche visible.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Flèche pleine = mon vote, flèche au trait = pas de vote.</li><li>Compteur collé à la flèche, mis à jour sans délai.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le vote se fait en un toucher, se change en un toucher.</li><li>L'état sélectionné se lit sans la couleur (flèche remplie).</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Jaune ou bleu pour l'état voté, gris sinon.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La flèche Phosphor `arrow-fat-up` qui devient `-fill`, le compteur collé, `aria-pressed` (déjà dans VoteBar). Mise à jour immédiate des compteurs partout.</p><p><b>À éviter.</b> Le score net unique (37) : nous affichons les deux compteurs, confirmations et contestations, car un signalement peut être confirmé et contesté.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">06</p><h3 class="text-2xl font-bold">IMDb, Google Photos · Un vote qui mesure, et qui le dit</h3><p class="text-sm text-muted">Contenus · <a href="https://mobbin.com/flows/a398395a-afa9-4d32-8f1b-327000d02a40">IMDb</a>, <a href="https://mobbin.com/flows/f07b74f9-6375-4c90-8595-b5fa772de954">Google Photos</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:imdb-vote}}" alt="IMDb : « What is your vote for sex & nudity? », quatre boutons None, Mild, Moderate, Severe"><figcaption><b>Une question claire</b>Le vote répond à une question.</figcaption></figure>
+        <figure class="shot"><img src="{{img:imdb-saved}}" alt="IMDb : bandeau Saving vote, Severe sélectionné, « Thanks for your vote! »"><figcaption><b>Merci sous le vote</b>Enregistrement visible, puis merci.</figcaption></figure>
+        <figure class="shot"><img src="{{img:gphotos-vote}}" alt="Google Photos : bouton pouce 141 et bouton Subscribe"><figcaption><b>Vote + s'abonner</b>Côte à côte sous le contenu.</figcaption></figure>
+        <figure class="shot"><img src="{{img:gphotos-toast}}" alt="Google Photos : toast « Updated vote successfully »"><figcaption><b>Vote modifié</b>Toast distinct pour une modification.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>La question au-dessus des boutons : « Ce signalement est-il exact ? ».</li><li>« Vote enregistré » puis « Vote modifié » : deux messages distincts.</li><li>Vote et abonnement voisins sous le contenu.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le vote est compris comme un avis sur le contenu, pas une réaction.</li><li>Changer d'avis est prévu et confirmé.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Boutons à contour, état choisi plein ; texte de remerciement discret.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La question « Ce signalement vous semble-t-il exact ? » au-dessus de Confirmer / Contester, et les toasts « Merci, votre vote est enregistré. » puis « Vote modifié. »</p><p><b>À éviter.</b> Le bandeau jaune « Saving vote » pleine largeur : le bouton passe en chargement, rien d'autre.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">07</p><h3 class="text-2xl font-bold">Reddit, Google Photos · S'abonner à une publication</h3><p class="text-sm text-muted">Social, communauté · <a href="https://mobbin.com/flows/ba280415-39c8-4021-b606-652dcf0af321">Reddit</a>, <a href="https://mobbin.com/flows/79888e8b-d3c2-40cc-b1fa-87dff2321ab6">Google Photos</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:reddit-menu}}" alt="Reddit : feuille More actions, Subscribe to post, Save, Report en rouge, Hide"><figcaption><b>Dans le menu</b>« S'abonner » en tête du menu.</figcaption></figure>
+        <figure class="shot"><img src="{{img:reddit-toast}}" alt="Reddit : toast « Post subscribed! » au-dessus de la réponse"><figcaption><b>Confirmé par toast</b>Un toast, rien de plus.</figcaption></figure>
+        <figure class="shot"><img src="{{img:gphotos-subscribe}}" alt="Google Photos : menu Subscribe avec Updates only, Updates and replies"><figcaption><b>Deux niveaux</b>Mises à jour seules, ou tout.</figcaption></figure>
+        <figure class="shot"><img src="{{img:gphotos-subscribed}}" alt="Google Photos : toast « You'll receive notifications for new posts »"><figcaption><b>Ce qui va arriver</b>Le toast dit quelles notifications.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Suivre se règle à deux niveaux : mises à jour seules, ou mises à jour et réponses.</li><li>Le toast dit ce qui va être notifié.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Choisir le bruit qu'on accepte évite de désactiver toutes les notifications ensuite.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Menu en liste simple, signalement en rouge, le reste neutre.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Les deux niveaux de suivi : « Pour tout changement » (commentaires, statut, expiration) ou « Seulement le traitement » (statut). Le toast « Vous suivez cette alerte. Vous serez prévenu de son traitement. »</p><p><b>À éviter.</b> Cacher « Suivre » dans le menu ⋯ : c'est une action principale de la fiche (F-13).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">08</p><h3 class="text-2xl font-bold">Strava, Particle · Suivre, puis choisir ses notifications</h3><p class="text-sm text-muted">Sport, actualités · <a href="https://mobbin.com/flows/54333dfd-3322-4ec2-b629-7fee1da915f5">Strava</a>, <a href="https://mobbin.com/flows/b4b147ae-76e0-48f1-be6d-3c2436664f1a">Particle</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:strava-sheet}}" alt="Strava : feuille avec Ajouter aux favoris, Activer les notifications, Masquer, chacun avec une ligne d'explication"><figcaption><b>Une ligne par option</b>Ce que chaque choix change.</figcaption></figure>
+        <figure class="shot"><img src="{{img:strava-explain}}" alt="Strava : fenêtre Notifications qui explique ce qui sera notifié, Annuler et Ok"><figcaption><b>Explication avant l'accord</b>Puis Ok ou Annuler.</figcaption></figure>
+        <figure class="shot"><img src="{{img:strava-on}}" alt="Strava : Notifications coché en orange dans la feuille"><figcaption><b>État visible</b>La coche reste dans la feuille.</figcaption></figure>
+        <figure class="shot"><img src="{{img:particle-follow}}" alt="Particle : Follow devient coche, toast Added to Feed, interrupteur Notifications"><figcaption><b>Suivre ≠ notifier</b>Deux réglages distincts.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Feuille de suivi : chaque option a une ligne d'explication.</li><li>Suivre et recevoir des notifications sont deux décisions distinctes.</li><li>Le bouton Suivre devient une coche, l'état reste visible.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'utilisateur sait ce qu'il accepte avant de dire oui (opt-in explicite, RGPD).</li><li>L'option « Non merci » ne retire pas le suivi : l'alerte reste dans « Alertes suivies ».</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Feuille blanche, explications en gris, une seule couleur d'accent.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 5.11 : au premier « Suivre », la feuille « Être prévenu ? » avec trois choix expliqués (Pour tout changement / Seulement le traitement / Non merci). Ensuite le bouton devient « Suivie ✓ ».</p><p><b>À éviter.</b> La fenêtre de confirmation par-dessus la feuille (Strava) : une seule couche, la feuille suffit.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">09</p><h3 class="text-2xl font-bold">Lex, X, Medium · Partager sans exposer</h3><p class="text-sm text-muted">Social, lecture · <a href="https://mobbin.com/flows/9dcdc274-574f-4d35-897e-e79faae7d97b">Lex</a>, <a href="https://mobbin.com/flows/2253bb90-fea1-4cec-9a8a-fcea28da4bf8">X</a>, <a href="https://mobbin.com/flows/d41f56b5-108b-4ecc-8cc0-db013ce78df4">Medium</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:lex-share}}" alt="Lex : feuille Share post, Copy Link, SMS, Instagram, More, Cancel"><figcaption><b>Liste d'actions</b>Copier le lien en premier.</figcaption></figure>
+        <figure class="shot"><img src="{{img:lex-copied}}" alt="Lex : bandeau « Post link copied to clipboard »"><figcaption><b>Lien copié</b>Confirmation immédiate.</figcaption></figure>
+        <figure class="shot"><img src="{{img:x-share}}" alt="X : feuille Share post avec contacts, Copy Link, Share via, Messages, WhatsApp, Gmail"><figcaption><b>Applis en rangée</b>Messageries reconnaissables.</figcaption></figure>
+        <figure class="shot"><img src="{{img:medium-card}}" alt="Medium : aperçu de la carte de partage, Copy link, Share via, Save image, toast Link copied"><figcaption><b>Aperçu de ce qui part</b>On voit la carte partagée.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Copier le lien en premier, puis SMS et messageries, puis « Plus… » (partage natif).</li><li>Aperçu de la carte partagée avant d'envoyer.</li><li>Toast « Lien copié ».</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'aperçu montre exactement ce qui sera vu : rien de personnel.</li><li>Copier le lien est l'action la plus fréquente, elle est en tête.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Medium : carte typographique soignée, très « marque ». Lex : liste sobre.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La feuille de partage simulée de la tâche 5.7 : aperçu de la carte (catégorie, titre, commune, ancienneté, « Visible encore 17 h »), puis Copier le lien, SMS, WhatsApp, Plus…</p><p><b>À éviter.</b> Le nom de l'auteur sur la carte partagée (Medium) : ni auteur, ni adresse précise, ni photo de personne (règle de confidentialité).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">10</p><h3 class="text-2xl font-bold">Bluesky, Handshake, Amazon · Menu ⋯, suppression et confirmation</h3><p class="text-sm text-muted">Social, commerce · <a href="https://mobbin.com/flows/db878b34-5cc6-4341-a580-36735054d4e6">Bluesky</a>, <a href="https://mobbin.com/flows/4966382b-eb55-470f-9413-aa47f41326b4">Handshake</a>, <a href="https://mobbin.com/flows/95e0102e-2c07-4d51-a42b-52064e96ff82">Amazon</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:bluesky-menu}}" alt="Bluesky : feuille en groupes, Épingler, Traduire, Copier, Masquer le fil, Supprimer la publication"><figcaption><b>Actions en groupes</b>Supprimer seul en bas.</figcaption></figure>
+        <figure class="shot"><img src="{{img:bluesky-deleted}}" alt="Bluesky : toast Post deleted et bandeau « Post has been deleted » à la place"><figcaption><b>Ce qui reste</b>Un bandeau remplace le contenu.</figcaption></figure>
+        <figure class="shot"><img src="{{img:handshake-menu}}" alt="Handshake : feuille Masquer ce contenu, Signaler ce contenu, Masquer cette personne"><figcaption><b>Trois actions</b>Icône + libellé, chevron si suite.</figcaption></figure>
+        <figure class="shot"><img src="{{img:amazon-thanks}}" alt="Amazon : toast « Thank you, we'll review this shortly » après signalement"><figcaption><b>Après signalement</b>Merci, et ce qui va se passer.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Menu ⋯ en feuille, actions groupées, la destructive isolée en bas.</li><li>Chevron quand l'action ouvre une suite (motifs de signalement).</li><li>Après suppression : un bandeau « n'est plus disponible » remplace le contenu.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'action destructive est loin des autres : pas de suppression par erreur.</li><li>Le contenu supprimé laisse une trace claire, pas un écran vide.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Groupes en cartes grises, icônes au trait à droite ; aucune couleur sauf pour supprimer.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Menu ⋯ : Copier le lien · Signaler cette alerte (› motifs, phase 7) · Supprimer mon alerte (auteur, `btn-destructive`, confirmation). Après suppression : « Cette alerte n'est plus disponible. »</p><p><b>À éviter.</b> Supprimer sans confirmation (Bluesky passe par une fenêtre, à garder) ; « Masquer » qui n'est pas dans le PRD.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">11</p><h3 class="text-2xl font-bold">inDrive, Waymo · Urgence : un seul bouton rouge</h3><p class="text-sm text-muted">Mobilité · <a href="https://mobbin.com/flows/bda0cc61-0d07-4c30-834e-0e7fb6e2b409">inDrive</a>, <a href="https://mobbin.com/flows/6d4aba2c-514e-4cea-a382-81fe9c21e4f7">Waymo</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:indrive-ride}}" alt="inDrive : fiche de course, ligne « Call emergency » en rouge parmi les actions"><figcaption><b>Une ligne rouge</b>Seule ligne rouge de l'écran.</figcaption></figure>
+        <figure class="shot"><img src="{{img:indrive-sos}}" alt="inDrive : écran SOS, ce qu'il faut dire à la police, mini-carte, adresse, bouton rouge Call 911"><figcaption><b>Quoi dire, où</b>Adresse et repères avant l'appel.</figcaption></figure>
+        <figure class="shot"><img src="{{img:indrive-safety}}" alt="inDrive : Safety features, bouton rouge Call 911 et rubriques d'aide"><figcaption><b>Le rouge, une fois</b>Un seul bouton rouge.</figcaption></figure>
+        <figure class="shot"><img src="{{img:waymo-help}}" alt="Waymo : feuille Get help, Rider support, 999 emergency en rouge, appel ou SMS"><figcaption><b>Assistance ≠ urgence</b>Deux lignes bien séparées.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Une seule action rouge par écran : l'appel d'urgence.</li><li>Écran d'urgence : ce qu'il faut dire, l'adresse où l'on est, puis le bouton.</li><li>Assistance de l'app et urgence vitale clairement séparées.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Personne ne confond l'app avec un service de secours.</li><li>L'adresse affichée aide à décrire le lieu à l'opérateur.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Rouge vif réservé à l'urgence ; tout le reste neutre.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Écran « Situation urgente ? » (5.8) : la phrase du PRD, les numéros 112, 18, 17, 15 et 114 en clair, le lieu de l'alerte à lire à l'opérateur, un seul bouton rouge. Rappel compact sur la fiche des catégories critiques.</p><p><b>À éviter.</b> Un appel lancé depuis l'app sans écran intermédiaire, et l'idée que 95 Alerte prévient les secours.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">12</p><h3 class="text-2xl font-bold">Orb, Bond · Galerie plein écran</h3><p class="text-sm text-muted">Social, lieux · <a href="https://mobbin.com/flows/73ea9e0e-f98e-4a23-bfc8-85c80eb0d32b">Orb</a>, <a href="https://mobbin.com/flows/37b78e9d-cbaa-4e35-a0a0-31bb916047fc">Bond</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:orb-post}}" alt="Orb : publication avec mosaïque de quatre photos"><figcaption><b>Mosaïque</b>Plusieurs photos sans défiler.</figcaption></figure>
+        <figure class="shot"><img src="{{img:orb-viewer}}" alt="Orb : visionneuse plein écran noire, points de pagination, auteur et actions en bas"><figcaption><b>Visionneuse</b>Fond noir, points, légende.</figcaption></figure>
+        <figure class="shot"><img src="{{img:bond-card}}" alt="Bond : carte de lieu avec carrousel de photos horizontal"><figcaption><b>Carrousel</b>Défilement horizontal dans la fiche.</figcaption></figure>
+        <figure class="shot"><img src="{{img:bond-viewer}}" alt="Bond : photo plein écran, bouton fermer rond en haut à droite, points"><figcaption><b>Fermer en haut</b>× rond, toujours visible.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Dans la fiche : média principal, puis vignettes si plusieurs.</li><li>Plein écran sur fond noir, points de pagination, × en haut.</li><li>Balayer pour passer, glisser vers le bas pour fermer.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Agrandir une photo sans perdre sa place dans la fiche.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Fond noir pour la photo, interface minimale.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 5.3 : média en tête de fiche (ou rien s'il n'y en a pas), visionneuse plein écran avec « 1 sur 3 », texte alternatif lu, fermeture par × ou Échap.</p><p><b>À éviter.</b> Un grand bandeau vide quand l'alerte n'a pas de photo : la mini-carte prend sa place.</p></div>
+    </article>
+  </div>
+</section>
+
+<section id="etats" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">03 · États</p><h2 class="h2">Expirée, supprimée, indisponible</h2><p class="lede">Une alerte vit 24 heures, peut être supprimée par son auteur ou retirée par la modération. Un lien partagé ou une notification peut donc mener à un contenu disparu. Les meilleurs écrans disent ce qui s'est passé et proposent une seule issue.</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:bluesky-deleted}}" alt="Bluesky : bandeau « Post has been deleted » à la place de la publication"><figcaption><b>Bluesky</b>Un bandeau remplace le contenu, le fil continue. <a href="https://mobbin.com/flows/db878b34-5cc6-4341-a580-36735054d4e6">flow</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:linkedin-missing}}" alt="LinkedIn : This page doesn't exist, bouton Go to your feed"><figcaption><b>LinkedIn</b>Titre, explication, un bouton de retour. <a href="https://mobbin.com/screens/c6df5f74-e9f6-40cf-8b87-c529b86851c9">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:subway-error}}" alt="Subway : Unable to load product, Try Again et Go back"><figcaption><b>Subway</b>Erreur de chargement : Réessayer ou Retour. <a href="https://mobbin.com/screens/b8bbfbfb-5299-41c5-a7c5-4874daafc3ad">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:shop-hidden}}" alt="Shop : contenu flouté, « We'll show you less like this », bouton Undo"><figcaption><b>Shop</b>Le contenu retiré reste en place, flouté, avec Annuler. <a href="https://mobbin.com/screens/26edeaa3-1454-4c37-948a-bd6c8eb364ba">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:nextdoor-empty}}" alt="Nextdoor : No alerts in this area, illustration de ville"><figcaption><b>Nextdoor</b>Le vide de la zone, sans drame. <a href="https://mobbin.com/flows/6b4f645a-feed-47a4-9c48-e6dbb4b24f9a">flow</a></figcaption></figure>
+  </div>
+  <div class="take"><p><b>À reprendre.</b> Expirée : la fiche en lecture seule, grisée, avec « Cette alerte a expiré. » (PRD §10.3), votes fermés et compteurs conservés. Supprimée ou modérée : « Cette alerte n'est plus disponible », la raison générale (auteur ou modération, sans détail) et « Retour à la carte ». Erreur : « Réessayer ».</p><p><b>À éviter.</b> Les illustrations décoratives (LinkedIn) : nos états utilisent le Spot Phosphor Duotone. Le « Annuler » de Shop pour une suppression : chez nous, la suppression passe par une confirmation.</p></div>
+</section>
+
+<section id="matrice" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">04 · Matrice</p><h2 class="h2">Qui fait quoi</h2><p class="lede">● pattern maîtrisé · ○ présent mais partiel · vide si absent. La dernière ligne situe nos écrans actuels.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[960px] text-sm">
+      <caption class="sr-only">Patterns de fiche, de vote et d'actions par app</caption>
+      <thead class="bg-sunk text-left text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">App</th><th class="p-3">Média et mini-carte en tête</th><th class="p-3">Statut en badge</th><th class="p-3">Timeline datée</th><th class="p-3">Vote réversible</th><th class="p-3">Suivi réglable</th><th class="p-3">Partage avec aperçu</th><th class="p-3">Menu ⋯ + confirmation</th><th class="p-3">Urgence isolée</th><th class="p-3">État « plus disponible »</th></tr></thead>
+      <tbody class="divide-y divide-line text-center">
+        <tr><th class="p-3 text-left">Citizen</th><td>●</td><td>○</td><td>●</td><td></td><td></td><td>○</td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Nextdoor</th><td>●</td><td>●</td><td>○</td><td></td><td>○</td><td>○</td><td>○</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">talabat</th><td></td><td>●</td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">7-Eleven, sweetgreen, Superpower</th><td>○</td><td>●</td><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Digg, QUITTR</th><td></td><td></td><td></td><td>●</td><td></td><td></td><td>○</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">IMDb, Google Photos</th><td></td><td></td><td></td><td>●</td><td>○</td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Reddit, Google Photos</th><td></td><td></td><td></td><td></td><td>●</td><td></td><td>○</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Strava, Particle</th><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Lex, X, Medium</th><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Bluesky, Handshake, Amazon</th><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td>●</td></tr>
+        <tr><th class="p-3 text-left">inDrive, Waymo</th><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td></tr>
+        <tr><th class="p-3 text-left">Orb, Bond</th><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="bg-brand/10 font-semibold"><th class="p-3 text-left">95 Alerte (aujourd'hui)</th><td></td><td>●</td><td>○</td><td>○</td><td></td><td></td><td></td><td>○</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-muted">Le résumé de la carte (phase 3) a déjà le statut en badge, les votes et un rappel d'urgence dans la légende. Composants Timeline et VoteBar existent depuis la phase 0. Il manque l'essentiel de la phase : la fiche elle-même, l'expiration, la timeline branchée, le suivi, le partage, le menu ⋯, l'écran d'urgence et les états expirée / supprimée.</p>
+  </div>
+</section>
+
+<section id="lecons" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">05 · Enseignements</p><h2 class="h2">Dix règles pour la fiche alerte</h2></div>
+  <ol class="grid gap-4 sm:grid-cols-2">
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">01 · Citizen, Nextdoor</p><p class="mt-1 font-display text-lg font-bold">Comprendre en trois secondes</p><p class="mt-1 text-sm text-muted">Média ou mini-carte, type, titre, lieu, ancienneté : tout ce qui répond à « quoi, où, quand » tient au-dessus du pli.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">02 · Nextdoor, talabat</p><p class="mt-1 font-display text-lg font-bold">Le statut est la première réponse</p><p class="mt-1 text-sm text-muted">Badge « Pris en compte » dans l'en-tête ; le détail du traitement à un toucher.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">03 · talabat, 7-Eleven</p><p class="mt-1 font-display text-lg font-bold">Une timeline dit le passé et la suite</p><p class="mt-1 text-sm text-muted">Étapes faites horodatées, étape courante en couleur, suite en gris, sans promesse de délai.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">04 · IMDb</p><p class="mt-1 font-display text-lg font-bold">Le vote répond à une question</p><p class="mt-1 text-sm text-muted">« Ce signalement vous semble-t-il exact ? » au-dessus de Confirmer / Contester : ce n'est pas un « j'aime ».</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">05 · Digg, Google Photos</p><p class="mt-1 font-display text-lg font-bold">Un vote se change, et ça se voit</p><p class="mt-1 text-sm text-muted">Flèche remplie, compteur immédiat, toasts distincts pour enregistrer, modifier, retirer.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">06 · Strava, Google Photos</p><p class="mt-1 font-display text-lg font-bold">Suivre, c'est choisir son bruit</p><p class="mt-1 text-sm text-muted">Au premier suivi, trois choix expliqués ; jamais de notification sans accord.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">07 · Medium, Lex</p><p class="mt-1 font-display text-lg font-bold">Montrer ce qu'on partage</p><p class="mt-1 text-sm text-muted">Aperçu de la carte partagée : catégorie, titre, commune. Ni auteur, ni adresse précise.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">08 · Bluesky, Handshake</p><p class="mt-1 font-display text-lg font-bold">Le menu explique, la suppression s'isole</p><p class="mt-1 text-sm text-muted">Une ligne d'aide par action ; « Supprimer » en bas, rouge, confirmé.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">09 · inDrive, Waymo</p><p class="mt-1 font-display text-lg font-bold">L'urgence a un seul bouton rouge</p><p class="mt-1 text-sm text-muted">Numéros en clair, lieu à dicter, et la phrase : 95 Alerte n'est pas un service de secours.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">10 · Bluesky, LinkedIn</p><p class="mt-1 font-display text-lg font-bold">Ce qui a disparu s'explique</p><p class="mt-1 text-sm text-muted">Expirée : lecture seule grisée. Supprimée : « Cette alerte n'est plus disponible » et une issue.</p></li>
+  </ol>
+</section>
+
+<section id="da" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">06 · Direction artistique</p><h2 class="h2">« Vigilance lumineuse » appliquée à la fiche</h2><p class="lede">Une fiche calme : la couleur de famille dans l'en-tête, le bleu primaire pour agir, le rouge seulement pour l'urgence et la suppression. Les positives ont exactement la même fiche que les négatives.</p></div>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="card p-5"><p class="eyebrow">En-tête</p><div class="mt-3 grid gap-1"><p class="text-[11px] font-bold uppercase text-incident">◆ Incendie · <span class="rounded bg-incident/10 px-1">Urgent</span></p><p class="font-display text-lg font-bold leading-tight">Fumée importante rue Carnot</p><p class="text-xs text-muted">Rue Carnot, Pontoise · 1,1 km · il y a 12 min</p></div><p class="mt-3 text-sm text-muted">Famille = forme + icône + libellé ; titre en display ; lieu au niveau de précision autorisé.</p></div>
+    <div class="card p-5"><p class="eyebrow">Expiration</p><div class="mt-3 rounded-xl bg-sunk p-3"><p class="text-sm font-semibold">Visible encore 17 h 32</p><div class="mt-2 h-1.5 rounded-full bg-line"><div class="h-1.5 w-3/4 rounded-full bg-primary"></div></div><p class="mt-2 text-sm font-semibold text-vigilance">Expire dans 45 min</p></div><p class="mt-3 text-sm text-muted">Barre bleue ; dernière heure en orange vigilance, jamais en rouge.</p></div>
+    <div class="card p-5"><p class="eyebrow">Votes</p><p class="mt-3 text-sm font-semibold">Ce signalement vous semble-t-il exact ?</p><div class="mt-2 grid grid-cols-2 gap-2"><span class="rounded-lg bg-primary py-2 text-center text-sm font-semibold text-white">⬆ Confirmer 25</span><span class="rounded-lg border border-line py-2 text-center text-sm">⬇ Contester 3</span></div><p class="mt-3 text-sm text-muted">Pleine largeur dans la fiche ; état choisi plein + flèche remplie.</p></div>
+    <div class="card p-5"><p class="eyebrow">Timeline</p><ol class="mt-3 grid gap-2 border-l-2 border-primary pl-3 text-sm"><li><b>✓ Transmis</b> <span class="text-muted">14:02</span></li><li class="font-semibold text-primary">● Pris en compte <span class="font-normal text-muted">14:20</span></li><li class="text-muted">En traitement</li></ol><p class="mt-3 text-sm text-muted">Heure à droite, étape courante en bleu, suite en gris.</p></div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="eyebrow">Mouvement</p><p class="mt-2 text-sm">Le résumé de la carte se déploie en fiche : type et titre glissent à leur place (smart animate), le reste se fond. Le vote fait un léger rebond du compteur. La visionneuse s'ouvre depuis la vignette. Animations réduites : changement direct.</p></div>
+    <div class="card p-5"><p class="eyebrow">Sombre</p><p class="mt-2 text-sm">Mini-carte et média gardent leur luminosité ; dégradé sous l'en-tête pour la lisibilité des boutons ‹ ↗ ⋯. Les étapes futures de la timeline restent lisibles (contraste AA).</p></div>
+    <div class="card p-5"><p class="eyebrow">Accessibilité</p><p class="mt-2 text-sm">Titre de fiche en h1, sections en h2. Votes : <span class="font-mono">aria-pressed</span> et compteurs annoncés. Timeline en liste ordonnée, étape courante <span class="font-mono">aria-current="step"</span>. Expiration lue en clair, pas seulement en barre.</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="audit" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">07 · Audit</p><h2 class="h2">Nos écrans actuels</h2><p class="lede">Captures du prototype à la fin de la phase 4, au format 390 × 844, en mode invité. Le résumé de la carte est solide, mais il ne mène nulle part : « Voir le détail » affiche « La fiche alerte complète arrive bientôt. »</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:ours-summary}}" alt="95 Alerte : résumé d'alerte sur la carte, Culture, Visite gratuite du musée Tavet-Delacour, votes, Voir le détail"><figcaption><b>Résumé sur la carte</b><span class="text-positive">+</span> Type, titre, lieu, auteur public, votes, pagination. <span class="text-incident">−</span> Ni expiration ni statut de traitement pour cette alerte.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-vote-guest}}" alt="95 Alerte : toast « Connectez-vous pour confirmer ou contester une alerte » avec une icône de succès"><figcaption><b>Vote en invité</b><span class="text-incident">−</span> Un toast sans bouton de connexion, avec l'icône verte de succès ; il recouvre le bouton Démo.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-detail-toast}}" alt="95 Alerte : deux toasts empilés, dont « La fiche alerte complète arrive bientôt »"><figcaption><b>Voir le détail</b><span class="text-incident">−</span> Pas de fiche ; les toasts s'empilent et le second est coupé.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-summary-next}}" alt="95 Alerte : alerte voisine, Banc public cassé, badge Prise en compte, 1000 m"><figcaption><b>Alerte voisine</b><span class="text-positive">+</span> Badge « Prise en compte ». <span class="text-incident">−</span> « 1000 m » au lieu de « 1,0 km » ; le statut n'ouvre pas de timeline.</figcaption></figure>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ce qu'on garde</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Résumé de la carte, pagination et balayage</li><li>VoteBar (aria-pressed, flèches remplies) et compteurs dans le store</li><li>Composant Timeline (phase 0)</li><li>Auteur public, badge Zone, bandeau doublons</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on refond</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Vote invité : feuille de connexion, pas un toast</li><li>Toasts : un à la fois, ton juste (info ≠ succès), jamais sur le bouton Démo</li><li>VoteBar pleine largeur avec question</li><li>fmtDistance (« 1000 m »)</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on ajoute</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>La fiche complète et sa visionneuse</li><li>Expiration, service et timeline</li><li>Suivre, Partager, menu ⋯, supprimer</li><li>Écran d'urgence, états expirée / supprimée / modérée</li></ul></div>
+  </div>
+</section>
+
+<section id="cible" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">08 · Écrans cibles</p><h2 class="h2">La fiche, ses feuilles et ses états</h2><p class="lede">Huit esquisses. La fiche se lit de haut en bas : comprendre (1), réagir (2), puis les feuilles qui s'ouvrent depuis elle (3 à 6), l'écran d'urgence (7) et les états (8).</p></div>
+  <div class="flex gap-5 overflow-x-auto pb-4" role="list">
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-0 top-0 h-[92px] bg-sunk"><span class="absolute left-[78px] top-[44px] h-3.5 w-3.5 rotate-45 rounded-[2px] bg-incident"></span></div><div class="absolute inset-x-2 top-5 flex items-center justify-between text-[9px] text-ink"><span class="grid h-5 w-5 place-items-center rounded-full bg-card shadow">‹</span><span class="flex gap-1"><span class="grid h-5 w-5 place-items-center rounded-full bg-card shadow">↗</span><span class="grid h-5 w-5 place-items-center rounded-full bg-card shadow">⋯</span></span></div><div class="absolute inset-x-2 top-[98px] grid gap-1"><p class="text-[7px] font-bold uppercase text-incident">Incendie · Urgent</p><p class="text-[10px] font-bold leading-tight text-ink">Fumée importante rue Carnot</p><p class="text-[7px] text-muted">Rue Carnot, Pontoise · 1,1 km · il y a 12 min</p><div class="mt-0.5 rounded-md bg-sunk p-1"><p class="text-[7px] text-ink">Visible encore 17 h 32</p><div class="mt-0.5 h-1 rounded bg-line"><div class="h-1 w-3/4 rounded bg-primary"></div></div></div><div class="rounded-md border border-incident/40 bg-incident/10 p-1 text-[7px] text-ink">Situation urgente ? Appelez le 112 ›</div><p class="text-[7px] leading-snug text-muted">Fumée noire visible depuis le parking de la gare. Les pompiers semblent déjà sur place…</p><p class="text-[7px] text-muted"><b class="text-ink">JD</b> Signalé par Jean D.</p></div></div><p class="anno"><b>1 · En-tête</b>Mini-carte ou média, type, titre, lieu, compteur d'expiration, rappel d'urgence (Citizen, Nextdoor).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1.5"><p class="text-[8px] font-bold text-ink">Ce signalement vous semble-t-il exact ?</p><div class="grid grid-cols-2 gap-1"><span class="rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">⬆ Confirmer 25</span><span class="rounded-md border border-line py-1.5 text-center text-[8px] text-ink">⬇ Contester 3</span></div><p class="text-[7px] text-muted">Merci, votre vote est enregistré.</p><div class="grid grid-cols-2 gap-1"><span class="rounded-md border border-line py-1 text-center text-[8px] text-ink">♢ Suivre</span><span class="rounded-md border border-line py-1 text-center text-[8px] text-ink">↗ Partager</span></div><div class="rounded-md border border-line p-1.5"><p class="text-[7px] font-bold text-ink">Transmis au service compétent</p><p class="text-[7px] text-muted">Service Incendie · SDIS 95</p><div class="mt-1 flex items-center gap-0.5"><span class="h-1.5 flex-1 rounded bg-primary"></span><span class="h-1.5 flex-1 rounded bg-primary"></span><span class="h-1.5 flex-1 rounded bg-primary"></span><span class="h-1.5 flex-1 rounded bg-line"></span><span class="h-1.5 flex-1 rounded bg-line"></span><span class="h-1.5 flex-1 rounded bg-line"></span></div><p class="mt-0.5 text-[7px] text-primary">Pris en compte · 3 sur 6 ›</p></div><p class="text-[8px] font-bold text-ink">Commentaires (8)</p><div class="h-6 rounded bg-sunk"></div><div class="h-6 rounded bg-sunk"></div></div></div><p class="anno"><b>2 · Réagir</b>Votes pleine largeur avec la question, Suivre et Partager, résumé du traitement, aperçu des commentaires (IMDb, talabat).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-ink/30"></div><div class="sheet"><div class="grab"></div><p class="t">Suivi du traitement</p><p class="l">Service Incendie · SDIS 95</p><div class="mt-1 grid gap-1.5 border-l-2 border-primary pl-2 text-[8px]"><p class="text-ink"><b>✓ Envoyé</b> <span class="float-right text-muted">14:02</span></p><p class="text-ink"><b>✓ Transmis</b> <span class="float-right text-muted">14:02</span></p><p class="text-primary"><b>● Pris en compte</b> <span class="float-right text-muted">14:20</span></p><p class="text-muted">En traitement</p><p class="text-muted">Traité</p><p class="text-muted">Clôturé</p></div><p class="l mt-1">Délai habituel : quelques heures.</p></div></div><p class="anno"><b>3 · Timeline</b>Étapes faites cochées et horodatées, étape courante en couleur, suite en gris (talabat).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-ink/30"></div><div class="sheet"><div class="grab"></div><p class="t">Être prévenu ?</p><p class="l">Vous suivez « Fumée importante rue Carnot ».</p><div class="mt-1 grid gap-1"><div class="rounded-md border-2 border-primary p-1"><p class="text-[8px] font-bold text-ink">Pour tout changement</p><p class="text-[7px] text-muted">Commentaires, statut, expiration</p></div><div class="rounded-md border border-line p-1"><p class="text-[8px] font-bold text-ink">Seulement le traitement</p><p class="text-[7px] text-muted">Transmis, pris en compte, traité</p></div><div class="rounded-md border border-line p-1"><p class="text-[8px] font-bold text-ink">Non merci</p><p class="text-[7px] text-muted">L'alerte reste dans « Suivies »</p></div></div><span class="b1 !mt-2">Valider</span></div></div><p class="anno"><b>4 · Suivre</b>Opt-in au premier « Suivre », trois choix expliqués (Strava, Google Photos).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-ink/30"></div><div class="sheet"><div class="grab"></div><p class="t">Partager l'alerte</p><div class="mt-1 rounded-md border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-incident">Incendie</p><p class="text-[8px] font-bold text-ink">Fumée importante rue Carnot</p><p class="text-[7px] text-muted">Pontoise · visible encore 17 h</p><p class="text-[7px] text-primary">95alerte.fr/a/7K2Q</p></div><div class="mt-1.5 grid grid-cols-4 gap-1 text-center text-[7px] text-ink"><span>⧉<br>Copier</span><span>✉<br>SMS</span><span>◎<br>WhatsApp</span><span>⋯<br>Plus</span></div><p class="l mt-1">Aucune donnée personnelle n'est partagée.</p></div></div><p class="anno"><b>5 · Partager</b>Aperçu de la carte partagée, sans auteur ni adresse précise ; lien copié en toast (Medium, Lex).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-ink/30"></div><div class="sheet"><div class="grab"></div><p class="t">Options</p><div class="mt-1 grid gap-1.5 text-[8px] text-ink"><p>⧉ Copier le lien</p><p>⚑ Signaler cette alerte <span class="float-right text-muted">›</span></p><p class="text-[7px] text-muted">Fausse, offensante, mauvaise catégorie…</p></div><div class="mt-2 border-t border-line pt-1.5 text-[8px] font-semibold text-incident">✕ Supprimer mon alerte</div><p class="text-[7px] text-muted">Elle disparaîtra pour tous. Le service déjà saisi en est informé.</p></div></div><p class="anno"><b>6 · Menu ⋯</b>Une ligne d'explication par action, la suppression isolée (auteur) et confirmée (Bluesky, Handshake).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1.5"><span class="text-[9px] text-ink">×</span><span class="grid h-8 w-8 place-items-center rounded-full bg-incident/15 text-incident">⚠</span><p class="text-[10px] font-bold leading-tight text-ink">Situation urgente ?</p><p class="text-[7px] text-muted">95 Alerte n'est pas un remplacement des services d'urgence.</p><div class="grid gap-0.5 rounded-md bg-sunk p-1 text-[7px] text-ink"><p><b>112</b> Urgence (Europe)</p><p><b>18</b> Pompiers</p><p><b>17</b> Police</p><p><b>15</b> SAMU</p><p><b>114</b> Par SMS (sourds et malentendants)</p></div><p class="text-[7px] text-muted">Lieu à indiquer : rue Carnot, Pontoise</p></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-incident py-1.5 text-center text-[8px] font-semibold text-white">Appeler le 112</span></div><p class="anno"><b>7 · Urgence</b>Phrase du PRD, numéros en clair, lieu à dicter, un seul bouton rouge (inDrive, Waymo). Numéros à valider.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-5 grid gap-1"><div class="h-14 rounded-md bg-sunk opacity-60"></div><div class="rounded-md bg-sunk p-1 text-[7px] text-ink">⏱ Cette alerte a expiré. Elle n'est plus visible sur la carte.</div><p class="text-[9px] font-bold text-muted">Fumée importante rue Carnot</p><p class="text-[7px] text-muted">Votes fermés · 25 confirmations</p><div class="mt-3 grid place-items-center gap-1 text-center"><span class="grid h-8 w-8 place-items-center rounded-full bg-sunk text-muted">∅</span><p class="text-[8px] font-bold text-ink">Cette alerte n'est plus disponible</p><p class="text-[7px] text-muted">Son auteur l'a supprimée ou elle a été retirée par la modération.</p><span class="b2 w-full">Retour à la carte</span></div></div></div><p class="anno"><b>8 · Expirée, supprimée</b>Expirée : lecture seule grisée. Supprimée ou modérée : un écran qui explique, une issue (Bluesky, LinkedIn).</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="plan" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">09 · Plan</p><h2 class="h2">Refonte en six lots</h2><p class="lede">Chaque lot livre les deux versions (prototype React et canevas, en clair et en sombre). Il passe par la revue de direction artistique (390, 375, 430) et le test de bout en bout. Les nouveaux composants entrent d'abord dans le Design System, avec l'étiquette « New ». Les écrans de la phase rejoignent le catalogue « Écrans par phase » du panneau Démo.</p></div>
+  <div class="grid gap-4">
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L0 · Fondations · 1 j</p><h3 class="mt-1 text-xl font-bold">Composants de fiche</h3><p class="mt-2 text-sm text-muted">Tâches 5.1, 5.2</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">AlertDetail</span> écran empilé, en-tête transparent sur la mini-carte ou le média</li><li><span class="tag">ExpiryMeter</span> « Visible encore 17 h 32 » + barre ; « Expire dans 45 min » en vigilance</li><li><span class="tag">StatusSummary</span> étape courante + position (3 sur 6)</li><li><span class="tag">VoteBar</span> pleine largeur avec question (variante de l'existant)</li><li>Correction : <span class="font-mono">fmtDistance</span> affiche « 1000 m » au lieu de « 1,0 km »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Composants ajoutés au Design System avec l'étiquette « New »</li><li>smart animate : type et titre partagés entre le résumé de la carte et la fiche</li><li>Lisible en niveaux de gris</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L1 · Fiche · 2 j</p><h3 class="mt-1 text-xl font-bold">Comprendre</h3><p class="mt-2 text-sm text-muted">Tâches 5.1, 5.3, 5.4</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Ordre : média ou mini-carte → type et titre → lieu (précision selon la catégorie) et distance → expiration → description → auteur public</li><li>Galerie : vignettes puis visionneuse plein écran (« 1 sur 3 », texte alternatif, Échap)</li><li>Ouverture depuis le résumé de la carte, la liste, la recherche et les notifications</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Jamais d'email, de téléphone ni d'adresse personnelle</li><li>« Voir le détail » n'affiche plus de toast « arrive bientôt »</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L2 · Votes · 1 j</p><h3 class="mt-1 text-xl font-bold">Réagir</h3><p class="mt-2 text-sm text-muted">Tâche 5.5</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Question « Ce signalement vous semble-t-il exact ? » + Confirmer / Contester pleine largeur</li><li>Un vote par alerte : toucher l'autre bouton change, retoucher le même annule</li><li>Toasts « Merci, votre vote est enregistré. » / « Vote modifié. » / « Vote retiré. »</li><li>Invité : feuille « Connectez-vous pour voter » au lieu d'un toast</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Un vote changé met à jour les compteurs sur la carte, la liste et la fiche (validation)</li><li>Hors connexion : boutons désactivés + explication</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L3 · Service · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Suivre le traitement</h3><p class="mt-2 text-sm text-muted">Tâche 5.6</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Bloc « Transmis au service compétent » : nom du service selon catégorie et commune</li><li>Résumé (étape courante, 3 sur 6) → feuille timeline Envoyé → … → Clôturé, horodatée</li><li>Délai habituel affiché seulement si le service le fournit (donnée fictive)</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Statut = icône + texte + couleur</li><li>Mises à jour du service distinguées des commentaires</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L4 · Actions · 2 j</p><h3 class="mt-1 text-xl font-bold">Suivre, partager, ⋯</h3><p class="mt-2 text-sm text-muted">Tâches 5.7, 5.11</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Suivre : feuille d'opt-in au premier toucher, puis « Suivie ✓ » ; réglage modifiable</li><li>Partager : aperçu sans donnée personnelle, Copier le lien (toast), SMS, WhatsApp, Plus… (simulés)</li><li>Menu ⋯ : Copier le lien, Signaler (› phase 7), Supprimer mon alerte (auteur, confirmation)</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>L'alerte suivie apparaît dans Activité › Suivies (prévu phase 8, état stocké dès maintenant)</li><li>Aucun texte qui promet un envoi réel</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L5 · Urgence et états · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Tout prévoir</h3><p class="mt-2 text-sm text-muted">Tâches 5.8, 5.9, 5.10, 5.C</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Rappel compact sur les catégories critiques → écran « Situation urgente ? »</li><li>Doublons : bandeau « Ces alertes semblent concerner le même événement. » + liens</li><li>Expirée (lecture seule, grisée), supprimée, modérée, chargement, erreur, hors connexion</li><li>PHASE_SCREENS phase 5 + planches du canevas en clair et en sombre</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Rouge uniquement pour l'urgence et la suppression</li><li>Chaque état déclenchable par le mode démo</li></ul></div>
+        </div>
+      </article>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ordre et charge</p><p class="mt-2 text-sm text-muted">L0, puis L1 et L2 en parallèle, puis L3, L4 et L5 : environ 9 jours. Canevas (5.C) au fil des lots.</p></div>
+    <div class="card p-5"><p class="font-bold">Indicateurs (tests)</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>S2 : de la carte au détail en 2 touchers</li><li>S5 : jusqu'au vote ; vote changé = compteurs à jour sur carte, liste et fiche</li><li>Type, titre, lieu et expiration visibles sans défiler à 375 × 812</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Risques</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Fiche trop longue : commentaires en aperçu, timeline en feuille</li><li>Rouge envahissant sur les incendies : rouge seulement pour le rappel d'urgence</li><li>Promesses implicites (« les secours sont prévenus ») : textes du PRD uniquement</li></ul></div>
+  </div>
+</section>
+
+<section id="decisions" class="border-t border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">10 · Décisions</p><h2 class="h2">Avant de démarrer</h2><p class="lede">Ces points touchent la navigation, une règle métier (vote), l'urgence (PRD §13) ou une exception à la règle des illustrations : selon AGENTS.md, ils demandent une validation.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="bg-sunk text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">#</th><th class="p-3">Question</th><th class="p-3">Recommandation</th><th class="p-3">Impact si non</th></tr></thead>
+      <tbody class="divide-y divide-line">
+        <tr><td class="p-3 font-mono">G1</td><td class="p-3">La fiche : écran empilé ou feuille pleine hauteur au-dessus de la carte ?</td><td class="p-3">Écran empilé (comme la recherche), ouvert depuis le résumé, avec smart animate du type et du titre. Retour : la carte reste centrée sur l'alerte.</td><td class="p-3 text-muted">Feuille à trois hauteurs difficile à lire avec timeline et commentaires</td></tr>
+        <tr><td class="p-3 font-mono">G2</td><td class="p-3">Retoucher le même bouton de vote : annule-t-il le vote ?</td><td class="p-3">Oui : toucher l'autre change le vote, retoucher le même le retire (« Vote retiré. »). Un seul vote par alerte reste garanti.</td><td class="p-3 text-muted">Impossible de revenir à « sans avis »</td></tr>
+        <tr><td class="p-3 font-mono">G3</td><td class="p-3">Écran « Situation urgente ? » : numéros affichés et bouton d'appel ?</td><td class="p-3">Numéros 112, 18, 17, 15 et 114 (SMS) affichés en clair ; un seul bouton rouge « Appeler le 112 » qui ouvre le composeur du téléphone (lien tel:, aucun appel automatique). PRD §13 point 5.</td><td class="p-3 text-muted">Numéros seuls, sans bouton : un geste de plus en situation de stress</td></tr>
+        <tr><td class="p-3 font-mono">G4</td><td class="p-3">Photos des alertes de démo : lesquelles ?</td><td class="p-3">Générer 6 photos réalistes avec Magnific (rues du Val-d'Oise, sans personne identifiable), embarquées en WebP comme l'onboarding. Sans photo : mini-carte en tête.</td><td class="p-3 text-muted">Fiches sans média : la visionneuse (5.3) n'est pas démontrable</td></tr>
+        <tr><td class="p-3 font-mono">G5</td><td class="p-3">Que garde-t-on d'une alerte expirée ?</td><td class="p-3">Absente de la carte et de la liste ; consultable en lecture seule depuis une notification, « Suivies » ou un lien : grisée, votes fermés, bandeau « Cette alerte a expiré. »</td><td class="p-3 text-muted">Lien partagé qui mène à une erreur</td></tr>
+        <tr><td class="p-3 font-mono">G6</td><td class="p-3">Commentaires dans la fiche en phase 5 ?</td><td class="p-3">Aperçu des 2 derniers commentaires + « Voir les 8 commentaires » (lecture seule) ; écrire, répondre et signaler arrivent en phase 7.</td><td class="p-3 text-muted">Une fiche sans trace de la discussion</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="wrap flex flex-wrap items-center justify-between gap-3 py-8 text-sm text-muted">
+    <p>95 Alerte · rapport généré par <span class="font-mono">tools/build_benchmark_refonte.py fiche-refonte</span> · sources Mobbin (iOS), aperçus à basse résolution.</p>
+    <p>Rapports liés : <span class="font-mono">liste-refonte.html</span>, <span class="font-mono">carte-refonte.html</span>, <span class="font-mono">benchmark-mobbin.html</span></p>
+  </div>
+</footer>

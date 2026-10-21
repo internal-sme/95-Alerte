@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Fiche · alerte de zone</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/1fccea002aa630f9bc03c5eaebf6e400">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95">
+<div class="stack-layer is-modal"><div class="screen detail-screen fam-incident"><div class="detail-hero"><button type="button" class="detail-photo" aria-label="Agrandir la photo : Chemin de halage recouvert par l'Oise, banc à moitié dans l'eau"><img src="/_blob/d476059cfd225d51c07aa2f4ca36e323" alt=""></button><div class="detail-top"><a class="icon-btn" aria-label="Retour" href="{{l.Main}}"><span class="ph i i-caret-left" aria-hidden="true"></span></a><button type="button" class="icon-btn" aria-label="Plus d'actions"><span class="ph i i-dots-three" aria-hidden="true"></span></button></div></div><article class="detail-body" aria-labelledby="dt-title"><div class="detail-eyebrow"><span style="view-transition-name: alert-type;"><span class="badge badge-type fam-incident"><span class="ph i i-drop-fill" aria-hidden="true"></span>Inondation</span></span><span class="badge badge-area"><span class="ph i i-polygon" aria-hidden="true"></span>Zone</span><span class="badge badge-status st-sent"><span class="ph i i-paper-plane-tilt" aria-hidden="true"></span>Transmise</span></div><h1 id="dt-title" class="detail-title" style="view-transition-name: alert-title;">Chemin de halage inondé au pied de l'Axe Majeur</h1><ul class="detail-meta"><li><span class="ph ph-sm i i-map-pin" aria-hidden="true"></span><span>Axe Majeur, Cergy · 3,4 km</span></li><li><span class="ph ph-sm i i-clock" aria-hidden="true"></span><span>Publiée il y a 55 min · 13:56</span></li><li><span class="ph ph-sm i i-polygon" aria-hidden="true"></span><span>Zone d'environ 1,1 km de large</span></li></ul><div class="expiry"><span class="lbl"><span class="ph ph-sm i i-timer" aria-hidden="true"></span>Visible encore 23 h 05</span><div class="bar" aria-hidden="true"><i style="width: 96.1632%;"></i></div></div><button type="button" class="emergency-note"><span class="ph i i-siren-fill" aria-hidden="true"></span><span><b>Situation urgente ?</b>95 Alerte ne prévient pas les secours. Appelez le 112.</span><span class="ph ph-sm i i-caret-right" aria-hidden="true"></span></button><p class="detail-desc">L'Oise déborde sur le chemin de halage : passage impossible à pied et à vélo.</p><p class="detail-by"><span class="avatar anon" aria-hidden="true"><span class="ph i i-detective" aria-hidden="true"></span></span><span>Signalé par <b>Citoyen anonyme</b></span></p><section class="detail-section" aria-labelledby="dt-vote"><h2 id="dt-vote">Ce signalement vous semble-t-il exact ?</h2><div class="vote" role="group" aria-label="Votre avis sur ce signalement"><button class="up" type="button" aria-pressed="false" aria-label="Confirmer, 14 confirmations"><span class="ph i i-arrow-fat-up" aria-hidden="true"></span>Confirmer <span class="n">14</span></button><button class="down" type="button" aria-pressed="false" aria-label="Contester, 1 contestations"><span class="ph i i-arrow-fat-down" aria-hidden="true"></span>Contester <span class="n">1</span></button></div><p class="detail-hint">Un seul avis par alerte, modifiable à tout moment.</p></section><div class="detail-actions"><button type="button" class="btn btn-secondary" aria-pressed="false"><span class="ph i i-bell" aria-hidden="true"></span>Suivre</button><button type="button" class="btn btn-secondary"><span class="ph i i-share-network" aria-hidden="true"></span>Partager</button></div><section class="service-card" aria-labelledby="svc-title"><div class="svc-head"><span class="svc-ico" aria-hidden="true"><span class="ph i i-buildings" aria-hidden="true"></span></span><div><h2 id="svc-title">Transmis au service compétent</h2><p>Sécurité et secours · Val-d'Oise</p></div></div><div class="status-progress" aria-hidden="true"><i class="on"></i><i class="on now"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><p class="svc-step"><b>Transmis au service compétent</b> · étape 2 sur 6 · 13:58</p><button type="button" class="btn btn-tertiary btn-inline">Voir le suivi du traitement</button></section><section class="detail-section" aria-labelledby="dt-comments"><h2 id="dt-comments">Commentaires<small> · 3</small></h2><button type="button" class="btn btn-secondary btn-block">Voir les 3 commentaires</button></section></article></div></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark": {"editor": "boolean", "default": false}, "$preview": {"width": 390, "height": 844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const go = (n) => n + s + '.dc.html';
+    return { theme: s ? 't-dark' : 't-light', l: { Activity: go('Activity'), Alerts: go('Alerts'), Login: go('Login'), Main: go('Main'), MapSelected: go('MapSelected'), Profile: go('Profile'), Report: go('Report') } };
+  }
+}
+</script>
+</body>
+</html>
