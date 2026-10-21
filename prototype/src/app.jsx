@@ -345,6 +345,7 @@ function initialState() {
     mapFilter: DEFAULT_FILTER,
     listSort: "relevance",
     mapFocus: null,
+    draft: null, // signalement en cours (phase 6, H4) : gardé pour la session, jamais dans localStorage
     sheet: null,
     modal: null,
     toasts: [],
@@ -416,6 +417,21 @@ function reducer(state, action) {
       const follows = { ...state.follows };
       delete follows[action.alertId];
       return { ...state, follows };
+    }
+    case "DRAFT_START":
+      return state.draft ? state : { ...state, draft: { step: "type", photos: [], identity: state.prefs.lastIdentity || null, title: "", description: "" } };
+    case "DRAFT_GO":
+      return { ...state, draft: { ...state.draft, step: action.step } };
+    case "DRAFT_SET":
+      return { ...state, draft: { ...state.draft, ...action.patch } };
+    case "DRAFT_PHOTO": // une photo du brouillon : ajout, progression, erreur, retrait
+      return { ...state, draft: { ...state.draft, photos: action.remove ? state.draft.photos.filter((ph) => ph.id !== action.id) : state.draft.photos.some((ph) => ph.id === action.photo.id) ? state.draft.photos.map((ph) => (ph.id === action.photo.id ? { ...ph, ...action.photo } : ph)) : [...state.draft.photos, action.photo] } };
+    case "DRAFT_RESET":
+      return { ...state, draft: null };
+    case "PUBLISH_ALERT": { // 6.9, 6.10 : l'alerte rejoint la carte, la liste et « Mes alertes » ; notification « Alerte publiée »
+      const a = action.alert;
+      const notif = { id: `n-${a.id}`, kind: "publiee", alertId: a.id, title: "Votre alerte a été publiée", body: a.title, ageMin: 0, read: false };
+      return { ...state, alerts: [a, ...state.alerts], notifications: [notif, ...state.notifications], prefs: { ...state.prefs, startReported: true, lastIdentity: a.anonymous ? "anonymous" : "profile" }, draft: { ...state.draft, step: "done", publishedId: a.id } };
     }
     case "DELETE_ALERT": // R : l'auteur peut supprimer son alerte (confirmation obligatoire, PRD §10.2)
       return { ...state, alerts: state.alerts.map((a) => (a.id === action.alertId ? { ...a, status: "supprimee" } : a)) };
@@ -845,13 +861,13 @@ const TABS = [
 
 function TabBar() {
   const { state } = useStore();
-  const { setTab, push, setPref } = useActions();
+  const { setTab, push, setPref, openSheet } = useActions();
   return (
     <nav className="tabbar" aria-label="Navigation principale">
       {TABS.map((t) => {
         if (t.id === "report") {
           return (
-            <button key={t.id} type="button" className="tab tab-report" onClick={() => { setPref("reportHintSeen", true); push("report"); }} aria-label="Signaler un événement">
+            <button key={t.id} type="button" className="tab tab-report" onClick={() => { setPref("reportHintSeen", true); if (state.session.user) push("report"); else openSheet("sign-in", { reason: "report" }); }} aria-label="Signaler un événement">
               <span className="fab"><Icon name="plus" /></span>Signaler
             </button>
           );
@@ -958,7 +974,7 @@ function ConfirmModal({ modal, onClose }) {
         <h3 id="modal-title">{modal.title}</h3>
         {modal.body ? <p id="modal-body">{modal.body}</p> : null}
         <div className="actions">
-          <button ref={firstRef} type="button" className="btn btn-secondary" onClick={onClose}>{modal.cancelLabel || "Annuler"}</button>
+          <button ref={firstRef} type="button" className="btn btn-secondary" onClick={() => { onClose(); modal.onCancel?.(); }}>{modal.cancelLabel || "Annuler"}</button>
           <button type="button" className={cx("btn", modal.destructive ? "btn-destructive" : "btn-primary")} onClick={() => { onClose(); modal.onConfirm?.(); }}>{modal.confirmLabel || "Confirmer"}</button>
         </div>
       </div>
@@ -2362,33 +2378,590 @@ function ProfileScreen() {
   );
 }
 
-function ReportScreen() {
+/* =====================================================================
+   PHASE 6 — Création d'une alerte (ALERT-02 ; rapport docs/benchmark/signalement-refonte.html, H1 à H6)
+   Une question par écran, barre d'étapes et bouton principal immobiles (smart animate), brouillon de session.
+   ===================================================================== */
+const REPORT_STEPS = [
+  { id: "type", label: "Type" }, { id: "category", label: "Catégorie" }, { id: "place", label: "Lieu" },
+  { id: "description", label: "Description" }, { id: "photo", label: "Photo" }, { id: "identity", label: "Identité" }, { id: "preview", label: "Aperçu" },
+];
+const REPORT_FAMILIES = { negative: ["incident", "vigilance", "info"], positive: ["positive", "info"] };
+const MAX_PHOTOS = 3;
+const isCritical = (cat) => cat && cat.family === "incident"; // consigne de sécurité + accès à « Situation urgente ? »
+const slug = (s) => foldQuery(s).replace(/ /g, "-");
+
+/* Communes hors de la liste de démonstration : enregistrées à la volée pour qu'une alerte publiée y soit affichée */
+function communeIdFor(name, epci, c) {
+  const known = COMMUNES.find((x) => foldQuery(x.name) === foldQuery(name));
+  if (known) return known.id;
+  const id = slug(name);
+  if (!COMMUNE_BY_ID[id]) {
+    const quartiers = (MAP95 ? MAP95.quartiers : []).filter((q) => q.name && q.commune === c.code).map((q) => q.name);
+    const entry = { id, name, interco: epci || "cp", ...kmToLatLng(c.c[0], c.c[1]), quartiers: quartiers.length ? quartiers : ["Centre"] };
+    COMMUNES.push(entry);
+    COMMUNE_BY_ID[id] = entry;
+  }
+  return id;
+}
+
+/* Adresse « en direct » sous l'épingle : commune et quartier réels de la carte, voie connue la plus proche (≤ 350 m) */
+function reverseGeocode(x, y) {
+  const at = placeAt(x, y);
+  const ll = kmToLatLng(x, y);
+  if (!at.inside || !at.commune) return { inside: false, x, y, ...ll };
+  const communeId = communeIdFor(at.commune.name, at.commune.epci, at.commune);
+  let street = null;
+  let best = 0.35;
+  SEED_ALERTS.forEach((a) => {
+    if (!a.street) return;
+    const d = haversineKm(ll, a);
+    if (d < best) { best = d; street = a.street; }
+  });
+  const quartier = at.quartier ? at.quartier.name : COMMUNE_BY_ID[communeId].quartiers[0];
+  return { inside: true, x, y, ...ll, communeId, quartier, street };
+}
+
+/* 6.4 : carte de choix du lieu — l'épingle reste au centre, la carte bouge dessous (Snoonu, Blinkit, Apple Maps) */
+function PinMap({ center, onSettle, family, icon }) {
+  const sat = useSatellite();
+  const alerts = useVisibleAlerts();
   const { state } = useStore();
-  const { pop, toast } = useActions();
-  const [type, setType] = useState(null);
+  const box = useRef(null);
+  const [size, setSize] = useState({ w: 390, h: 420 });
+  const start = projectKm(center);
+  const [v, setV] = useState({ x: start.x, y: start.y, s: 120 });
+  const vRef = useRef(v);
+  vRef.current = v;
+  const drag = useRef(null);
+  const [dragging, setDragging] = useState(false);
+  useLayoutEffect(() => {
+    const el = box.current;
+    const measure = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  // Recentrage demandé (ma position, adresse recherchée)
+  useEffect(() => {
+    const k = projectKm(center);
+    setV((o) => ({ ...o, x: k.x, y: k.y }));
+    onSettle(k.x, k.y);
+  }, [center.lat, center.lng, center.key]);
+  const settle = () => onSettle(vRef.current.x, vRef.current.y);
+  const moveBy = (dx, dy) => setV((o) => ({ ...o, x: o.x - dx / o.s, y: o.y - dy / o.s }));
+  const zoom = (k) => setV((o) => ({ ...o, s: Math.min(MAP_MAX_S, Math.max(24, o.s * k)) }));
+  const onPointerDown = (e) => { if (e.target.closest("button")) return; drag.current = { x: e.clientX, y: e.clientY, v: vRef.current }; e.currentTarget.setPointerCapture(e.pointerId); };
+  const onPointerMove = (e) => {
+    const d = drag.current;
+    if (!d) return;
+    if (!dragging && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 3) setDragging(true);
+    setV({ ...d.v, x: d.v.x - (e.clientX - d.x) / d.v.s, y: d.v.y - (e.clientY - d.y) / d.v.s });
+  };
+  const onPointerUp = () => { if (!drag.current) return; drag.current = null; setDragging(false); settle(); };
+  const onKeyDown = (e) => {
+    const step = 48;
+    const keys = { ArrowLeft: [step, 0], ArrowRight: [-step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
+    if (keys[e.key]) { e.preventDefault(); moveBy(...keys[e.key]); setTimeout(settle, 0); }
+    if (e.key === "+" || e.key === "=") { e.preventDefault(); zoom(1.6); }
+    if (e.key === "-") { e.preventDefault(); zoom(1 / 1.6); }
+  };
+  const toScreen = (x, y) => ({ x: size.w / 2 + (x - v.x) * v.s, y: size.h / 2 + (y - v.y) * v.s });
+  const level = levelOf(v.s);
+  const pos = state.session.position;
+  const me = pos.source !== "default" ? (() => { const k = projectKm(pos); return toScreen(k.x, k.y); })() : null;
+  const inView = (p) => p.x > 12 && p.x < size.w - 12 && p.y > 12 && p.y < size.h - 12;
+  return (
+    <div className={cx("pin-map", dragging && "is-dragging")} ref={box} tabIndex={0} role="application"
+      aria-label="Carte : déplacez-la pour placer l'épingle sur le lieu. Flèches pour déplacer, plus et moins pour zoomer."
+      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onKeyDown={onKeyDown}>
+      <div className={cx("map95", "map-live", "is-static", `lv-${level}`, sat && "is-sat")}>
+        {MAP95 ? (
+          <svg className="map-geo" width={size.w} height={size.h} aria-hidden="true">
+            <g transform={`translate(${size.w / 2 - v.x * v.s} ${size.h / 2 - v.y * v.s}) scale(${v.s})`}>{sat ? SAT_LAYERS : null}{GEO_LAYERS}</g>
+          </svg>
+        ) : MAP_ART}
+        {mapLabels(level, toScreen, size.w, size.h, 0).map((l) => <span key={l.key} className={cx("map-label", l.cls)} style={{ left: l.x, top: l.y }} aria-hidden="true">{l.text}</span>)}
+      </div>
+      {dedupeEvents(alerts).map((a) => { const k = projectKm(a); const p = toScreen(k.x, k.y); const c = CATEGORY_BY_ID[a.categoryId]; return inView(p) ? <span key={a.id} className="map-pin is-other" style={{ left: p.x, top: p.y }} aria-hidden="true"><Marker family={c.family} icon={c.icon} /></span> : null; })}
+      {me && inView(me) ? <span className="me-wrap" style={{ left: me.x, top: me.y }} aria-hidden="true"><span className="me" /></span> : null}
+      <span className="pick-shadow" aria-hidden="true" />
+      <span className="pick-pin" aria-hidden="true">{family ? <Marker family={family} icon={icon} /> : <Icon name="map-pin-fill" />}</span>
+      {dragging ? null : <span className="pick-bubble" aria-hidden="true">Vérifiez que la position est correcte</span>}
+      <div className="pick-zoom" role="group" aria-label="Zoom">
+        <IconButton icon="plus" label="Zoomer" onClick={() => zoom(1.6)} />
+        <IconButton icon="minus" label="Dézoomer" onClick={() => zoom(1 / 1.6)} />
+      </div>
+    </div>
+  );
+}
+
+function SafetyNote({ onClick }) {
+  return (
+    <button type="button" className="emergency-note" onClick={onClick}>
+      <Icon name="siren-fill" />
+      <span><b>Ne signalez que si vous êtes en sécurité.</b>95 Alerte ne prévient pas les secours. En cas d'urgence, appelez le 112.</span>
+      <Icon name="caret-right" className="ph-sm" />
+    </button>
+  );
+}
+
+function ReportFooter({ children, note }) {
+  return <div className="screen-footer report-footer">{note ? <p className="footer-note">{note}</p> : null}{children}</div>;
+}
+
+/* 6.2 : deux cartes de même poids (P7) */
+function StepType({ d, set, next }) {
+  const pick = (type) => {
+    const cat = d.categoryId ? CATEGORY_BY_ID[d.categoryId] : null;
+    set({ type, ...(cat && cat.type !== type ? { categoryId: null } : {}) });
+  };
+  return (
+    <Fragment>
+      <div className="screen-pad report-body">
+        <h2 className="question">Que souhaitez-vous signaler ?</h2>
+        <div className="radio-list" role="radiogroup" aria-label="Type d'événement">
+          <RadioCard large name="report-type" value="positive" family="positive" icon="star-fill" checked={d.type === "positive"} onChange={pick}
+            title="Un événement positif" description="Solidarité, culture, sport, environnement, vie de quartier…" />
+          <RadioCard large name="report-type" value="negative" family="incident" icon="warning-fill" checked={d.type === "negative"} onChange={pick}
+            title="Un événement négatif" description="Incident, danger, dégradation, propreté, nuisance…" />
+        </div>
+      </div>
+      <ReportFooter><Button block disabled={!d.type} onClick={next}>Continuer</Button></ReportFooter>
+    </Fragment>
+  );
+}
+
+/* 6.3 : grille filtrée par le type, groupée par famille ; consigne de sécurité pour les incidents */
+function StepCategory({ d, set, next }) {
+  const { push } = useActions();
+  const cats = CATEGORIES.filter((c) => c.type === d.type);
+  const cat = d.categoryId ? CATEGORY_BY_ID[d.categoryId] : null;
+  return (
+    <Fragment>
+      <div className="screen-pad report-body">
+        <h2 className="question">Quelle catégorie ?</h2>
+        {REPORT_FAMILIES[d.type].map((fam) => {
+          const list = cats.filter((c) => c.family === fam);
+          return list.length ? (
+            <section key={fam} className="filter-group" aria-label={FAMILY_LABEL[fam]}>
+              <h3>{FAMILY_LABEL[fam]}</h3>
+              <div className="cat-grid">{list.map((c) => <CategoryTile key={c.id} category={c} selected={d.categoryId === c.id} onClick={() => set({ categoryId: c.id })} />)}</div>
+            </section>
+          ) : null;
+        })}
+      </div>
+      <ReportFooter>
+        {isCritical(cat) ? <SafetyNote onClick={() => push("emergency", {})} /> : null}
+        <Button block disabled={!cat} onClick={next}>Continuer</Button>
+      </ReportFooter>
+    </Fragment>
+  );
+}
+
+/* 6.4 : trois chemins vers le lieu (ma position, une adresse, la carte), refus hors du Val-d'Oise */
+function StepPlace({ d, set, next }) {
+  const { state } = useStore();
+  const pos = state.session.position;
+  const cat = CATEGORY_BY_ID[d.categoryId];
+  const hasPos = pos.source !== "default";
+  const [center, setCenter] = useState(() => (d.place ? { lat: d.place.lat, lng: d.place.lng, key: 0 } : { lat: pos.lat, lng: pos.lng, key: 0 }));
+  const [q, setQ] = useState("");
+  const place = d.place;
+  const nq = foldQuery(q);
+  const results = nq.length >= 2 ? searchPlaces().filter((p) => foldQuery(p.label).includes(nq)).slice(0, 5) : [];
+  const onSettle = useCallback((x, y) => set({ place: reverseGeocode(x, y) }), [set]);
+  const goTo = (p) => { setCenter({ lat: p.lat, lng: p.lng, key: Date.now() }); setQ(""); };
+  const shown = place && place.inside ? (cat.precision === "rue" && place.street ? `${place.street}, ${COMMUNE_BY_ID[place.communeId].name}` : `${place.quartier}, ${COMMUNE_BY_ID[place.communeId].name}`) : null;
+  return (
+    <Fragment>
+      <div className="report-place">
+        <PinMap center={center} onSettle={onSettle} family={cat.family} icon={cat.icon} />
+        <div className="place-search">
+          <div className="search-field">
+            <Icon name="magnifying-glass" />
+            <input className="input" type="search" placeholder="Rechercher une adresse, une commune…" aria-label="Rechercher une adresse" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && results[0]) goTo(results[0]); }} />
+            {q ? <IconButton icon="x" label="Effacer la saisie" className="flat sf-clear" onClick={() => setQ("")} /> : null}
+          </div>
+          {results.length ? (
+            <div className="place-results" role="listbox" aria-label="Adresses trouvées">
+              {results.map((p) => <SearchRow key={p.kind + p.label + p.sub} icon={PLACE_ICON[p.kind]} label={p.label} sub={p.sub} q={nq} onClick={() => goTo(p)} />)}
+            </div>
+          ) : null}
+        </div>
+      </div>
+      <div className="place-panel" aria-live="polite">
+        {place && place.inside ? (
+          <Fragment>
+            <p className="place-addr"><Icon name="map-pin-fill" /><b>{place.street ? `${place.street}, ` : ""}{COMMUNE_BY_ID[place.communeId].name}</b></p>
+            <p className="place-sub">Quartier {place.quartier} · affiché sur l'alerte : {shown}</p>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <p className="place-addr is-out"><Icon name="map-trifold" /><b>Hors du Val-d'Oise</b></p>
+            <p className="place-sub">95 Alerte n'est pas encore disponible dans cette zone.</p>
+          </Fragment>
+        )}
+        {hasPos ? <Button variant="tertiary" className="btn-inline" icon="crosshair" onClick={() => setCenter({ lat: pos.lat, lng: pos.lng, key: Date.now() })}>Utiliser ma position</Button> : null}
+      </div>
+      <ReportFooter><Button block disabled={!place || !place.inside} onClick={next}>Confirmer cette position</Button></ReportFooter>
+    </Fragment>
+  );
+}
+
+/* 6.5 : titre proposé d'après la catégorie et le lieu (H1), description facultative */
+function suggestTitle(d) {
+  const cat = CATEGORY_BY_ID[d.categoryId];
+  const p = d.place;
+  if (!p || !p.inside) return cat.label;
+  if (p.street) return `${cat.label} ${p.street.charAt(0).toLowerCase()}${p.street.slice(1)}`;
+  return `${cat.label} à ${COMMUNE_BY_ID[p.communeId].name}`;
+}
+function StepDescription({ d, set, next }) {
+  const [error, setError] = useState(null);
+  useEffect(() => { if (!d.title) set({ title: suggestTitle(d), titleSuggested: true }); }, []);
+  const submit = () => {
+    if ((d.title || "").trim().length < 5) { setError("Donnez un titre d'au moins 5 caractères."); document.getElementById("rp-title")?.focus(); return; }
+    next();
+  };
+  return (
+    <Fragment>
+      <div className="screen-pad report-body">
+        <h2 className="question">Décrivez ce que vous voyez</h2>
+        <Field id="rp-title" label="Titre" max={80} value={d.title || ""} error={error}
+          help={d.titleSuggested ? "Titre proposé d'après la catégorie et le lieu : modifiez-le si besoin." : "Court et précis, il s'affiche sur la carte."}
+          onChange={(e) => { set({ title: e.target.value, titleSuggested: false }); setError(null); }} />
+        <Field id="rp-desc" label="Description (facultatif)" textarea rows={5} max={500} value={d.description || ""}
+          placeholder="Ce qui se passe, depuis quand, ce qui gêne…" help="N'indiquez ni nom, ni numéro de téléphone, ni plaque d'immatriculation."
+          onChange={(e) => set({ description: e.target.value })} />
+      </div>
+      <ReportFooter><Button block onClick={submit}>Continuer</Button></ReportFooter>
+    </Fragment>
+  );
+}
+
+/* 6.6 : photos simulées (H5) — caméra avec consigne, galerie fictive, envoi avec progression, erreur et réessai */
+const demoGallery = () => Object.keys(PHOTO_ALT); // photos de démonstration (définies avec la fiche, phase 5)
+function CameraOverlay({ photoKey, onShoot, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <div className="camera" role="dialog" aria-modal="true" aria-label="Appareil photo (simulé)">
+      {ALERT_PHOTOS[photoKey] ? <img src={ALERT_PHOTOS[photoKey]} alt="" className="camera-view" /> : <span className="camera-view" />}
+      <p className="camera-tip"><Icon name="info" />Photographiez le problème ou le lieu. Évitez les visages et les plaques d'immatriculation.</p>
+      <div className="camera-bar">
+        <button type="button" className="btn btn-tertiary camera-cancel" onClick={onClose}>Annuler</button>
+        <button type="button" className="shutter" aria-label="Prendre la photo" onClick={onShoot}><span /></button>
+        <span className="camera-spacer" />
+      </div>
+    </div>
+  );
+}
+function PhotoThumb({ ph, onRemove, onRetry }) {
+  return (
+    <div className={cx("photo-thumb", ph.status === "error" && "is-error")}>
+      {ALERT_PHOTOS[ph.key] ? <img src={ALERT_PHOTOS[ph.key]} alt={PHOTO_ALT[ph.key]} /> : null}
+      {ph.status === "uploading" ? <span className="pt-progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={ph.progress} aria-label="Envoi de la photo"><i style={{ width: `${ph.progress}%` }} /><small>{ph.progress < 40 ? "Compression…" : `Envoi ${ph.progress} %`}</small></span> : null}
+      {ph.status === "error" ? <button type="button" className="pt-retry" onClick={onRetry}><Icon name="arrows-clockwise" />Réessayer</button> : null}
+      <IconButton icon="x" label="Retirer la photo" className="pt-remove" onClick={onRemove} />
+    </div>
+  );
+}
+function StepPhoto({ d, next }) {
+  const { state, dispatch } = useStore();
+  const { toast, openSheet } = useActions();
+  const [camera, setCamera] = useState(!!d.camera);
+  useEffect(() => { if (d.camera) dispatch({ type: "DRAFT_SET", patch: { camera: false } }); }, []);
+  const photos = d.photos;
+  const uploading = photos.some((ph) => ph.status === "uploading");
+  const cat = CATEGORY_BY_ID[d.categoryId];
+  const suggested = demoGallery().find((k) => { const id = k.split("-")[0]; const a = SEED_ALERTS.find((x) => x.id === id); return a && a.categoryId === d.categoryId; }) || demoGallery()[0];
+  const add = (key) => { if (photos.length >= MAX_PHOTOS) return; dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key, status: "uploading", progress: 0 } }); };
+  // Envoi simulé : compression puis envoi ; échec si le mode démo « erreur réseau » est actif
+  useEffect(() => {
+    if (!uploading) return undefined;
+    const t = setInterval(() => {
+      photos.filter((ph) => ph.status === "uploading").forEach((ph) => {
+        const progress = Math.min(100, ph.progress + 20);
+        if (state.demo.networkError && progress >= 60) { dispatch({ type: "DRAFT_PHOTO", photo: { id: ph.id, status: "error", progress } }); toast("L'envoi de la photo a échoué. Vérifiez votre connexion.", { tone: "info" }); return; }
+        dispatch({ type: "DRAFT_PHOTO", photo: { id: ph.id, progress, status: progress >= 100 ? "done" : "uploading" } });
+        if (progress >= 100) toast("Photo ajoutée.");
+      });
+    }, motionReduced() ? 60 : 260);
+    return () => clearInterval(t);
+  }, [uploading, photos, state.demo.networkError]);
+  return (
+    <Fragment>
+      <div className="screen-pad report-body">
+        <h2 className="question">Ajoutez une photo</h2>
+        <p className="report-lead">Facultatif. Une photo aide le service à comprendre la situation{cat.family === "incident" ? ", mais ne vous mettez pas en danger pour la prendre" : ""}.</p>
+        {photos.length ? (
+          <div className="photo-grid">
+            {photos.map((ph) => <PhotoThumb key={ph.id} ph={ph} onRemove={() => dispatch({ type: "DRAFT_PHOTO", remove: true, id: ph.id })} onRetry={() => dispatch({ type: "DRAFT_PHOTO", photo: { id: ph.id, status: "uploading", progress: 0 } })} />)}
+          </div>
+        ) : null}
+        {photos.length < MAX_PHOTOS ? (
+          <div className="photo-actions">
+            <Button variant="secondary" icon="camera" onClick={() => setCamera(true)}>Prendre une photo</Button>
+            <Button variant="secondary" icon="image" onClick={() => openSheet("report-gallery", {})}>Choisir dans la galerie</Button>
+          </div>
+        ) : <p className="report-lead">{MAX_PHOTOS} photos au plus : retirez-en une pour en ajouter une autre.</p>}
+        <p className="demo-note">Prototype : l'appareil photo et la galerie sont simulés avec des photos de démonstration.</p>
+      </div>
+      <ReportFooter><Button block disabled={uploading} onClick={next}>{uploading ? "Envoi en cours…" : photos.length ? "Continuer" : "Continuer sans photo"}</Button></ReportFooter>
+      {camera ? <CameraOverlay photoKey={suggested} onClose={() => setCamera(false)} onShoot={() => { add(suggested); setCamera(false); }} /> : null}
+    </Fragment>
+  );
+}
+function GallerySheet() {
+  const { state, dispatch } = useStore();
+  const { closeSheet } = useActions();
+  const used = new Set((state.draft?.photos || []).map((ph) => ph.key));
+  const full = (state.draft?.photos || []).length >= MAX_PHOTOS;
+  return (
+    <Fragment>
+      <div className="gallery-grid">
+        {demoGallery().filter((k) => ALERT_PHOTOS[k]).map((k) => (
+          <button key={k} type="button" className="gallery-item" disabled={used.has(k) || full} aria-label={`${used.has(k) ? "Déjà ajoutée : " : "Ajouter : "}${PHOTO_ALT[k]}`}
+            onClick={() => { dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key: k, status: "uploading", progress: 0 } }); closeSheet(); }}>
+            <img src={ALERT_PHOTOS[k]} alt="" />{used.has(k) ? <span className="ms-check" style={{ display: "grid" }}><Icon name="check" /></span> : null}
+          </button>
+        ))}
+      </div>
+      <p className="demo-note">Galerie de démonstration : photos générées pour le prototype.</p>
+    </Fragment>
+  );
+}
+
+/* 6.7 : deux cartes avec l'aperçu exact du nom public (H3 : le dernier choix est repris) */
+function StepIdentity({ d, set, next }) {
+  const { state } = useStore();
+  const name = publicName(state.session.user);
+  return (
+    <Fragment>
+      <div className="screen-pad report-body">
+        <h2 className="question">Comment souhaitez-vous publier votre signalement ?</h2>
+        <div className="radio-list" role="radiogroup" aria-label="Identité affichée">
+          <RadioCard name="report-identity" value="profile" icon="user-circle" checked={d.identity === "profile"} onChange={(v) => set({ identity: v })}
+            title="Publier avec mon profil" description={<Fragment>Les autres verront : <strong>{name}</strong></Fragment>} />
+          <RadioCard name="report-identity" value="anonymous" icon="detective" iconTone="muted" checked={d.identity === "anonymous"} onChange={(v) => set({ identity: v })}
+            title="Publier anonymement" description={<Fragment>Les autres verront : <strong>Citoyen anonyme</strong>. La plateforme peut retrouver l'auteur en cas d'abus.</Fragment>} />
+        </div>
+        <PrivacyNote>Votre e-mail, votre téléphone et votre adresse ne sont jamais affichés.</PrivacyNote>
+      </div>
+      <ReportFooter><Button block disabled={!d.identity} onClick={next}>Continuer</Button></ReportFooter>
+    </Fragment>
+  );
+}
+
+/* L'alerte telle qu'elle sera publiée (aperçu et publication) */
+function draftAlert(d, now, id = "draft") {
+  const p = d.place;
+  return {
+    id, categoryId: d.categoryId, title: d.title.trim(), description: (d.description || "").trim(), communeId: p.communeId, quartier: p.quartier, street: p.street || "",
+    lat: p.lat, lng: p.lng, createdAt: now, expiresAt: now + ALERT_TTL, authorId: ME_ID, anonymous: d.identity === "anonymous",
+    votesUp: 0, votesDown: 0, commentsCount: 0, hasPhoto: d.photos.length > 0, photos: d.photos.filter((ph) => ph.status === "done").map((ph) => ph.key),
+    transmission: "transmis", status: "active", duplicateGroup: null, areaKm: null,
+  };
+}
+
+/* 6.8 : l'aperçu est la confirmation (H2) : la carte telle qu'elle sera vue, « Modifier » par bloc, 24 h, service */
+function StepPreview({ d, go }) {
+  const { state } = useStore();
+  const now = useNow();
+  const a = draftAlert(d, now);
+  const cat = CATEGORY_BY_ID[a.categoryId];
+  const route = routeAlert(a);
+  const rows = [
+    ["category", "Catégorie", `${cat.label} · ${d.type === "positive" ? "positif" : "négatif"}`],
+    ["place", "Lieu", displayPlace(a)],
+    ["description", "Description", a.description || "Aucune description"],
+    ["photo", "Photos", d.photos.length ? `${d.photos.length} photo${d.photos.length > 1 ? "s" : ""}` : "Aucune photo"],
+    ["identity", "Publié par", a.anonymous ? "Citoyen anonyme" : publicName(state.session.user)],
+  ];
+  return (
+    <Fragment>
+      <div className="screen-pad report-body">
+        <h2 className="question">Vérifiez avant de publier</h2>
+        <AlertCard alert={a} onOpen={() => {}} />
+        <dl className="preview-list">
+          {rows.map(([step, label, value]) => (
+            <div key={step} className="preview-row">
+              <dt>{label}</dt><dd>{value}</dd>
+              <Button variant="tertiary" className="btn-inline" onClick={() => go(step)} aria-label={`Modifier : ${label}`}>Modifier</Button>
+            </div>
+          ))}
+        </dl>
+        <div className="publish-scope">
+          <p><Icon name="timer" /><span>Visible par tous pendant <b>24 heures</b>, sur la carte et dans la liste.</span></p>
+          <p><Icon name="buildings" /><span>Transmise à : <b>{route.name}</b></span></p>
+        </div>
+      </div>
+      <ReportFooter note={state.demo.offline ? "Publication impossible hors connexion. Votre brouillon est gardé." : null}>
+        <Button block icon="paper-plane-tilt" disabled={state.demo.offline} onClick={() => go("publishing")}>Publier l'alerte</Button>
+      </ReportFooter>
+    </Fragment>
+  );
+}
+
+/* 6.9 : publication → « publiée » → routage animé vers le service ; 6.11 : erreur réseau, refus */
+const PERSONAL_DATA = /(\b0[1-9](?:[\s.-]?\d{2}){4}\b)|(\b[A-Z]{2}-\d{3}-[A-Z]{2}\b)|(@[a-z0-9-]+\.)/i;
+function ReportOutcome({ d }) {
+  const { state, dispatch } = useStore();
+  const { pop, push } = useActions();
+  const now = useNow();
+  const go = (step) => dispatch({ type: "DRAFT_GO", step });
+  const [stage, setStage] = useState(motionReduced() ? 4 : 0);
+  useEffect(() => {
+    if (d.step !== "publishing") return undefined;
+    const t = setTimeout(() => {
+      if (state.demo.networkError || state.demo.offline) { go("error"); return; }
+      if (PERSONAL_DATA.test(`${d.title} ${d.description || ""}`)) { go("refused"); return; }
+      dispatch({ type: "PUBLISH_ALERT", alert: draftAlert(d, now, `p${Date.now().toString(36)}`) });
+    }, motionReduced() ? 50 : 1100);
+    return () => clearTimeout(t);
+  }, [d.step]);
+  useEffect(() => {
+    if (d.step !== "done" || stage >= 4) return undefined;
+    const t = setTimeout(() => setStage((s) => s + 1), 520);
+    return () => clearTimeout(t);
+  }, [d.step, stage]);
+  const close = () => { dispatch({ type: "DRAFT_RESET" }); pop(); };
+  if (d.step === "publishing") {
+    return (
+      <div className="report-outcome" role="status" aria-live="polite">
+        <span className="spinner big" aria-hidden="true" />
+        <h2>Publication de votre alerte…</h2>
+      </div>
+    );
+  }
+  if (d.step === "error") {
+    return (
+      <Fragment>
+        <div className="report-outcome" role="alert">
+          <Spot icon="cloud-slash" tone="neutral" />
+          <h2>Impossible de publier votre alerte. Vérifiez votre connexion.</h2>
+          <p>Votre signalement est gardé : rien n'est perdu.</p>
+        </div>
+        <ReportFooter>
+          <Button block icon="arrows-clockwise" onClick={() => go("publishing")}>Réessayer</Button>
+          <Button block variant="secondary" onClick={() => go("preview")}>Revenir à l'aperçu</Button>
+        </ReportFooter>
+      </Fragment>
+    );
+  }
+  if (d.step === "refused") {
+    return (
+      <Fragment>
+        <div className="report-outcome" role="alert">
+          <Spot icon="eye-slash" tone="neutral" />
+          <h2>Publication refusée</h2>
+          <p>Votre alerte contient une information personnelle (numéro de téléphone, plaque d'immatriculation ou adresse e-mail). Retirez-la, puis publiez à nouveau.</p>
+        </div>
+        <ReportFooter>
+          <Button block onClick={() => go("description")}>Modifier la description</Button>
+          <Button block variant="tertiary" onClick={close}>Abandonner</Button>
+        </ReportFooter>
+      </Fragment>
+    );
+  }
+  // Publiée
+  const a = state.alerts.find((x) => x.id === d.publishedId);
+  if (!a) return null;
+  const route = routeAlert(a);
+  const nodes = [["user-circle", "Vous"], ["megaphone", "95 Alerte"], ["seal-check", "Analyse"], ["buildings", "Service"]];
+  const seeMap = () => { dispatch({ type: "DRAFT_RESET" }); dispatch({ type: "MAP_FOCUS", focus: { kind: "alert", id: a.id } }); };
+  const seeAlert = () => { dispatch({ type: "DRAFT_RESET" }); dispatch({ type: "MAP_FOCUS", focus: { kind: "alert", id: a.id } }); push("alert", { id: a.id }); };
+  return (
+    <Fragment>
+      <div className="report-outcome is-done">
+        <Spot icon="seal-check" tone="positive" />
+        <h2 role="status">Votre alerte a été publiée.</h2>
+        <ol className="route-steps" aria-label="Transmission du signalement">
+          {nodes.map(([icon, label], i) => <li key={label} className={cx(i < stage && "is-done", i === stage && "is-now")}><span><Icon name={icon} /></span>{label}</li>)}
+        </ol>
+        <p className={cx("route-result", stage >= 4 && "is-shown")} role="status" aria-live="polite">
+          {stage >= 4 ? <Fragment><Icon name="check-circle-fill" /><span>Votre signalement a été transmis au service compétent : <b>{route.name}</b></span></Fragment> : null}
+        </p>
+      </div>
+      <ReportFooter>
+        <Button block onClick={seeMap}>Voir sur la carte</Button>
+        <Button block variant="secondary" onClick={seeAlert}>Voir mon alerte</Button>
+      </ReportFooter>
+    </Fragment>
+  );
+}
+
+/* Brouillon retrouvé au prochain « + Signaler » (H4) */
+function ReportResume({ d }) {
+  const { dispatch } = useStore();
+  const cat = d.categoryId ? CATEGORY_BY_ID[d.categoryId] : null;
+  const idx = REPORT_STEPS.findIndex((s) => s.id === d.step);
+  return (
+    <Fragment>
+      <div className="report-outcome">
+        <Spot icon="pencil-simple" tone="neutral" />
+        <h2>Reprendre votre signalement ?</h2>
+        <p>{cat ? `${cat.label}${d.place && d.place.inside ? ` · ${COMMUNE_BY_ID[d.place.communeId].name}` : ""} · ` : ""}arrêté à l'étape {idx + 1} sur {REPORT_STEPS.length}.</p>
+      </div>
+      <ReportFooter>
+        <Button block onClick={() => dispatch({ type: "DRAFT_SET", patch: { saved: false } })}>Reprendre</Button>
+        <Button block variant="tertiary" onClick={() => { dispatch({ type: "DRAFT_RESET" }); dispatch({ type: "DRAFT_START" }); }}>Recommencer</Button>
+      </ReportFooter>
+    </Fragment>
+  );
+}
+
+const REPORT_STEP_VIEWS = { type: StepType, category: StepCategory, place: StepPlace, description: StepDescription, photo: StepPhoto, identity: StepIdentity, preview: StepPreview };
+
+function ReportScreen() {
+  const { state, dispatch } = useStore();
+  const { pop, toast, confirm } = useActions();
+  const d = state.draft;
+  useEffect(() => { if (state.session.user && !state.draft) dispatch({ type: "DRAFT_START" }); }, []);
+  const set = useCallback((patch) => dispatch({ type: "DRAFT_SET", patch }), [dispatch]);
   if (!state.session.user) {
     return (
       <div className="screen">
         <ScreenHeader title="Signaler" close onBack={pop} />
-        <div className="screen-pad"><GuestGate icon="plus" title="Connectez-vous pour signaler" text="Un compte permet de transmettre votre signalement au bon service et d'en suivre le traitement. Vous pourrez publier anonymement." /></div>
+        <div className="screen-pad"><GuestGate icon="plus" title="Connectez-vous pour signaler" text={SIGN_IN_REASONS.report.text} /></div>
       </div>
     );
   }
+  if (!d) return <div className="screen report-flow" />;
+  const idx = REPORT_STEPS.findIndex((s) => s.id === d.step);
+  const inSteps = idx >= 0;
+  const go = (step) => dispatch({ type: "DRAFT_GO", step });
+  const started = !!(d.type || d.categoryId);
+  const quit = () => {
+    if (d.step === "done" || !started) { dispatch({ type: "DRAFT_RESET" }); pop(); return; }
+    confirm({
+      title: "Quitter le signalement ?",
+      body: "Gardez votre brouillon pour le reprendre plus tard, ou abandonnez-le.",
+      confirmLabel: "Garder le brouillon", cancelLabel: "Abandonner",
+      onConfirm: () => { dispatch({ type: "DRAFT_SET", patch: { saved: true } }); pop(); toast("Brouillon gardé. Vous le retrouverez au prochain signalement."); },
+      onCancel: () => { dispatch({ type: "DRAFT_RESET" }); pop(); toast("Signalement abandonné.", { tone: "info" }); },
+    });
+  };
+  const back = () => (idx > 0 ? go(REPORT_STEPS[idx - 1].id) : quit());
+  const View = REPORT_STEP_VIEWS[d.step];
   return (
-    <div className="screen">
-      <ScreenHeader title="Signaler" close onBack={pop} />
-      <div className="screen-pad" style={{ flex: 1 }}>
-        <Stepper step={1} total={7} label="Type" />
-        <h2 className="question">Que souhaitez-vous signaler ?</h2>
-        <RadioCard large name="report-type" value="positive" family="positive" icon="star-fill" checked={type === "positive"} onChange={setType}
-          title="Un événement positif" description="Initiative, solidarité, culture, sport, vie de quartier…" />
-        <RadioCard large name="report-type" value="negative" family="incident" icon="warning-fill" checked={type === "negative"} onChange={setType}
-          title="Un événement négatif" description="Incident, danger, dégradation, propreté, nuisance…" />
-        <Banner tone="emergency">En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés.</Banner>
-      </div>
-      <div className="screen-footer">
-        <Button block disabled={!type} onClick={() => toast("La suite du parcours (catégorie, lieu, photo…) arrive bientôt.")}>Continuer</Button>
-      </div>
+    <div className={cx("screen", "report-flow", d.step === "place" && "is-place")}>
+      <header className="screen-header">
+        {inSteps && !d.saved ? <IconButton icon="caret-left" label={idx > 0 ? "Étape précédente" : "Quitter"} onClick={back} /> : <span />}
+        <h1>Signaler</h1>
+        {d.step === "publishing" ? <span /> : <IconButton icon="x" label={d.step === "done" ? "Fermer" : "Quitter le signalement"} onClick={quit} />}
+      </header>
+      {d.saved ? <ReportResume d={d} /> : inSteps ? (
+        <Fragment>
+          <div className="report-progress"><Stepper step={idx + 1} total={REPORT_STEPS.length} label={REPORT_STEPS[idx].label} /></div>
+          <View d={d} set={set} go={go} next={() => go(REPORT_STEPS[idx + 1].id)} />
+        </Fragment>
+      ) : <ReportOutcome d={d} />}
     </div>
   );
 }
@@ -3570,6 +4143,7 @@ const PHOTO_ALT = {
   "a30-1": "Chemin de halage recouvert par l'Oise, banc à moitié dans l'eau",
 };
 function alertPhotos(alert) {
+  if (alert.photos) return alert.photos.filter((k) => ALERT_PHOTOS[k]).map((k, i) => ({ id: `${alert.id}-${i}`, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
   return Object.keys(PHOTO_ALT).filter((k) => k.startsWith(`${alert.id}-`) && ALERT_PHOTOS[k]).map((k) => ({ id: k, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
 }
 
@@ -3746,6 +4320,7 @@ function FollowButton({ alert }) {
 /* Invité : expliquer pourquoi se connecter, au lieu d'un toast sans issue (audit phase 5) */
 const SIGN_IN_REASONS = {
   vote: { title: "Connectez-vous pour voter", text: "Confirmer ou contester un signalement demande un compte : un seul avis par personne et par alerte." },
+  report: { title: "Connectez-vous pour signaler", text: "Un compte permet de transmettre votre signalement au bon service et d'en suivre le traitement. Vous pourrez publier anonymement." },
   follow: { title: "Connectez-vous pour suivre", text: "Avec un compte, vous êtes prévenu du traitement de l'alerte et la retrouvez dans votre activité." },
 };
 function SignInSheet({ reason = "vote" }) {
@@ -4069,6 +4644,7 @@ const STACK_SCREENS = {
 };
 const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet },
   "map-style": { title: "Fond de carte", component: MapStyleSheet },
+  "report-gallery": { title: "Choisir dans la galerie", component: GallerySheet },
   "alert-timeline": { title: "Suivi du traitement", subtitle: (p, st) => { const a = st.alerts.find((x) => x.id === p.id); return a ? routeAlert(a).name : null; }, component: TimelineSheet },
   follow: { title: "Être prévenu ?", subtitle: (p, st) => (st.follows[p.id] ? "Vous suivez cette alerte" : "Choisissez ce qui vous sera notifié"), component: FollowSheet },
   "sign-in": { title: (p) => SIGN_IN_REASONS[p.reason || "vote"].title, component: SignInSheet },
@@ -4097,10 +4673,17 @@ const jumpApp = (s, o = {}) => ({
 });
 const jumpOnb = (step, slide = 0, o = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: false }, session: { ...s.session, status: "onboarding", user: null, position: o.position || DEFAULT_POSITION }, onb: { step, slide, pending: o.pending } });
 const jumpAuth = (step, extra = {}) => (s) => ({ ...s, prefs: { ...s.prefs, onboardingSeen: true }, session: { ...s.session, status: "auth", user: null }, auth: { ...initialAuth(), step, ...extra } });
-const jumpStack = (id) => ({ tab: "map", stack: [{ id, params: {}, key: `${id}-jump` }] });
+const jumpStack = (id) => ({ tab: "map", stack: [{ id, params: {}, key: `${id}-jump-${Date.now()}` }] }); // clé neuve : l'écran repart de zéro
 const jumpSheet = (id, snap = "half", params = {}) => ({ id, params, snap });
 const jumpAlert = (id, params = {}) => ({ tab: "map", stack: [{ id: "alert", params: { id, ...params }, key: `alert-${id}-jump` }] });
 const CARNOT = SEED_ALERTS.find((a) => a.id === "a1");
+/* Phase 6 : un signalement d'incendie rue Carnot (S4), arrêté à l'étape voulue */
+const jumpReport = (s, patch = {}, o = {}) => {
+  const k = projectKm(CARNOT);
+  const draft = { step: "type", type: "negative", categoryId: "incendie", place: reverseGeocode(k.x, k.y), title: "Incendie rue Carnot",
+    description: "Fumée noire au-dessus des toits, odeur de brûlé jusqu'à la gare.", photos: [{ id: "ph-1", key: "a1-1", status: "done", progress: 100 }], identity: "anonymous", ...patch };
+  return { ...jumpApp(s, { nav: jumpStack("report"), sheet: o.sheet, modal: o.modal, demo: o.demo }), draft };
+};
 
 const PHASE_SCREENS = [
   { n: 0, title: "Fondations techniques et composants", items: [
@@ -4189,7 +4772,28 @@ const PHASE_SCREENS = [
     ["Fond de carte (depuis la carte)", (s) => jumpApp(s, { sheet: jumpSheet("map-style") })],
     ["Profil · fond de carte", (s) => jumpApp(s, { nav: { tab: "profile", stack: [] } })],
   ] },
-  { n: 6, title: "Création d'une alerte (+ Signaler)", items: [] },
+  { n: 6, title: "Création d'une alerte (+ Signaler)", items: [
+    ["Étape 1 · Type", (s) => jumpReport(s, { step: "type", type: null, categoryId: null, place: null, title: "", identity: null, photos: [] })],
+    ["Étape 2 · Catégorie (incident)", (s) => jumpReport(s, { step: "category", place: null, title: "" })],
+    ["Étape 2 · Catégorie (positif)", (s) => jumpReport(s, { step: "category", type: "positive", categoryId: "culture", place: null, title: "" })],
+    ["Étape 3 · Lieu", (s) => jumpReport(s, { step: "place", title: "" })],
+    ["Lieu hors du Val-d'Oise", (s) => jumpReport(s, { step: "place", title: "", place: { inside: false, lat: 49.2, lng: 1.45 } })],
+    ["Étape 4 · Description (titre proposé)", (s) => jumpReport(s, { step: "description", title: "", description: "" })],
+    ["Étape 5 · Photo", (s) => jumpReport(s, { step: "photo", photos: [] })],
+    ["Caméra (simulée)", (s) => jumpReport(s, { step: "photo", photos: [], camera: true })],
+    ["Galerie", (s) => jumpReport(s, { step: "photo", photos: [] }, { sheet: jumpSheet("report-gallery") })],
+    ["Photos en cours d'envoi", (s) => jumpReport(s, { step: "photo", photos: [{ id: "ph-1", key: "a1-1", status: "done", progress: 100 }, { id: "ph-2", key: "a1-2", status: "uploading", progress: 40 }] })],
+    ["Échec de l'envoi d'une photo", (s) => jumpReport(s, { step: "photo", photos: [{ id: "ph-1", key: "a1-1", status: "error", progress: 60 }] }, { demo: { networkError: true } })],
+    ["Étape 6 · Identité", (s) => jumpReport(s, { step: "identity", identity: null })],
+    ["Étape 7 · Aperçu", (s) => jumpReport(s, { step: "preview" })],
+    ["Aperçu hors connexion", (s) => jumpReport(s, { step: "preview" }, { demo: { offline: true } })],
+    ["Publication et routage", (s) => jumpReport(s, { step: "publishing" })],
+    ["Erreur de publication", (s) => jumpReport(s, { step: "error" })],
+    ["Publication refusée", (s) => jumpReport(s, { step: "refused", description: "Le conducteur du véhicule AB-123-CD a vu le départ du feu." })],
+    ["Quitter : garder le brouillon ?", (s) => jumpReport(s, { step: "description" }, { modal: { title: "Quitter le signalement ?", body: "Gardez votre brouillon pour le reprendre plus tard, ou abandonnez-le.", confirmLabel: "Garder le brouillon", cancelLabel: "Abandonner" } })],
+    ["Reprendre un brouillon", (s) => jumpReport(s, { step: "photo", saved: true })],
+    ["Signaler sans compte", (s) => jumpApp(s, { guest: true, sheet: jumpSheet("sign-in", "half", { reason: "report" }) })],
+  ] },
   { n: 7, title: "Commentaires et signalement de contenu", items: [] },
   { n: 8, title: "Activité et notifications", items: [] },
   { n: 9, title: "Profil, paramètres, aide, légal", items: [] },
@@ -4314,7 +4918,7 @@ function usePrefsEffects(prefs) {
 /* Transitions entre écrans : « smart animate » (View Transitions API). Les éléments présents des deux côtés
    portent un view-transition-name (titre d'en-tête, barre d'étapes, bouton principal, barre d'onglets) et se
    déforment d'un écran à l'autre ; le reste se fond. Sans l'API ou avec les animations réduites : changement direct. */
-const SCREEN_ACTIONS = new Set(["AUTH_GO", "LOGIN", "GUEST", "LOGOUT", "SET_TAB", "PUSH", "POP", "ONB_GO", "ONB_FINISH"]);
+const SCREEN_ACTIONS = new Set(["AUTH_GO", "LOGIN", "GUEST", "LOGOUT", "SET_TAB", "PUSH", "POP", "ONB_GO", "ONB_FINISH", "DRAFT_GO"]);
 function useScreenTransitions(rawDispatch) {
   return useCallback((action) => {
     const changesScreen = SCREEN_ACTIONS.has(action.type) || (action.type === "AUTH_SET" && action.patch && action.patch.step);
