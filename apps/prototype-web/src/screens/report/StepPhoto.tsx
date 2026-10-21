@@ -17,13 +17,13 @@ export interface StepPhotoProps {
 export function StepPhoto({ d, next }: StepPhotoProps) {
   const { state, dispatch } = useStore();
   const { toast, openSheet } = useActions();
-  const [camera, setCamera] = useState(!!d.camera);
+  const [camera, setCamera] = useState(d.camera || false); // true : ouvrir la caméra ; « asking », « denied »… : état forcé (démo)
   useEffect(() => { if (d.camera) dispatch({ type: "DRAFT_SET", patch: { camera: false } }); }, []);
   const photos = d.photos;
   const uploading = photos.some((ph) => ph.status === "uploading");
   const cat = CATEGORY_BY_ID[d.categoryId];
   const suggested = demoGallery().find((k) => { const id = k.split("-")[0]; const a = SEED_ALERTS.find((x) => x.id === id); return a && a.categoryId === d.categoryId; }) || demoGallery()[0];
-  const add = (key) => { if (photos.length >= MAX_PHOTOS) return; dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key, status: "uploading", progress: 0 } }); };
+  const add = (shot) => { if (photos.length >= MAX_PHOTOS) return; dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key: shot.key || null, src: shot.src || null, status: "uploading", progress: 0 } }); };
   // Envoi simulé : compression puis envoi ; échec si le mode démo « erreur réseau » est actif
   useEffect(() => {
     if (!uploading) return undefined;
@@ -53,10 +53,10 @@ export function StepPhoto({ d, next }: StepPhotoProps) {
             <Button variant="secondary" icon="image" onClick={() => openSheet("report-gallery", {})}>Choisir dans la galerie</Button>
           </div>
         ) : <p className="report-lead">{MAX_PHOTOS} photos au plus : retirez-en une pour en ajouter une autre.</p>}
-        <p className="demo-note">Prototype : l'appareil photo et la galerie sont simulés avec des photos de démonstration.</p>
+        <p className="demo-note">Prototype : l'appareil photo de l'appareil est utilisé s'il est accessible, sinon simulé ; la galerie montre des photos de démonstration.</p>
       </div>
       <ReportFooter><Button block disabled={uploading} onClick={next}>{uploading ? "Envoi en cours…" : photos.length ? "Continuer" : "Continuer sans photo"}</Button></ReportFooter>
-      {camera ? <CameraOverlay photoKey={suggested} onClose={() => setCamera(false)} onShoot={() => { add(suggested); setCamera(false); }} /> : null}
+      {camera ? <CameraOverlay photoKey={suggested} forced={typeof camera === "string" ? camera : null} onClose={() => setCamera(false)} onGallery={() => { setCamera(false); openSheet("report-gallery", {}); }} onShoot={(shot) => { add(shot); setCamera(false); }} /> : null}
     </Fragment>
   );
 }

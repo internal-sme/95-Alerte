@@ -123,3 +123,7 @@ s = (R/'store/store.ts').read_text()
 s = s.replace('import { createContext, useContext, useMemo } from "react";', 'import { createContext, useContext, useMemo, type Dispatch } from "react";\nimport type { Action, AppState } from "@/types";', 1)
 (R/'store/store.ts').write_text(s)
 edit('screens/auth/SignupInfoScreen.tsx', [('const [errors, setErrors] = useState({});', 'const [errors, setErrors] = useState<Record<string, string | null>>({});')])
+
+# Caméra réelle : Permissions Policy (API Chrome, absente des types du DOM)
+edit('screens/report/report.ts', [('  const policy = document.permissionsPolicy || document.featurePolicy;',
+  '  const doc = document as Document & { permissionsPolicy?: { allowsFeature(feature: string): boolean }; featurePolicy?: { allowsFeature(feature: string): boolean } };\n  const policy = doc.permissionsPolicy || doc.featurePolicy;')])

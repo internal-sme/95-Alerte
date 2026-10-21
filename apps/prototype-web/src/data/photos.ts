@@ -14,6 +14,7 @@ export const PHOTO_ALT = {
 };
 
 export function alertPhotos(alert) {
-  if (alert.photos) return alert.photos.filter((k) => ALERT_PHOTOS[k]).map((k, i) => ({ id: `${alert.id}-${i}`, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
+  // alert.photos : clés des photos de démonstration ou photos prises avec l'appareil photo (data URL)
+  if (alert.photos) return alert.photos.map((k, i) => (k.startsWith("data:") ? { id: `${alert.id}-${i}`, src: k, alt: "Photo jointe au signalement" } : { id: `${alert.id}-${i}`, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] })).filter((ph) => ph.src);
   return Object.keys(PHOTO_ALT).filter((k) => k.startsWith(`${alert.id}-`) && ALERT_PHOTOS[k]).map((k) => ({ id: k, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
 }

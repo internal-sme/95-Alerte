@@ -12,7 +12,7 @@ export const PREFS_KEY = "95alerte:prefs";
 
 export const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false, homeView: "map", mapStyle: "plan" };
 
-export const DEFAULT_DEMO = { offline: false, permissionDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
+export const DEFAULT_DEMO = { offline: false, permissionDenied: false, cameraDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 export function initialAuth() {
   return {

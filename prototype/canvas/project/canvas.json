@@ -2212,7 +2212,7 @@
       "y": 0,
       "w": 390,
       "h": 844,
-      "title": "Caméra (simulée)",
+      "title": "Caméra (simulée sans appareil photo)",
       "is_interactive": true,
       "page": "p6"
     },
@@ -2221,7 +2221,7 @@
       "y": 1200,
       "w": 390,
       "h": 844,
-      "title": "Caméra (simulée) (sombre)",
+      "title": "Caméra (simulée sans appareil photo) (sombre)",
       "is_interactive": true,
       "page": "p6"
     },
@@ -2492,6 +2492,60 @@
       "w": 390,
       "h": 844,
       "title": "Reprendre un brouillon (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCameraAsking.dc.html": {
+      "x": 3760,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra : autorisation demandée",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCameraAsking-dark.dc.html": {
+      "x": 3760,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra : autorisation demandée (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCameraDenied.dc.html": {
+      "x": 4230,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra : accès refusé",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCameraDenied-dark.dc.html": {
+      "x": 4230,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra : accès refusé (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCameraUnavailable.dc.html": {
+      "x": 4700,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra : indisponible",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCameraUnavailable-dark.dc.html": {
+      "x": 4700,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra : indisponible (sombre)",
       "is_interactive": true,
       "page": "p6"
     }
@@ -2769,7 +2823,13 @@
     "ReportQuit.dc.html",
     "ReportQuit-dark.dc.html",
     "ReportResume.dc.html",
-    "ReportResume-dark.dc.html"
+    "ReportResume-dark.dc.html",
+    "ReportCameraAsking.dc.html",
+    "ReportCameraAsking-dark.dc.html",
+    "ReportCameraDenied.dc.html",
+    "ReportCameraDenied-dark.dc.html",
+    "ReportCameraUnavailable.dc.html",
+    "ReportCameraUnavailable-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -3074,7 +3134,7 @@
       "maxH": 760,
       "fill": "blue",
       "page": "p6",
-      "text": "Phase 6 · création d'une alerte (rapport docs/benchmark/signalement-refonte.html)\n\nPlay sur « 1 · Type » (ou sur le + de n'importe quelle barre d'onglets) : une question par écran, Continuer toujours en pied d'écran. Lieu : l'épingle reste au centre, la carte bouge dessous ; Photo : caméra et galerie simulées, envoi avec progression ; Aperçu : « Modifier » par bloc, 24 h et service destinataire ; Publier → publication → trajet Vous · 95 Alerte · Analyse · Service. × ouvre « Garder le brouillon / Abandonner ».\n\nDécisions : H1 titre obligatoire proposé d'après la catégorie et le lieu, description et photo facultatives ; H2 l'aperçu tient lieu de confirmation ; H3 identité sans choix par défaut la première fois, puis le dernier choix repris ; H4 brouillon gardé dans la session (« Reprendre votre signalement ? ») ; H5 photos seulement (3 au plus), caméra et galerie simulées ; H6 invité : feuille « Connectez-vous pour signaler » sur la carte.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+      "text": "Phase 6 · création d'une alerte (rapport docs/benchmark/signalement-refonte.html)\n\nPlay sur « 1 · Type » (ou sur le + de n'importe quelle barre d'onglets) : une question par écran, Continuer toujours en pied d'écran. Lieu : l'épingle reste au centre, la carte bouge dessous ; Photo : vraie caméra si l'appareil en a une (le navigateur demande l'autorisation ; refus → galerie), sinon caméra simulée ; galerie de démonstration, envoi avec progression ; Aperçu : « Modifier » par bloc, 24 h et service destinataire ; Publier → publication → trajet Vous · 95 Alerte · Analyse · Service. × ouvre « Garder le brouillon / Abandonner ».\n\nDécisions : H1 titre obligatoire proposé d'après la catégorie et le lieu, description et photo facultatives ; H2 l'aperçu tient lieu de confirmation ; H3 identité sans choix par défaut la première fois, puis le dernier choix repris ; H4 brouillon gardé dans la session (« Reprendre votre signalement ? ») ; H5 photos seulement (3 au plus), caméra et galerie simulées ; H6 invité : feuille « Connectez-vous pour signaler » sur la carte.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
     }
   },
   "designSystems": []

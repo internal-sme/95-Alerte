@@ -73,13 +73,46 @@ export function suggestTitle(d) {
 /* 6.6 : photos simulées (H5) — caméra avec consigne, galerie fictive, envoi avec progression, erreur et réessai */
 export const demoGallery = () => Object.keys(PHOTO_ALT); // photos de démonstration (définies avec la fiche, phase 5)
 
+/* Vraie caméra quand l'appareil en a une (getUserMedia) : le navigateur demande l'autorisation.
+   Sans caméra, ou si la page n'y a pas droit (ex. artefact intégré sans droit caméra), caméra simulée. */
+export async function detectCamera() {
+  const md = navigator.mediaDevices;
+  if (!md || !md.getUserMedia || !window.isSecureContext) return "none";
+  const doc = document as Document & { permissionsPolicy?: { allowsFeature(feature: string): boolean }; featurePolicy?: { allowsFeature(feature: string): boolean } };
+  const policy = doc.permissionsPolicy || doc.featurePolicy;
+  if (policy && policy.allowsFeature && !policy.allowsFeature("camera")) return "none";
+  try {
+    const devices = await md.enumerateDevices();
+    return devices.some((dev) => dev.kind === "videoinput") ? "available" : "none";
+  } catch (e) {
+    return "none";
+  }
+}
+
+export const CAMERA_MAX_SIDE = 1600; // photo réduite avant l'envoi (la capture d'écran du flux ne contient aucune métadonnée de position)
+
+export function captureFrame(video) {
+  const k = Math.min(1, CAMERA_MAX_SIDE / Math.max(video.videoWidth, video.videoHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(video.videoWidth * k);
+  canvas.height = Math.round(video.videoHeight * k);
+  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.85);
+}
+
+export const CAMERA_STATES = {
+  asking: { icon: "camera", title: "Autorisez l'accès à l'appareil photo", text: "Votre navigateur vous demande l'autorisation. L'appareil photo sert uniquement à photographier votre signalement." },
+  denied: { icon: "camera-slash", title: "Accès à l'appareil photo refusé", text: "Pour prendre une photo, autorisez l'appareil photo dans les réglages de votre navigateur. Vous pouvez aussi choisir une photo dans la galerie." },
+  unavailable: { icon: "camera-slash", title: "Appareil photo indisponible", text: "Il est peut-être utilisé par une autre application. Réessayez, ou choisissez une photo dans la galerie." },
+};
+
 /* L'alerte telle qu'elle sera publiée (aperçu et publication) */
 export function draftAlert(d: Draft, now: number, id = "draft"): Alert {
   const p = d.place;
   return {
     id, categoryId: d.categoryId, title: d.title.trim(), description: (d.description || "").trim(), communeId: p.communeId, quartier: p.quartier, street: p.street || "",
     lat: p.lat, lng: p.lng, createdAt: now, expiresAt: now + ALERT_TTL, authorId: ME_ID, anonymous: d.identity === "anonymous",
-    votesUp: 0, votesDown: 0, commentsCount: 0, hasPhoto: d.photos.length > 0, photos: d.photos.filter((ph) => ph.status === "done").map((ph) => ph.key),
+    votesUp: 0, votesDown: 0, commentsCount: 0, hasPhoto: d.photos.length > 0, photos: d.photos.filter((ph) => ph.status === "done").map((ph) => ph.src || ph.key),
     transmission: "transmis", status: "active", duplicateGroup: null, areaKm: null,
   };
 }

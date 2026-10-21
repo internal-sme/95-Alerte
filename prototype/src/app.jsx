@@ -314,7 +314,7 @@ function cx(...parts) {
    ===================================================================== */
 const PREFS_KEY = "95alerte:prefs";
 const DEFAULT_PREFS = { theme: "system", textScale: 100, highContrast: false, reduceMotion: false, onboardingSeen: false, reportHintSeen: false, homeView: "map", mapStyle: "plan" };
-const DEFAULT_DEMO = { offline: false, permissionDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
+const DEFAULT_DEMO = { offline: false, permissionDenied: false, cameraDenied: false, gpsUnavailable: false, networkError: false, emptyZone: false, manyAlerts: false, timeSpeed: 1 };
 
 function initialAuth() {
   return {
@@ -2643,19 +2643,99 @@ function StepDescription({ d, set, next }) {
 
 /* 6.6 : photos simulées (H5) — caméra avec consigne, galerie fictive, envoi avec progression, erreur et réessai */
 const demoGallery = () => Object.keys(PHOTO_ALT); // photos de démonstration (définies avec la fiche, phase 5)
-function CameraOverlay({ photoKey, onShoot, onClose }) {
+/* Vraie caméra quand l'appareil en a une (getUserMedia) : le navigateur demande l'autorisation.
+   Sans caméra, ou si la page n'y a pas droit (ex. artefact intégré sans droit caméra), caméra simulée. */
+async function detectCamera() {
+  const md = navigator.mediaDevices;
+  if (!md || !md.getUserMedia || !window.isSecureContext) return "none";
+  const policy = document.permissionsPolicy || document.featurePolicy;
+  if (policy && policy.allowsFeature && !policy.allowsFeature("camera")) return "none";
+  try {
+    const devices = await md.enumerateDevices();
+    return devices.some((dev) => dev.kind === "videoinput") ? "available" : "none";
+  } catch (e) {
+    return "none";
+  }
+}
+const CAMERA_MAX_SIDE = 1600; // photo réduite avant l'envoi (la capture d'écran du flux ne contient aucune métadonnée de position)
+function captureFrame(video) {
+  const k = Math.min(1, CAMERA_MAX_SIDE / Math.max(video.videoWidth, video.videoHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(video.videoWidth * k);
+  canvas.height = Math.round(video.videoHeight * k);
+  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.85);
+}
+const CAMERA_STATES = {
+  asking: { icon: "camera", title: "Autorisez l'accès à l'appareil photo", text: "Votre navigateur vous demande l'autorisation. L'appareil photo sert uniquement à photographier votre signalement." },
+  denied: { icon: "camera-slash", title: "Accès à l'appareil photo refusé", text: "Pour prendre une photo, autorisez l'appareil photo dans les réglages de votre navigateur. Vous pouvez aussi choisir une photo dans la galerie." },
+  unavailable: { icon: "camera-slash", title: "Appareil photo indisponible", text: "Il est peut-être utilisé par une autre application. Réessayez, ou choisissez une photo dans la galerie." },
+};
+function CameraOverlay({ photoKey, onShoot, onClose, onGallery, forced }) {
+  const { state } = useStore();
+  const [mode, setMode] = useState(forced || "detecting"); // detecting · asking · live · denied · unavailable · simulated
+  const [attempt, setAttempt] = useState(0);
+  const video = useRef(null);
+  const stream = useRef(null);
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+  useEffect(() => {
+    if (forced) return undefined;
+    let cancelled = false;
+    (async () => {
+      if (state.demo.cameraDenied) { setMode("denied"); return; }
+      if ((await detectCamera()) !== "available") { if (!cancelled) setMode("simulated"); return; }
+      if (cancelled) return;
+      setMode("asking");
+      try {
+        const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+        if (cancelled) { s.getTracks().forEach((t) => t.stop()); return; }
+        stream.current = s;
+        setMode("live");
+      } catch (e) {
+        if (cancelled) return;
+        if (e.name === "NotAllowedError" || e.name === "SecurityError") setMode("denied");
+        else if (e.name === "NotFoundError" || e.name === "OverconstrainedError" || e.name === "NotSupportedError") setMode("simulated");
+        else setMode("unavailable");
+      }
+    })();
+    return () => { cancelled = true; if (stream.current) { stream.current.getTracks().forEach((t) => t.stop()); stream.current = null; } };
+  }, [forced, attempt, state.demo.cameraDenied]);
+  useEffect(() => {
+    if (mode === "live" && video.current && stream.current) { video.current.srcObject = stream.current; video.current.play().catch(() => {}); }
+  }, [mode]);
+  const shoot = () => {
+    if (mode === "live") { const v = video.current; if (v && v.videoWidth) onShoot({ src: captureFrame(v) }); return; }
+    onShoot({ key: photoKey });
+  };
+  const info = CAMERA_STATES[mode];
+  const canShoot = mode === "live" || mode === "simulated";
   return (
-    <div className="camera" role="dialog" aria-modal="true" aria-label="Appareil photo (simulé)">
-      {ALERT_PHOTOS[photoKey] ? <img src={ALERT_PHOTOS[photoKey]} alt="" className="camera-view" /> : <span className="camera-view" />}
-      <p className="camera-tip"><Icon name="info" />Photographiez le problème ou le lieu. Évitez les visages et les plaques d'immatriculation.</p>
+    <div className="camera" role="dialog" aria-modal="true" aria-label={mode === "simulated" ? "Appareil photo (simulé)" : "Appareil photo"}>
+      {mode === "live" ? <video ref={video} className="camera-view" autoPlay playsInline muted aria-label="Aperçu de l'appareil photo" /> : null}
+      {mode === "simulated" ? (ALERT_PHOTOS[photoKey] ? <img src={ALERT_PHOTOS[photoKey]} alt="" className="camera-view" /> : <span className="camera-view" />) : null}
+      {canShoot ? (
+        <p className="camera-tip"><Icon name="info" /><span>Photographiez le problème ou le lieu. Évitez les visages et les plaques d'immatriculation.{mode === "simulated" ? <small>Aucun appareil photo accessible ici : photo de démonstration.</small> : null}</span></p>
+      ) : null}
+      {info ? (
+        <div className="camera-state" role={mode === "asking" ? "status" : "alert"}>
+          <Spot icon={info.icon} tone="neutral" />
+          <h2>{info.title}</h2>
+          <p>{info.text}</p>
+          {mode === "denied" || mode === "unavailable" ? (
+            <div className="camera-actions">
+              {mode === "unavailable" ? <Button block icon="arrows-clockwise" onClick={() => { setMode("detecting"); setAttempt((n) => n + 1); }}>Réessayer</Button> : null}
+              <Button block variant={mode === "unavailable" ? "secondary" : "primary"} icon="image" onClick={onGallery}>Choisir dans la galerie</Button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       <div className="camera-bar">
         <button type="button" className="btn btn-tertiary camera-cancel" onClick={onClose}>Annuler</button>
-        <button type="button" className="shutter" aria-label="Prendre la photo" onClick={onShoot}><span /></button>
+        {canShoot ? <button type="button" className="shutter" aria-label="Prendre la photo" onClick={shoot}><span /></button> : <span />}
         <span className="camera-spacer" />
       </div>
     </div>
@@ -2664,7 +2744,7 @@ function CameraOverlay({ photoKey, onShoot, onClose }) {
 function PhotoThumb({ ph, onRemove, onRetry }) {
   return (
     <div className={cx("photo-thumb", ph.status === "error" && "is-error")}>
-      {ALERT_PHOTOS[ph.key] ? <img src={ALERT_PHOTOS[ph.key]} alt={PHOTO_ALT[ph.key]} /> : null}
+      {ph.src ? <img src={ph.src} alt="Photo prise avec l'appareil photo" /> : ALERT_PHOTOS[ph.key] ? <img src={ALERT_PHOTOS[ph.key]} alt={PHOTO_ALT[ph.key]} /> : null}
       {ph.status === "uploading" ? <span className="pt-progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={ph.progress} aria-label="Envoi de la photo"><i style={{ width: `${ph.progress}%` }} /><small>{ph.progress < 40 ? "Compression…" : `Envoi ${ph.progress} %`}</small></span> : null}
       {ph.status === "error" ? <button type="button" className="pt-retry" onClick={onRetry}><Icon name="arrows-clockwise" />Réessayer</button> : null}
       <IconButton icon="x" label="Retirer la photo" className="pt-remove" onClick={onRemove} />
@@ -2674,13 +2754,13 @@ function PhotoThumb({ ph, onRemove, onRetry }) {
 function StepPhoto({ d, next }) {
   const { state, dispatch } = useStore();
   const { toast, openSheet } = useActions();
-  const [camera, setCamera] = useState(!!d.camera);
+  const [camera, setCamera] = useState(d.camera || false); // true : ouvrir la caméra ; « asking », « denied »… : état forcé (démo)
   useEffect(() => { if (d.camera) dispatch({ type: "DRAFT_SET", patch: { camera: false } }); }, []);
   const photos = d.photos;
   const uploading = photos.some((ph) => ph.status === "uploading");
   const cat = CATEGORY_BY_ID[d.categoryId];
   const suggested = demoGallery().find((k) => { const id = k.split("-")[0]; const a = SEED_ALERTS.find((x) => x.id === id); return a && a.categoryId === d.categoryId; }) || demoGallery()[0];
-  const add = (key) => { if (photos.length >= MAX_PHOTOS) return; dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key, status: "uploading", progress: 0 } }); };
+  const add = (shot) => { if (photos.length >= MAX_PHOTOS) return; dispatch({ type: "DRAFT_PHOTO", photo: { id: `ph-${Date.now()}`, key: shot.key || null, src: shot.src || null, status: "uploading", progress: 0 } }); };
   // Envoi simulé : compression puis envoi ; échec si le mode démo « erreur réseau » est actif
   useEffect(() => {
     if (!uploading) return undefined;
@@ -2710,10 +2790,10 @@ function StepPhoto({ d, next }) {
             <Button variant="secondary" icon="image" onClick={() => openSheet("report-gallery", {})}>Choisir dans la galerie</Button>
           </div>
         ) : <p className="report-lead">{MAX_PHOTOS} photos au plus : retirez-en une pour en ajouter une autre.</p>}
-        <p className="demo-note">Prototype : l'appareil photo et la galerie sont simulés avec des photos de démonstration.</p>
+        <p className="demo-note">Prototype : l'appareil photo de l'appareil est utilisé s'il est accessible, sinon simulé ; la galerie montre des photos de démonstration.</p>
       </div>
       <ReportFooter><Button block disabled={uploading} onClick={next}>{uploading ? "Envoi en cours…" : photos.length ? "Continuer" : "Continuer sans photo"}</Button></ReportFooter>
-      {camera ? <CameraOverlay photoKey={suggested} onClose={() => setCamera(false)} onShoot={() => { add(suggested); setCamera(false); }} /> : null}
+      {camera ? <CameraOverlay photoKey={suggested} forced={typeof camera === "string" ? camera : null} onClose={() => setCamera(false)} onGallery={() => { setCamera(false); openSheet("report-gallery", {}); }} onShoot={(shot) => { add(shot); setCamera(false); }} /> : null}
     </Fragment>
   );
 }
@@ -2764,7 +2844,7 @@ function draftAlert(d, now, id = "draft") {
   return {
     id, categoryId: d.categoryId, title: d.title.trim(), description: (d.description || "").trim(), communeId: p.communeId, quartier: p.quartier, street: p.street || "",
     lat: p.lat, lng: p.lng, createdAt: now, expiresAt: now + ALERT_TTL, authorId: ME_ID, anonymous: d.identity === "anonymous",
-    votesUp: 0, votesDown: 0, commentsCount: 0, hasPhoto: d.photos.length > 0, photos: d.photos.filter((ph) => ph.status === "done").map((ph) => ph.key),
+    votesUp: 0, votesDown: 0, commentsCount: 0, hasPhoto: d.photos.length > 0, photos: d.photos.filter((ph) => ph.status === "done").map((ph) => ph.src || ph.key),
     transmission: "transmis", status: "active", duplicateGroup: null, areaKm: null,
   };
 }
@@ -4143,7 +4223,8 @@ const PHOTO_ALT = {
   "a30-1": "Chemin de halage recouvert par l'Oise, banc à moitié dans l'eau",
 };
 function alertPhotos(alert) {
-  if (alert.photos) return alert.photos.filter((k) => ALERT_PHOTOS[k]).map((k, i) => ({ id: `${alert.id}-${i}`, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
+  // alert.photos : clés des photos de démonstration ou photos prises avec l'appareil photo (data URL)
+  if (alert.photos) return alert.photos.map((k, i) => (k.startsWith("data:") ? { id: `${alert.id}-${i}`, src: k, alt: "Photo jointe au signalement" } : { id: `${alert.id}-${i}`, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] })).filter((ph) => ph.src);
   return Object.keys(PHOTO_ALT).filter((k) => k.startsWith(`${alert.id}-`) && ALERT_PHOTOS[k]).map((k) => ({ id: k, src: ALERT_PHOTOS[k], alt: PHOTO_ALT[k] }));
 }
 
@@ -4780,7 +4861,11 @@ const PHASE_SCREENS = [
     ["Lieu hors du Val-d'Oise", (s) => jumpReport(s, { step: "place", title: "", place: { inside: false, lat: 49.2, lng: 1.45 } })],
     ["Étape 4 · Description (titre proposé)", (s) => jumpReport(s, { step: "description", title: "", description: "" })],
     ["Étape 5 · Photo", (s) => jumpReport(s, { step: "photo", photos: [] })],
-    ["Caméra (simulée)", (s) => jumpReport(s, { step: "photo", photos: [], camera: true })],
+    ["Caméra (réelle si disponible, sinon simulée)", (s) => jumpReport(s, { step: "photo", photos: [], camera: true })],
+    ["Caméra simulée (aucun appareil photo)", (s) => jumpReport(s, { step: "photo", photos: [], camera: "simulated" })],
+    ["Caméra : autorisation demandée", (s) => jumpReport(s, { step: "photo", photos: [], camera: "asking" })],
+    ["Caméra : accès refusé", (s) => jumpReport(s, { step: "photo", photos: [], camera: "denied" })],
+    ["Caméra : indisponible", (s) => jumpReport(s, { step: "photo", photos: [], camera: "unavailable" })],
     ["Galerie", (s) => jumpReport(s, { step: "photo", photos: [] }, { sheet: jumpSheet("report-gallery") })],
     ["Photos en cours d'envoi", (s) => jumpReport(s, { step: "photo", photos: [{ id: "ph-1", key: "a1-1", status: "done", progress: 100 }, { id: "ph-2", key: "a1-2", status: "uploading", progress: 40 }] })],
     ["Échec de l'envoi d'une photo", (s) => jumpReport(s, { step: "photo", photos: [{ id: "ph-1", key: "a1-1", status: "error", progress: 60 }] }, { demo: { networkError: true } })],
@@ -4856,6 +4941,7 @@ function DemoPanel() {
           <hr />
           <Switch id="demo-offline" label="Hors connexion" checked={d.offline} onChange={(v) => setDemo("offline", v)} />
           <Switch id="demo-perm" label="Localisation refusée" checked={d.permissionDenied} onChange={(v) => setDemo("permissionDenied", v)} />
+          <Switch id="demo-camera" label="Appareil photo refusé" checked={d.cameraDenied} onChange={(v) => setDemo("cameraDenied", v)} />
           <Switch id="demo-gps" label="Position introuvable" checked={d.gpsUnavailable} onChange={(v) => setDemo("gpsUnavailable", v)} />
           <Switch id="demo-error" label="Erreur réseau" checked={d.networkError} onChange={(v) => setDemo("networkError", v)} />
           <Switch id="demo-empty" label="Zone sans alerte" checked={d.emptyZone} onChange={(v) => setDemo("emptyZone", v)} />

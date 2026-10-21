@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Signaler · Caméra : indisponible</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/127f05763423314958ff0e5c7ffbfd12">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95">
+<div class="stack-layer is-modal"><div class="screen report-flow"><header class="screen-header"><button type="button" class="icon-btn" aria-label="Étape précédente"><span class="ph i i-caret-left" aria-hidden="true"></span></button><h1>Signaler</h1><button type="button" class="icon-btn" aria-label="Quitter le signalement"><span class="ph i i-x" aria-hidden="true"></span></button></header><div class="report-progress"><div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="5" aria-label="Étape 5 sur 7"><div class="lbl"><span>Étape 5 sur 7</span><span>Photo</span></div><div class="track"><i style="width: 71.4286%;"></i></div></div></div><div class="screen-pad report-body"><h2 class="question">Ajoutez une photo</h2><p class="report-lead">Facultatif. Une photo aide le service à comprendre la situation, mais ne vous mettez pas en danger pour la prendre.</p><div class="photo-actions"><button type="button" class="btn btn-secondary"><span class="ph i i-camera" aria-hidden="true"></span>Prendre une photo</button><button type="button" class="btn btn-secondary"><span class="ph i i-image" aria-hidden="true"></span>Choisir dans la galerie</button></div><p class="demo-note">Prototype : l'appareil photo de l'appareil est utilisé s'il est accessible, sinon simulé ; la galerie montre des photos de démonstration.</p></div><div class="screen-footer report-footer"><button type="button" class="btn btn-primary btn-block">Continuer sans photo</button></div><div class="camera" role="dialog" aria-modal="true" aria-label="Appareil photo"><div class="camera-state" role="alert"><span class="spot tone-neutral" aria-hidden="true"><span class="ph i i-camera-slash-duotone" aria-hidden="true"></span></span><h2>Appareil photo indisponible</h2><p>Il est peut-être utilisé par une autre application. Réessayez, ou choisissez une photo dans la galerie.</p><div class="camera-actions"><a class="btn btn-primary btn-block" href="{{l.ReportCameraAsking}}"><span class="ph i i-arrows-clockwise" aria-hidden="true"></span>Réessayer</a><a class="btn btn-secondary btn-block" href="{{l.ReportGallery}}"><span class="ph i i-image" aria-hidden="true"></span>Choisir dans la galerie</a></div></div><div class="camera-bar"><a class="btn btn-tertiary camera-cancel" href="{{l.ReportPhoto}}">Annuler</a><span></span><span class="camera-spacer"></span></div></div></div></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark": {"editor": "boolean", "default": false}, "$preview": {"width": 390, "height": 844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const go = (n) => n + s + '.dc.html';
+    return { theme: s ? 't-dark' : 't-light', l: { Activity: go('Activity'), Alerts: go('Alerts'), Login: go('Login'), Main: go('Main'), MapSelected: go('MapSelected'), Profile: go('Profile'), Report: go('Report'), ReportCameraAsking: go('ReportCameraAsking'), ReportGallery: go('ReportGallery'), ReportPhoto: go('ReportPhoto') } };
+  }
+}
+</script>
+</body>
+</html>
