@@ -3563,10 +3563,10 @@ function DemoSheetContent() {
 const ALERT_PHOTOS = (typeof window !== "undefined" && window.ALERT_PHOTOS) || {};
 const PHOTO_ALT = {
   "a1-1": "Fumée noire au-dessus des immeubles, vue depuis la rue près de la gare de Pontoise",
-  "a1-2": "Fumée grise qui s'échappe du toit d'un immeuble ancien, rue Carnot",
-  "a4-1": "Bénévoles vus de dos, gants aux mains, qui remplissent des sacs sur la pelouse du parc",
+  "a1-2": "Fumée grise qui s'échappe du toit d'une maison ancienne en pierre, rue Carnot",
+  "a4-1": "Bénévoles gantés qui remplissent des sacs-poubelle sur la pelouse du parc",
   "a6-1": "Nid-de-poule rempli d'eau au milieu de la chaussée",
-  "a8-1": "Chêne tombé en travers de la voie de droite, voitures à l'arrêt derrière",
+  "a8-1": "Gros arbre déraciné tombé en travers de la rue, sur une voiture jaune garée",
   "a30-1": "Chemin de halage recouvert par l'Oise, banc à moitié dans l'eau",
 };
 function alertPhotos(alert) {
@@ -4185,7 +4185,7 @@ const PHASE_SCREENS = [
     ["Onboarding · choix de la carte", jumpOnb("map-style", 0, { position: DEMO_GPS, pending: { communeId: "pontoise", source: "gps", coords: { lat: 49.05388, lng: 2.09924 } } })],
     ["Carte satellite", (s) => jumpApp(s, { prefs: { mapStyle: "satellite" } })],
     ["Carte satellite · alerte sélectionnée", (s) => jumpApp(s, { prefs: { mapStyle: "satellite" }, mapFocus: { kind: "alert", id: "a30" } })],
-    ["Fiche · mini-carte satellite", (s) => jumpApp(s, { prefs: { mapStyle: "satellite" }, nav: jumpAlert("a1") })],
+    ["Fiche · mini-carte satellite", (s) => jumpApp(s, { prefs: { mapStyle: "satellite" }, nav: jumpAlert("a31") })],
     ["Fond de carte (depuis la carte)", (s) => jumpApp(s, { sheet: jumpSheet("map-style") })],
     ["Profil · fond de carte", (s) => jumpApp(s, { nav: { tab: "profile", stack: [] } })],
   ] },
