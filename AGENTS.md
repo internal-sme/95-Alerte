@@ -31,11 +31,12 @@ Puis inspecter les composants existants du prototype **avant d'en créer un nouv
 - Ne jamais présenter l'app comme un service de secours : afficher le rappel d'urgence pour les catégories critiques.
 - En cas de conflit entre documents ou de décision manquante importante (voir PRD §13), **demander** avant de faire une hypothèse majeure. Pour une hypothèse mineure, la signaler dans un commentaire.
 
-## Livrables à chaque phase — deux versions, toujours
+## Livrables à chaque phase — trois versions, toujours
 
-Une phase n'est terminée que lorsque **les deux versions** sont à jour et publiées :
+Une phase n'est terminée que lorsque **les trois versions** sont à jour (et les deux premières publiées) :
 1. **Prototype React** : `prototype/src/` → `python3 tools/build_prototype.py` → `prototype/index.html`, publié sur https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw. Les écrans et états de la phase sont ajoutés au catalogue `PHASE_SCREENS` (panneau Démo › « Écrans par phase », un bouton par écran) ; la dernière phase y rend jouables les scénarios de test du PRD.
 2. **Canevas de preview** (type Design) : une planche `.dc.html` par nouvel écran ou état, en clair et en sombre, reliées entre elles pour le bouton Play, **sans cadre de téléphone** (les planches ne peuvent pas savoir si elles sont affichées sur le canevas ou en Play). Sources dans `prototype/canvas/`, publié sur https://claude.ai/artifact/Sd2XN1KjGF8LzZ1rtBfvm4 (voir `prototype/canvas/README.md`).
+3. **Code source React + TypeScript** : `apps/prototype-web/` (Vite, voir son `README.md`). **Chaque modification du canevas (nouvelle planche, écran ou état modifié) est aussi codée dans cette version**, dans le même commit ou la même PR : composant dans le bon dossier (`components/`, `screens/<parcours>/`…), un fichier par composant, interface `<Composant>Props`, types du domaine dans `src/types.ts`, écran ajouté au catalogue `demo/catalog.ts`. Avant de livrer : `npm run typecheck` et `npm run build` sans erreur, et le même écran vérifié dans les deux prototypes (texte et rendu identiques, en clair et en sombre).
 
 ## Conception des écrans — à chaque phase
 
@@ -58,6 +59,7 @@ Une phase n'est terminée que lorsque **les deux versions** sont à jour et publ
 
 ## Code Guidelines (prototype)
 
+- Code source React + TypeScript (`apps/prototype-web/src/`) : TypeScript avec des versions exactes (Vite 5.4.11, React 18.3.1, TypeScript 5.6.3), imports avec l'alias `@/`, aucun `any` ajouté sans raison, aucune nouvelle dépendance sans accord. Les CSS, le sprite et les ressources ne sont jamais copiés : le projet lit `docs/design-system/index.html`, `prototype/src/app.css`, `prototype/src/phosphor-sprite.svg` et les images de `prototype/src/` et `docs/brand/`.
 - Livrable : un seul fichier `prototype/index.html`, **généré** par `python3 tools/build_prototype.py` à partir de `prototype/src/` (`app.jsx`, `app.css`, `phosphor-sprite.svg`) et du CSS de `docs/design-system/index.html`. On modifie `prototype/src/`, jamais `index.html` à la main. Scripts : React 18.3.1 + ReactDOM depuis `cdnjs.cloudflare.com`, Babel `@babel/standalone@7.26.4` depuis `cdn.jsdelivr.net/npm/`, toujours avec des **versions exactes**. Icônes Phosphor intégrées en **sprite SVG** dans la page (généré par `tools/build_phosphor_sprite.py` depuis `@phosphor-icons/core@2.1.1`) : les artefacts bloquent les feuilles de style jsDelivr. Aucune autre ressource externe : pas de tuiles de carte, pas de polices hors Google Fonts.
 - Le CSS des tokens et des composants vient de `docs/design-system/index.html` : le reprendre tel quel, et y ajouter tout nouveau composant avant de l'utiliser.
 - Composants fonctionnels React, petits et réutilisables ; noms en anglais PascalCase (`AlertCard`, `VoteBar`), textes UI en français.
@@ -91,6 +93,12 @@ python3 tools/build_prototype.py   # régénère prototype/index.html depuis pro
 npx serve prototype                # ou : python3 -m http.server -d prototype 8080
 # icônes : npm pack @phosphor-icons/core@2.1.1 && tar xzf phosphor-icons-core-2.1.1.tgz
 #          python3 tools/build_phosphor_sprite.py package/assets > prototype/src/phosphor-sprite.svg
+```
+Code source React (Vite + TypeScript), même prototype en modules : voir `apps/prototype-web/README.md`.
+```bash
+cd apps/prototype-web && npm install && npm run dev   # http://localhost:5173
+npm run typecheck && npm run build
+tools/prototype_to_vite/convert.sh                     # reconvertit src/ depuis prototype/src/app.jsx
 ```
 Les commandes de l'application de production (pnpm + Turborepo) seront fixées à l'initialisation du monorepo ; stack proposée dans ARCHITECTURE §7.
 

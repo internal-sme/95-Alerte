@@ -37,7 +37,7 @@
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ✅ Terminée (validée, PR vers `develop`) |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (internal-sme/95-Alerte#15) |
 | 5 | Fiche alerte + votes | ALERT-03 | ✅ Terminée (validée, PR vers `develop`) |
-| 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ⬜ À faire |
+| 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ✅ Terminée (validée, PR vers `develop`) |
 | 7 | Commentaires + signalement de contenu | ALERT-04 | ⬜ À faire |
 | 8 | Activité + notifications | PROFILE-01, UI-013 | ⬜ À faire |
 | 9 | Profil, paramètres, aide, légal | UI-014→024 | ⬜ À faire |
@@ -251,21 +251,29 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - Publication : écran dédié « Alerte publiée » → animation de routage vers « Service Propreté · Ville de Cergy » → retour à la carte centrée sur l'alerte, avec toast (Google Maps, Bird)
 - Première publication → proposition d'activer les notifications de suivi (Transit)
 
-- [ ] **6.1** Stepper « Étape n sur 7 » avec barre de progression, retour arrière, quitter avec confirmation (brouillon)
-- [ ] **6.2** **Type** : « Que souhaitez-vous signaler ? » — Un événement positif / Un événement négatif (RadioCards)
-- [ ] **6.3** **Catégorie** : grille d'icônes filtrée selon le type ; rappel d'urgence si la catégorie est critique
-- [ ] **6.4** **Localisation** : Utiliser ma position · Choisir sur la carte (épingle déplaçable) · Rechercher une adresse → adresse affichée → **Confirmer cette position** ; refus hors territoire
-- [ ] **6.5** **Description** : titre (placeholder « Arbre tombé sur la chaussée »), description avec aide et compteur, validation
-- [ ] **6.6** **Photo / vidéo** : prendre/sélectionner (simulé avec des visuels fictifs), aperçu, supprimer, remplacer, progression de compression et d'envoi, erreur d'upload + Réessayer, toast « Photo ajoutée. »
-- [ ] **6.7** **Identité** : « Comment souhaitez-vous publier votre signalement ? » — Publier avec mon profil / Publier anonymement, avec aperçu de l'affichage public
-- [ ] **6.8** **Prévisualisation** : récapitulatif + durée de 24 heures → **Publier l'alerte** (confirmation)
-- [ ] **6.9** **Publication** : chargement → « ✓ Votre alerte a été publiée. » → animation de routage (Citoyen → 95 Alerte → Analyse → Service) → « ✓ Votre signalement a été transmis au service compétent. » (nom du service selon la catégorie et la commune)
-- [ ] **6.10** L'alerte créée apparaît sur la carte, dans la liste et dans « Mes alertes » ; notification « Alerte publiée »
-- [ ] **6.11** Erreurs : « Impossible de publier votre alerte. Vérifiez votre connexion. », publication refusée ; utilisateur non connecté → invitation à se connecter
+**Décisions validées par l'utilisateur (« vas-y » sur les recommandations du rapport `docs/benchmark/signalement-refonte.html`)**
+- **H1** : titre obligatoire, proposé d'après la catégorie et le lieu (« Incendie rue Carnot »), modifiable ; description et photo facultatives (« Continuer sans photo »)
+- **H2** : l'étape « Aperçu » est la confirmation (carte telle qu'elle sera vue, « Modifier » par bloc, 24 h, public, service) ; « Publier l'alerte » publie sans modale de plus
+- **H3** : identité sans choix par défaut la première fois ; ensuite le dernier choix est présélectionné (préférence `lastIdentity`), toujours modifiable
+- **H4** : brouillon gardé dans le store pour la session (pas dans localStorage) ; quitter propose « Garder le brouillon » / « Abandonner », puis « Reprendre votre signalement ? » au prochain +
+- **H5** : photos seulement (3 au plus), caméra simulée avec consigne et galerie de démonstration ; pas de vidéo simulée
+- **H6** : invité qui touche + → feuille « Connectez-vous pour signaler » par-dessus la carte (comme pour voter)
 
-- [ ] **6.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+- [x] **6.1** Écran empilé plein écran depuis le + : en-tête ‹ · Signaler · ×, « Étape n sur 7 » avec barre, une question par écran, CTA dans le pied d'écran, smart animate (barre, question, bouton) ; × → « Quitter le signalement ? » Garder le brouillon / Abandonner (H4)
+- [x] **6.2** **Type** : « Que souhaitez-vous signaler ? » — Un événement positif / Un événement négatif (RadioCards)
+- [x] **6.3** **Catégorie** : grille d'icônes filtrée selon le type et groupée par famille ; « Ne signalez que si vous êtes en sécurité » (→ Situation urgente ?) pour les incidents
+- [x] **6.4** **Localisation** : épingle fixe au centre, la carte bouge dessous (glisser, zoom, flèches du clavier), alertes existantes estompées, adresse en direct (rue la plus proche, quartier, commune) et précision affichée selon la catégorie, recherche d'adresse, « Utiliser ma position » → **Confirmer cette position** ; hors du Val-d'Oise : bouton inactif et message
+- [x] **6.5** **Description** : titre proposé (H1) avec compteur, description facultative avec aide (« ni nom, ni numéro de téléphone, ni plaque »), validation (5 caractères au moins)
+- [x] **6.6** **Photo** (H5) : caméra simulée avec consigne, galerie de démonstration, vignettes avec progression (compression puis envoi), retirer, erreur d'envoi + Réessayer, toast « Photo ajoutée. », 3 photos au plus
+- [x] **6.7** **Identité** : « Comment souhaitez-vous publier votre signalement ? » — Publier avec mon profil (« Les autres verront : Jean D. ») / Publier anonymement (« Citoyen anonyme », traçabilité rappelée) ; dernier choix repris (H3)
+- [x] **6.8** **Aperçu** (H2) : la carte d'alerte telle qu'elle sera publiée, récapitulatif avec « Modifier » par bloc, « Visible par tous pendant 24 heures », service destinataire → **Publier l'alerte**
+- [x] **6.9** **Publication** : chargement → « ✓ Votre alerte a été publiée. » → animation de routage (Citoyen → 95 Alerte → Analyse → Service) → « ✓ Votre signalement a été transmis au service compétent. » (nom du service selon la catégorie et la commune)
+- [x] **6.10** L'alerte créée apparaît sur la carte, dans la liste et dans « Mes alertes » ; notification « Votre alerte a été publiée » ; « Voir sur la carte » (centrée sur l'alerte) / « Voir mon alerte » (fiche)
+- [x] **6.11** Erreurs : « Impossible de publier votre alerte. Vérifiez votre connexion. » (Réessayer, brouillon gardé), aperçu hors connexion (publication désactivée), publication refusée (téléphone, plaque ou e-mail dans le texte) ; invité → feuille de connexion (H6)
 
-**Validation** : S3 (positif, identifié) et S4 (incendie, anonyme, transmission au service) jouables de bout en bout en moins de 60 s.
+- [x] **6.C** Canevas : page « Phase 6 · Création d'une alerte », 21 planches en clair et en sombre reliées pour Play ; la planche « Signaler » (cible du + de toutes les barres d'onglets) ouvre désormais le parcours
+
+**Validation** : S3 (positif, identifié) et S4 (incendie, anonyme, transmission au service) jouables de bout en bout en moins de 60 s. Vérifié : S4 (incendie rue Carnot, anonyme, 1 photo) publié et transmis à « Sécurité et secours · Val-d'Oise », visible sur la carte, la fiche et Mes alertes ; S3 (culture à Cergy, identifié, adresse recherchée) publié sous « Jean D. » ; brouillon repris à l'étape 3 sur 7.
 
 ---
 
@@ -423,3 +431,7 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-21 | 5 | Nouvelle tâche 5.12 demandée par l'utilisateur : choix du fond de carte Plan / Satellite (onboarding étape 3 sur 3, Profil, bouton calques de la carte). Google Earth testé : impossible dans un artefact (scripts, images et cadres Google bloqués, clé d'API, conditions d'utilisation) ; vue satellite construite à partir des images libres Copernicus Sentinel-2 (AWS Open Data, accessibles depuis l'environnement), 2 niveaux (département 25 m, Cergy-Pontoise 10 m), embarquées en WebP (1,4 Mo). Démo › Écrans par phase : 6 écrans de plus ; canevas : 7 planches de plus. |
 | 2026-10-21 | 5 | Accès réseau ouvert par l'utilisateur : les 6 photos Magnific sont importées (incendie gare et rue Carnot, nettoyage du parc, nid-de-poule, arbre tombé, halage inondé) ; fiche, vignettes de la liste et visionneuse les affichent. Canevas : planches de la fiche et de la liste régénérées avec les photos (ressources du canevas). |
 | 2026-10-21 | 5 | Phase 5 validée par l'utilisateur ; PR `phase/5-fiche-alerte` → `develop`. |
+| 2026-10-21 | 6 | PR de la phase 5 (internal-sme/95-Alerte#17) fusionnée ; branche `phase/6-creation-alerte` créée depuis `develop`. Benchmark Mobbin du signalement (`docs/benchmark/signalement-refonte.html`, publié sur https://claude.ai/artifact/XbdECRgJxVVoEgMRzYkjZN) : 12 flows (Google Maps, Waze / Buddy, Apple Maps, Citizen, Bird, Snoonu / Shopee / Glovo, Blinkit / talabat / Apple Maps, Glassdoor, YouTube Studio / Whering / Tripadvisor, Notion Mail / Grailed / Givingli, Spotify / Mindtrip / ABY, Alan / Public / GOAT), états d'envoi et d'erreur, matrice, 10 enseignements, audit, 8 écrans cibles, plan en 6 lots (tâches 6.1 à 6.11). Décisions H1 à H6 en attente ; aucun développement avant validation. |
+| 2026-10-21 | 6 | Phase 6 réalisée selon H1 à H6 sur `phase/6-creation-alerte` : parcours en 7 étapes (type, catégorie, lieu à l'épingle fixe, description avec titre proposé, photos simulées, identité, aperçu), publication puis trajet du signalement Vous → 95 Alerte → Analyse → Service (direct avec animations réduites), brouillon gardé et repris, erreurs (réseau, hors connexion, donnée personnelle refusée). Démo › Écrans par phase : 20 écrans et états ; canevas : 21 planches (page « Phase 6 »). Design System : composants étiquetés « New » ; ARCHITECTURE.md : brouillon, géocodage inverse, publication. En attente de validation de l'utilisateur. |
+| 2026-10-21 | 6 | Phase 6 validée par l'utilisateur ; PR `phase/6-creation-alerte` → `develop`. Point reporté : proposition d'activer les notifications après la première publication (phase 8). |
+| 2026-10-21 | — | Prototype recodé en **code source React** sur `refactor/react-source` : `apps/prototype-web` (Vite 5.4.11, React 18.3.1, TypeScript 5.6.3), 157 modules (un fichier par composant, un dossier par parcours), interfaces de props, store et modèle de données typés, `tsc` sans erreur. Mêmes sources que l'artefact (CSS du Design System par module virtuel, `app.css`, sprite, ressources). Conversion reproductible (`tools/prototype_to_vite/`, analyse Babel). Parité : 94 écrans des phases 0 à 6 identiques (texte et captures, clair et sombre), S3 et S4 joués de bout en bout. À décider : quelle source fait foi pour les phases suivantes. |

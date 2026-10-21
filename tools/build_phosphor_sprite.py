@@ -59,7 +59,7 @@ FILL = [
 # Illustrations ponctuelles (écrans de confirmation, états) : Phosphor Duotone, même bibliothèque que l'interface
 DUOTONE = ["envelope-open", "hand-waving", "seal-check", "map-trifold", "identification-card", "shield-check",
            "megaphone", "hand-heart", "map-pin-area", "compass", "cloud-slash",
-           "siren", "trash", "eye-slash", "link-break"]
+           "siren", "trash", "eye-slash", "link-break", "pencil-simple"]
 
 
 def inner(svg: str) -> str:

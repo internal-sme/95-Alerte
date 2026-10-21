@@ -32,6 +32,10 @@
     {
       "id": "p5",
       "name": "Phase 5 · Fiche alerte et votes"
+    },
+    {
+      "id": "p6",
+      "name": "Phase 6 · Création d'une alerte"
     }
   ],
   "boards": {
@@ -2112,6 +2116,384 @@
       "title": "Profil · fond de carte (sombre)",
       "is_interactive": true,
       "page": "p5"
+    },
+    "ReportType.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "1 · Type",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportType-dark.dc.html": {
+      "x": 0,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "1 · Type (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCategory.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "2 · Catégorie (incident)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCategory-dark.dc.html": {
+      "x": 470,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "2 · Catégorie (incident) (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPlace.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "3 · Lieu (épingle)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPlace-dark.dc.html": {
+      "x": 940,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "3 · Lieu (épingle) (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportDescription.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "4 · Description",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportDescription-dark.dc.html": {
+      "x": 1410,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "4 · Description (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhoto.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "5 · Photo",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhoto-dark.dc.html": {
+      "x": 1880,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "5 · Photo (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCamera.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra (simulée)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCamera-dark.dc.html": {
+      "x": 2350,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Caméra (simulée) (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportGallery.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Galerie",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportGallery-dark.dc.html": {
+      "x": 2820,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Galerie (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhotoUploading.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Photo en cours d'envoi",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhotoUploading-dark.dc.html": {
+      "x": 3290,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Photo en cours d'envoi (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhotoDone.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Photo ajoutée",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhotoDone-dark.dc.html": {
+      "x": 3760,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Photo ajoutée (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportIdentity.dc.html": {
+      "x": 4230,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "6 · Identité",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportIdentity-dark.dc.html": {
+      "x": 4230,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "6 · Identité (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPreview.dc.html": {
+      "x": 4700,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "7 · Aperçu",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPreview-dark.dc.html": {
+      "x": 4700,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "7 · Aperçu (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPublishing.dc.html": {
+      "x": 5170,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Publication…",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPublishing-dark.dc.html": {
+      "x": 5170,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Publication… (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportDone.dc.html": {
+      "x": 5640,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Publiée et transmise",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportDone-dark.dc.html": {
+      "x": 5640,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Publiée et transmise (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCategoryPositive.dc.html": {
+      "x": 0,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "2 · Catégorie (positif)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportCategoryPositive-dark.dc.html": {
+      "x": 0,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "2 · Catégorie (positif) (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPlaceOut.dc.html": {
+      "x": 470,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Lieu hors du Val-d'Oise",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPlaceOut-dark.dc.html": {
+      "x": 470,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Lieu hors du Val-d'Oise (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhotoError.dc.html": {
+      "x": 940,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Échec de l'envoi d'une photo",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPhotoError-dark.dc.html": {
+      "x": 940,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Échec de l'envoi d'une photo (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPreviewOffline.dc.html": {
+      "x": 1410,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Aperçu hors connexion",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportPreviewOffline-dark.dc.html": {
+      "x": 1410,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Aperçu hors connexion (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportError.dc.html": {
+      "x": 1880,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Erreur de publication",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportError-dark.dc.html": {
+      "x": 1880,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Erreur de publication (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportRefused.dc.html": {
+      "x": 2350,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Publication refusée",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportRefused-dark.dc.html": {
+      "x": 2350,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Publication refusée (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportQuit.dc.html": {
+      "x": 2820,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Quitter : garder le brouillon ?",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportQuit-dark.dc.html": {
+      "x": 2820,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Quitter : garder le brouillon ? (sombre)",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportResume.dc.html": {
+      "x": 3290,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Reprendre un brouillon",
+      "is_interactive": true,
+      "page": "p6"
+    },
+    "ReportResume-dark.dc.html": {
+      "x": 3290,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Reprendre un brouillon (sombre)",
+      "is_interactive": true,
+      "page": "p6"
     }
   },
   "order": [
@@ -2345,7 +2727,49 @@
     "DetailSatellite.dc.html",
     "DetailSatellite-dark.dc.html",
     "ProfileMapStyle.dc.html",
-    "ProfileMapStyle-dark.dc.html"
+    "ProfileMapStyle-dark.dc.html",
+    "ReportType.dc.html",
+    "ReportType-dark.dc.html",
+    "ReportCategory.dc.html",
+    "ReportCategory-dark.dc.html",
+    "ReportPlace.dc.html",
+    "ReportPlace-dark.dc.html",
+    "ReportDescription.dc.html",
+    "ReportDescription-dark.dc.html",
+    "ReportPhoto.dc.html",
+    "ReportPhoto-dark.dc.html",
+    "ReportCamera.dc.html",
+    "ReportCamera-dark.dc.html",
+    "ReportGallery.dc.html",
+    "ReportGallery-dark.dc.html",
+    "ReportPhotoUploading.dc.html",
+    "ReportPhotoUploading-dark.dc.html",
+    "ReportPhotoDone.dc.html",
+    "ReportPhotoDone-dark.dc.html",
+    "ReportIdentity.dc.html",
+    "ReportIdentity-dark.dc.html",
+    "ReportPreview.dc.html",
+    "ReportPreview-dark.dc.html",
+    "ReportPublishing.dc.html",
+    "ReportPublishing-dark.dc.html",
+    "ReportDone.dc.html",
+    "ReportDone-dark.dc.html",
+    "ReportCategoryPositive.dc.html",
+    "ReportCategoryPositive-dark.dc.html",
+    "ReportPlaceOut.dc.html",
+    "ReportPlaceOut-dark.dc.html",
+    "ReportPhotoError.dc.html",
+    "ReportPhotoError-dark.dc.html",
+    "ReportPreviewOffline.dc.html",
+    "ReportPreviewOffline-dark.dc.html",
+    "ReportError.dc.html",
+    "ReportError-dark.dc.html",
+    "ReportRefused.dc.html",
+    "ReportRefused-dark.dc.html",
+    "ReportQuit.dc.html",
+    "ReportQuit-dark.dc.html",
+    "ReportResume.dc.html",
+    "ReportResume-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -2610,6 +3034,47 @@
       "fill": "blue",
       "page": "p5",
       "text": "Tâche 5.12 · choisir son fond de carte\n\nOnboarding, étape 3 sur 3 : « Quelle carte préférez-vous ? », Plan ou Satellite ; la carte derrière change en direct. Ensuite : Profil › Affichage › Fond de carte, ou le bouton « calques » de la carte.\n\nSatellite : images Copernicus Sentinel-2 du 4 juin 2023 (10 m par pixel, données libres), posées sous les communes, routes et libellés. Google Earth ne peut pas être intégré au prototype : les artefacts bloquent les scripts, images et cadres de Google, et ses conditions interdisent de stocker ses images. En production, l'app pourra utiliser la vue satellite du SDK Google Maps (clé et facturation) ou les orthophotos IGN."
+    },
+    "p6Light": {
+      "x": 0,
+      "y": -300,
+      "text": "Création d'une alerte · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p6"
+    },
+    "p6Dark": {
+      "x": 0,
+      "y": 900,
+      "text": "Création d'une alerte · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p6"
+    },
+    "p6States": {
+      "x": 0,
+      "y": 2100,
+      "text": "États · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p6"
+    },
+    "p6StatesDark": {
+      "x": 0,
+      "y": 3300,
+      "text": "États · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p6"
+    },
+    "p6How": {
+      "x": 3760,
+      "y": 2400,
+      "w": 340,
+      "maxH": 760,
+      "fill": "blue",
+      "page": "p6",
+      "text": "Phase 6 · création d'une alerte (rapport docs/benchmark/signalement-refonte.html)\n\nPlay sur « 1 · Type » (ou sur le + de n'importe quelle barre d'onglets) : une question par écran, Continuer toujours en pied d'écran. Lieu : l'épingle reste au centre, la carte bouge dessous ; Photo : caméra et galerie simulées, envoi avec progression ; Aperçu : « Modifier » par bloc, 24 h et service destinataire ; Publier → publication → trajet Vous · 95 Alerte · Analyse · Service. × ouvre « Garder le brouillon / Abandonner ».\n\nDécisions : H1 titre obligatoire proposé d'après la catégorie et le lieu, description et photo facultatives ; H2 l'aperçu tient lieu de confirmation ; H3 identité sans choix par défaut la première fois, puis le dernier choix repris ; H4 brouillon gardé dans la session (« Reprendre votre signalement ? ») ; H5 photos seulement (3 au plus), caméra et galerie simulées ; H6 invité : feuille « Connectez-vous pour signaler » sur la carte.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
     }
   },
   "designSystems": []

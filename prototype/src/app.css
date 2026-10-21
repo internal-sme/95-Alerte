@@ -112,4 +112,4 @@ button{font-family:inherit}
 .phase-list .list-item{min-height:44px;font-size:var(--fs-sm)}
 
 /* Smart animate : sous un écran empilé (fiche, recherche), l'écran d'onglet ne partage plus ses éléments nommés */
-.screen-area:has(> .stack-layer) > .screen :is(.map-chips, .map-top .search, .view-toggle){view-transition-name:none}
+.screen-area:has(> .stack-layer) > .screen :is(.map-chips, .map-top .search, .view-toggle, .step-progress){view-transition-name:none}

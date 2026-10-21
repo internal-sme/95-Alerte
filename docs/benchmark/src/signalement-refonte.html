@@ -1,0 +1,439 @@
+<!-- Source du rapport : python3 tools/build_benchmark_refonte.py signalement-refonte → docs/benchmark/signalement-refonte.html -->
+<title>Créer une alerte</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/*TAILWIND*/
+</style>
+
+<header class="border-b border-line">
+  <div class="wrap grid gap-8 py-12 sm:py-16 lg:grid-cols-[1.25fr_1fr] lg:items-end">
+    <div class="grid gap-5">
+      <p class="eyebrow">95 Alerte · Benchmark Mobbin · phase 6 · octobre 2026</p>
+      <h1 class="text-4xl font-extrabold leading-[1.05] sm:text-6xl">Créer une alerte : <span class="hl">vite, juste, en confiance</span>.</h1>
+      <p class="lede">Nous avons passé en revue une trentaine de flows iOS sur Mobbin : signalements sur carte, grilles de catégories, choix du lieu à l'épingle, photos, publication anonyme ou identifiée, brouillons et écrans de confirmation. Nous en avons retenu douze. Pour chacun, le rapport détaille les points forts en patterns de design, en expérience utilisateur et en direction artistique. Il se termine par un audit de notre parcours actuel (seule la première étape existe), puis par un plan de refonte aligné sur les tâches 6.1 à 6.11 de <span class="font-mono text-base">docs/task.md</span>.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="chip">12 flows retenus</span><span class="chip">30 flows analysés</span><span class="chip">45 écrans cités</span><span class="chip">Plan en 6 lots</span>
+      </div>
+    </div>
+    <nav class="card toc p-5 text-sm" aria-label="Sommaire">
+      <p class="eyebrow mb-3">Sommaire</p>
+      <ol class="grid gap-1.5">
+        <li><a href="#methode">1. Méthode et grille de lecture</a></li>
+        <li><a href="#flows">2. Les 12 flows</a></li>
+        <li><a href="#etats">3. Envoi, erreurs et merci</a></li>
+        <li><a href="#matrice">4. Matrice des patterns</a></li>
+        <li><a href="#lecons">5. Dix enseignements</a></li>
+        <li><a href="#da">6. Direction artistique</a></li>
+        <li><a href="#audit">7. Audit de nos écrans</a></li>
+        <li><a href="#cible">8. Écrans cibles et états</a></li>
+        <li><a href="#plan">9. Plan de refonte détaillé</a></li>
+        <li><a href="#decisions">10. Décisions à prendre</a></li>
+      </ol>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="methode" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">01 · Méthode</p><h2 class="h2">Trois critères, une note sur 5</h2>
+    <p class="lede">Nous avons cherché sur Mobbin (iOS) les signalements sur carte (Google Maps, Waze, Apple Maps, Citizen, Bird), les grilles de catégories, les écrans de choix du lieu à l'épingle, les ajouts de photos, la publication anonyme ou identifiée, les brouillons et les écrans qui suivent un envoi. La grille est la même que pour les phases 2 à 5. Une partie des écrans vient du benchmark général du projet.</p></div>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="card p-5"><p class="font-display text-lg font-bold">Patterns de design</p><p class="mt-2 text-sm text-muted">La barre d'étapes, les cartes de choix, la grille de catégories, l'épingle, la caméra, les vignettes, le choix d'identité, l'aperçu, l'écran de confirmation.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Expérience utilisateur</p><p class="mt-2 text-sm text-muted">Signaler un incident en moins de 30 secondes, placer le bon lieu, savoir ce qui sera public, ne rien perdre en quittant, savoir à qui le signalement a été transmis.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Direction artistique</p><p class="mt-2 text-sm text-muted">Une question par écran, le bouton principal toujours au même endroit, la retenue du rouge, la même place pour le positif et le négatif.</p></div>
+  </div>
+  <p class="text-sm text-muted">Les images sont des aperçus Mobbin à basse résolution, avec leur mention « curated by Mobbin ». Chaque flow renvoie à sa page Mobbin. Rapports liés : <span class="font-mono">fiche-refonte.html</span> (phase 5), <span class="font-mono">liste-refonte.html</span> (phase 4) et <span class="font-mono">benchmark-mobbin.html</span>.</p>
+</section>
+
+<section id="flows" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-10 py-14">
+    <div class="grid gap-3"><p class="eyebrow">02 · Les 12 flows</p><h2 class="h2">Du bouton + à l'alerte publiée</h2>
+      <p class="lede">Google Maps, Waze, Apple Maps et Citizen montrent le signalement sur carte. Bird guide la photo. Snoonu, Shopee, Glovo, Blinkit et talabat placent le lieu à l'épingle. Glassdoor, YouTube Studio, Whering et Tripadvisor expliquent la visibilité. Notion Mail, Grailed et Givingli gardent les brouillons. Spotify, Mindtrip et ABY gèrent l'envoi des photos. Alan et Public disent la suite après l'envoi.</p></div>
+
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">01</p><h3 class="text-2xl font-bold">Google Maps · « Ajouter un signalement » : une grille, un toucher</h3><p class="text-sm text-muted">Navigation · <a href="https://mobbin.com/flows/43be898e-75de-4464-a7c2-621404aa0b27">signalement</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:google-route-menu}}" alt="Google Maps : menu du trajet avec « Add a report » en tête"><figcaption><b>Point d'entrée</b>Signaler depuis le trajet.</figcaption></figure>
+        <figure class="shot"><img src="{{img:google-add-report}}" alt="Google Maps : feuille « Add a report » avec « Only tap if it's safe to do so » et grille de 7 types"><figcaption><b>Sécurité d'abord</b>« Seulement si vous êtes en sécurité ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:google-added}}" alt="Google Maps : « Object on road added to the map » avec coche verte et « 1 reported » sur la carte"><figcaption><b>Ajouté à la carte</b>Le résultat se voit aussitôt.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Grille de grandes tuiles icône + libellé, une couleur par famille.</li><li>Consigne de sécurité sous le titre, avant tout choix.</li><li>Confirmation dans une feuille, puis le marqueur apparaît sur la carte.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Signaler en 2 touchers quand c'est urgent.</li><li>On voit tout de suite que le signalement est pris en compte.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Pastilles rondes colorées, fond clair, typographie système.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La grille de catégories en tuiles (CategoryTile, 2 colonnes) et la phrase « Ne signalez que si vous êtes en sécurité » sur les catégories critiques. Le marqueur visible sur la carte au retour.</p><p><b>À éviter.</b> Un signalement sans lieu confirmé ni service : chez nous, le lieu et le routage font partie du parcours.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">02</p><h3 class="text-2xl font-bold">Waze, Buddy · Catégories en grille, groupées par famille</h3><p class="text-sm text-muted">Navigation, finances · <a href="https://mobbin.com/flows/0da6b259-ff4a-43b6-a24e-daec4d8d2f98">Buddy</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:waze-update-the-map}}" alt="Waze : « Update the map », grille de 10 types et « Reports are public. Your Waze username will appear with your report »"><figcaption><b>Dire ce qui sera public</b>Sous la grille, la visibilité.</figcaption></figure>
+        <figure class="shot"><img src="{{img:buddy-quick}}" alt="Buddy : 4 catégories fréquentes en pastilles et « Browse all categories »"><figcaption><b>Les plus fréquentes</b>Puis « Toutes les catégories ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:buddy-grid}}" alt="Buddy : catégories groupées par famille (Food & drinks, Housing) en grille de 3"><figcaption><b>Groupes nommés</b>Une couleur par famille.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Grille de 3 colonnes, groupes nommés par famille.</li><li>Raccourci vers les catégories les plus utilisées.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Reconnaître à l'icône plutôt que lire une liste.</li><li>Waze dit, dès la grille, ce qui sera public.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Couleur par famille, icône pleine dans un rond, libellé court dessous.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La grille filtrée par le type choisi (négatif : Incidents, Vigilance, Information ; positif : Événements), avec nos tuiles du Design System (forme + icône + libellé de famille).</p><p><b>À éviter.</b> Une couleur par catégorie : la couleur reste celle de la famille (4 teintes).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">03</p><h3 class="text-2xl font-bold">Apple Maps · Trois choix, puis un toast</h3><p class="text-sm text-muted">Navigation · <a href="https://mobbin.com/flows/b2ae1786-5fc7-44e2-a9b7-47c599e0b6fd">signalement</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:apple-options}}" alt="Apple Maps : options du trajet avec « Report an Incident »"><figcaption><b>Dans les options</b>Une ligne parmi d'autres.</figcaption></figure>
+        <figure class="shot"><img src="{{img:apple-report}}" alt="Apple Maps : feuille « Report an Incident », Crash, Hazard, Speed Check"><figcaption><b>Trois choix</b>Pastilles rouge, jaune, bleue.</figcaption></figure>
+        <figure class="shot"><img src="{{img:apple-toast}}" alt="Apple Maps : bandeau « Hazard Reported · Just now »"><figcaption><b>Trace immédiate</b>Toast avec le type et l'heure.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Feuille courte, peu d'options.</li><li>Confirmation par un bandeau nommant le type et l'heure.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Aucune question superflue pour un signalement rapide.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Feuille système, pastilles de couleur, beaucoup d'air.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le bandeau final qui nomme ce qui a été publié (« Incendie publié · à l'instant »). La brièveté pour les incidents : description et photo facultatives (P2).</p><p><b>À éviter.</b> Le signalement en un toucher sans aperçu : chez nous l'auteur choisit anonyme ou identifié, il doit voir ce qui sera public.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">04</p><h3 class="text-2xl font-bold">Citizen · Créer une alerte : lieu, moment, détails</h3><p class="text-sm text-muted">Sécurité publique · <a href="https://mobbin.com/flows/f5a8ff74-f330-42da-9c4e-2727f53b52d1">création</a>, <a href="https://mobbin.com/flows/f5f8b2ea-e859-4a68-ae92-f2f4fd2c41e9">photo</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:citizen-fab}}" alt="Citizen : bouton flottant « + » avec bulle « Alert your community »"><figcaption><b>Bouton flottant</b>Toujours à portée de pouce.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-create}}" alt="Citizen : adresse sur une mini-carte, « Happening Right Now », détails, Send, « 2434 nearby users will be notified »"><figcaption><b>Qui sera prévenu</b>Le nombre de voisins notifiés.</figcaption></figure>
+        <figure class="shot"><img src="{{img:citizen-created}}" alt="Citizen : alerte créée avec sa timeline « Just now »"><figcaption><b>Arrivée sur la fiche</b>La timeline commence.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Mini-carte avec l'adresse en titre, détails libres, puis Envoyer.</li><li>Annonce de la portée : combien de personnes seront notifiées.</li><li>Après l'envoi, la fiche et sa timeline.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Savoir qui va voir l'alerte avant d'envoyer.</li><li>Le parcours se termine sur un objet concret (la fiche).</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Sombre, très contrasté ; rouge et jaune omniprésents.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> L'aperçu final qui annonce la portée (« Visible par les habitants du Val-d'Oise pendant 24 h, transmise au Service Propreté de Cergy ») et l'arrivée sur la fiche de l'alerte publiée.</p><p><b>À éviter.</b> L'incitation à « aller sur place » et le ton alarmiste ; aucun compteur de personnes notifiées que nous ne maîtrisons pas.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">05</p><h3 class="text-2xl font-bold">Bird · Photo guidée, étapes courtes, merci</h3><p class="text-sm text-muted">Mobilité · </p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:bird-camera}}" alt="Bird : caméra avec consigne « Snap a photo that shows the issue or location »"><figcaption><b>Consigne dans la caméra</b>Ce qu'il faut photographier.</figcaption></figure>
+        <figure class="shot"><img src="{{img:bird-formulaire}}" alt="Bird : « Report damage », étape 1 photo et lieu, étape 2 « What happened? » en boutons"><figcaption><b>Étapes numérotées</b>Un choix en boutons, pas en liste.</figcaption></figure>
+        <figure class="shot"><img src="{{img:bird-merci}}" alt="Bird : « Thanks for reporting », l'équipe sera prévenue, OK"><figcaption><b>Ce qui va se passer</b>Le merci dit la suite.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Consigne de cadrage dans la caméra.</li><li>Étapes numérotées et cochées au fil du formulaire.</li><li>Merci qui nomme l'équipe prévenue.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Une photo utile du premier coup.</li><li>Le merci répond à « et maintenant ? ».</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Formulaire sobre, capitales espacées, bouton plein en bas.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La consigne dans la caméra (« Photographiez le problème ou le lieu ») et le merci qui nomme le service (« Transmis au Service Propreté · Ville de Cergy »).</p><p><b>À éviter.</b> Le bouton « Submit » grisé sans dire ce qui manque : nos étapes disent ce qui est requis.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">06</p><h3 class="text-2xl font-bold">Snoonu, Shopee, Glovo · Placer l'épingle et confirmer</h3><p class="text-sm text-muted">Livraison · </p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:snoonu-lieu}}" alt="Snoonu : épingle au centre, « Select Location », recherche d'adresse, « Confirm location »"><figcaption><b>Épingle centrale</b>Recherche + confirmer.</figcaption></figure>
+        <figure class="shot"><img src="{{img:shopee-lieu}}" alt="Shopee : bulle « Your address is here, please confirm your map location is correct »"><figcaption><b>Bulle de vérification</b>« Vérifiez la position ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:glovo-lieu}}" alt="Glovo : « Place the pin on the entrance of the delivery location », bouton Confirm entrance"><figcaption><b>Consigne précise</b>Où poser l'épingle.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Épingle fixe, la carte bouge dessous.</li><li>Bulle de consigne au-dessus de l'épingle.</li><li>Adresse en direct dans le volet, bouton « Confirmer » en bas.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Corriger la position au pouce, sans viser un point minuscule.</li><li>La consigne évite les erreurs de lieu.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Une couleur d'accent pour l'épingle et le bouton ; carte neutre.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 6.4 : épingle centrale fixe, adresse en direct (commune, quartier, rue la plus proche), bulle « Vérifiez que la position est correcte », « Confirmer cette position » inactif hors Val-d'Oise.</p><p><b>À éviter.</b> Deux boutons pleins (Shopee) : un seul btn-primary en pied d'écran.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">07</p><h3 class="text-2xl font-bold">Blinkit, talabat, Apple Maps · Bouger la carte, pas l'épingle</h3><p class="text-sm text-muted">Livraison, cartes · <a href="https://mobbin.com/flows/34c9b27c-92a4-4426-83f6-3901f142269f">Blinkit</a>, <a href="https://mobbin.com/flows/2daa52c2-d521-4b46-9cfb-8419db60b4cc">talabat</a>, <a href="https://mobbin.com/flows/95c0d272-5a8f-4d42-8208-611fe6e3a765">Apple Maps</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:blinkit-pin}}" alt="Blinkit : « Move the pin to adjust your location », recherche en haut, adresse et Change en bas"><figcaption><b>Recherche + épingle</b>Les deux façons de placer.</figcaption></figure>
+        <figure class="shot"><img src="{{img:talabat-pin}}" alt="talabat : bulle « Your order will be delivered here », bouton Confirm pin location, bascule carte / satellite"><figcaption><b>Plan ou satellite</b>Bascule en bas à droite.</figcaption></figure>
+        <figure class="shot"><img src="{{img:apple-movepin}}" alt="Apple Maps : « Move the map to the correct location », Cancel, Done, vue satellite"><figcaption><b>La consigne en titre</b>« Déplacez la carte ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Recherche d'adresse au-dessus de la carte, épingle au centre.</li><li>Bouton de recentrage sur ma position.</li><li>La vue satellite aide à reconnaître le lieu.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Trois façons d'arriver au bon endroit : position, recherche, carte.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Bulle sombre au-dessus de l'épingle, bouton plein en bas.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Les trois chemins de la tâche 6.4 sur un seul écran (Utiliser ma position · Rechercher une adresse · déplacer la carte) et le fond Plan ou Satellite choisi par l'utilisateur (tâche 5.12).</p><p><b>À éviter.</b> « Cancel / Done » en texte dans l'en-tête : notre pied d'écran garde le bouton principal au même endroit à chaque étape.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">08</p><h3 class="text-2xl font-bold">Glassdoor · Publier anonymement ou avec son profil</h3><p class="text-sm text-muted">Emploi · <a href="https://mobbin.com/flows/0a2c9c8c-0ed5-401f-a565-489956dc5637">profil de publication</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:glassdoor-post}}" alt="Glassdoor : « Create a post », profil de publication en tête"><figcaption><b>Qui publie, en tête</b>Avant même d'écrire.</figcaption></figure>
+        <figure class="shot"><img src="{{img:glassdoor-anon}}" alt="Glassdoor : menu « Post anonymously » ou « Post as yourself » avec l'aperçu de chaque nom"><figcaption><b>Aperçu du nom</b>Ce que les autres verront.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Deux groupes : anonyme, ou à son nom, avec l'aperçu du nom affiché.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>L'anonymat est un choix explicite, visible avant de publier.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Liste simple, coche sur le choix courant.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 6.7 : deux RadioCards « Publier avec mon profil » (aperçu « Jean D. ») et « Publier anonymement » (aperçu « Citoyen anonyme »), avec ce que les autres verront et ce que la plateforme garde.</p><p><b>À éviter.</b> Le menu déroulant caché : chez nous, l'identité a sa propre étape (une question par écran).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">09</p><h3 class="text-2xl font-bold">YouTube Studio, Whering, Tripadvisor · Visibilité expliquée, changement confirmé</h3><p class="text-sm text-muted">Vidéo, mode, voyage · </p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:youtube-visibilite}}" alt="YouTube Studio : Public, Unlisted, Private avec une ligne d'explication chacun"><figcaption><b>Une ligne par option</b>Qui pourra voir.</figcaption></figure>
+        <figure class="shot"><img src="{{img:whering-confirmation}}" alt="Whering : « Switch to public profile? » qui explique les conséquences, Confirm et Cancel"><figcaption><b>Conséquences expliquées</b>Avant de confirmer.</figcaption></figure>
+        <figure class="shot"><img src="{{img:tripadvisor-visibilite}}" alt="Tripadvisor : « Make visible to all » avec explication sous l'interrupteur"><figcaption><b>Explication courte</b>Sous chaque réglage.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Chaque option de visibilité a une ligne d'explication.</li><li>Passer au public demande une confirmation qui explique.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On comprend la portée de son choix avant de publier.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Options en liste, boutons radio, textes gris.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Sous chaque RadioCard d'identité : « Votre prénom et l'initiale du nom » / « Votre nom n'apparaît pas. La plateforme peut retrouver l'auteur en cas d'abus. » (règle d'anonymat).</p><p><b>À éviter.</b> Promettre un anonymat total : l'anonymat est public, la plateforme reste capable de tracer l'auteur.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">10</p><h3 class="text-2xl font-bold">Notion Mail, Grailed, Givingli · Quitter : brouillon ou abandon</h3><p class="text-sm text-muted">Productivité, commerce · <a href="https://mobbin.com/flows/bd863c7a-a8b1-48e7-afd6-f6e8a3707ac1">Notion Mail</a>, <a href="https://mobbin.com/flows/b1c7bcf6-7788-482e-8b17-1af867c83da0">Grailed</a>, <a href="https://mobbin.com/flows/a16d4da8-bceb-4aaa-bdb7-ee8ef105995e">Givingli</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:notion-draft}}" alt="Notion Mail : « Are you sure? You have unsent changes », Save Draft, Discard en rouge"><figcaption><b>Deux issues</b>Garder ou abandonner.</figcaption></figure>
+        <figure class="shot"><img src="{{img:grailed-review}}" alt="Grailed : récapitulatif « Review Listing » avec EDIT par section et Publish listing"><figcaption><b>Récapitulatif</b>Modifier chaque section.</figcaption></figure>
+        <figure class="shot"><img src="{{img:grailed-draft}}" alt="Grailed : « Your draft has been saved », brouillon à 27 % complete"><figcaption><b>Brouillon retrouvé</b>Avec son avancement.</figcaption></figure>
+        <figure class="shot"><img src="{{img:givingli-draft}}" alt="Givingli : « If you go back now, your card will be discarded », Save Draft, Discard, Cancel"><figcaption><b>Ce qui sera perdu</b>Dit avant d'agir.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Quitter un parcours entamé : Enregistrer le brouillon / Abandonner / Continuer.</li><li>Récapitulatif avec « Modifier » par section avant de publier.</li><li>Brouillon retrouvé avec son avancement.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Aucune saisie perdue par erreur.</li><li>On corrige une section sans tout refaire.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Abandonner en rouge, le reste neutre.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 6.1 et 6.8 : × → modale « Quitter le signalement ? » (Enregistrer le brouillon · Abandonner) ; aperçu final avec « Modifier » sur chaque bloc ; bannière « Reprendre votre signalement » au prochain + Signaler.</p><p><b>À éviter.</b> La feuille d'actions à trois boutons empilés : notre ConfirmModal (Annuler + action) suffit, avec « Enregistrer le brouillon » en action principale.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">11</p><h3 class="text-2xl font-bold">Spotify for Creators, Mindtrip, ABY · Photos : ajouter, suivre l'envoi, annuler</h3><p class="text-sm text-muted">Création, voyage, journal · <a href="https://mobbin.com/flows/2812ecfe-70da-4c3d-8262-c6727cc93a51">Spotify</a>, <a href="https://mobbin.com/flows/8f2686fc-a309-4a18-9165-795200b32a2c">Mindtrip</a>, <a href="https://mobbin.com/flows/cba2c20d-42fa-4015-a985-5c1deeb9ab3c">ABY Journal</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:mindtrip-add}}" alt="Mindtrip : feuille Take a photo, Upload an image"><figcaption><b>Deux sources</b>Prendre ou choisir.</figcaption></figure>
+        <figure class="shot"><img src="{{img:spotify-upload}}" alt="Spotify for Creators : « Uploading (98 %) » avec bouton annuler"><figcaption><b>Progression en clair</b>Pourcentage et annuler.</figcaption></figure>
+        <figure class="shot"><img src="{{img:spotify-cancel}}" alt="Spotify for Creators : « Cancel upload? » explique la conséquence, Keep uploading"><figcaption><b>Annuler, expliqué</b>Ce qui sera perdu.</figcaption></figure>
+        <figure class="shot"><img src="{{img:aby-added}}" alt="ABY Journal : grille de vignettes et toast « Media added »"><figcaption><b>Vignettes + toast</b>« Média ajouté ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Prendre une photo ou en choisir une, dans une feuille.</li><li>Vignettes avec progression d'envoi, retirer, remplacer.</li><li>Toast « Photo ajoutée. » (PRD §10.3).</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On sait où en est l'envoi et on peut l'arrêter.</li><li>Une erreur d'envoi propose « Réessayer ».</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Vignettes carrées arrondies, cases « + » en pointillés.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 6.6 : feuille Prendre une photo / Choisir dans la galerie, vignettes ✕ / ↻ avec progression, erreur + « Réessayer », toast « Photo ajoutée. »</p><p><b>À éviter.</b> Les « + » vides en grille de 9 : 3 photos au plus, la grille ne montre qu'un « + » après la dernière.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">12</p><h3 class="text-2xl font-bold">Alan, Public, GOAT · Après l'envoi : dire la suite</h3><p class="text-sm text-muted">Santé, finance, commerce · <a href="https://mobbin.com/flows/bb1416f4-df4c-45be-b231-4fbf1278722f">Alan</a>, <a href="https://mobbin.com/flows/cfc0c806-1e44-460f-aeb8-f1576e108b35">Public</a>, <a href="https://mobbin.com/flows/090aaad6-7415-42d5-8a5a-dbde352707b6">GOAT</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:alan-sent}}" alt="Alan : « Message sent, our team will get back to you soon », illustration, Go back"><figcaption><b>Écran dédié</b>Ce qui va se passer.</figcaption></figure>
+        <figure class="shot"><img src="{{img:public-received}}" alt="Public : « Request received, we're reviewing your information and will let you know »"><figcaption><b>Promesse de suivi</b>On vous préviendra.</figcaption></figure>
+        <figure class="shot"><img src="{{img:goat-toast}}" alt="GOAT : toast « Your request was successfully submitted » au-dessus de l'aide"><figcaption><b>Simple toast</b>Trop discret pour une publication.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Écran dédié après un envoi important : ce qui s'est passé, ce qui suit, une issue.</li><li>Promesse de prévenir à chaque étape.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>La publication est un moment : un toast ne suffit pas (P9).</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Grand titre, texte court, bouton plein en bas.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 6.9 : écran « Votre alerte a été publiée » puis animation de routage (Vous → 95 Alerte → Analyse → Service) et « ✓ Votre signalement a été transmis au service compétent. » avec le nom du service ; puis « Voir mon alerte » ou « Retour à la carte ».</p><p><b>À éviter.</b> La mascotte (Alan) et le toast seul (GOAT) : Spot Phosphor Duotone et un écran dédié.</p></div>
+    </article>
+  </div>
+</section>
+
+<section id="etats" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">03 · États</p><h2 class="h2">Envoi, erreurs et merci</h2><p class="lede">La publication peut échouer (réseau, refus), un envoi de photo peut être long ou annulé, et la fin du parcours doit dire la suite. Les meilleurs écrans nomment ce qui se passe et proposent une issue.</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:spotify-cancel}}" alt="Spotify for Creators : Cancel upload? et conséquence expliquée"><figcaption><b>Spotify for Creators</b>Annuler un envoi : la conséquence avant le choix. <a href="https://mobbin.com/flows/2812ecfe-70da-4c3d-8262-c6727cc93a51">flow</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:grailed-draft}}" alt="Grailed : brouillon enregistré à 27 %"><figcaption><b>Grailed</b>Le brouillon se retrouve, avec son avancement. <a href="https://mobbin.com/flows/b1c7bcf6-7788-482e-8b17-1af867c83da0">flow</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:clubhouse-thanks}}" alt="Clubhouse : The incident has been reported, liens utiles"><figcaption><b>Clubhouse</b>Merci, puis des liens utiles. <a href="https://mobbin.com/flows/5de4e383-75ee-49ef-9073-1a5b11881c89">flow</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:hevy-thanks}}" alt="Hevy : fenêtre de remerciement par-dessus le formulaire"><figcaption><b>Hevy</b>À éviter : un merci en fenêtre qui ne dit rien de la suite. <a href="https://mobbin.com/flows/f6fdece7-2f66-4bb7-820a-d70be88e74d1">flow</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:goat-toast}}" alt="GOAT : toast de succès au-dessus de l'aide"><figcaption><b>GOAT</b>Un toast seul : trop discret pour une publication. <a href="https://mobbin.com/flows/090aaad6-7415-42d5-8a5a-dbde352707b6">flow</a></figcaption></figure>
+  </div>
+  <div class="take"><p><b>À reprendre.</b> Erreur de publication : « Impossible de publier votre alerte. Vérifiez votre connexion. » (PRD §10.3) avec « Réessayer » et le brouillon gardé. Photo : progression par vignette, « Réessayer » en cas d'échec. Hors connexion : on peut préparer le signalement, pas le publier, et l'app le dit sans promettre d'envoi différé.</p><p><b>À éviter.</b> Un merci en fenêtre modale (Hevy) ou un simple toast (GOAT) : la publication mérite un écran qui nomme le service destinataire.</p></div>
+</section>
+
+<section id="matrice" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">04 · Matrice</p><h2 class="h2">Qui fait quoi</h2><p class="lede">● pattern maîtrisé · ○ présent mais partiel · vide si absent. La dernière ligne situe nos écrans actuels.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[960px] text-sm">
+      <caption class="sr-only">Patterns de signalement par app</caption>
+      <thead class="bg-sunk text-left text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">App</th><th class="p-3">Grille de catégories</th><th class="p-3">Consigne de sécurité</th><th class="p-3">Épingle centrale</th><th class="p-3">Recherche d'adresse</th><th class="p-3">Photo guidée</th><th class="p-3">Anonyme / identifié</th><th class="p-3">Aperçu avant envoi</th><th class="p-3">Brouillon</th><th class="p-3">Écran de suite</th></tr></thead>
+      <tbody class="divide-y divide-line text-center">
+        <tr><th class="p-3 text-left">Google Maps</th><td>●</td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Waze, Buddy</th><td>●</td><td></td><td></td><td></td><td></td><td>○</td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Apple Maps</th><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Citizen</th><td></td><td></td><td>○</td><td>○</td><td>○</td><td></td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Bird</th><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td><td></td><td>●</td></tr>
+        <tr><th class="p-3 text-left">Snoonu, Shopee, Glovo</th><td></td><td></td><td>●</td><td>●</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Blinkit, talabat, Apple Maps</th><td></td><td></td><td>●</td><td>●</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Glassdoor</th><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">YouTube Studio, Whering, Tripadvisor</th><td></td><td></td><td></td><td></td><td></td><td>●</td><td>○</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Notion Mail, Grailed, Givingli</th><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td><td>●</td><td></td></tr>
+        <tr><th class="p-3 text-left">Spotify, Mindtrip, ABY</th><td></td><td></td><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Alan, Public, GOAT</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td></tr>
+        <tr class="bg-brand/10 font-semibold"><th class="p-3 text-left">95 Alerte (aujourd'hui)</th><td></td><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-muted">Nous avons les briques (RadioCard, CategoryTile, Stepper, Field, la carte du Val-d'Oise, la recherche d'adresse de la phase 4, le routage simulé) mais seulement la première étape du parcours : tout le reste est à construire.</p>
+  </div>
+</section>
+
+<section id="lecons" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">05 · Enseignements</p><h2 class="h2">Dix règles pour signaler</h2></div>
+  <ol class="grid gap-4 sm:grid-cols-2">
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">01 · Google Maps, Apple Maps</p><p class="mt-1 font-display text-lg font-bold">Signaler vite quand c'est urgent</p><p class="mt-1 text-sm text-muted">Type, catégorie, lieu confirmé : le reste est facultatif pour un incident (P2).</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">02 · Waze, Buddy</p><p class="mt-1 font-display text-lg font-bold">Reconnaître plutôt que lire</p><p class="mt-1 text-sm text-muted">Grille de tuiles icône + libellé, groupées par famille, filtrées par le type.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">03 · Google Maps</p><p class="mt-1 font-display text-lg font-bold">La sécurité avant le signalement</p><p class="mt-1 text-sm text-muted">« Ne signalez que si vous êtes en sécurité » sur les catégories critiques, avec le lien vers « Situation urgente ? ».</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">04 · Snoonu, Blinkit, Apple Maps</p><p class="mt-1 font-display text-lg font-bold">La carte bouge, l'épingle reste</p><p class="mt-1 text-sm text-muted">Épingle centrale, adresse en direct, trois chemins pour placer le lieu.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">05 · Bird</p><p class="mt-1 font-display text-lg font-bold">Une consigne dans la caméra</p><p class="mt-1 text-sm text-muted">« Photographiez le problème ou le lieu » : une photo utile du premier coup.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">06 · Glassdoor, YouTube Studio</p><p class="mt-1 font-display text-lg font-bold">Voir son nom public avant de publier</p><p class="mt-1 text-sm text-muted">« Jean D. » ou « Citoyen anonyme » dans la carte de choix (P3).</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">07 · Grailed, Citizen</p><p class="mt-1 font-display text-lg font-bold">Un aperçu qui dit la portée</p><p class="mt-1 text-sm text-muted">La carte telle qu'elle sera vue, 24 h, public, service destinataire ; « Modifier » par bloc.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">08 · Notion Mail, Givingli</p><p class="mt-1 font-display text-lg font-bold">Rien ne se perd en quittant</p><p class="mt-1 text-sm text-muted">Brouillon ou abandon, explicitement ; reprise au prochain + Signaler.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">09 · Spotify, ABY</p><p class="mt-1 font-display text-lg font-bold">L'envoi se voit et s'annule</p><p class="mt-1 text-sm text-muted">Progression par photo, retirer, remplacer, réessayer ; toast « Photo ajoutée. »</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">10 · Bird, Alan</p><p class="mt-1 font-display text-lg font-bold">Après l'envoi, la suite</p><p class="mt-1 text-sm text-muted">Écran « publiée », routage animé vers le service nommé, puis la carte centrée sur l'alerte.</p></li>
+  </ol>
+</section>
+
+<section id="da" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">06 · Direction artistique</p><h2 class="h2">« Vigilance lumineuse » appliquée au signalement</h2><p class="lede">Un parcours calme et rapide : une question par écran, la barre d'étapes et le bouton principal immobiles, la couleur de famille sur la catégorie choisie, le rouge seulement pour la consigne de sécurité.</p></div>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="card p-5"><p class="eyebrow">Barre d'étapes</p><div class="mt-3 grid gap-1"><div class="h-1.5 rounded-full bg-line"><div class="h-1.5 w-3/7 rounded-full bg-primary" style="width:43%"></div></div><p class="text-xs text-muted">Étape 3 sur 7 · Lieu</p></div><p class="mt-3 text-sm text-muted">Fine, en haut, nommée ; elle glisse d'une étape à l'autre (smart animate).</p></div>
+    <div class="card p-5"><p class="eyebrow">Catégorie choisie</p><div class="mt-3 grid grid-cols-2 gap-2 text-sm"><span class="rounded-lg border-2 border-incident p-2">◆ Incendie</span><span class="rounded-lg border border-line p-2">◆ Accident</span></div><p class="mt-3 text-sm text-muted">Bordure de la couleur de famille, coche ; les autres restent neutres.</p></div>
+    <div class="card p-5"><p class="eyebrow">Épingle</p><div class="mt-3 grid place-items-center rounded-lg bg-sunk py-4"><span class="rounded bg-ink px-2 py-1 text-xs text-white">Vérifiez la position</span><span class="mt-1 h-5 w-5 rounded-full bg-primary ring-4 ring-white"></span></div><p class="mt-3 text-sm text-muted">Bleu tant que la catégorie n'est pas choisie, puis la forme et la couleur de la famille.</p></div>
+    <div class="card p-5"><p class="eyebrow">Nom public</p><div class="mt-3 grid gap-2 text-sm"><span class="rounded-lg border-2 border-primary p-2">Avec mon profil · <b>Jean D.</b></span><span class="rounded-lg border border-line p-2">Anonymement · <b>Citoyen anonyme</b></span></div><p class="mt-3 text-sm text-muted">L'aperçu exact en gras dans chaque carte.</p></div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="eyebrow">Mouvement</p><p class="mt-2 text-sm">La barre d'étapes et le bouton principal restent en place, le contenu glisse. Après « Publier », le trajet du signalement s'anime (Vous → 95 Alerte → Analyse → Service) en moins de 2 s. Animations réduites : changement direct, étapes affichées d'un coup.</p></div>
+    <div class="card p-5"><p class="eyebrow">Sombre</p><p class="mt-2 text-sm">Cartes de choix sur la surface sombre ; la caméra reste noire dans les deux thèmes ; la carte suit le fond Plan ou Satellite choisi.</p></div>
+    <div class="card p-5"><p class="eyebrow">Accessibilité</p><p class="mt-2 text-sm">Chaque étape a un titre h1 lu à l'arrivée, la barre d'étapes est un <span class="font-mono">progressbar</span> nommé, les erreurs sont reliées au champ. L'épingle se déplace aussi au clavier (flèches) et l'adresse est annoncée.</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="audit" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">07 · Audit</p><h2 class="h2">Nos écrans actuels</h2><p class="lede">Captures du prototype à la fin de la phase 5, au format 390 × 844. Le bouton « + Signaler » ouvre la première étape ; « Continuer » affiche « La suite du parcours arrive bientôt ».</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:ours-map}}" alt="95 Alerte : carte d'accueil, bouton + Signaler central dans la barre d'onglets"><figcaption><b>Point d'entrée</b><span class="text-positive">+</span> « + Signaler » central, toujours visible. <span class="text-incident">−</span> Aucun brouillon à reprendre.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-step1}}" alt="95 Alerte : étape 1 sur 7, deux cartes positif et négatif, bandeau d'urgence rouge"><figcaption><b>Étape 1 · Type</b><span class="text-positive">+</span> Deux cartes de même poids, barre d'étapes. <span class="text-incident">−</span> Le bandeau rouge d'urgence s'affiche même pour un événement positif.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-next}}" alt="95 Alerte : toast « La suite du parcours arrive bientôt »"><figcaption><b>Continuer</b><span class="text-incident">−</span> Le parcours s'arrête là ; pas de retour arrière, seulement ×.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-guest}}" alt="95 Alerte : invité, Connectez-vous pour signaler, plein écran"><figcaption><b>Invité</b><span class="text-positive">+</span> Explique l'anonymat possible. <span class="text-incident">−</span> Plein écran qui cache la carte ; icône « + » au lieu d'un Spot.</figcaption></figure>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ce qu'on garde</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>« + Signaler » central dans la barre d'onglets</li><li>Étape 1 : deux RadioCards de même poids</li><li>Stepper, Field, CategoryTile, routeAlert</li><li>Recherche d'adresse (phase 4), carte Plan ou Satellite</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on refond</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Rappel d'urgence : seulement sur les catégories critiques</li><li>En-tête : retour arrière + quitter avec brouillon</li><li>Invité : feuille au lieu d'un écran plein</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on ajoute</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Catégorie, lieu, description, photos, identité, aperçu</li><li>Publication, routage animé, écran « publiée »</li><li>Erreurs, hors connexion, brouillon</li></ul></div>
+  </div>
+</section>
+
+<section id="cible" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">08 · Écrans cibles</p><h2 class="h2">Sept étapes et la publication</h2><p class="lede">Huit esquisses. Une question par écran, la barre d'étapes en haut et le bouton principal en bas ne bougent pas.</p></div>
+  <div class="flex gap-5 overflow-x-auto pb-4" role="list">
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 grid gap-1"><div class="flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span>×</span></div><div class="h-1 rounded bg-sunk"><div class="h-1 rounded bg-primary" style="width:14%"></div></div><p class="text-[7px] text-muted">Étape 1 sur 7 · Type</p></div><div class="absolute inset-x-2 top-[52px] grid gap-1.5"><p class="text-[10px] font-bold leading-tight text-ink">Que souhaitez-vous signaler ?</p><div class="rounded-md border-2 border-positive/60 p-1.5"><p class="text-[8px] font-bold text-ink">● Un événement positif</p><p class="text-[7px] text-muted">Solidarité, culture, sport…</p></div><div class="rounded-md border-2 border-line p-1.5"><p class="text-[8px] font-bold text-ink">◆ Un événement négatif</p><p class="text-[7px] text-muted">Incident, dégradation, nuisance…</p></div></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Continuer</span></div><p class="anno"><b>1 · Type</b>Deux cartes de même poids (P7) ; le rappel d'urgence n'apparaît plus ici mais avec les catégories critiques.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 grid gap-1"><div class="flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span>×</span></div><div class="h-1 rounded bg-sunk"><div class="h-1 rounded bg-primary" style="width:29%"></div></div><p class="text-[7px] text-muted">Étape 2 sur 7 · Catégorie</p></div><div class="absolute inset-x-2 top-[52px] grid gap-1.5"><p class="text-[10px] font-bold leading-tight text-ink">Quelle catégorie ?</p><div class="grid grid-cols-2 gap-1"><span class="rounded-md border-2 border-incident p-1 text-[7px] text-ink">◆ Incendie</span><span class="rounded-md border border-line p-1 text-[7px] text-ink">◆ Accident</span><span class="rounded-md border border-line p-1 text-[7px] text-ink">▲ Voirie</span><span class="rounded-md border border-line p-1 text-[7px] text-ink">▲ Propreté</span><span class="rounded-md border border-line p-1 text-[7px] text-ink">▲ Éclairage</span><span class="rounded-md border border-line p-1 text-[7px] text-ink">■ Travaux</span></div><div class="rounded-md bg-incident/10 p-1 text-[7px] text-ink">Ne signalez que si vous êtes en sécurité. Urgence : 112.</div></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Continuer</span></div><p class="anno"><b>2 · Catégorie</b>Grille de 2 colonnes filtrée par le type ; consigne de sécurité sur les catégories critiques (Google Maps).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-sunk"></div><div class="absolute inset-x-2 top-4 grid gap-1"><div class="flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span>×</span></div><div class="h-1 rounded bg-sunk"><div class="h-1 rounded bg-primary" style="width:43%"></div></div><p class="text-[7px] text-muted">Étape 3 sur 7 · Lieu</p></div><div class="absolute inset-x-2 top-[52px] flex h-5 items-center rounded-full border border-line bg-card px-2 text-[7px] text-muted">Rechercher une adresse</div><span class="absolute left-1/2 top-[108px] -translate-x-1/2 whitespace-nowrap rounded bg-ink px-1 py-0.5 text-[6px] text-white">Vérifiez que la position est correcte</span><span class="absolute left-1/2 top-[126px] h-4 w-4 -translate-x-1/2 rounded-full bg-incident ring-2 ring-white"></span><div class="absolute inset-x-0 bottom-0 rounded-t-lg bg-card p-2 pb-10"><p class="text-[8px] font-bold text-ink">Rue Carnot, Pontoise</p><p class="text-[7px] text-muted">Quartier Centre · précision : rue</p><p class="text-[7px] text-primary">◎ Utiliser ma position</p></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Confirmer cette position</span></div><p class="anno"><b>3 · Lieu</b>Épingle fixe, la carte bouge, adresse en direct, trois chemins (Snoonu, Blinkit, Apple Maps) ; fond Plan ou Satellite.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 grid gap-1"><div class="flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span>×</span></div><div class="h-1 rounded bg-sunk"><div class="h-1 rounded bg-primary" style="width:57%"></div></div><p class="text-[7px] text-muted">Étape 4 sur 7 · Description</p></div><div class="absolute inset-x-2 top-[52px] grid gap-1.5"><p class="text-[10px] font-bold leading-tight text-ink">Décrivez ce que vous voyez</p><p class="text-[7px] font-semibold text-ink">Titre</p><div class="rounded border border-line p-1 text-[7px] text-ink">Incendie rue Carnot</div><p class="text-[7px] font-semibold text-ink">Description <span class="font-normal text-muted">(facultatif)</span></p><div class="h-10 rounded border border-line p-1 text-[7px] text-muted">Ce qui se passe, depuis quand…</div><p class="text-right text-[6px] text-muted">0 / 500</p></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Continuer</span></div><p class="anno"><b>4 · Description</b>Titre proposé d'après la catégorie et le lieu, modifiable ; description facultative avec aide et compteur.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-0 bg-ink"></div><div class="absolute inset-x-2 top-4 rounded bg-white/90 p-1 text-[7px] text-ink">Photographiez le problème ou le lieu. Évitez les visages et les plaques.</div><span class="absolute bottom-16 left-1/2 h-8 w-8 -translate-x-1/2 rounded-full border-4 border-white"></span><div class="absolute inset-x-2 bottom-4 flex justify-between text-[7px] text-white"><span>Galerie</span><span>Passer</span></div></div><p class="anno"><b>5 · Photo</b>Consigne dans la caméra (Bird), galerie fictive, « Passer » (facultatif) ; vignettes avec progression ensuite.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 grid gap-1"><div class="flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span>×</span></div><div class="h-1 rounded bg-sunk"><div class="h-1 rounded bg-primary" style="width:86%"></div></div><p class="text-[7px] text-muted">Étape 6 sur 7 · Identité</p></div><div class="absolute inset-x-2 top-[52px] grid gap-1.5"><p class="text-[10px] font-bold leading-tight text-ink">Comment souhaitez-vous publier votre signalement ?</p><div class="rounded-md border-2 border-primary p-1.5"><p class="text-[8px] font-bold text-ink">Avec mon profil</p><p class="text-[7px] text-muted">Affiché : <b>Jean D.</b></p></div><div class="rounded-md border border-line p-1.5"><p class="text-[8px] font-bold text-ink">Anonymement</p><p class="text-[7px] text-muted">Affiché : <b>Citoyen anonyme</b>. La plateforme peut retrouver l'auteur en cas d'abus.</p></div></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Continuer</span></div><p class="anno"><b>6 · Identité</b>Deux cartes avec l'aperçu exact du nom public (Glassdoor, YouTube Studio).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 grid gap-1"><div class="flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span>×</span></div><div class="h-1 rounded bg-sunk"><div class="h-1 rounded bg-primary" style="width:100%"></div></div><p class="text-[7px] text-muted">Étape 7 sur 7 · Aperçu</p></div><div class="absolute inset-x-2 top-[52px] grid gap-1"><p class="text-[10px] font-bold leading-tight text-ink">Vérifiez avant de publier</p><div class="rounded-md border border-line p-1.5"><p class="text-[7px] font-bold uppercase text-incident">Incendie · Urgent</p><p class="text-[8px] font-bold text-ink">Incendie rue Carnot</p><p class="text-[7px] text-muted">Rue Carnot, Pontoise · 1 photo · Jean D.</p></div><p class="text-[7px] text-muted">Visible 24 h par tous. Transmise à : Sécurité et secours · Val-d'Oise.</p><p class="text-[7px] text-primary">Modifier le lieu · la photo · l'identité</p></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Publier l'alerte</span></div><p class="anno"><b>7 · Aperçu</b>Récapitulatif avec « Modifier » par bloc, durée de 24 h et service destinataire (Grailed, Citizen).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-8 grid justify-items-center gap-1.5 text-center"><span class="grid h-10 w-10 place-items-center rounded-full bg-positive/15 text-positive">✓</span><p class="text-[9px] font-bold text-ink">Votre alerte a été publiée.</p><div class="flex items-center gap-1 text-[6px] text-muted"><span>Vous</span>→<span>95 Alerte</span>→<span>Analyse</span>→<b class="text-primary">Service</b></div><p class="text-[7px] text-muted">✓ Votre signalement a été transmis au service compétent : Service Propreté · Ville de Cergy.</p></div><span class="absolute inset-x-2 bottom-9 rounded-md border border-primary py-1.5 text-center text-[8px] font-semibold text-primary">Voir mon alerte</span><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Retour à la carte</span></div><p class="anno"><b>8 · Publiée</b>Écran dédié, animation de routage puis transmission nommée (Bird, Alan) ; la carte se centre sur l'alerte.</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="plan" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">09 · Plan</p><h2 class="h2">Refonte en six lots</h2><p class="lede">Chaque lot livre les deux versions (prototype React et canevas, en clair et en sombre). Il passe par la revue de direction artistique (390, 375, 430) et le test de bout en bout. Les nouveaux composants entrent d'abord dans le Design System, avec l'étiquette « New ». Les écrans de la phase rejoignent le catalogue « Écrans par phase » du panneau Démo ; S3 et S4 y deviennent jouables.</p></div>
+  <div class="grid gap-4">
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L0 · Fondations · 1 j</p><h3 class="mt-1 text-xl font-bold">Le cadre du parcours</h3><p class="mt-2 text-sm text-muted">Tâche 6.1</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">ReportFlow</span> écran plein, en-tête ‹ · titre · ×, <span class="tag">Stepper</span> « Étape n sur 7 » (smart animate de la barre et du bouton principal)</li><li><span class="tag">ReportDraft</span> dans le store : reprise, abandon</li><li>Quitter : modale « Quitter le signalement ? » Enregistrer le brouillon / Abandonner</li><li>Invité : feuille « Connectez-vous pour signaler » (comme pour voter)</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Une question par écran, bouton principal au même endroit</li><li>Retour arrière sans perte de saisie</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L1 · Type et catégorie · 1 j</p><h3 class="mt-1 text-xl font-bold">Quoi</h3><p class="mt-2 text-sm text-muted">Tâches 6.2, 6.3</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Deux RadioCards de même poids (P7)</li><li>Grille de CategoryTile en 2 colonnes, filtrée par le type, groupée par famille</li><li>Rappel « Ne signalez que si vous êtes en sécurité » + lien « Situation urgente ? » sur les catégories critiques</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Positives et négatives à égalité</li><li>Rouge seulement sur le rappel d'urgence</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L2 · Lieu · 2 j</p><h3 class="mt-1 text-xl font-bold">Où</h3><p class="mt-2 text-sm text-muted">Tâche 6.4</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">PinPicker</span> : carte du prototype (Plan ou Satellite), épingle centrale fixe, adresse en direct (commune, quartier, rue des alertes la plus proche)</li><li>Utiliser ma position · Rechercher une adresse (index de la phase 4) · déplacer la carte</li><li>Hors Val-d'Oise : bouton inactif + « 95 Alerte n'est pas encore disponible dans cette zone. »</li><li>Précision affichée selon la catégorie (rue, quartier)</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Lieu confirmé en 1 toucher avec la position</li><li>Sans position : la recherche passe en premier</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L3 · Description et médias · 2 j</p><h3 class="mt-1 text-xl font-bold">Quoi exactement</h3><p class="mt-2 text-sm text-muted">Tâches 6.5, 6.6</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Titre proposé (« Incendie rue Carnot »), modifiable, 80 caractères ; description facultative, 500 caractères, aide et compteur</li><li>Caméra simulée avec consigne, galerie fictive (les photos de démonstration), 3 photos au plus</li><li>Vignettes ✕ / ↻, progression de compression et d'envoi, erreur + « Réessayer », toast « Photo ajoutée. »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Photo et description facultatives (P2)</li><li>Texte alternatif proposé pour chaque photo</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L4 · Identité et aperçu · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Qui, et vérifier</h3><p class="mt-2 text-sm text-muted">Tâches 6.7, 6.8</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Deux RadioCards avec l'aperçu exact du nom public</li><li>Aperçu : la carte de l'alerte telle qu'elle sera vue, « Modifier » par bloc, 24 h, service destinataire</li><li>« Publier l'alerte »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Jamais d'email, de téléphone ni d'adresse personnelle</li><li>Ce qui sera public dit avant l'envoi (P3)</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L5 · Publication et états · 2 j</p><h3 class="mt-1 text-xl font-bold">Et après</h3><p class="mt-2 text-sm text-muted">Tâches 6.9, 6.10, 6.11, 6.C</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Chargement → « ✓ Votre alerte a été publiée. » → animation de routage → « ✓ Votre signalement a été transmis au service compétent. »</li><li>L'alerte apparaît sur la carte, dans la liste et dans « Mes alertes » ; notification « Alerte publiée »</li><li>Erreurs : « Impossible de publier votre alerte. Vérifiez votre connexion. », publication refusée ; hors connexion</li><li>PHASE_SCREENS phase 6 + planches du canevas</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>S3 et S4 jouables en moins de 60 s</li><li>Le service nommé correspond à la catégorie et à la commune</li></ul></div>
+        </div>
+      </article>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ordre et charge</p><p class="mt-2 text-sm text-muted">L0, puis L1 et L2, puis L3 et L4 en parallèle, puis L5 : environ 9,5 jours. Canevas (6.C) au fil des lots.</p></div>
+    <div class="card p-5"><p class="font-bold">Indicateurs (tests)</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>S4 (incendie, anonyme) publié en moins de 30 s</li><li>S3 (positif, identifié) de bout en bout en moins de 60 s</li><li>L'alerte publiée visible sur la carte, la liste et « Mes alertes »</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Risques</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Parcours trop long : photo et description facultatives (H1)</li><li>Adresse fictive peu crédible : commune et quartier réels, rue des alertes la plus proche</li><li>Croire que les secours sont prévenus : rappel d'urgence sur les catégories critiques</li></ul></div>
+  </div>
+</section>
+
+<section id="decisions" class="border-t border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">10 · Décisions</p><h2 class="h2">Avant de démarrer</h2><p class="lede">Ces points touchent une règle du PRD (confirmation de publication), l'anonymat, le stockage local ou le périmètre des médias : selon AGENTS.md, ils demandent une validation.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="bg-sunk text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">#</th><th class="p-3">Question</th><th class="p-3">Recommandation</th><th class="p-3">Impact si non</th></tr></thead>
+      <tbody class="divide-y divide-line">
+        <tr><td class="p-3 font-mono">H1</td><td class="p-3">Photo et description : obligatoires ou facultatives ?</td><td class="p-3">Titre obligatoire (proposé automatiquement d'après la catégorie et le lieu, modifiable) ; description et photo facultatives, avec « Passer » (P2). Un incendie se signale en moins de 30 s.</td><td class="p-3 text-muted">Signalements urgents retardés par la saisie</td></tr>
+        <tr><td class="p-3 font-mono">H2</td><td class="p-3">Confirmation de publication (PRD §10.2) : modale en plus de l'aperçu ?</td><td class="p-3">Non : l'étape « Aperçu » est la confirmation (récapitulatif, 24 h, public, service) ; « Publier l'alerte » publie directement.</td><td class="p-3 text-muted">Deux confirmations à la suite</td></tr>
+        <tr><td class="p-3 font-mono">H3</td><td class="p-3">Identité : quel choix par défaut ?</td><td class="p-3">Aucun la première fois (la personne choisit) ; ensuite, le dernier choix est présélectionné, toujours modifiable.</td><td class="p-3 text-muted">Publication involontaire sous son nom</td></tr>
+        <tr><td class="p-3 font-mono">H4</td><td class="p-3">Brouillon : où le garder ?</td><td class="p-3">Dans le store pour la session (pas dans localStorage, réservé aux préférences) ; bannière « Reprendre votre signalement » au prochain + Signaler.</td><td class="p-3 text-muted">Saisie perdue en quittant par erreur</td></tr>
+        <tr><td class="p-3 font-mono">H5</td><td class="p-3">Médias du prototype : photo et vidéo ?</td><td class="p-3">Photos seulement (3 au plus), depuis une caméra simulée et une galerie fictive (les photos de démonstration) ; la vidéo reste au CDC mais n'est pas simulée.</td><td class="p-3 text-muted">Promettre une vidéo qu'on ne sait pas montrer</td></tr>
+        <tr><td class="p-3 font-mono">H6</td><td class="p-3">Invité qui touche + Signaler : écran bloquant ou feuille ?</td><td class="p-3">Feuille « Connectez-vous pour signaler » par-dessus la carte (comme pour voter), avec « Se connecter » et « Plus tard ».</td><td class="p-3 text-muted">Écran plein qui fait perdre sa place sur la carte</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="wrap flex flex-wrap items-center justify-between gap-3 py-8 text-sm text-muted">
+    <p>95 Alerte · rapport généré par <span class="font-mono">tools/build_benchmark_refonte.py signalement-refonte</span> · sources Mobbin (iOS), aperçus à basse résolution.</p>
+    <p>Rapports liés : <span class="font-mono">fiche-refonte.html</span>, <span class="font-mono">liste-refonte.html</span>, <span class="font-mono">benchmark-mobbin.html</span></p>
+  </div>
+</footer>
