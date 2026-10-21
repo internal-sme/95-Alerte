@@ -1,0 +1,9 @@
+{
+  "name": "prototype-to-vite",
+  "private": true,
+  "description": "Conversion de prototype/src/app.jsx en modules TypeScript pour apps/prototype-web (analyse Babel)",
+  "devDependencies": {
+    "@babel/parser": "7.26.3",
+    "@babel/traverse": "7.26.4"
+  }
+}
