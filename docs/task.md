@@ -37,7 +37,7 @@
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ✅ Terminée (validée, PR vers `develop`) |
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (internal-sme/95-Alerte#15) |
 | 5 | Fiche alerte + votes | ALERT-03 | ✅ Terminée (validée, PR vers `develop`) |
-| 6 | Création d'une alerte (+ Signaler) | ALERT-02 | 🟨 En cours (réalisée, en attente de validation) |
+| 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ✅ Terminée (validée, PR vers `develop`) |
 | 7 | Commentaires + signalement de contenu | ALERT-04 | ⬜ À faire |
 | 8 | Activité + notifications | PROFILE-01, UI-013 | ⬜ À faire |
 | 9 | Profil, paramètres, aide, légal | UI-014→024 | ⬜ À faire |
@@ -433,3 +433,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-21 | 5 | Phase 5 validée par l'utilisateur ; PR `phase/5-fiche-alerte` → `develop`. |
 | 2026-10-21 | 6 | PR de la phase 5 (internal-sme/95-Alerte#17) fusionnée ; branche `phase/6-creation-alerte` créée depuis `develop`. Benchmark Mobbin du signalement (`docs/benchmark/signalement-refonte.html`, publié sur https://claude.ai/artifact/XbdECRgJxVVoEgMRzYkjZN) : 12 flows (Google Maps, Waze / Buddy, Apple Maps, Citizen, Bird, Snoonu / Shopee / Glovo, Blinkit / talabat / Apple Maps, Glassdoor, YouTube Studio / Whering / Tripadvisor, Notion Mail / Grailed / Givingli, Spotify / Mindtrip / ABY, Alan / Public / GOAT), états d'envoi et d'erreur, matrice, 10 enseignements, audit, 8 écrans cibles, plan en 6 lots (tâches 6.1 à 6.11). Décisions H1 à H6 en attente ; aucun développement avant validation. |
 | 2026-10-21 | 6 | Phase 6 réalisée selon H1 à H6 sur `phase/6-creation-alerte` : parcours en 7 étapes (type, catégorie, lieu à l'épingle fixe, description avec titre proposé, photos simulées, identité, aperçu), publication puis trajet du signalement Vous → 95 Alerte → Analyse → Service (direct avec animations réduites), brouillon gardé et repris, erreurs (réseau, hors connexion, donnée personnelle refusée). Démo › Écrans par phase : 20 écrans et états ; canevas : 21 planches (page « Phase 6 »). Design System : composants étiquetés « New » ; ARCHITECTURE.md : brouillon, géocodage inverse, publication. En attente de validation de l'utilisateur. |
+| 2026-10-21 | 6 | Phase 6 validée par l'utilisateur ; PR `phase/6-creation-alerte` → `develop`. Point reporté : proposition d'activer les notifications après la première publication (phase 8). |
