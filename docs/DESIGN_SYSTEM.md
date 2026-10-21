@@ -237,15 +237,17 @@ Le statut s'affiche pour les alertes négatives (Transmise, En traitement, Trait
 
 **Upload Tile** : vignette avec ✕ supprimer, ↻ remplacer, barre de progression, état d'erreur avec « Réessayer ».
 
-**New · Report Flow** (phase 6) : écran plein, en-tête ‹ · Signaler · ×, « Étape n sur 7 » + barre, une question par écran (`.question`), bouton principal toujours dans le pied d'écran (`.report-footer`).
+**Report Flow** (phase 6) : écran plein, en-tête ‹ · Signaler · ×, « Étape n sur 7 » + barre, une question par écran (`.question`), bouton principal toujours dans le pied d'écran (`.report-footer`).
 
-**New · Pin Map** : l'épingle (forme et icône de la catégorie) reste au centre, la carte bouge dessous ; ombre qui s'écarte pendant le glissement ; bulle « Vérifiez que la position est correcte » ; zoom + / − ; panneau d'adresse (`.place-panel`) avec la précision affichée et « Utiliser ma position ».
+**Pin Map** : l'épingle (forme et icône de la catégorie) reste au centre, la carte bouge dessous ; ombre qui s'écarte pendant le glissement ; bulle « Vérifiez que la position est correcte » ; zoom + / − ; panneau d'adresse (`.place-panel`) avec la précision affichée et « Utiliser ma position ».
 
-**New · Photo Thumb / Camera** : vignette 1:1 avec ✕, progression « Compression… » puis « Envoi n % », erreur avec « Réessayer » ; caméra simulée toujours sombre avec consigne « Photographiez le problème ou le lieu » et déclencheur de 72 px ; galerie en grille de 3.
+**Photo Thumb / Camera** : vignette 1:1 avec ✕, progression « Compression… » puis « Envoi n % », erreur avec « Réessayer » ; caméra simulée toujours sombre avec consigne « Photographiez le problème ou le lieu » et déclencheur de 72 px ; galerie en grille de 3.
 
-**New · Preview List / Publish Scope** : récapitulatif en lignes libellé + valeur + « Modifier » (bouton tertiaire en ligne) ; encadré « Visible par tous pendant 24 heures » et « Transmise à : service ».
+**Preview List / Publish Scope** : récapitulatif en lignes libellé + valeur + « Modifier » (bouton tertiaire en ligne) ; encadré « Visible par tous pendant 24 heures » et « Transmise à : service ».
 
-**New · Route Steps** : trajet Vous → 95 Alerte → Analyse → Service, chaque étape s'allume après la publication (direct avec animations réduites), puis « Votre signalement a été transmis au service compétent : … »
+**Route Steps** : trajet Vous → 95 Alerte → Analyse → Service, chaque étape s'allume après la publication (direct avec animations réduites), puis « Votre signalement a été transmis au service compétent : … »
+
+**New · Camera State** (phase 6, appareil photo réel) : quand l'appareil a un appareil photo, l'écran caméra demande l'autorisation (« Autorisez l'accès à l'appareil photo »), puis montre l'aperçu en direct ; refus → « Accès à l'appareil photo refusé » + « Choisir dans la galerie » ; caméra occupée → « Appareil photo indisponible » + « Réessayer ». Fond toujours sombre, Spot Phosphor Duotone `camera` / `camera-slash`. Sans appareil photo accessible : caméra simulée.
 
 **Emergency Notice** : bandeau `--error` soft : « En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés. » Il apparaît dans le parcours de signalement des catégories critiques et sur l'écran d'urgence.
 

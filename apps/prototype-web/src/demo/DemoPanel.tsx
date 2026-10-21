@@ -22,6 +22,7 @@ export function DemoPanel() {
           <hr />
           <Switch id="demo-offline" label="Hors connexion" checked={d.offline} onChange={(v) => setDemo("offline", v)} />
           <Switch id="demo-perm" label="Localisation refusée" checked={d.permissionDenied} onChange={(v) => setDemo("permissionDenied", v)} />
+          <Switch id="demo-camera" label="Appareil photo refusé" checked={d.cameraDenied} onChange={(v) => setDemo("cameraDenied", v)} />
           <Switch id="demo-gps" label="Position introuvable" checked={d.gpsUnavailable} onChange={(v) => setDemo("gpsUnavailable", v)} />
           <Switch id="demo-error" label="Erreur réseau" checked={d.networkError} onChange={(v) => setDemo("networkError", v)} />
           <Switch id="demo-empty" label="Zone sans alerte" checked={d.emptyZone} onChange={(v) => setDemo("emptyZone", v)} />

@@ -20,6 +20,8 @@ const DICT = {
 };
 const OVERRIDE = { // props dont le type ne se déduit pas des sites d'appel
   'FeedSection.title': 'string', 'Hl.text': 'string', 'Hl.q': 'string',
+  'CameraOverlay.photoKey': 'string', 'CameraOverlay.onShoot': '(shot: { key?: string; src?: string }) => void',
+  'CameraOverlay.onClose': '() => void', 'CameraOverlay.onGallery': '() => void', 'CameraOverlay.forced': 'CameraMode | null',
 };
 const typeOfExpr = (e) => {
   if (!e) return 'boolean';
@@ -97,7 +99,7 @@ for (const f of files) {
       }
       const required = !def && calls.length > 0 && calls.every((c) => c.spread || c.props.has(key));
       lines.push(`  ${key}${required ? '' : '?'}: ${t};`);
-      ['ReactNode', 'CSSProperties', 'Ref', 'Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep'].forEach((n) => { if (new RegExp(`\\b${n}\\b`).test(t)) USED.add(f + '|' + n); });
+      ['ReactNode', 'CSSProperties', 'Ref', 'Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep', 'CameraMode'].forEach((n) => { if (new RegExp(`\\b${n}\\b`).test(t)) USED.add(f + '|' + n); });
     }
     if (rest) lines.push('  [prop: string]: any;');
     const iface = `export interface ${name}Props {\n${lines.join('\n')}\n}\n\n`;
@@ -109,7 +111,7 @@ for (const f of files) {
   edits.sort((a, b) => b.at - a.at).forEach((e) => { src = src.slice(0, e.at) + e.text + src.slice(e.at); });
   // imports de types
   const reactTypes = ['ReactNode', 'CSSProperties', 'Ref'].filter((n) => USED.has(f + '|' + n));
-  const domain = ['Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep'].filter((n) => USED.has(f + '|' + n));
+  const domain = ['Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep', 'CameraMode'].filter((n) => USED.has(f + '|' + n));
   const imp = [];
   if (reactTypes.length) imp.push(`import type { ${reactTypes.join(', ')} } from "react";`);
   if (domain.length) imp.push(`import type { ${domain.join(', ')} } from "@/types";`);
