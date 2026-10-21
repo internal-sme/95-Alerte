@@ -225,6 +225,12 @@ Le statut s'affiche pour les alertes négatives (Transmise, En traitement, Trait
 
 **Comment Component** : avatar ou initiales (pictogramme neutre si anonyme), nom public (« Jean D. » / « Citoyen anonyme »), date relative, texte, actions *Répondre · Signaler · ⋯*. Réponses indentées d'un niveau.
 
+**New · Comment Thread** (phase 7) : écran « Commentaires · n » ouvert depuis la fiche ; bandeau « Restez courtois et utile. Les commentaires sont modérés. » + « Règles de la communauté » ; commentaires dans l'ordre chronologique, réponses d'un niveau (filet gauche, repliées au-delà de deux, « Voir n réponses de plus »), « (vous) » et fond primary-soft pour les siens, badge « Auteur » seulement si l'alerte n'est pas anonyme. Supprimé avec des réponses : « Commentaire supprimé par son auteur. » ; masqué : « Ce commentaire a été masqué par la modération. » (gris, italique, sans nom ni texte).
+
+**New · Composer** : champ collé en bas, qui grandit jusqu'à 4 lignes, bouton d'envoi rond ; « En réponse à … ✕ » ; « Commenter en tant que Jean D. ⌄ » (feuille Avec mon profil / Anonymement) ; compteur au-delà de 400 caractères (500 au plus) ; refus si téléphone, plaque ou e-mail. Sans compte, hors connexion ou alerte expirée : une note à la place du champ.
+
+**New · Report Content Flow** : motif (ReasonOption, motifs du PRD F-11, phrase « Choisissez le motif le plus proche… », confidentialité) → confirmer (ReportRecap, précision facultative 300 caractères, « Envoyer le signalement ») → « Merci pour votre signalement » (Spot flag, ce qui va se passer, « Règles de la communauté », Terminé). Ensuite « Commentaire signalé » / « Alerte signalée » dans le menu.
+
 **Location Component** : 📍 adresse au niveau de précision autorisé (rue / quartier / zone) + mini-carte + action « Modifier ».
 
 **Service Assignment Component** : « ➜ Transmis au service compétent » + nom du service si sa visibilité est autorisée.
@@ -247,7 +253,7 @@ Le statut s'affiche pour les alertes négatives (Transmise, En traitement, Trait
 
 **Route Steps** : trajet Vous → 95 Alerte → Analyse → Service, chaque étape s'allume après la publication (direct avec animations réduites), puis « Votre signalement a été transmis au service compétent : … »
 
-**New · Camera State** (phase 6, appareil photo réel) : quand l'appareil a un appareil photo, l'écran caméra demande l'autorisation (« Autorisez l'accès à l'appareil photo »), puis montre l'aperçu en direct ; refus → « Accès à l'appareil photo refusé » + « Choisir dans la galerie » ; caméra occupée → « Appareil photo indisponible » + « Réessayer ». Fond toujours sombre, Spot Phosphor Duotone `camera` / `camera-slash`. Sans appareil photo accessible : caméra simulée.
+**Camera State** (phase 6, appareil photo réel) : quand l'appareil a un appareil photo, l'écran caméra demande l'autorisation (« Autorisez l'accès à l'appareil photo »), puis montre l'aperçu en direct ; refus → « Accès à l'appareil photo refusé » + « Choisir dans la galerie » ; caméra occupée → « Appareil photo indisponible » + « Réessayer ». Fond toujours sombre, Spot Phosphor Duotone `camera` / `camera-slash`. Sans appareil photo accessible : caméra simulée.
 
 **Emergency Notice** : bandeau `--error` soft : « En cas d'urgence nécessitant une intervention immédiate, contactez les services d'urgence appropriés. » Il apparaît dans le parcours de signalement des catégories critiques et sur l'écran d'urgence.
 
