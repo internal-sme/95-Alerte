@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Signaler · Lieu hors du Val-d'Oise</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="/_blob/1bf65a5c9978cc4d2dfc271d0369d7c4">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="a95 {{theme}}" style="width: 390px; height: 844px">
+  <div class="screen95">
+<div class="stack-layer is-modal"><div class="screen report-flow is-place"><header class="screen-header"><a class="icon-btn" aria-label="Étape précédente" href="{{l.ReportCategory}}"><span class="ph i i-caret-left" aria-hidden="true"></span></a><h1>Signaler</h1><a class="icon-btn" aria-label="Quitter le signalement" href="{{l.ReportQuit}}"><span class="ph i i-x" aria-hidden="true"></span></a></header><div class="report-progress"><div class="stepper" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="3" aria-label="Étape 3 sur 7"><div class="lbl"><span>Étape 3 sur 7</span><span>Lieu</span></div><div class="track"><i style="width: 42.8571%;"></i></div></div></div><div class="report-place"><div class="pin-map" role="application" aria-label="Carte : déplacez-la pour placer l'épingle sur le lieu. Flèches pour déplacer, plus et moins pour zoomer."><div class="map95 map-live is-static lv-3"><svg class="map-geo" width="390" height="537" aria-hidden="true"><g transform="translate(1507.7364000000011 -332.62799999992774) scale(120)"></g></svg></div><span class="pick-shadow" aria-hidden="true"></span><span class="pick-pin" aria-hidden="true"><span class="marker fam-incident"><svg class="shape" viewBox="0 0 36 36" aria-hidden="true"><path d="M18 2.5 33.5 18 18 33.5 2.5 18Z" stroke-linejoin="round"></path></svg><span class="ph i i-fire-fill" aria-hidden="true"></span></span></span><span class="pick-bubble" aria-hidden="true">Vérifiez que la position est correcte</span><div class="pick-zoom" role="group" aria-label="Zoom"><button type="button" class="icon-btn" aria-label="Zoomer"><span class="ph i i-plus" aria-hidden="true"></span></button><button type="button" class="icon-btn" aria-label="Dézoomer"><span class="ph i i-minus" aria-hidden="true"></span></button></div></div><div class="place-search"><div class="search-field"><span class="ph i i-magnifying-glass" aria-hidden="true"></span><input class="input" type="search" placeholder="Rechercher une adresse, une commune…" aria-label="Rechercher une adresse" value=""></div></div></div><div class="place-panel" aria-live="polite"><p class="place-addr is-out"><span class="ph i i-map-trifold" aria-hidden="true"></span><b>Hors du Val-d'Oise</b></p><p class="place-sub">95 Alerte n'est pas encore disponible dans cette zone.</p><a class="btn btn-tertiary btn-inline" href="{{l.ReportPlace}}"><span class="ph i i-crosshair" aria-hidden="true"></span>Utiliser ma position</a></div><div class="screen-footer report-footer"><button type="button" class="btn btn-primary btn-block" disabled="">Confirmer cette position</button></div></div></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark": {"editor": "boolean", "default": false}, "$preview": {"width": 390, "height": 844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const s = this.props.dark === true ? '-dark' : '';
+    const go = (n) => n + s + '.dc.html';
+    return { theme: s ? 't-dark' : 't-light', l: { Activity: go('Activity'), Alerts: go('Alerts'), Login: go('Login'), Main: go('Main'), MapSelected: go('MapSelected'), Profile: go('Profile'), Report: go('Report'), ReportCategory: go('ReportCategory'), ReportPlace: go('ReportPlace'), ReportQuit: go('ReportQuit') } };
+  }
+}
+</script>
+</body>
+</html>
