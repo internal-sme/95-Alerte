@@ -8,7 +8,7 @@ Sources du canevas Design publié : https://claude.ai/artifact/Sd2XN1KjGF8LzZ1rt
   Les planches `*-dark.dc.html` montent l'écran clair correspondant avec `dark`.
   `AlertCard.dc.html` est le composant carte d'alerte, monté par les écrans (`<dc-import name="AlertCard" row=…>`).
 - Feuille de style partagée : générée par `python3 tools/build_canvas_css.py`, puis téléversée
-  comme ressource du canevas (`/_blob/127f05763423314958ff0e5c7ffbfd12`). À re-téléverser et
+  comme ressource du canevas (`/_blob/aff4adacc132a3253f74aa8a13431724`). À re-téléverser et
   re-pointer dans chaque planche si le Design System change.
 
 À chaque phase terminée, ajouter ou mettre à jour les planches des nouveaux écrans.

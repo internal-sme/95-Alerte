@@ -7,6 +7,12 @@ import { MapStyleSheet } from "@/map/MapStyleSheet";
 import { ActivityScreen } from "@/screens/activity/ActivityScreen";
 import { AlertsScreen } from "@/screens/alerts/AlertsScreen";
 import { VerifyIdentityScreen } from "@/screens/auth/VerifyIdentityScreen";
+import { CommentIdentitySheet } from "@/screens/comments/CommentIdentitySheet";
+import { CommentMenuSheet } from "@/screens/comments/CommentMenuSheet";
+import { CommentsScreen } from "@/screens/comments/CommentsScreen";
+import { ReportContentScreen } from "@/screens/comments/ReportContentScreen";
+import { RulesSheet } from "@/screens/comments/RulesSheet";
+import { threadOf } from "@/screens/comments/comments";
 import { AlertDetail } from "@/screens/detail/AlertDetail";
 import { AlertMenuSheet } from "@/screens/detail/AlertMenuSheet";
 import { EmergencyScreen } from "@/screens/detail/EmergencyScreen";
@@ -24,7 +30,7 @@ import { ProfileScreen } from "@/screens/profile/ProfileScreen";
 import { GallerySheet } from "@/screens/report/GallerySheet";
 import { ReportScreen } from "@/screens/report/ReportScreen";
 import { SearchScreen } from "@/screens/search/SearchScreen";
-import { routeAlert } from "@/utils/index";
+import { publicAuthor, routeAlert } from "@/utils/index";
 
 export const TAB_SCREENS = { map: MapScreen, alerts: AlertsScreen, activity: ActivityScreen, profile: ProfileScreen };
 
@@ -37,6 +43,8 @@ export const STACK_SCREENS = {
   alert: { component: AlertDetail, modal: true },
   emergency: { component: EmergencyScreen, modal: true },
   "photo-viewer": { component: PhotoViewer, modal: true },
+  comments: { component: CommentsScreen, modal: true },
+  "report-content": { component: ReportContentScreen, modal: true },
 };
 
 export const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", component: DemoSheetContent }, "map-legend": { title: "Comprendre la carte", component: MapLegendSheet }, "map-filters": { title: "Filtres", component: FiltersSheet }, "list-sort": { title: "Trier par", component: SortSheet }, "location-help": { title: "Activer la localisation", component: LocationHelpSheet }, "location-why": { title: "Comment ma position est utilisée", component: LocationWhySheet },
@@ -47,4 +55,7 @@ export const SHEETS = { "demo-sheet": { title: "Exemple de bottom sheet", compon
   "sign-in": { title: (p) => SIGN_IN_REASONS[p.reason || "vote"].title, component: SignInSheet },
   share: { title: "Partager l'alerte", component: ShareSheet },
   "alert-menu": { title: "Options", component: AlertMenuSheet },
+  "comment-menu": { title: "Commentaire", subtitle: (p, st) => { const a = st.alerts.find((x) => x.id === p.alertId); const c = a ? threadOf(st, a).find((x) => x.id === p.commentId) : null; return c && !c.status ? publicAuthor(c).name : null; }, component: CommentMenuSheet },
+  "comment-identity": { title: "Commenter en tant que", component: CommentIdentitySheet },
+  "community-rules": { title: "Règles de la communauté", component: RulesSheet },
 };

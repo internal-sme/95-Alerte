@@ -53,6 +53,6 @@ La conversion est reproductible : relancée, elle redonne exactement ce dossier.
 
 ## Parité vérifiée (phase 6)
 
-- Les 98 écrans et états du catalogue « Écrans par phase » (phases 0 à 6, caméra réelle comprise) ont été ouverts dans l'artefact et dans cette app, en clair et en sombre, à 390 × 844. Le texte est identique, aucune capture ne diffère de plus de 0,2 % des pixels, et aucune erreur n'apparaît dans la console.
+- Les 123 écrans et états du catalogue « Écrans par phase » (phases 0 à 7) ont été ouverts dans l'artefact et dans cette app, en clair et en sombre, à 390 × 844. Le texte est identique, aucune capture ne diffère de plus de 0,2 % des pixels, et aucune erreur n'apparaît dans la console.
 - La vraie caméra (6.12) a été testée avec une caméra virtuelle Chromium : autorisation accordée (photo réelle publiée), refusée, caméra occupée, aucune caméra (caméra simulée).
 - Les scénarios S3 et S4 (signalement positif identifié, incendie anonyme transmis au service) se jouent de bout en bout, brouillon gardé et repris compris.

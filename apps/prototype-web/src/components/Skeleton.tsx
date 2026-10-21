@@ -1,6 +1,6 @@
 export interface SkeletonProps {
   height?: any;
-  width?: string;
+  width?: any;
   radius?: any;
 }
 

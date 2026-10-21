@@ -10,7 +10,7 @@ export interface AlertMenuSheetProps {
 
 export function AlertMenuSheet({ id }: AlertMenuSheetProps) {
   const { state, dispatch } = useStore();
-  const { closeSheet, toast, confirm } = useActions();
+  const { closeSheet, toast, confirm, push, openSheet } = useActions();
   const alert = state.alerts.find((a) => a.id === id);
   if (!alert) return null;
   const mine = state.session.user && alert.authorId === ME_ID && !alert.anonymous;
@@ -27,8 +27,12 @@ export function AlertMenuSheet({ id }: AlertMenuSheetProps) {
   return (
     <div className="menu-list">
       <MenuRow icon="link" label="Copier le lien" help="Pour le coller dans un message" onClick={copy} />
-      <MenuRow icon="flag" label="Signaler cette alerte" help="Fausse, offensante, mauvaise catégorie ou mauvais lieu…" more
-        onClick={() => { closeSheet(); toast("Le signalement d'un contenu arrive avec la modération (phase 7).", { tone: "info" }); }} />
+      {state.reports[`alert:${alert.id}`] ? (
+        <MenuRow icon="flag" label="Alerte signalée" help="Merci : la modération va l'examiner." disabled />
+      ) : (
+        <MenuRow icon="flag" label="Signaler cette alerte" help="Fausse, offensante, mauvaise catégorie ou mauvais lieu…" more
+          onClick={() => (state.session.user ? push("report-content", { kind: "alert", alertId: alert.id }) : openSheet("sign-in", { reason: "flag" }))} />
+      )}
       {mine ? (
         <Fragment>
           <hr />

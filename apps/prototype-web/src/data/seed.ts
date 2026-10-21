@@ -203,6 +203,7 @@ export const SEED_COMMENTS: Record<string, Comment[]> = {
   a1: [
     { id: "c1", authorId: "u2", anonymous: false, body: "Les pompiers arrivent, on entend les sirènes depuis la place.", ageMin: 8 },
     { id: "c2", authorId: "u5", anonymous: true, body: "Merci pour l'info, je passe par Saint-Martin.", ageMin: 4, parentId: "c1" },
+    { id: "c7", authorId: "u8", anonymous: false, body: "", ageMin: 6, status: "moderated" }, // masqué par la modération (7.6) : le texte n'est jamais affiché
   ],
   a3: [{ id: "c3", authorId: "u7", anonymous: false, body: "Le service est passé ce midi, tout est propre maintenant.", ageMin: 90 }],
   a4: [

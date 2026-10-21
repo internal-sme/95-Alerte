@@ -1,8 +1,11 @@
-import { SEED_ALERTS, USERS } from "@/data/seed";
+import { ME_ID, MIN, SEED_ALERTS, USERS } from "@/data/seed";
 import { DEFAULT_FILTER } from "@/filters/filters";
 import { projectKm } from "@/map/geo";
+import { seedThread } from "@/screens/comments/comments";
 import { reverseGeocode } from "@/screens/report/report";
 import { DEFAULT_POSITION, initialAuth } from "@/store/store";
+
+import type { Comment } from "@/types";
 
 /* =====================================================================
    ÉCRANS PAR PHASE (panneau de démo) : ouvrir directement ce qui a été réalisé à chaque phase
@@ -44,6 +47,22 @@ export const jumpReport = (s, patch: Record<string, any> = {}, o: Record<string,
   const draft = { step: "type", type: "negative", categoryId: "incendie", place: reverseGeocode(k.x, k.y), title: "Incendie rue Carnot",
     description: "Fumée noire au-dessus des toits, odeur de brûlé jusqu'à la gare.", photos: [{ id: "ph-1", key: "a1-1", status: "done", progress: 100 }], identity: "anonymous", ...patch };
   return { ...jumpApp(s, { nav: jumpStack("report"), sheet: o.sheet, modal: o.modal, demo: o.demo }), draft };
+};
+
+/* Phase 7 : le fil de l'incendie rue Carnot (a1), ouvert depuis sa fiche */
+export const MY_COMMENT = { id: "k-demo", authorId: ME_ID, anonymous: false, body: "La rue Carnot est fermée côté gare, passez par la rue Thiers." };
+
+export const withMyComment = (s, patch: Record<string, any> = {}, extra = []) => {
+  const mine: Comment = { ...MY_COMMENT, createdAt: Date.now() - 2 * MIN, ...patch };
+  return { comments: { a1: [...seedThread(CARNOT), mine, ...extra] }, alerts: s.alerts.map((a) => (a.id === "a1" ? { ...a, commentsCount: CARNOT.commentsCount + 1 + extra.length - (mine.status === "deleted" ? 1 : 0) } : a)) };
+};
+
+export const jumpComments = (s, params: Record<string, any> = {}, o: Record<string, any> = {}) => {
+  const id = o.id || "a1";
+  const screen = o.screen || "comments";
+  const stack = [{ id: "alert", params: { id }, key: `alert-${id}-jump` }, { id: screen, params: { id, ...params }, key: `${screen}-jump-${Date.now()}` }];
+  const base = jumpApp(s, { guest: o.guest, nav: { tab: "map", stack }, sheet: o.sheet, modal: o.modal, demo: o.demo, alerts: o.alerts });
+  return { ...base, comments: o.comments || {}, reports: o.reports || {}, prefs: { ...base.prefs, lastCommentIdentity: "profile" } };
 };
 
 export const PHASE_SCREENS = [
@@ -159,7 +178,33 @@ export const PHASE_SCREENS = [
     ["Reprendre un brouillon", (s) => jumpReport(s, { step: "photo", saved: true })],
     ["Signaler sans compte", (s) => jumpApp(s, { guest: true, sheet: jumpSheet("sign-in", "half", { reason: "report" }) })],
   ] },
-  { n: 7, title: "Commentaires et signalement de contenu", items: [] },
+  { n: 7, title: "Commentaires et signalement de contenu", items: [
+    ["Commentaires (fil)", (s) => jumpComments(s)],
+    ["Chargement des commentaires", (s) => jumpComments(s, { view: "loading" })],
+    ["Erreur de chargement", (s) => jumpComments(s, { view: "error" })],
+    ["Aucun commentaire", (s) => jumpComments(s, {}, { id: "a6", alerts: s.alerts.map((a) => (a.id === "a6" ? { ...a, commentsCount: 0 } : a)), comments: { a6: [] } })],
+    ["Répondre à un commentaire", (s) => jumpComments(s, { replyTo: "c1" })],
+    ["Commentaire publié", (s) => ({ ...jumpComments(s, { highlight: MY_COMMENT.id }, withMyComment(s)), toasts: [{ id: Date.now(), text: "Commentaire publié.", tone: "success" }] })],
+    ["Commenter en tant que…", (s) => jumpComments(s, {}, { sheet: jumpSheet("comment-identity") })],
+    ["Donnée personnelle refusée", (s) => jumpComments(s, { draftText: "Le conducteur de la AB-123-CD bloque la rue, appelez-moi au 06 12 34 56 78.", submitted: true })],
+    ["Menu d'un commentaire", (s) => jumpComments(s, {}, { sheet: jumpSheet("comment-menu", "half", { alertId: "a1", commentId: "c1" }) })],
+    ["Menu de mon commentaire", (s) => jumpComments(s, {}, { ...withMyComment(s), sheet: jumpSheet("comment-menu", "half", { alertId: "a1", commentId: MY_COMMENT.id }) })],
+    ["Supprimer : confirmation", (s) => jumpComments(s, {}, { ...withMyComment(s), modal: { title: "Supprimer ce commentaire ?", body: "Il ne sera plus visible. Les réponses restent. Cette action est définitive.", confirmLabel: "Supprimer", destructive: true } })],
+    ["Commentaire supprimé (avec réponses)", (s) => jumpComments(s, {}, withMyComment(s, { status: "deleted", body: "", parentId: undefined }, [{ id: "k-rep", authorId: "u3", anonymous: false, body: "Merci, je fais le tour par la rue Thiers.", parentId: MY_COMMENT.id, createdAt: Date.now() - MIN }]))],
+    ["Commentaire masqué par la modération", (s) => jumpComments(s, { highlight: "c7" })],
+    ["Commentaires sans compte", (s) => jumpComments(s, {}, { guest: true })],
+    ["Commentaires hors connexion", (s) => jumpComments(s, {}, { demo: { offline: true } })],
+    ["Alerte expirée : commentaires fermés", (s) => jumpComments(s, {}, { id: "a23" })],
+    ["Règles de la communauté", (s) => jumpComments(s, {}, { sheet: jumpSheet("community-rules") })],
+    ["Signaler l'alerte · motif", (s) => jumpComments(s, { kind: "alert", alertId: "a1" }, { screen: "report-content" })],
+    ["Signaler · information dangereuse", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "dangereux" }, { screen: "report-content" })],
+    ["Signaler · confirmer", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "faux", step: "confirm", note: "Je suis devant la gare : aucune fumée." }, { screen: "report-content" })],
+    ["Signaler · envoi impossible", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "faux", step: "error" }, { screen: "report-content", demo: { networkError: true } })],
+    ["Signaler · merci", (s) => jumpComments(s, { kind: "alert", alertId: "a1", reason: "faux", step: "done" }, { screen: "report-content", reports: { "alert:a1": { reason: "faux" } } })],
+    ["Signaler un commentaire", (s) => jumpComments(s, { kind: "comment", alertId: "a1", commentId: "c1" }, { screen: "report-content" })],
+    ["Alerte déjà signalée (menu ⋯)", (s) => ({ ...jumpApp(s, { nav: jumpAlert("a1"), sheet: jumpSheet("alert-menu", "half", { id: "a1" }) }), reports: { "alert:a1": { reason: "faux" } } })],
+    ["Signaler sans compte", (s) => jumpComments(s, {}, { guest: true, sheet: jumpSheet("sign-in", "half", { reason: "flag" }) })],
+  ] },
   { n: 8, title: "Activité et notifications", items: [] },
   { n: 9, title: "Profil, paramètres, aide, légal", items: [] },
   { n: 10, title: "États transverses, recette et scénarios de test", items: [], scenarios: true },

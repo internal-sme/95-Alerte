@@ -27,6 +27,8 @@ ICONS = [
     "sliders-horizontal", "crosshair", "map-pin", "arrow-fat-up", "arrow-fat-down",
     "chat-circle", "flag", "share-network", "bookmark-simple", "timer", "seal-check",
     "detective", "siren", "wifi-slash",
+    # Phase 7 : commentaires et signalement de contenu
+    "arrow-bend-up-left", "dots-three-vertical", "shield-check", "prohibit",
     # Utilitaires
     "warning", "check", "check-circle", "x", "caret-right", "caret-left", "caret-down",
     "arrow-right", "camera", "image", "pencil-simple", "eye", "eye-slash", "lock-simple",
@@ -59,7 +61,7 @@ FILL = [
 # Illustrations ponctuelles (écrans de confirmation, états) : Phosphor Duotone, même bibliothèque que l'interface
 DUOTONE = ["envelope-open", "hand-waving", "seal-check", "map-trifold", "identification-card", "shield-check",
            "megaphone", "hand-heart", "map-pin-area", "compass", "cloud-slash",
-           "siren", "trash", "eye-slash", "link-break", "pencil-simple", "camera", "camera-slash"]
+           "siren", "trash", "eye-slash", "link-break", "pencil-simple", "camera", "camera-slash", "chat-circle-dots", "flag", "shield-check", "prohibit"]
 
 
 def inner(svg: str) -> str:
