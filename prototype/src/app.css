@@ -86,7 +86,7 @@ button{font-family:inherit}
 /* ---- Panneau de démo ---- */
 .demo-toggle{position:fixed;right:16px;bottom:16px;z-index:200;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font:600 13px/1 var(--font);box-shadow:var(--shadow-2);cursor:pointer;opacity:.85}
 .demo-toggle:hover{opacity:1}
-@media (max-width:540px){.demo-toggle{right:8px;bottom:calc(var(--tabbar-h) + 8px);min-height:32px;padding:0 10px;font-size:11px;opacity:.6}.demo-panel{right:8px;left:8px;width:auto;top:8px;bottom:auto;max-height:calc(100% - var(--tabbar-h) - 56px)}}
+@media (max-width:540px){.toast-host:not(.no-tabbar){bottom:calc(var(--tabbar-h) + 48px)}.demo-toggle{right:8px;bottom:calc(var(--tabbar-h) + 8px);min-height:32px;padding:0 10px;font-size:11px;opacity:.6}.demo-panel{right:8px;left:8px;width:auto;top:8px;bottom:auto;max-height:calc(100% - var(--tabbar-h) - 56px)}}
 .demo-panel{position:fixed;right:16px;bottom:64px;z-index:201;width:min(340px,calc(100% - 32px));max-height:calc(100% - 96px);overflow-y:auto;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-3);padding:var(--s-4);display:grid;gap:var(--s-3)}
 .demo-panel h2{margin:0;font:700 var(--fs-h3)/var(--lh-h3) var(--font);display:flex;align-items:center;gap:8px}
 .demo-panel .switch{min-height:40px;font-size:var(--fs-sm)}
@@ -110,3 +110,6 @@ button{font-family:inherit}
 .phase-name{margin:0;display:grid;gap:2px;color:var(--text-muted);font:400 var(--fs-caption)/var(--lh-caption) var(--font)}
 .phase-name b{color:var(--text);font:600 var(--fs-sm)/var(--lh-sm) var(--font)}
 .phase-list .list-item{min-height:44px;font-size:var(--fs-sm)}
+
+/* Smart animate : sous un écran empilé (fiche, recherche), l'écran d'onglet ne partage plus ses éléments nommés */
+.screen-area:has(> .stack-layer) > .screen :is(.map-chips, .map-top .search, .view-toggle){view-transition-name:none}

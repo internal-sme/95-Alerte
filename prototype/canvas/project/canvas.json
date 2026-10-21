@@ -28,6 +28,10 @@
     {
       "id": "p4",
       "name": "Phase 4 · Liste, recherche et filtres"
+    },
+    {
+      "id": "p5",
+      "name": "Phase 5 · Fiche alerte et votes"
     }
   ],
   "boards": {
@@ -1568,6 +1572,546 @@
       "title": "Recherche · aucun résultat (sombre)",
       "is_interactive": true,
       "page": "p4"
+    },
+    "DetailUrgent.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · incendie urgent",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailUrgent-dark.dc.html": {
+      "x": 0,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · incendie urgent (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "Emergency.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Situation urgente ?",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "Emergency-dark.dc.html": {
+      "x": 470,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Situation urgente ? (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "Detail.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · nid-de-poule",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "Detail-dark.dc.html": {
+      "x": 940,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · nid-de-poule (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailVoted.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · vote enregistré",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailVoted-dark.dc.html": {
+      "x": 1410,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · vote enregistré (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailFollow.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Être prévenu ? (premier suivi)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailFollow-dark.dc.html": {
+      "x": 1880,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Être prévenu ? (premier suivi) (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailFollowed.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · alerte suivie",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailFollowed-dark.dc.html": {
+      "x": 2350,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · alerte suivie (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailShare.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Partager l'alerte",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailShare-dark.dc.html": {
+      "x": 2820,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Partager l'alerte (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailTimeline.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Suivi du traitement",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailTimeline-dark.dc.html": {
+      "x": 3290,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Suivi du traitement (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailMenu.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Menu ⋯",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailMenu-dark.dc.html": {
+      "x": 3760,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Menu ⋯ (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailMine.dc.html": {
+      "x": 4230,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · mon alerte",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailMine-dark.dc.html": {
+      "x": 4230,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · mon alerte (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MenuMine.dc.html": {
+      "x": 4700,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Menu ⋯ · mon alerte",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MenuMine-dark.dc.html": {
+      "x": 4700,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Menu ⋯ · mon alerte (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DeleteConfirm.dc.html": {
+      "x": 5170,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Supprimer : confirmation",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DeleteConfirm-dark.dc.html": {
+      "x": 5170,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Supprimer : confirmation (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "Deleted.dc.html": {
+      "x": 5640,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte supprimée",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "Deleted-dark.dc.html": {
+      "x": 5640,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte supprimée (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailPositive.dc.html": {
+      "x": 0,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · événement positif",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailPositive-dark.dc.html": {
+      "x": 0,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · événement positif (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailZone.dc.html": {
+      "x": 470,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · alerte de zone",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailZone-dark.dc.html": {
+      "x": 470,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · alerte de zone (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailDuplicate.dc.html": {
+      "x": 940,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · doublons",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailDuplicate-dark.dc.html": {
+      "x": 940,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · doublons (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailSoon.dc.html": {
+      "x": 1410,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · expire bientôt",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailSoon-dark.dc.html": {
+      "x": 1410,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · expire bientôt (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailExpired.dc.html": {
+      "x": 1880,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · alerte expirée",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailExpired-dark.dc.html": {
+      "x": 1880,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · alerte expirée (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailModerated.dc.html": {
+      "x": 2350,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte modérée",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailModerated-dark.dc.html": {
+      "x": 2350,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte modérée (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailLoading.dc.html": {
+      "x": 2820,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · chargement",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailLoading-dark.dc.html": {
+      "x": 2820,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · chargement (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailError.dc.html": {
+      "x": 3290,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · erreur de chargement",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailError-dark.dc.html": {
+      "x": 3290,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · erreur de chargement (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailOffline.dc.html": {
+      "x": 3760,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · hors connexion",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailOffline-dark.dc.html": {
+      "x": 3760,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · hors connexion (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailGuest.dc.html": {
+      "x": 4230,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Voter sans compte",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailGuest-dark.dc.html": {
+      "x": 4230,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Voter sans compte (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "OnbMapStyle.dc.html": {
+      "x": 0,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (plan)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "OnbMapStyle-dark.dc.html": {
+      "x": 0,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (plan) (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "OnbMapStyleSat.dc.html": {
+      "x": 470,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (satellite)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "OnbMapStyleSat-dark.dc.html": {
+      "x": 470,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Onboarding · choix de la carte (satellite) (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheet.dc.html": {
+      "x": 940,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · plan",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheet-dark.dc.html": {
+      "x": 940,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · plan (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheetSat.dc.html": {
+      "x": 1410,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · satellite",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapStyleSheetSat-dark.dc.html": {
+      "x": 1410,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Fond de carte · satellite (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapSatellite.dc.html": {
+      "x": 1880,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Carte satellite",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "MapSatellite-dark.dc.html": {
+      "x": 1880,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Carte satellite (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailSatellite.dc.html": {
+      "x": 2350,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · mini-carte satellite",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "DetailSatellite-dark.dc.html": {
+      "x": 2350,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Fiche · mini-carte satellite (sombre)",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "ProfileMapStyle.dc.html": {
+      "x": 2820,
+      "y": 4800,
+      "w": 390,
+      "h": 844,
+      "title": "Profil · fond de carte",
+      "is_interactive": true,
+      "page": "p5"
+    },
+    "ProfileMapStyle-dark.dc.html": {
+      "x": 2820,
+      "y": 6000,
+      "w": 390,
+      "h": 844,
+      "title": "Profil · fond de carte (sombre)",
+      "is_interactive": true,
+      "page": "p5"
     }
   },
   "order": [
@@ -1741,7 +2285,67 @@
     "AlertsNoMatch-dark.dc.html",
     "AlertsEmpty-dark.dc.html",
     "SearchNone.dc.html",
-    "SearchNone-dark.dc.html"
+    "SearchNone-dark.dc.html",
+    "DetailUrgent.dc.html",
+    "DetailUrgent-dark.dc.html",
+    "Emergency.dc.html",
+    "Emergency-dark.dc.html",
+    "Detail.dc.html",
+    "Detail-dark.dc.html",
+    "DetailVoted.dc.html",
+    "DetailVoted-dark.dc.html",
+    "DetailFollow.dc.html",
+    "DetailFollow-dark.dc.html",
+    "DetailFollowed.dc.html",
+    "DetailFollowed-dark.dc.html",
+    "DetailShare.dc.html",
+    "DetailShare-dark.dc.html",
+    "DetailTimeline.dc.html",
+    "DetailTimeline-dark.dc.html",
+    "DetailMenu.dc.html",
+    "DetailMenu-dark.dc.html",
+    "DetailMine.dc.html",
+    "DetailMine-dark.dc.html",
+    "MenuMine.dc.html",
+    "MenuMine-dark.dc.html",
+    "DeleteConfirm.dc.html",
+    "DeleteConfirm-dark.dc.html",
+    "Deleted.dc.html",
+    "Deleted-dark.dc.html",
+    "DetailPositive.dc.html",
+    "DetailPositive-dark.dc.html",
+    "DetailZone.dc.html",
+    "DetailZone-dark.dc.html",
+    "DetailDuplicate.dc.html",
+    "DetailDuplicate-dark.dc.html",
+    "DetailSoon.dc.html",
+    "DetailSoon-dark.dc.html",
+    "DetailExpired.dc.html",
+    "DetailExpired-dark.dc.html",
+    "DetailModerated.dc.html",
+    "DetailModerated-dark.dc.html",
+    "DetailLoading.dc.html",
+    "DetailLoading-dark.dc.html",
+    "DetailError.dc.html",
+    "DetailError-dark.dc.html",
+    "DetailOffline.dc.html",
+    "DetailOffline-dark.dc.html",
+    "DetailGuest.dc.html",
+    "DetailGuest-dark.dc.html",
+    "OnbMapStyle.dc.html",
+    "OnbMapStyle-dark.dc.html",
+    "OnbMapStyleSat.dc.html",
+    "OnbMapStyleSat-dark.dc.html",
+    "MapStyleSheet.dc.html",
+    "MapStyleSheet-dark.dc.html",
+    "MapStyleSheetSat.dc.html",
+    "MapStyleSheetSat-dark.dc.html",
+    "MapSatellite.dc.html",
+    "MapSatellite-dark.dc.html",
+    "DetailSatellite.dc.html",
+    "DetailSatellite-dark.dc.html",
+    "ProfileMapStyle.dc.html",
+    "ProfileMapStyle-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -1940,6 +2544,72 @@
       "fill": "blue",
       "page": "p4",
       "text": "Phase 4 · liste, recherche et filtres (rapport docs/benchmark/liste-refonte.html)\n\nPlay sur « Alertes · fil » : « ⇅ Pertinence » ouvre le tri (Distance = Autour de moi), le bouton Filtres la feuille (Positives + Culture + 5 km → 1 alerte, même résultat sur la carte), la barre de recherche la recherche (« car » → rue Carnot → la carte se centre sur le lieu, « Suivre cette zone » / « Revenir à ma zone »).\n\nDécisions : F1 Autour de moi = tri Distance ; F2 vignette à droite ; F3 la recherche ne change pas la zone suivie ; F4 période 1 h · 6 h · aujourd'hui · 24 h ; F5 5 recherches récentes sur l'appareil.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+    },
+    "p5Light": {
+      "x": 0,
+      "y": -300,
+      "text": "Fiche alerte et votes · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5Dark": {
+      "x": 0,
+      "y": 900,
+      "text": "Fiche alerte et votes · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5States": {
+      "x": 0,
+      "y": 2100,
+      "text": "États · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5StatesDark": {
+      "x": 0,
+      "y": 3300,
+      "text": "États · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5How": {
+      "x": 4700,
+      "y": 2400,
+      "w": 340,
+      "maxH": 760,
+      "fill": "blue",
+      "page": "p5",
+      "text": "Phase 5 · fiche alerte et votes (rapport docs/benchmark/fiche-refonte.html)\n\nPlay sur « Fiche · nid-de-poule » : Confirmer enregistre le vote (retoucher le retire), Suivre ouvre « Être prévenu ? » au premier suivi, Partager montre ce qui est partagé, « Voir le suivi du traitement » la timeline, ⋯ le menu. « Fiche · incendie urgent » mène à « Situation urgente ? » et aux doublons ; « Fiche · mon alerte » à la suppression confirmée.\n\nDécisions : G1 fiche en écran empilé (smart animate du type et du titre depuis le résumé) ; G2 un vote modifiable, retirable ; G3 112, 18, 17, 15, 114 et un seul bouton rouge ; G4 photos Magnific (mini-carte sans photo) ; G5 expirée en lecture seule ; G6 aperçu des commentaires.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+    },
+    "p5Map": {
+      "x": 0,
+      "y": 4500,
+      "text": "Tâche 5.12 · fond de carte plan ou satellite · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5MapDark": {
+      "x": 0,
+      "y": 5700,
+      "text": "Tâche 5.12 · fond de carte · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p5"
+    },
+    "p5MapHow": {
+      "x": 3290,
+      "y": 4800,
+      "w": 340,
+      "maxH": 700,
+      "fill": "blue",
+      "page": "p5",
+      "text": "Tâche 5.12 · choisir son fond de carte\n\nOnboarding, étape 3 sur 3 : « Quelle carte préférez-vous ? », Plan ou Satellite ; la carte derrière change en direct. Ensuite : Profil › Affichage › Fond de carte, ou le bouton « calques » de la carte.\n\nSatellite : images Copernicus Sentinel-2 du 4 juin 2023 (10 m par pixel, données libres), posées sous les communes, routes et libellés. Google Earth ne peut pas être intégré au prototype : les artefacts bloquent les scripts, images et cadres de Google, et ses conditions interdisent de stocker ses images. En production, l'app pourra utiliser la vue satellite du SDK Google Maps (clé et facturation) ou les orthophotos IGN."
     }
   },
   "designSystems": []

@@ -35,8 +35,8 @@
 | 1 | Splash screen + Connexion (FranceConnect, compte, identité) | UI-001, UI-008→010 | ✅ Terminée |
 | 2 | Onboarding + territoire + localisation | UI-002→007 | ✅ Terminée (internal-sme/95-Alerte#11) |
 | 3 | Accueil — carte interactive | UI-011 / HOME-01 | ✅ Terminée (validée, PR vers `develop`) |
-| 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (validée, PR vers `develop`) |
-| 5 | Fiche alerte + votes | ALERT-03 | ⬜ À faire |
+| 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (internal-sme/95-Alerte#15) |
+| 5 | Fiche alerte + votes | ALERT-03 | ✅ Terminée (validée, PR vers `develop`) |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ⬜ À faire |
 | 7 | Commentaires + signalement de contenu | ALERT-04 | ⬜ À faire |
 | 8 | Activité + notifications | PROFILE-01, UI-013 | ⬜ À faire |
@@ -210,21 +210,30 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - Menu ⋯ en sheet, chaque action avec une ligne d'explication (Nextdoor)
 - Écran **Situation urgente ?** : numéros 112 / 18 / 17 / 15 affichés en clair, **un seul** bouton rouge (DoorDash, Waymo) — numéros à valider (PRD §13)
 
-- [ ] **5.1** ALERT-03 **En-tête** : type, catégorie, titre, date, lieu au niveau de précision autorisé, mini-carte
-- [ ] **5.2** **Compteur d'expiration** : « Visible encore 17 h 32 » + barre ; « Expire dans 45 min » ; état expiré
-- [ ] **5.3** Contenu : description, galerie photo/vidéo (plein écran, texte alternatif)
-- [ ] **5.4** Auteur public : « Jean D. » ou « Citoyen anonyme » — jamais d'email, de téléphone ou d'adresse
-- [ ] **5.5** **Votes** ⬆ Confirmer / ⬇ Contester : un vote par alerte, modifiable, compteurs mis à jour, pas de cœur ni de « j'aime »
-- [ ] **5.6** **Service** : « Transmis au service compétent » + **timeline** Envoyé → Transmis → Pris en compte → En traitement → Traité → Clôturé
-- [ ] **5.7** Actions : **Suivre cette alerte**, **Partager** (feuille de partage simulée : copier le lien, SMS, messageries), menu `⋯`
-- [ ] **5.8** Rappel d'urgence sur les catégories critiques + écran **Information d'urgence** (« 95 Alerte n'est pas un remplacement des services d'urgence »)
-- [ ] **5.9** Doublons : bandeau « Ces alertes semblent concerner le même événement. » avec liens
-- [ ] **5.10** États : alerte expirée (grisée), supprimée (« Cette alerte n'est plus disponible »), modérée
-- [ ] **5.11** Sheet d'opt-in aux notifications au premier « Suivre »
+**Décisions validées par l'utilisateur (« vas-y » sur les recommandations du rapport `docs/benchmark/fiche-refonte.html`)**
+- **G1** : la fiche est un écran empilé (comme la recherche), ouvert depuis le résumé de la carte, la liste et l'activité ; smart animate du type et du titre depuis le résumé
+- **G2** : un vote par alerte ; toucher l'autre bouton change le vote, retoucher le même le retire (« Vote retiré. »)
+- **G3** : écran « Situation urgente ? » avec 112, 18, 17, 15 et 114 (SMS) en clair, un seul bouton rouge « Appeler le 112 » qui ouvre le clavier du téléphone (lien `tel:`), jamais d'appel automatique
+- **G4** : photos de démonstration générées avec Magnific (rues du Val-d'Oise, personne d'identifiable), embarquées en WebP ; sans photo, la mini-carte prend la tête de la fiche
+- **G5** : alerte expirée absente de la carte et de la liste, consultable en lecture seule (grisée, votes fermés, « Cette alerte a expiré. »)
+- **G6** : aperçu des 2 derniers commentaires en lecture seule ; écrire, répondre et signaler arrivent en phase 7
 
-- [ ] **5.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+- [x] **5.1** ALERT-03 **En-tête** : type, catégorie, « Urgent », statut, titre, lieu au niveau de précision autorisé (halo pour le quartier, zone dessinée), publication, mini-carte au niveau de la rue
+- [x] **5.2** **Compteur d'expiration** : « Visible encore 17 h 32 » + barre ; « Expire dans 45 min » (orange) ; état expiré
+- [x] **5.3** Contenu : description, photo en tête (« 1 / 2 »), vignettes, visionneuse plein écran (« 1 sur 2 », balayage, flèches, Échap, texte alternatif lu et affiché) ; 6 photos Magnific importées (`tools/fetch_alert_photos.py`, originaux dans `docs/brand/alertes/`)
+- [x] **5.4** Auteur public : « Jean D. » ou « Citoyen anonyme », « (vous) » pour l'auteur — jamais d'email, de téléphone ou d'adresse
+- [x] **5.5** **Votes** : question « Ce signalement vous semble-t-il exact ? », Confirmer / Contester, un vote modifiable et retirable (G2), toasts « Merci, votre vote est enregistré. » / « Vote modifié. » / « Vote retiré. », compteurs à jour partout ; invité → feuille de connexion ; fermés si expirée ou hors connexion
+- [x] **5.6** **Service** : « Transmis au service compétent » + nom du service (catégorie + commune), progression en 6 segments, délai habituel s'il est fourni ; feuille **Suivi du traitement** (timeline horodatée Envoyé → … → Clôturé)
+- [x] **5.7** Actions : **Suivre** / « Suivie », **Partager** (aperçu sans donnée personnelle, Copier le lien, SMS, WhatsApp, Plus… simulés), menu `⋯` (Copier le lien, Signaler → phase 7, Supprimer mon alerte avec confirmation)
+- [x] **5.8** Rappel d'urgence sur les catégories d'incident + écran **Situation urgente ?** (G3)
+- [x] **5.9** Doublons : bandeau « Ces alertes semblent concerner le même événement. » + liens vers les autres fiches
+- [x] **5.10** États : chargement, erreur (« Impossible de charger cette alerte. »), hors connexion, expirée (G5), supprimée et modérée (« Cette alerte n'est plus disponible »)
+- [x] **5.11** Feuille « Être prévenu ? » au premier « Suivre » : Pour tout changement / Seulement le traitement / Non merci ; ensuite le choix est repris, modifiable depuis « Suivie »
+- [x] **5.12** *(ajoutée à la demande de l'utilisateur)* **Fond de carte Plan ou Satellite** : étape 3 sur 3 de l'onboarding « Quelle carte préférez-vous ? » (la carte derrière change en direct), réglage Profil › Affichage › Fond de carte, bouton « Fond de carte » (calques) sur la carte ; appliqué à la carte d'accueil, aux cartes de l'onboarding et à la mini-carte de la fiche. Satellite = images **Copernicus Sentinel-2** (4 juin 2023, 10 m par pixel, données libres) reprojetées dans le repère de la carte et embarquées (`tools/build_satellite_95.py`). **Google Earth n'est pas intégrable au prototype** : les artefacts bloquent les scripts, images et cadres externes (Google compris), l'API Google demande une clé et ses conditions interdisent de stocker ses images ; en production, la vue satellite du SDK Google Maps (clé, facturation) ou les orthophotos IGN (BD ORTHO, 20 cm) prendront le relais (ARCHITECTURE.md).
 
-**Validation** : S2 complet jusqu'au détail ; S5 jusqu'au vote ; un vote changé met à jour les compteurs partout (carte, liste, fiche).
+- [x] **5.C** Canevas : page « Phase 5 · Fiche alerte et votes », 23 planches en clair et en sombre reliées pour Play (le résumé de la carte et le fil y mènent) + 7 planches du fond de carte (onboarding plan et satellite, feuille, carte satellite, mini-carte, Profil) ; onboarding passé à 3 étapes
+
+**Validation** : S2 complet jusqu'au détail ; S5 jusqu'au vote ; un vote changé met à jour les compteurs partout (carte, liste, fiche). Vérifié : carte → résumé → fiche en 2 touchers, vote 24 → 25 puis modifié, retiré, et 25 dans le résumé de la carte au retour.
 
 ---
 
@@ -409,3 +418,8 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-16 | 4 | PR de la phase 3 (internal-sme/95-Alerte#13) fusionnée ; branche `phase/4-liste-recherche` créée depuis `develop`, étiquettes « New » de la phase 3 retirées. Benchmark Mobbin de la liste, de la recherche et des filtres (`docs/benchmark/liste-refonte.html`, publié sur https://claude.ai/artifact/E5PPNXtVreNP2fhnQGjy5X) : 12 flows (Uber Eats, Places, Apple Store, Pangea, Skip, Beli, Mindtrip, Gojek, Tock et Hypelist, Citizen, Nextdoor, Swarm), états vides, matrice, 10 enseignements, audit, 8 écrans cibles, plan en 6 lots (L0 à L5, tâches 4.1 à 4.7). Décisions F1 à F5 en attente. |
 | 2026-10-16 | 4 | Phase 4 réalisée selon F1 à F5 : AlertCard compacte, fil en sections avec tri (Pertinence, Distance = Autour de moi, Récentes), feuille de filtres complète avec compteur, filtres actifs retirables, recherche sur tout le territoire (lieu centré sur la carte sans changer la zone suivie, récentes), états. Validation vérifiée : « Positives + Culture + 5 km » → 1 alerte sur la liste et sur la carte (alerte de démo ajoutée à Pontoise). Design System : composants étiquetés « New » ; ARCHITECTURE.md : filtre, tri, pertinence et recherche. |
 | 2026-10-16 | 4 | Panneau Démo : section « Écrans par phase » (phases 0 à 10, un bouton par écran ou état réalisé, 48 écrans pour les phases 0 à 4 ; phases 5 à 9 « à venir » ; phase 10 : emplacement des scénarios de test S1 à S10 du PRD). Le prototype complet ne change pas : chaque bouton place l'app dans l'état voulu (action `JUMP`). Règle ajoutée dans AGENTS.md : chaque phase complète le catalogue `PHASE_SCREENS`. |
+| 2026-10-16 | 5 | PR de la phase 4 (internal-sme/95-Alerte#15) fusionnée ; branche `phase/5-fiche-alerte` créée depuis `develop`. Benchmark Mobbin de la fiche alerte et des votes (`docs/benchmark/fiche-refonte.html`, publié sur https://claude.ai/artifact/P6w33T9qaekfp4AEbFm8RX) : 12 flows (Citizen, Nextdoor, talabat, 7-Eleven / sweetgreen / Superpower, Digg / QUITTR, IMDb / Google Photos, Reddit / Google Photos, Strava / Particle, Lex / X / Medium, Bluesky / Handshake / Amazon, inDrive / Waymo, Orb / Bond), états expirée / supprimée, matrice, 10 enseignements, audit du résumé de la carte, 8 écrans cibles, plan en 6 lots (L0 à L5, tâches 5.1 à 5.11). Décisions G1 à G6 en attente ; aucun développement avant validation. |
+| 2026-10-21 | 5 | Phase 5 réalisée selon G1 à G6 : fiche alerte (écran empilé, smart animate depuis le résumé), votes avec question, service et timeline, suivre (opt-in au premier suivi), partager, menu ⋯ et suppression confirmée, écran « Situation urgente ? », doublons, états (chargement, erreur, hors connexion, expirée, supprimée, modérée). Audit corrigé : vote invité → feuille de connexion, un seul toast à la fois (ton info), « 1000 m » → « 1,0 km ». 6 photos générées avec Magnific ; leur téléchargement est bloqué par le réseau de l'environnement (`pikaso.cdnpk.net`) : la fiche montre la mini-carte en attendant. Démo › Écrans par phase : 20 écrans et états ; canevas : 23 planches. |
+| 2026-10-21 | 5 | Nouvelle tâche 5.12 demandée par l'utilisateur : choix du fond de carte Plan / Satellite (onboarding étape 3 sur 3, Profil, bouton calques de la carte). Google Earth testé : impossible dans un artefact (scripts, images et cadres Google bloqués, clé d'API, conditions d'utilisation) ; vue satellite construite à partir des images libres Copernicus Sentinel-2 (AWS Open Data, accessibles depuis l'environnement), 2 niveaux (département 25 m, Cergy-Pontoise 10 m), embarquées en WebP (1,4 Mo). Démo › Écrans par phase : 6 écrans de plus ; canevas : 7 planches de plus. |
+| 2026-10-21 | 5 | Accès réseau ouvert par l'utilisateur : les 6 photos Magnific sont importées (incendie gare et rue Carnot, nettoyage du parc, nid-de-poule, arbre tombé, halage inondé) ; fiche, vignettes de la liste et visionneuse les affichent. Canevas : planches de la fiche et de la liste régénérées avec les photos (ressources du canevas). |
+| 2026-10-21 | 5 | Phase 5 validée par l'utilisateur ; PR `phase/5-fiche-alerte` → `develop`. |

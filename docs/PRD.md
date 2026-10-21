@@ -70,6 +70,7 @@ Contexte d'usage : smartphone, **utilisation à une main, en mobilité**, consul
   3. « Une bonne nouvelle ? Partagez-la aussi. »
   4. « Votre territoire, votre vigilance. » — CTA **Commencer**
 - Choix du territoire (UI-006) et demande de géolocalisation **facultative** (UI-007).
+- **Choix du fond de carte** (ajout phase 5, tâche 5.12) : « Quelle carte préférez-vous ? » Plan ou Satellite, modifiable à tout moment dans les paramètres.
 
 ### F-02 · Connexion et identité (§8, §9, §43)
 - **FranceConnect** : « Continuer avec FranceConnect », avec une explication de la sécurisation de l'identité.
@@ -86,6 +87,7 @@ Contexte d'usage : smartphone, **utilisation à une main, en mobilité**, consul
 - **Ma position** : point « Vous êtes ici ». L'app fonctionne aussi avec une position choisie manuellement.
 - Tap sur un marqueur → **bottom sheet** de résumé (catégorie, ville, ancienneté, extrait, votes, commentaires, « Voir le détail »).
 - Barre de recherche en haut ; accès aux notifications et au profil.
+- **Fond de carte** Plan ou Satellite (bouton calques), même affichage des alertes sur les deux.
 
 ### F-04 · Recherche (§45) — UI-012
 - Recherche par ville, quartier, rue, événement, catégorie.
@@ -371,6 +373,6 @@ Dérivés des indicateurs prévus au back-office (§60) :
 2. Faut-il un compte pour **consulter** la carte, ou seulement pour signaler, commenter et voter ?
 3. Règle d'affichage de l'auteur des **commentaires** (« auteur ou anonyme selon règle »).
 4. Mode d'envoi réel aux services : email, accès agent au back-office, API.
-5. Numéros d'urgence affichés et contexte d'apparition du CTA « Appeler les services d'urgence ».
+5. Numéros d'urgence affichés et contexte d'apparition du CTA « Appeler les services d'urgence ». → **Décidé (phase 5, G3)** : 112, 18, 17, 15 et 114 (SMS) affichés sur l'écran « Situation urgente ? », ouvert depuis le rappel des catégories d'incident ; un seul bouton « Appeler le 112 » qui ouvre le clavier du téléphone, jamais d'appel automatique.
 6. Limites des médias : nombre de photos, durée et poids des vidéos.
 7. Fonctionnement réel du mode hors connexion.
