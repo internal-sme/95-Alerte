@@ -72,13 +72,28 @@ export interface Alert extends LatLng {
   areaKm: number | null;
 }
 
+/** Commentaire d'une alerte (F-10). Le nom public suit la règle des alertes : « Jean D. » ou « Citoyen anonyme » (I1). */
 export interface Comment {
   id: string;
   authorId: string;
   anonymous: boolean;
   body: string;
-  ageMin: number;
+  /** Commentaires de démonstration : âge en minutes au lancement */
+  ageMin?: number;
+  /** Commentaires publiés pendant la session : horodatage */
+  createdAt?: number;
+  /** Réponse : identifiant du commentaire racine (un seul niveau, I3) */
   parentId?: string;
+  /** Supprimé par son auteur (avec des réponses) ou masqué par la modération */
+  status?: "deleted" | "moderated";
+}
+
+/** Motif d'un signalement de contenu (F-11) */
+export type ReportReason = "faux" | "offensant" | "dangereux" | "spam" | "illegal" | "categorie" | "lieu" | "doublon" | "autre";
+
+/** Signalement envoyé : clé « alert:<id> » ou « comment:<alerte>:<commentaire> » (I5 : un par contenu et par personne) */
+export interface ContentReport {
+  reason: ReportReason;
 }
 
 export interface Notification {
@@ -155,6 +170,8 @@ export interface Prefs {
   mapStyle: "plan" | "satellite";
   /** Dernier choix d'identité au signalement (H3) */
   lastIdentity?: Identity;
+  /** Dernière identité choisie pour commenter (I1) */
+  lastCommentIdentity?: Identity;
   /** Niveau de suivi proposé, et opt-in déjà demandé (phase 5) */
   followLevel?: FollowLevel;
   followAsked?: boolean;
@@ -210,6 +227,7 @@ export interface AppState {
   listSort: string;
   mapFocus: any;
   draft: Draft | null;
+  reports: Record<string, ContentReport>;
   sheet: { id: string; params?: Record<string, any>; [key: string]: any } | null;
   modal: any;
   toasts: Toast[];

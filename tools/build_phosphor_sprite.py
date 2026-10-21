@@ -28,7 +28,7 @@ ICONS = [
     "chat-circle", "flag", "share-network", "bookmark-simple", "timer", "seal-check",
     "detective", "siren", "wifi-slash",
     # Phase 7 : commentaires et signalement de contenu
-    "arrow-bend-up-left", "dots-three-vertical", "shield-check",
+    "arrow-bend-up-left", "dots-three-vertical", "shield-check", "prohibit",
     # Utilitaires
     "warning", "check", "check-circle", "x", "caret-right", "caret-left", "caret-down",
     "arrow-right", "camera", "image", "pencil-simple", "eye", "eye-slash", "lock-simple",

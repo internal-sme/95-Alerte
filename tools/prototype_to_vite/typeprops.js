@@ -22,6 +22,16 @@ const OVERRIDE = { // props dont le type ne se déduit pas des sites d'appel
   'FeedSection.title': 'string', 'Hl.text': 'string', 'Hl.q': 'string',
   'CameraOverlay.photoKey': 'string', 'CameraOverlay.onShoot': '(shot: { key?: string; src?: string }) => void',
   'CameraOverlay.onClose': '() => void', 'CameraOverlay.onGallery': '() => void', 'CameraOverlay.forced': 'CameraMode | null',
+  'CommentsScreen.id': 'string', 'CommentsScreen.compose': 'boolean', 'CommentsScreen.replyTo': 'string', 'CommentsScreen.highlight': 'string',
+  'CommentsScreen.draftText': 'string', 'CommentsScreen.submitted': 'boolean', 'CommentsScreen.view': '"loading" | "error" | "ready"',
+  'Composer.replyTo': 'Comment | null', 'Composer.onCancelReply': '() => void', 'Composer.onPosted': '(commentId: string) => void',
+  'Composer.draftText': 'string', 'Composer.submitted': 'boolean',
+  'CommentItem.mine': 'boolean', 'CommentItem.isAuthor': 'boolean', 'CommentItem.highlight': 'boolean', 'CommentItem.onReply': '() => void', 'CommentItem.onMenu': '() => void',
+  'CommentMenuSheet.alertId': 'string', 'CommentMenuSheet.commentId': 'string', 'CommentMenuSheet.onReply': '() => void',
+  'ReportContentScreen.kind': '"alert" | "comment"', 'ReportContentScreen.alertId': 'string', 'ReportContentScreen.commentId': 'string',
+  'ReportContentScreen.step': '"reason" | "confirm" | "sending" | "error" | "done"', 'ReportContentScreen.reason': 'ReportReason | null', 'ReportContentScreen.note': 'string',
+  'ReasonOption.name': 'string', 'ReasonOption.value': 'string', 'ReasonOption.checked': 'boolean', 'ReasonOption.onChange': '(value: string) => void',
+  'ReasonOption.label': 'string', 'ReasonOption.help': 'string',
 };
 const typeOfExpr = (e) => {
   if (!e) return 'boolean';
@@ -99,7 +109,7 @@ for (const f of files) {
       }
       const required = !def && calls.length > 0 && calls.every((c) => c.spread || c.props.has(key));
       lines.push(`  ${key}${required ? '' : '?'}: ${t};`);
-      ['ReactNode', 'CSSProperties', 'Ref', 'Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep', 'CameraMode'].forEach((n) => { if (new RegExp(`\\b${n}\\b`).test(t)) USED.add(f + '|' + n); });
+      ['ReactNode', 'CSSProperties', 'Ref', 'Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep', 'CameraMode', 'ReportReason'].forEach((n) => { if (new RegExp(`\\b${n}\\b`).test(t)) USED.add(f + '|' + n); });
     }
     if (rest) lines.push('  [prop: string]: any;');
     const iface = `export interface ${name}Props {\n${lines.join('\n')}\n}\n\n`;
@@ -111,7 +121,7 @@ for (const f of files) {
   edits.sort((a, b) => b.at - a.at).forEach((e) => { src = src.slice(0, e.at) + e.text + src.slice(e.at); });
   // imports de types
   const reactTypes = ['ReactNode', 'CSSProperties', 'Ref'].filter((n) => USED.has(f + '|' + n));
-  const domain = ['Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep', 'CameraMode'].filter((n) => USED.has(f + '|' + n));
+  const domain = ['Alert', 'Draft', 'Category', 'Comment', 'DraftPhoto', 'LatLng', 'ReportStep', 'CameraMode', 'ReportReason'].filter((n) => USED.has(f + '|' + n));
   const imp = [];
   if (reactTypes.length) imp.push(`import type { ${reactTypes.join(', ')} } from "react";`);
   if (domain.length) imp.push(`import type { ${domain.join(', ')} } from "@/types";`);

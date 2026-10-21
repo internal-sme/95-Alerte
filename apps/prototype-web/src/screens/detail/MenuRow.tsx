@@ -7,14 +7,15 @@ export interface MenuRowProps {
   icon: string;
   label: string;
   help: ReactNode;
-  onClick: (...args: any[]) => any;
+  onClick?: (...args: any[]) => any;
   destructive?: boolean;
   more?: boolean;
+  disabled?: boolean;
 }
 
-export function MenuRow({ icon, label, help, onClick, destructive, more }: MenuRowProps) {
+export function MenuRow({ icon, label, help, onClick, destructive, more, disabled }: MenuRowProps) {
   return (
-    <button type="button" className={cx("menu-row", destructive && "is-destructive")} onClick={onClick}>
+    <button type="button" className={cx("menu-row", destructive && "is-destructive")} onClick={onClick} disabled={disabled}>
       <Icon name={icon} />
       <span><b>{label}</b>{help ? <small>{help}</small> : null}</span>
       {more ? <Icon name="caret-right" className="ph-sm" /> : null}

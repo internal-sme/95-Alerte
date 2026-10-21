@@ -16,7 +16,7 @@ const SECTIONS = [ // préfixe du titre de section → dossier, fichier des déc
   ['COMPOSANTS DE BASE', 'components', 'helpers'], ['NAVIGATION', 'navigation', 'helpers'],
   ['ÉCRANS — phase 0', 'screens/tabs', 'mapArt'], ['CARTE INTERACTIVE', 'map', 'geo'], ['FILTRES ET TRI', 'filters', 'filters'],
   ["ÉCRAN D'ACCUEIL", 'screens/home', 'helpers'], ['RECHERCHE', 'screens/search', 'search'], ['FIL DE', 'screens/alerts', 'feed'],
-  ['PHASE 6', 'screens/report', 'report'], ['PHASE 1', 'screens/auth', 'auth'], ['PHASE 2', 'screens/onboarding', 'onboarding'],
+  ['PHASE 6', 'screens/report', 'report'], ['PHASE 7', 'screens/comments', 'comments'], ['PHASE 1', 'screens/auth', 'auth'], ['PHASE 2', 'screens/onboarding', 'onboarding'],
   ['FICHE ALERTE', 'screens/detail', 'detail'], ['ÉCRANS PAR PHASE', 'demo', 'catalog'], ['PANNEAU DE DÉMO', 'demo', 'demoPanel'],
   ['APP', '', 'appHelpers'],
 ];

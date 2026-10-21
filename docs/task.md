@@ -38,7 +38,7 @@
 | 4 | Liste des alertes, recherche, filtres | ALERT-01, UI-012 | ✅ Terminée (internal-sme/95-Alerte#15) |
 | 5 | Fiche alerte + votes | ALERT-03 | ✅ Terminée (validée, PR vers `develop`) |
 | 6 | Création d'une alerte (+ Signaler) | ALERT-02 | ✅ Terminée (validée, PR vers `develop`) |
-| 7 | Commentaires + signalement de contenu | ALERT-04 | 🟨 En cours (benchmark à valider) |
+| 7 | Commentaires + signalement de contenu | ALERT-04 | 🟨 En cours (réalisée, en attente de validation) |
 | 8 | Activité + notifications | PROFILE-01, UI-013 | ⬜ À faire |
 | 9 | Profil, paramètres, aide, légal | UI-014→024 | ⬜ À faire |
 | 10 | États transverses, finitions, recette, publication | UI-025→029 | ⬜ À faire |
@@ -287,16 +287,24 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 - Signaler : liste de motifs avec une phrase d'aide sous le titre, puis écran « Merci » + lien vers les règles de la communauté (Clubhouse)
 - Toasts « Commentaire publié » / « Commentaire supprimé » (Nextdoor)
 
-- [ ] **7.1** ALERT-04 **Liste de commentaires** : auteur public ou anonyme, date relative, texte, réponses indentées d'un niveau, pagination « Voir plus »
-- [ ] **7.2** **Ajouter un commentaire** / répondre : champ en bas, publication → confirmation ; état vide « Aucun commentaire pour le moment. Soyez le premier à réagir. »
-- [ ] **7.3** Supprimer son propre commentaire (confirmation)
-- [ ] **7.4** **⚑ Signaler cette alerte** : motifs (faux, offensant, information dangereuse, spam, illégal, mauvaise catégorie, mauvaise localisation, doublon, autre) → confirmer → « Merci »
-- [ ] **7.5** Signaler un commentaire (même parcours)
-- [ ] **7.6** Affichage d'un commentaire modéré (« Ce commentaire a été masqué »)
+**Décisions validées par l'utilisateur (« vas-y » sur les recommandations du rapport `docs/benchmark/commentaires-refonte.html`)**
+- **I1** : identité des commentaires (PRD §13, point 3) : même règle que les alertes, « Jean D. » ou « Citoyen anonyme », choisie dans le champ (« Commenter en tant que … ⌄ ») ; dernier choix repris (préférence `lastCommentIdentity`) ; badge « Auteur » seulement si l'alerte n'est pas anonyme
+- **I2** : écran empilé « Commentaires » ouvert depuis la fiche ; la fiche garde l'aperçu des 2 derniers
+- **I3** : un seul niveau de réponses (« En réponse à … »), repliées au-delà de deux
+- **I4** : signalement en trois écrans : motif → confirmer (récapitulatif, précision facultative) → merci
+- **I5** : le contenu signalé reste visible (modération en phase B) ; « Signalé » pour la personne qui a signalé, un seul signalement par contenu
+- **I6** : feuille « Règles de la communauté » (5 règles), ouverte depuis le fil et le merci
 
-- [ ] **7.C** Canevas de preview : planches des nouveaux écrans et états (clair + sombre), liens pour Play, sources dans `prototype/canvas/`, publication
+- [x] **7.1** ALERT-04 **Liste de commentaires** : écran « Commentaires · n » (I2), rappel de l'alerte, bandeau de règle, auteur public ou anonyme, date relative, « (vous) », badge « Auteur » (I1), réponses d'un niveau repliées au-delà de deux (I3), « Voir plus de commentaires » par 10 ; chargement, erreur, hors connexion, alerte expirée (fermé) ; fils de démonstration complétés jusqu'au compteur de chaque alerte
+- [x] **7.2** **Ajouter un commentaire** / répondre : champ collé en bas, « Commenter en tant que … » (I1), « En réponse à … ✕ », 500 caractères, refus des données personnelles, toast « Commentaire publié. », compteur à jour partout (fiche, carte, liste) ; état vide « Aucun commentaire pour le moment. Soyez le premier à réagir. » ; sans compte → feuille « Connectez-vous pour commenter »
+- [x] **7.3** Supprimer son propre commentaire : menu ⋯ → « Supprimer ce commentaire ? » (confirmation) → toast « Commentaire supprimé. » ; avec des réponses, « Commentaire supprimé par son auteur. » à sa place
+- [x] **7.4** **⚑ Signaler cette alerte** (menu ⋯ de la fiche) : motifs du PRD → confirmer (récapitulatif, précision facultative 300 caractères) → « Merci pour votre signalement » (I4) ; « Information dangereuse » rappelle le 112 ; ensuite « Alerte signalée » (I5) ; erreur réseau + Réessayer, hors connexion ; sans compte → feuille de connexion
+- [x] **7.5** Signaler un commentaire : même parcours depuis le menu ⋯ du commentaire (motifs sans catégorie, localisation ni doublon), puis « Commentaire signalé »
+- [x] **7.6** Commentaire modéré : « Ce commentaire a été masqué par la modération. » (ligne grise, sans nom ni texte) ; règles de la communauté en feuille (I6)
 
-**Validation** : S5, S9 et S10 jouables de bout en bout.
+- [x] **7.C** Canevas : page « Phase 7 · Commentaires et signalement de contenu », 25 planches en clair et en sombre reliées pour Play (depuis « Voir les 8 commentaires » et le menu ⋯ de la fiche de l'incendie) ; code source React + TypeScript (`apps/prototype-web/src/screens/comments/`) à jour
+
+**Validation** : S5, S9 et S10 jouables de bout en bout. Vérifié : S9 (fiche → commentaires → publier) en 1,9 s avec « Commentaire publié. » et compteur 8 → 9 sur la fiche et la carte ; réponse anonyme ; donnée personnelle refusée ; suppression confirmée ; S10 (⋯ → Signaler → motif → confirmer → merci) en 3,4 s, puis « Alerte signalée ».
 
 ---
 
@@ -439,3 +447,4 @@ Statuts possibles : ⬜ À faire · 🟨 En cours · ✅ Terminée.
 | 2026-10-21 | 6 | Tâche 6.12 (demande de l'utilisateur) sur `phase/6-camera-reelle` : vraie caméra quand l'appareil en a une (autorisation du navigateur, aperçu en direct, photo réelle publiée), états autorisation demandée / refusée / indisponible, repli sur la caméra simulée. Testé avec une caméra virtuelle Chromium (accordée, refusée, occupée, absente) dans les deux versions ; parité React + TypeScript : 98 écrans identiques en clair et en sombre. Canevas : 3 planches de plus. Étiquettes « New » de la phase 6 retirées (fusionnée), « CameraState » étiqueté New. Les artefacts claude.ai n'offrent pas de droit caméra à ce compte : dans l'artefact, la caméra reste simulée. |
 | 2026-10-21 | 6 | Tâche 6.12 validée par l'utilisateur ; PR `phase/6-camera-reelle` → `develop`. |
 | 2026-10-21 | 7 | PR de la tâche 6.12 (internal-sme/95-Alerte#25) fusionnée ; branche `phase/7-commentaires` créée depuis `develop`. Benchmark Mobbin des commentaires et du signalement de contenu (`docs/benchmark/commentaires-refonte.html`, publié sur https://claude.ai/artifact/E2ASVJa6P6WQV3dNRUDc1U) : 12 flows (Nextdoor, Glassdoor, Coursera, Flo, komoot, YouTube, Digg, The New York Times, BeReal / Sora, Bluesky / Handshake, Weverse / Reddit / Realtor.com, Strava / Vrbo / Fable), états, matrice, 10 enseignements, audit, 8 écrans cibles, plan en 6 lots (tâches 7.1 à 7.6, 7.C). Décisions I1 à I6 en attente ; aucun développement avant validation. |
+| 2026-10-21 | 7 | Phase 7 réalisée selon I1 à I6 sur `phase/7-commentaires` : écran Commentaires (fil, réponses d'un niveau, identité choisie, suppression, masqué par la modération, états), signalement d'une alerte ou d'un commentaire (motif, confirmer, merci), règles de la communauté. Démo › Écrans par phase : 25 écrans ; canevas : 25 planches (page « Phase 7 ») ; React + TypeScript : `screens/comments/` (7 composants typés). Étiquette « New » de CameraState retirée (6.12 fusionnée). En attente de validation de l'utilisateur. |

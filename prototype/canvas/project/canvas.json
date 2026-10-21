@@ -36,6 +36,10 @@
     {
       "id": "p6",
       "name": "Phase 6 · Création d'une alerte"
+    },
+    {
+      "id": "p7",
+      "name": "Phase 7 · Commentaires et signalement de contenu"
     }
   ],
   "boards": {
@@ -2548,6 +2552,456 @@
       "title": "Caméra : indisponible (sombre)",
       "is_interactive": true,
       "page": "p6"
+    },
+    "CmThread.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Commentaires (fil)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmThread-dark.dc.html": {
+      "x": 0,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Commentaires (fil) (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmReply.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Répondre",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmReply-dark.dc.html": {
+      "x": 470,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Répondre (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmPublished.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Commentaire publié",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmPublished-dark.dc.html": {
+      "x": 940,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Commentaire publié (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmIdentity.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Commenter en tant que",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmIdentity-dark.dc.html": {
+      "x": 1410,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Commenter en tant que (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmMenu.dc.html": {
+      "x": 1880,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Menu d'un commentaire",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmMenu-dark.dc.html": {
+      "x": 1880,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Menu d'un commentaire (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmMenuMine.dc.html": {
+      "x": 2350,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Menu de mon commentaire",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmMenuMine-dark.dc.html": {
+      "x": 2350,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Menu de mon commentaire (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmDelete.dc.html": {
+      "x": 2820,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Supprimer : confirmation",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmDelete-dark.dc.html": {
+      "x": 2820,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Supprimer : confirmation (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmDeleted.dc.html": {
+      "x": 3290,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Supprimé (avec réponses)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmDeleted-dark.dc.html": {
+      "x": 3290,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Supprimé (avec réponses) (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcReason.dc.html": {
+      "x": 3760,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler l'alerte · motif",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcReason-dark.dc.html": {
+      "x": 3760,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler l'alerte · motif (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcDanger.dc.html": {
+      "x": 4230,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Motif : information dangereuse",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcDanger-dark.dc.html": {
+      "x": 4230,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Motif : information dangereuse (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcConfirm.dc.html": {
+      "x": 4700,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler · confirmer",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcConfirm-dark.dc.html": {
+      "x": 4700,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler · confirmer (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcDone.dc.html": {
+      "x": 5170,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler · merci",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcDone-dark.dc.html": {
+      "x": 5170,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler · merci (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcComment.dc.html": {
+      "x": 5640,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler un commentaire",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcComment-dark.dc.html": {
+      "x": 5640,
+      "y": 1200,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler un commentaire (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmLoading.dc.html": {
+      "x": 0,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Chargement",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmLoading-dark.dc.html": {
+      "x": 0,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Chargement (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmError.dc.html": {
+      "x": 470,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Erreur de chargement",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmError-dark.dc.html": {
+      "x": 470,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Erreur de chargement (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmEmpty.dc.html": {
+      "x": 940,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Aucun commentaire",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmEmpty-dark.dc.html": {
+      "x": 940,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Aucun commentaire (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmPersonal.dc.html": {
+      "x": 1410,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Donnée personnelle refusée",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmPersonal-dark.dc.html": {
+      "x": 1410,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Donnée personnelle refusée (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmModerated.dc.html": {
+      "x": 1880,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Masqué par la modération",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmModerated-dark.dc.html": {
+      "x": 1880,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Masqué par la modération (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmGuest.dc.html": {
+      "x": 2350,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Sans compte",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmGuest-dark.dc.html": {
+      "x": 2350,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Sans compte (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "FlagGuest.dc.html": {
+      "x": 2820,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler sans compte",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "FlagGuest-dark.dc.html": {
+      "x": 2820,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler sans compte (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmOffline.dc.html": {
+      "x": 3290,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Hors connexion",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmOffline-dark.dc.html": {
+      "x": 3290,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Hors connexion (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmExpired.dc.html": {
+      "x": 3760,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte expirée : fermé",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmExpired-dark.dc.html": {
+      "x": 3760,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte expirée : fermé (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmRules.dc.html": {
+      "x": 4230,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Règles de la communauté",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "CmRules-dark.dc.html": {
+      "x": 4230,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Règles de la communauté (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcError.dc.html": {
+      "x": 4700,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler · envoi impossible",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "RcError-dark.dc.html": {
+      "x": 4700,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Signaler · envoi impossible (sombre)",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "MenuReported.dc.html": {
+      "x": 5170,
+      "y": 2400,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte déjà signalée",
+      "is_interactive": true,
+      "page": "p7"
+    },
+    "MenuReported-dark.dc.html": {
+      "x": 5170,
+      "y": 3600,
+      "w": 390,
+      "h": 844,
+      "title": "Alerte déjà signalée (sombre)",
+      "is_interactive": true,
+      "page": "p7"
     }
   },
   "order": [
@@ -2829,7 +3283,57 @@
     "ReportCameraDenied.dc.html",
     "ReportCameraDenied-dark.dc.html",
     "ReportCameraUnavailable.dc.html",
-    "ReportCameraUnavailable-dark.dc.html"
+    "ReportCameraUnavailable-dark.dc.html",
+    "CmThread.dc.html",
+    "CmThread-dark.dc.html",
+    "CmReply.dc.html",
+    "CmReply-dark.dc.html",
+    "CmPublished.dc.html",
+    "CmPublished-dark.dc.html",
+    "CmIdentity.dc.html",
+    "CmIdentity-dark.dc.html",
+    "CmMenu.dc.html",
+    "CmMenu-dark.dc.html",
+    "CmMenuMine.dc.html",
+    "CmMenuMine-dark.dc.html",
+    "CmDelete.dc.html",
+    "CmDelete-dark.dc.html",
+    "CmDeleted.dc.html",
+    "CmDeleted-dark.dc.html",
+    "RcReason.dc.html",
+    "RcReason-dark.dc.html",
+    "RcDanger.dc.html",
+    "RcDanger-dark.dc.html",
+    "RcConfirm.dc.html",
+    "RcConfirm-dark.dc.html",
+    "RcDone.dc.html",
+    "RcDone-dark.dc.html",
+    "RcComment.dc.html",
+    "RcComment-dark.dc.html",
+    "CmLoading.dc.html",
+    "CmLoading-dark.dc.html",
+    "CmError.dc.html",
+    "CmError-dark.dc.html",
+    "CmEmpty.dc.html",
+    "CmEmpty-dark.dc.html",
+    "CmPersonal.dc.html",
+    "CmPersonal-dark.dc.html",
+    "CmModerated.dc.html",
+    "CmModerated-dark.dc.html",
+    "CmGuest.dc.html",
+    "CmGuest-dark.dc.html",
+    "FlagGuest.dc.html",
+    "FlagGuest-dark.dc.html",
+    "CmOffline.dc.html",
+    "CmOffline-dark.dc.html",
+    "CmExpired.dc.html",
+    "CmExpired-dark.dc.html",
+    "CmRules.dc.html",
+    "CmRules-dark.dc.html",
+    "RcError.dc.html",
+    "RcError-dark.dc.html",
+    "MenuReported.dc.html",
+    "MenuReported-dark.dc.html"
   ],
   "notes": {
     "rowLight": {
@@ -3135,6 +3639,47 @@
       "fill": "blue",
       "page": "p6",
       "text": "Phase 6 · création d'une alerte (rapport docs/benchmark/signalement-refonte.html)\n\nPlay sur « 1 · Type » (ou sur le + de n'importe quelle barre d'onglets) : une question par écran, Continuer toujours en pied d'écran. Lieu : l'épingle reste au centre, la carte bouge dessous ; Photo : vraie caméra si l'appareil en a une (le navigateur demande l'autorisation ; refus → galerie), sinon caméra simulée ; galerie de démonstration, envoi avec progression ; Aperçu : « Modifier » par bloc, 24 h et service destinataire ; Publier → publication → trajet Vous · 95 Alerte · Analyse · Service. × ouvre « Garder le brouillon / Abandonner ».\n\nDécisions : H1 titre obligatoire proposé d'après la catégorie et le lieu, description et photo facultatives ; H2 l'aperçu tient lieu de confirmation ; H3 identité sans choix par défaut la première fois, puis le dernier choix repris ; H4 brouillon gardé dans la session (« Reprendre votre signalement ? ») ; H5 photos seulement (3 au plus), caméra et galerie simulées ; H6 invité : feuille « Connectez-vous pour signaler » sur la carte.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
+    },
+    "p7Light": {
+      "x": 0,
+      "y": -300,
+      "text": "Commentaires et signalement de contenu · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p7"
+    },
+    "p7Dark": {
+      "x": 0,
+      "y": 900,
+      "text": "Commentaires et signalement de contenu · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p7"
+    },
+    "p7States": {
+      "x": 0,
+      "y": 2100,
+      "text": "États · clair",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p7"
+    },
+    "p7StatesDark": {
+      "x": 0,
+      "y": 3300,
+      "text": "États · sombre",
+      "kind": "title1",
+      "maxW": 6030,
+      "page": "p7"
+    },
+    "p7How": {
+      "x": 5640,
+      "y": 2400,
+      "w": 340,
+      "maxH": 760,
+      "fill": "blue",
+      "page": "p7",
+      "text": "Phase 7 · commentaires et signalement de contenu (rapport docs/benchmark/commentaires-refonte.html)\n\nPlay sur « Commentaires (fil) » (ou « Voir les 8 commentaires » sur la fiche de l'incendie) : Répondre, ⋯ (menu), « Règles de la communauté », « Commenter en tant que ». Signaler : motif → confirmer → merci (aussi depuis ⋯ de la fiche).\n\nDécisions : I1 « Jean D. » ou « Citoyen anonyme », choisi dans le champ, pas de badge Auteur sur une alerte anonyme ; I2 écran Commentaires depuis la fiche ; I3 un niveau de réponses, repliées au-delà de deux ; I4 motif → confirmer → merci ; I5 le contenu reste visible, « Signalé » pour vous ; I6 feuille des règles de la communauté.\n\nVersion React complète : https://claude.ai/artifact/2cXwSVgCUu2Drs46h1F9hw"
     }
   },
   "designSystems": []
