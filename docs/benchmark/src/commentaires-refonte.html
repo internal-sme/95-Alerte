@@ -1,0 +1,433 @@
+<!-- Source du rapport : python3 tools/build_benchmark_refonte.py commentaires-refonte → docs/benchmark/commentaires-refonte.html -->
+<title>Commenter et signaler</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/*TAILWIND*/
+</style>
+
+<header class="border-b border-line">
+  <div class="wrap grid gap-8 py-12 sm:py-16 lg:grid-cols-[1.25fr_1fr] lg:items-end">
+    <div class="grid gap-5">
+      <p class="eyebrow">95 Alerte · Benchmark Mobbin · phase 7 · octobre 2026</p>
+      <h1 class="text-4xl font-extrabold leading-[1.05] sm:text-6xl">Commenter et signaler : <span class="hl">un espace utile et sain</span>.</h1>
+      <p class="lede">Nous avons passé en revue une trentaine de flows iOS sur Mobbin : fils de commentaires, réponses, choix de l'identité, suppression, signalement d'un contenu, écrans de remerciement, contenus supprimés ou masqués, états vides. Nous en avons retenu douze. Pour chacun, le rapport détaille les points forts en patterns de design, en expérience utilisateur et en direction artistique. Il se termine par un audit de nos écrans (la fiche montre seulement un aperçu en lecture seule), puis par un plan de refonte aligné sur les tâches 7.1 à 7.6 de <span class="font-mono text-base">docs/task.md</span>.</p>
+      <div class="flex flex-wrap gap-2">
+        <span class="chip">12 flows retenus</span><span class="chip">30 flows analysés</span><span class="chip">36 écrans cités</span><span class="chip">Plan en 6 lots</span>
+      </div>
+    </div>
+    <nav class="card toc p-5 text-sm" aria-label="Sommaire">
+      <p class="eyebrow mb-3">Sommaire</p>
+      <ol class="grid gap-1.5">
+        <li><a href="#methode">1. Méthode et grille de lecture</a></li>
+        <li><a href="#flows">2. Les 12 flows</a></li>
+        <li><a href="#etats">3. Supprimé, signalé, publié</a></li>
+        <li><a href="#matrice">4. Matrice des patterns</a></li>
+        <li><a href="#lecons">5. Dix enseignements</a></li>
+        <li><a href="#da">6. Direction artistique</a></li>
+        <li><a href="#audit">7. Audit de nos écrans</a></li>
+        <li><a href="#cible">8. Écrans cibles et états</a></li>
+        <li><a href="#plan">9. Plan de refonte détaillé</a></li>
+        <li><a href="#decisions">10. Décisions à prendre</a></li>
+      </ol>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="methode" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">01 · Méthode</p><h2 class="h2">Trois critères, une note sur 5</h2>
+    <p class="lede">Nous avons cherché sur Mobbin (iOS) les fils de commentaires de communautés locales et de presse (Nextdoor, Glassdoor, The New York Times), les réponses, le choix de l'identité, la suppression d'un commentaire, les parcours de signalement (komoot, YouTube, Digg, Bluesky, BeReal), les remerciements, les contenus supprimés ou masqués et les états vides. La grille est la même que pour les phases 2 à 6.</p></div>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="card p-5"><p class="font-display text-lg font-bold">Patterns de design</p><p class="mt-2 text-sm text-muted">Le champ de commentaire, le fil et les réponses, le menu d'un commentaire, la liste des motifs, le récapitulatif, le merci, la ligne « supprimé » ou « masqué ».</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Expérience utilisateur</p><p class="mt-2 text-sm text-muted">Commenter en moins de 15 secondes, savoir sous quel nom on écrit et à qui on répond, signaler sans hésiter, savoir ce qui va se passer, ne rien supprimer par erreur.</p></div>
+    <div class="card p-5"><p class="font-display text-lg font-bold">Direction artistique</p><p class="mt-2 text-sm text-muted">Un fil calme et lisible, le rouge réservé à la suppression, les mêmes composants que la fiche (CommentItem, MenuRow, RadioCard, ConfirmModal).</p></div>
+  </div>
+  <p class="text-sm text-muted">Les images sont des aperçus Mobbin à basse résolution, avec leur mention « curated by Mobbin ». Chaque flow renvoie à sa page Mobbin. Rapports liés : <span class="font-mono">signalement-refonte.html</span> (phase 6), <span class="font-mono">fiche-refonte.html</span> (phase 5) et <span class="font-mono">benchmark-mobbin.html</span>.</p>
+</section>
+
+<section id="flows" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-10 py-14">
+    <div class="grid gap-3"><p class="eyebrow">02 · Les 12 flows</p><h2 class="h2">Du premier commentaire au contenu masqué</h2>
+      <p class="lede">Nextdoor, Glassdoor, Coursera et Flo montrent l'écriture et les réponses. komoot, YouTube, Digg, The New York Times, BeReal, Sora, Bluesky et Handshake montrent le signalement d'un contenu. Weverse, Reddit et Realtor.com montrent la suppression. Strava, Vrbo et Fable montrent l'état vide.</p></div>
+
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">01</p><h3 class="text-2xl font-bold">Nextdoor · Commenter entre voisins</h3><p class="text-sm text-muted">Vie de quartier · <a href="https://mobbin.com/flows/a0263dfd-ec72-4a91-b9b1-d9bce04e99ba">commenter</a>, <a href="https://mobbin.com/flows/b278d4f1-98e7-4915-91c2-264f86cff9c6">menu</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:nd-compose}}" alt="Nextdoor : champ « Add a comment » collé en bas, réactions au-dessus du clavier, texte « Sad to hear »"><figcaption><b>Composer en bas</b>Toujours au même endroit.</figcaption></figure>
+        <figure class="shot"><img src="{{img:nd-posted}}" alt="Nextdoor : « Comments (2) », le nouveau commentaire d'Alex Smith avec « Now · Lower Allston », Like et Reply"><figcaption><b>Publié sur place</b>Nom, quartier, « à l'instant ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:nd-menu}}" alt="Nextdoor : menu Hide, Mute, Report « Flag for review », Turn off notifications, Share, Bookmark, chacun avec une ligne d'explication"><figcaption><b>Menu expliqué</b>« Signaler · pour examen ».</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Champ de commentaire collé en bas de la fiche, toujours visible.</li><li>Le commentaire publié apparaît en bas du fil, daté « à l'instant ».</li><li>Menu ⋯ où chaque action a une ligne d'explication.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Commenter sans quitter la publication.</li><li>« Report : Flag for review » dit que quelqu'un va examiner, pas que le contenu disparaît.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Fond blanc, gris doux, un seul vert d'action ; avatars ronds avec initiales.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le composer collé en bas de l'écran des commentaires ; le nom public et la date relative sur chaque commentaire ; le menu ⋯ en feuille avec une ligne d'explication par action (notre MenuRow de la phase 5).</p><p><b>À éviter.</b> Le quartier de l'auteur sous son nom : chez nous, aucun lieu personnel n'est affiché (« Jean D. » ou « Citoyen anonyme » seulement).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">02</p><h3 class="text-2xl font-bold">Glassdoor · Fil, réponses repliées et identité choisie</h3><p class="text-sm text-muted">Emploi · <a href="https://mobbin.com/flows/010c2b51-ea69-4133-a1df-06b7d751e5f2">commenter</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:glassdoor-thread}}" alt="Glassdoor : fil avec « View 7 more replies », réponse indentée et champ « Comment as Product Designer » en bas"><figcaption><b>Réponses repliées</b>« Voir 7 réponses de plus ».</figcaption></figure>
+        <figure class="shot"><img src="{{img:glassdoor-identity}}" alt="Glassdoor : composer plein écran avec le choix de l'identité « Product Designer ⌄ » en haut"><figcaption><b>Qui parle</b>L'identité se choisit dans le composer.</figcaption></figure>
+        <figure class="shot"><img src="{{img:glassdoor-posted}}" alt="Glassdoor : réponse publiée « 1s » en tête du fil, avec photo"><figcaption><b>Retour au fil</b>Le nouveau commentaire en premier.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>« Commenter en tant que … » dans le champ : on sait sous quel nom on publie.</li><li>Réponses d'un seul niveau, repliées au-delà de deux (« Voir 7 réponses de plus »).</li><li>Menu ⋮ discret sur chaque commentaire.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le pseudonymat est réglé avant d'écrire, pas après.</li><li>Un long fil reste lisible.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Bulles grises arrondies, nom en gras court, actions en texte.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> « Commenter en tant que Jean D. ⌄ » dans le champ, avec le passage à « Citoyen anonyme » (même règle que les alertes) ; réponses d'un niveau, repliées au-delà de deux.</p><p><b>À éviter.</b> Le composer plein écran pour un commentaire court : chez nous, le champ grandit sur place (3 lignes, puis défilement).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">03</p><h3 class="text-2xl font-bold">Coursera · Répondre en voyant à qui</h3><p class="text-sm text-muted">Éducation · <a href="https://mobbin.com/flows/e3430599-5c9f-4e65-9174-b5ecaa6110d5">répondre</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:coursera-thread}}" alt="Coursera : discussion avec « 1 · Reply » et « 0 · Upvote », tri « Latest »"><figcaption><b>Le fil</b>Réponse et vote sous chaque message.</figcaption></figure>
+        <figure class="shot"><img src="{{img:coursera-reply}}" alt="Coursera : « Compose Reply » avec le message cité « In reply to karthik sekar · 8 days »"><figcaption><b>En réponse à</b>Le message cité au-dessus du champ.</figcaption></figure>
+        <figure class="shot"><img src="{{img:coursera-posted}}" alt="Coursera : « 2 · Reply », la réponse d'Alex Smith « Just now » en tête"><figcaption><b>Compteur à jour</b>Le nombre de réponses suit.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Le message auquel on répond est cité au-dessus du champ.</li><li>Compteur de réponses mis à jour aussitôt.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Pas de doute sur la personne à qui on répond.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Liste plate, séparateurs fins, liens bleus.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Le bandeau « En réponse à Sami L. » au-dessus du champ, avec ✕ pour annuler la réponse ; le compteur « Commentaires · 9 » mis à jour partout (fiche, résumé de la carte, liste).</p><p><b>À éviter.</b> Un écran de composition séparé : la réponse s'écrit dans le même champ en bas.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">04</p><h3 class="text-2xl font-bold">Flo · Répondre sous chaque commentaire, merci rassurant</h3><p class="text-sm text-muted">Santé · <a href="https://mobbin.com/flows/fe7d7764-c847-487b-b550-d4bbf0b9f955">commenter</a>, <a href="https://mobbin.com/flows/cd549f05-89e6-4a17-ad4b-27e6c8b68053">signaler</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:flo-compose}}" alt="Flo : saisie d'un long commentaire, bouton d'envoi rond rose"><figcaption><b>Envoi en un geste</b>Bouton rond dans le champ.</figcaption></figure>
+        <figure class="shot"><img src="{{img:flo-posted}}" alt="Flo : commentaire publié « Just now » en bulle rose, « Write a reply… » juste dessous, onglets Top, Newest, My"><figcaption><b>Répondre juste dessous</b>Le champ de réponse sous le commentaire.</figcaption></figure>
+        <figure class="shot"><img src="{{img:flo-thanks}}" alt="Flo : feuille « Thank you! Our team will check if this content goes against our Community guidelines. » et OK"><figcaption><b>Merci et suite</b>L'équipe vérifie, selon les règles.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Son propre commentaire mis en évidence (bulle de couleur).</li><li>Merci du signalement en feuille : ce qui va se passer, référence aux règles.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>On retrouve vite ce qu'on a écrit.</li><li>Le merci répond à « et maintenant ? ».</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Couleur de marque pour ses propres messages, grandes coches.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Un léger fond primary-soft sur ses propres commentaires (« vous ») ; le merci qui dit la suite : « Merci. Notre équipe de modération va examiner ce contenu au regard des règles de la communauté. »</p><p><b>À éviter.</b> L'onglet « My » : nos commentaires se retrouvent dans Activité (phase 8).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">05</p><h3 class="text-2xl font-bold">komoot · Quatre motifs, un merci qui explique</h3><p class="text-sm text-muted">Sport, voyage · <a href="https://mobbin.com/flows/b3575b85-bcfb-4ec9-b76b-f98d723d9217">signaler</a>, <a href="https://mobbin.com/flows/d4e315f7-e02e-4d7f-a9cd-bdc88b35031f">supprimer</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:komoot-reasons}}" alt="komoot : « Why are you reporting this? » avec 4 motifs en boutons radio et Submit inactif"><figcaption><b>Peu de motifs</b>Radio, bouton inactif tant que rien n'est choisi.</figcaption></figure>
+        <figure class="shot"><img src="{{img:komoot-thanks}}" alt="komoot : « Thank you. We received your report. » et ce qui va se passer, Got it"><figcaption><b>Ce qui va se passer</b>Examen, retrait si besoin.</figcaption></figure>
+        <figure class="shot"><img src="{{img:komoot-confirm}}" alt="komoot : « Are you sure you want to delete this comment? » Cancel / Delete en rouge"><figcaption><b>Supprimer : confirmer</b>Le rouge sur l'action seulement.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Liste courte de motifs, un seul choix, bouton actif après le choix.</li><li>Merci avec coche, phrase sur l'examen, un bouton.</li><li>Suppression d'un commentaire confirmée par une alerte.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Signaler en 2 touchers.</li><li>Le merci dit que le contenu sera retiré s'il ne respecte pas les règles.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Fond crème, vert sombre, radio à droite.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Les motifs en RadioCards compactes (une ligne d'aide chacune), « Continuer » inactif tant qu'aucun motif n'est choisi ; le merci avec Spot, phrase d'examen, un seul bouton « Terminé ».</p><p><b>À éviter.</b> « Something else » sans champ : notre motif « Autre » ouvre une précision facultative (300 caractères).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">06</p><h3 class="text-2xl font-bold">YouTube · « Pas besoin de choisir parfaitement »</h3><p class="text-sm text-muted">Vidéo · <a href="https://mobbin.com/flows/3d936b55-8ad0-4c8e-95a0-fa6a8d82f027">signaler</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:youtube-report}}" alt="YouTube : « What's going on? » « We'll check for all Community Guidelines, so don't worry about making the perfect choice. », 9 motifs, Report"><figcaption><b>Rassurer</b>Une phrase sous le titre.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Une phrase d'aide sous la question : le choix du motif n'a pas besoin d'être parfait.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Moins d'hésitation devant une longue liste de motifs.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Liste plate, radio à gauche, bouton noir en bas.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La phrase d'aide sous la question : « Choisissez le motif le plus proche : la modération vérifiera l'ensemble des règles. » Elle compte avec nos 9 motifs (PRD F-11).</p><p><b>À éviter.</b> Des motifs généralistes (contenu sexuel, terrorisme) : nos motifs sont ceux du PRD, propres aux alertes (mauvaise catégorie, mauvaise localisation, doublon…).</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">07</p><h3 class="text-2xl font-bold">Digg · Feuille de motifs, merci illustré, trace du supprimé</h3><p class="text-sm text-muted">Actualité · <a href="https://mobbin.com/flows/97366649-16d2-4282-8338-755b9d540be3">signaler</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:digg-reasons}}" alt="Digg : feuille « Report post », 6 motifs, Submit inactif et Skip"><figcaption><b>En feuille</b>La publication reste visible derrière.</figcaption></figure>
+        <figure class="shot"><img src="{{img:digg-thanks}}" alt="Digg : « Thank you for your feedback · We'll look into this », illustration de mégaphone, Done"><figcaption><b>Merci illustré</b>Une illustration, une phrase.</figcaption></figure>
+        <figure class="shot"><img src="{{img:digg-deleted}}" alt="Digg : « Comment deleted » à la place d'un commentaire dont les réponses restent, toast « Comment deleted »"><figcaption><b>Garder la trace</b>Les réponses gardent leur contexte.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Motifs en feuille par-dessus le contenu.</li><li>Commentaire supprimé remplacé par une ligne grise quand il a des réponses.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le fil reste compréhensible après une suppression.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Illustration 3D, beaucoup d'air, liens bleus.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> La ligne « Commentaire supprimé » quand le commentaire a des réponses (sinon il disparaît) ; le même gabarit gris pour « Ce commentaire a été masqué par la modération. » (tâche 7.6).</p><p><b>À éviter.</b> L'illustration 3D : Spot Phosphor Duotone (flag, seal-check). Et « Skip », qui ne veut rien dire dans un signalement.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">08</p><h3 class="text-2xl font-bold">The New York Times · La règle affichée avant d'écrire</h3><p class="text-sm text-muted">Presse · <a href="https://mobbin.com/flows/ecf14da3-8e06-4404-a499-112e90904ff1">signaler</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:nyt-moderated}}" alt="The New York Times : « We welcome your on-topic commentary… Comments are moderated for civility. » en tête du fil"><figcaption><b>Règle en tête</b>Avant le premier commentaire.</figcaption></figure>
+        <figure class="shot"><img src="{{img:nyt-flagged}}" alt="The New York Times : menu du commentaire avec « Flagged » après signalement"><figcaption><b>Déjà signalé</b>Le menu le dit.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Une phrase de règle en tête du fil, avec un lien vers les règles.</li><li>Après signalement, l'action devient « Signalé ».</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le cadre est posé avant que la discussion commence.</li><li>On ne signale pas deux fois le même commentaire.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Typographie éditoriale, sobre, gris chauds.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Un bandeau discret en tête du fil : « Restez courtois et utile. Les commentaires sont modérés. » + « Règles de la communauté » ; « Signalé » à la place de « Signaler » ensuite.</p><p><b>À éviter.</b> Le menu contextuel flottant pour les motifs : trop petit au toucher (48 px minimum), nous gardons une feuille.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">09</p><h3 class="text-2xl font-bold">BeReal, Sora · Confidentiel, et l'urgence d'abord</h3><p class="text-sm text-muted">Réseaux sociaux · <a href="https://mobbin.com/flows/b4d24119-6bda-4537-b267-ac6c6c92b631">BeReal</a>, <a href="https://mobbin.com/flows/09574929-3857-4d81-b110-7b55ecc03ed5">Sora</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:bereal-confidential}}" alt="BeReal : « Your report is confidential. If you or someone you know is in immediate danger, contact local law enforcement or your local emergency services immediately. »"><figcaption><b>Confidentiel</b>Et le rappel d'urgence.</figcaption></figure>
+        <figure class="shot"><img src="{{img:sora-thanks}}" alt="Sora : « Thank you for your report. We'll review the content… » et « Learn more about how we handle reports »"><figcaption><b>Comment c'est traité</b>Un lien pour en savoir plus.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Dire que le signalement est confidentiel.</li><li>Rappeler les secours en cas de danger immédiat.</li><li>Lien « Comment nous traitons les signalements ».</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>La personne signalée ne saura pas qui l'a signalée.</li><li>Signaler n'est pas appeler les secours.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Sombre, texte blanc, peu d'éléments.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> « Votre signalement est confidentiel : l'auteur du contenu ne saura pas qui l'a signalé. » sous la question ; pour le motif « Information dangereuse », le rappel « En cas de danger immédiat, appelez le 112 » (notre EmergencyNote).</p><p><b>À éviter.</b> Le minimum de 10 caractères obligatoire (BeReal) : la précision reste facultative.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">10</p><h3 class="text-2xl font-bold">Bluesky, Handshake · À qui va le signalement</h3><p class="text-sm text-muted">Réseau social, emploi · <a href="https://mobbin.com/flows/a190f273-baee-46a8-a400-2b6aab5db8fa">Bluesky</a>, <a href="https://mobbin.com/flows/cbd09ae2-02e1-4f26-bad1-f869c8a216f3">Handshake</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:bluesky-report}}" alt="Bluesky : 3 étapes cochées, « Your report will be sent to Bluesky Moderation Service », détails facultatifs (300 caractères), Submit report"><figcaption><b>Récapitulatif</b>Motif, destinataire, détails, envoyer.</figcaption></figure>
+        <figure class="shot"><img src="{{img:handshake-report}}" alt="Handshake : « Report this · Help us keep Handshake safe by telling us why. Your answer will be kept confidential. » 4 motifs"><figcaption><b>Pourquoi signaler</b>Garder l'espace sûr.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Récapitulatif avant l'envoi : motif choisi, destinataire nommé, détails facultatifs.</li><li>Une phrase qui dit à quoi sert le signalement.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Bluesky fait de l'envoi une confirmation explicite, ce que demande notre PRD (§10.2).</li><li>On sait qui va lire.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Étapes numérotées et cochées, bouton plein bleu.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Tâche 7.4 : motif → confirmer (récapitulatif : contenu signalé, motif, « Envoyé à l'équipe de modération de 95 Alerte », précision facultative 300 caractères, « Envoyer le signalement ») → merci.</p><p><b>À éviter.</b> Le choix du service de modération (Bluesky) : chez nous, un seul destinataire.</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">11</p><h3 class="text-2xl font-bold">Weverse, Reddit, Realtor.com · Supprimer son commentaire</h3><p class="text-sm text-muted">Communautés · <a href="https://mobbin.com/flows/c998a61e-e707-4119-8148-62afb969775c">Weverse</a>, <a href="https://mobbin.com/flows/fdfdf212-9096-4fc1-945e-25c916e14b46">Zomato</a></p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:weverse-confirm}}" alt="Weverse : « Delete this comment? » Cancel / OK"><figcaption><b>Confirmer</b>Une question courte.</figcaption></figure>
+        <figure class="shot"><img src="{{img:weverse-deleted}}" alt="Weverse : toast « Deleted. » et compteur passé de 336 à 335"><figcaption><b>Toast et compteur</b>Le nombre baisse aussitôt.</figcaption></figure>
+        <figure class="shot"><img src="{{img:reddit-confirm}}" alt="Reddit : « Are you sure? You cannot restore comments that have been deleted. » Cancel / Delete"><figcaption><b>Dire la conséquence</b>C'est définitif.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>Confirmation qui dit la conséquence (« définitif »).</li><li>Toast après la suppression, compteur mis à jour.</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Pas de suppression par erreur.</li><li>Le fil et les compteurs restent justes.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Alerte système, bouton destructif en rouge.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> Notre ConfirmModal : « Supprimer ce commentaire ? Il ne sera plus visible. Les réponses restent. » Supprimer (destructif) / Annuler ; toast « Commentaire supprimé. » ; compteurs mis à jour partout.</p><p><b>À éviter.</b> « OK » comme libellé du bouton destructif (Weverse) : le verbe, « Supprimer ».</p></div>
+    </article>
+    <article class="card grid gap-5 p-5 sm:p-7">
+      <header class="flex flex-wrap items-baseline justify-between gap-3">
+        <div><p class="font-mono text-xs text-muted">12</p><h3 class="text-2xl font-bold">Strava, Vrbo, Fable · Aucun commentaire : inviter, et protéger</h3><p class="text-sm text-muted">Sport, voyage, lecture</p></div>
+        <div class="grid gap-1 text-right"><span class="score">Patterns <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">UX <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="score">DA <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+      </header>
+      <div class="strip">
+        <figure class="shot"><img src="{{img:strava-empty}}" alt="Strava : « There aren't any comments yet · Get the conversation started with others in your challenge. », champ en bas"><figcaption><b>Inviter</b>Une icône, une phrase, le champ.</figcaption></figure>
+        <figure class="shot"><img src="{{img:vrbo-empty}}" alt="Vrbo : bandeau « Protect yourself by not sharing sensitive info like credit card details. » au-dessus de « No comments yet »"><figcaption><b>Protéger</b>Avant le premier mot.</figcaption></figure>
+        <figure class="shot"><img src="{{img:fable-empty}}" alt="Fable : « No comments yet · Be the first to kick things off », illustration"><figcaption><b>Soyez le premier</b>Titre engageant.</figcaption></figure>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-3">
+        <div class="col"><h4>Patterns</h4><ul><li>État vide court : une icône, un titre, une phrase, le champ prêt.</li><li>Conseil de prudence au-dessus du fil (données personnelles).</li></ul></div>
+        <div class="col"><h4>UX</h4><ul><li>Le premier commentaire n'est qu'à un toucher.</li><li>Personne ne publie son numéro par inadvertance.</li></ul></div>
+        <div class="col"><h4>Direction artistique</h4><ul><li>Icône de la couleur d'action, beaucoup de blanc.</li></ul></div>
+      </div>
+      <div class="take"><p><b>À reprendre.</b> L'état vide du PRD : « Aucun commentaire pour le moment. Soyez le premier à réagir. » avec Spot chat-circle et le champ en bas ; et le contrôle des données personnelles de la phase 6 (téléphone, plaque, e-mail) appliqué aux commentaires.</p><p><b>À éviter.</b> Les illustrations dessinées (Fable) : Spot Phosphor Duotone.</p></div>
+    </article>
+  </div>
+</section>
+
+<section id="etats" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">03 · États</p><h2 class="h2">Supprimé, signalé, publié</h2><p class="lede">Après chaque action, le fil doit rester juste : le compteur, la place du commentaire supprimé, la trace d'un signalement. Les meilleurs écrans le disent par un toast court et gardent le contexte des réponses.</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:realtor-undo}}" alt="Realtor.com : toast Comment deleted avec Undo"><figcaption><b>Realtor.com</b>Toast avec « Annuler » : une autre voie que la confirmation. <a href="https://mobbin.com/screens/c04c8256-189b-45ac-bf0c-bfe859e30384">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:kitchen-toast}}" alt="Kitchen Stories : bandeau vert Your report has been sent. Thank you for your help!"><figcaption><b>Kitchen Stories</b>Un bandeau seul après un signalement : trop discret pour dire la suite. <a href="https://mobbin.com/flows/357ec645-c1a4-4aad-9e64-2e7a0ee30ea2">flow</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:zomato-sheet}}" alt="Zomato : feuille Your comment, Edit et Delete avec une ligne d'explication"><figcaption><b>Zomato</b>Le menu de son commentaire : une ligne d'aide par action. <a href="https://mobbin.com/flows/fdfdf212-9096-4fc1-945e-25c916e14b46">flow</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:vsco-empty}}" alt="VSCO : No responses yet. Start the discussion."><figcaption><b>VSCO</b>État vide minimal, champ prêt. <a href="https://mobbin.com/screens/791ce753-eb64-454e-9eaa-030cf6dc24a2">écran</a></figcaption></figure>
+    <figure class="shot"><img src="{{img:digg-deleted}}" alt="Digg : Comment deleted à la place d'un commentaire, réponses visibles"><figcaption><b>Digg</b>La trace du supprimé garde le contexte des réponses. <a href="https://mobbin.com/screens/c108c7d4-ce51-4a4f-811b-00fba6157fa6">écran</a></figcaption></figure>
+  </div>
+  <div class="take"><p><b>À reprendre.</b> Toasts « Commentaire publié. » et « Commentaire supprimé. » (Nextdoor, Weverse) ; ligne grise « Commentaire supprimé par son auteur. » ou « Ce commentaire a été masqué par la modération. » à la place du contenu (Digg) ; un écran de merci dédié après un signalement. Hors connexion : le fil reste lisible, le champ est désactivé avec « Commenter nécessite une connexion. », sans promettre d'envoi différé.</p><p><b>À éviter.</b> L'annulation par toast (Realtor) à la place de la confirmation : le PRD (§10.2) demande une confirmation pour supprimer un commentaire. Un simple bandeau après un signalement (Kitchen Stories).</p></div>
+</section>
+
+<section id="matrice" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">04 · Matrice</p><h2 class="h2">Qui fait quoi</h2><p class="lede">● pattern maîtrisé · ○ présent mais partiel · vide si absent. La dernière ligne situe nos écrans actuels.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[960px] text-sm">
+      <caption class="sr-only">Patterns de commentaires et de signalement par app</caption>
+      <thead class="bg-sunk text-left text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">App</th><th class="p-3">Champ en bas</th><th class="p-3">Réponses (1 niveau)</th><th class="p-3">Identité choisie</th><th class="p-3">Supprimer + confirmer</th><th class="p-3">Motifs courts</th><th class="p-3">Phrase rassurante</th><th class="p-3">Confidentiel / urgence</th><th class="p-3">Merci + suite</th><th class="p-3">Supprimé / masqué</th><th class="p-3">État vide</th></tr></thead>
+      <tbody class="divide-y divide-line text-center">
+        <tr><th class="p-3 text-left">Nextdoor</th><td>●</td><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Glassdoor</th><td>●</td><td>●</td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Coursera</th><td></td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Flo</th><td>●</td><td>○</td><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">komoot</th><td>●</td><td></td><td></td><td>●</td><td>●</td><td></td><td></td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">YouTube</th><td></td><td></td><td></td><td></td><td>●</td><td>●</td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Digg</th><td>●</td><td></td><td></td><td></td><td>●</td><td></td><td></td><td>○</td><td>●</td><td></td></tr>
+        <tr><th class="p-3 text-left">The New York Times</th><td></td><td>●</td><td></td><td></td><td>○</td><td>○</td><td></td><td></td><td>○</td><td></td></tr>
+        <tr><th class="p-3 text-left">BeReal, Sora</th><td></td><td></td><td></td><td></td><td></td><td>○</td><td>●</td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Bluesky, Handshake</th><td></td><td></td><td></td><td></td><td>●</td><td>○</td><td>○</td><td>●</td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Weverse, Reddit, Realtor.com</th><td>●</td><td></td><td></td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><th class="p-3 text-left">Strava, Vrbo, Fable</th><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>●</td></tr>
+        <tr class="bg-brand/10 font-semibold"><th class="p-3 text-left">95 Alerte (aujourd'hui)</th><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td><td>○</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-muted">Nous avons les briques (CommentItem, MenuRow, RadioCard, ConfirmModal, les toasts, le contrôle des données personnelles de la phase 6, les commentaires de démonstration) mais seulement un aperçu en lecture seule sur la fiche : écrire, répondre, supprimer et signaler sont à construire.</p>
+  </div>
+</section>
+
+<section id="lecons" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">05 · Enseignements</p><h2 class="h2">Dix règles pour une discussion saine</h2></div>
+  <ol class="grid gap-4 sm:grid-cols-2">
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">01 · Nextdoor</p><p class="mt-1 font-display text-lg font-bold">Le champ toujours au même endroit</p><p class="mt-1 text-sm text-muted">Collé en bas de l'écran des commentaires ; le clavier le pousse, ne le cache pas.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">02 · Glassdoor</p><p class="mt-1 font-display text-lg font-bold">Savoir sous quel nom on écrit</p><p class="mt-1 text-sm text-muted">« Commenter en tant que Jean D. ⌄ » avant d'écrire, avec l'option anonyme.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">03 · Coursera</p><p class="mt-1 font-display text-lg font-bold">Savoir à qui on répond</p><p class="mt-1 text-sm text-muted">« En réponse à Sami L. » au-dessus du champ, annulable.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">04 · Glassdoor, The New York Times</p><p class="mt-1 font-display text-lg font-bold">Un seul niveau de réponses</p><p class="mt-1 text-sm text-muted">Lisible sur mobile ; les longues séries se replient.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">05 · The New York Times, Vrbo</p><p class="mt-1 font-display text-lg font-bold">La règle avant le premier mot</p><p class="mt-1 text-sm text-muted">Bandeau discret : courtoisie, modération, pas de données personnelles.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">06 · komoot, YouTube</p><p class="mt-1 font-display text-lg font-bold">Signaler sans hésiter</p><p class="mt-1 text-sm text-muted">Motifs courts, une phrase rassurante, bouton actif après le choix.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">07 · Bluesky, BeReal</p><p class="mt-1 font-display text-lg font-bold">Confirmer en voyant tout</p><p class="mt-1 text-sm text-muted">Récapitulatif : contenu, motif, destinataire, confidentialité.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">08 · komoot, Flo, Sora</p><p class="mt-1 font-display text-lg font-bold">Le merci dit la suite</p><p class="mt-1 text-sm text-muted">Examen par la modération, masquage si les règles ne sont pas respectées, lien vers les règles.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">09 · Weverse, Reddit</p><p class="mt-1 font-display text-lg font-bold">Supprimer en connaissance de cause</p><p class="mt-1 text-sm text-muted">Confirmation qui dit la conséquence, toast, compteurs à jour.</p></li>
+    <li class="card p-5"><p class="font-mono text-xs text-brand-ink">10 · Digg</p><p class="mt-1 font-display text-lg font-bold">Le fil reste compréhensible</p><p class="mt-1 text-sm text-muted">« Commentaire supprimé » ou « masqué par la modération » à la place du contenu, les réponses restent.</p></li>
+  </ol>
+</section>
+
+<section id="da" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">06 · Direction artistique</p><h2 class="h2">« Vigilance lumineuse » appliquée à la discussion</h2><p class="lede">Un fil calme : fond neutre, noms courts en gras, dates relatives en gris, le bleu pour Répondre et le champ, le rouge seulement pour Supprimer. Ses propres commentaires se reconnaissent à un fond primary-soft.</p></div>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="card p-5"><p class="eyebrow">Commentaire</p><div class="mt-3 grid gap-1 text-sm"><p><b>Sami L.</b> <span class="text-muted">· il y a 8 min</span></p><p>Les pompiers arrivent.</p><p class="text-xs text-primary">Répondre · ⋯</p></div><p class="mt-3 text-sm text-muted">Initiales dans un rond neutre ; pictogramme masqué pour « Citoyen anonyme ».</p></div>
+    <div class="card p-5"><p class="eyebrow">Réponse</p><div class="mt-3 border-l-2 border-line pl-3 text-sm"><p><b>Citoyen anonyme</b> <span class="text-muted">· il y a 4 min</span></p><p>Je passe par Saint-Martin.</p></div><p class="mt-3 text-sm text-muted">Un niveau, filet gauche, pas de cadre.</p></div>
+    <div class="card p-5"><p class="eyebrow">Champ</p><div class="mt-3 grid gap-1"><p class="text-xs text-muted">Commenter en tant que <b class="text-ink">Jean D.</b> ⌄</p><div class="rounded-full border border-line px-3 py-2 text-sm text-muted">Ajouter un commentaire…</div></div><p class="mt-3 text-sm text-muted">Collé en bas, bouton d'envoi rond, compteur au-delà de 400 caractères (500 au plus).</p></div>
+    <div class="card p-5"><p class="eyebrow">Masqué</p><p class="mt-3 rounded-lg bg-sunk p-2 text-sm italic text-muted">Ce commentaire a été masqué par la modération.</p><p class="mt-3 text-sm text-muted">Gris, italique, sans nom ni date : rien de lisible.</p></div>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="eyebrow">Mouvement</p><p class="mt-2 text-sm">Le titre « Commentaires » passe de la fiche à l'écran (smart animate). Le commentaire publié apparaît en fondu à sa place ; le fil défile jusqu'à lui. Animations réduites : apparition directe.</p></div>
+    <div class="card p-5"><p class="eyebrow">Sombre</p><p class="mt-2 text-sm">Commentaires sur la surface sombre, primary-soft sombre pour les siens, lignes « masqué » sur surface-2.</p></div>
+    <div class="card p-5"><p class="eyebrow">Accessibilité</p><p class="mt-2 text-sm">Chaque commentaire est un <span class="font-mono">article</span> nommé (auteur, date), les réponses sont annoncées « réponse à Sami L. ». Le champ a un libellé, le compteur est lu en fin de saisie, les toasts passent par <span class="font-mono">aria-live</span>. Zones tactiles de 48 px pour ⋯ et Répondre.</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="audit" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">07 · Audit</p><h2 class="h2">Nos écrans actuels</h2><p class="lede">Captures du prototype à la fin de la phase 6, au format 390 × 844. La fiche montre un aperçu des commentaires en lecture seule (décision G6) ; écrire, répondre et signaler annoncent la phase 7.</p></div>
+  <div class="strip">
+    <figure class="shot"><img src="{{img:ours-preview}}" alt="95 Alerte : section Commentaires · 8 de la fiche, un seul commentaire visible, bouton Voir les 8 commentaires"><figcaption><b>Aperçu sur la fiche</b><span class="text-positive">+</span> Nom public, date relative. <span class="text-incident">−</span> « 8 » annoncés, un seul visible ; pas de champ pour commenter.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-toast}}" alt="95 Alerte : toast La discussion complète arrive avec les commentaires (phase 7)"><figcaption><b>Voir les commentaires</b><span class="text-incident">−</span> Un toast d'attente à la place du fil.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-menu}}" alt="95 Alerte : menu Options avec Copier le lien et Signaler cette alerte"><figcaption><b>Menu ⋯</b><span class="text-positive">+</span> « Signaler cette alerte » avec une ligne d'aide. <span class="text-incident">−</span> Aucun menu sur un commentaire.</figcaption></figure>
+    <figure class="shot"><img src="{{img:ours-report}}" alt="95 Alerte : toast Le signalement d'un contenu arrive avec la modération"><figcaption><b>Signaler</b><span class="text-incident">−</span> Un toast d'attente : ni motif, ni confirmation, ni merci.</figcaption></figure>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ce qu'on garde</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>L'aperçu des 2 derniers commentaires sur la fiche</li><li>CommentItem, MenuRow, ConfirmModal, toasts</li><li>« Signaler cette alerte » dans le menu ⋯</li><li>Le contrôle des données personnelles (phase 6)</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on refond</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Compteur et liste cohérents (données de démonstration complétées)</li><li>« Voir les commentaires » ouvre le fil</li><li>CommentItem : menu ⋯, Répondre, état masqué</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Ce qu'on ajoute</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Écran Commentaires, champ, réponses, suppression</li><li>Signalement : motif, confirmer, merci</li><li>Règles de la communauté, états vide, erreur, hors connexion</li></ul></div>
+  </div>
+</section>
+
+<section id="cible" class="border-y border-line bg-sunk/60">
+  <div class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">08 · Écrans cibles</p><h2 class="h2">Le fil, l'écriture et le signalement</h2><p class="lede">Huit esquisses. Le champ reste en bas, le titre en haut ; le signalement suit le parcours du PRD (S10) : motif → confirmer → merci.</p></div>
+  <div class="flex gap-5 overflow-x-auto pb-4" role="list">
+    <div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Commentaires · 8</span><span> </span></div><div class="absolute inset-x-2 top-[34px] grid gap-2"><p class="rounded bg-sunk p-1 text-[6px] text-muted">Restez courtois et utile. Les commentaires sont modérés. <u>Règles de la communauté</u></p><div class="grid gap-0.5 "><p class="text-[7px]"><b class="text-ink">Sami L.</b> <span class="text-muted">· il y a 8 min</span></p><p class="text-[7px] text-ink">Les pompiers arrivent, on entend les sirènes.</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div><div class="grid gap-0.5 ml-3 border-l-2 border-line pl-1.5"><p class="text-[7px]"><b class="text-ink">Citoyen anonyme</b> <span class="text-muted">· il y a 4 min</span></p><p class="text-[7px] text-ink">Merci, je passe par Saint-Martin.</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div><div class="grid gap-0.5 "><p class="text-[7px]"><b class="text-ink">Inès B.</b> <span class="text-muted">· il y a 2 min</span></p><p class="text-[7px] text-ink">Fumée visible depuis l'Hautil.</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div><p class="text-[7px] text-primary">Voir 4 réponses de plus</p></div><div class="absolute inset-x-0 bottom-0 grid gap-1 border-t border-line bg-card p-2"><p class="text-[6px] text-muted">Commenter en tant que <b class="text-ink">Jean D.</b> ⌄</p><div class="flex items-center gap-1"><span class="flex-1 rounded-full border border-line px-2 py-1 text-[7px] text-muted">Ajouter un commentaire…</span><span class="grid h-5 w-5 place-items-center rounded-full bg-primary text-[8px] text-white">↑</span></div></div></div><p class="anno"><b>1 · Fil</b>Écran empilé depuis la fiche ; règle en tête (NYT), réponses d'un niveau (Glassdoor), champ en bas (Nextdoor).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Commentaires · 8</span><span> </span></div><div class="absolute inset-x-2 top-[34px] grid gap-2"><div class="grid gap-0.5 "><p class="text-[7px]"><b class="text-ink">Sami L.</b> <span class="text-muted">· il y a 8 min</span></p><p class="text-[7px] text-ink">Les pompiers arrivent, on entend les sirènes.</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div></div><div class="absolute inset-x-0 bottom-0 grid gap-1 border-t border-line bg-card p-2"><p class="rounded bg-primary/10 px-1.5 py-1 text-[6px] text-ink">En réponse à <b>Sami L.</b> <span class="float-right">✕</span></p><div class="rounded-lg border-2 border-primary px-2 py-1 text-[7px] text-ink">La rue Carnot est fermée côté gare.</div><p class="text-[6px] text-muted">Commenter en tant que <b class="text-ink">Jean D.</b> ⌄ · 38 / 500</p></div></div><p class="anno"><b>2 · Répondre</b>« En réponse à » au-dessus du champ (Coursera), compteur, identité modifiable (Glassdoor).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Commentaires · 9</span><span> </span></div><div class="absolute inset-x-2 top-[34px] grid gap-2"><div class="grid gap-0.5 "><p class="text-[7px]"><b class="text-ink">Sami L.</b> <span class="text-muted">· il y a 8 min</span></p><p class="text-[7px] text-ink">Les pompiers arrivent…</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div><div class="grid gap-0.5 ml-3 border-l-2 border-line rounded bg-primary/10 pl-1.5"><p class="text-[7px]"><b class="text-ink">Jean D. (vous)</b> <span class="text-muted">· à l'instant</span></p><p class="text-[7px] text-ink">La rue Carnot est fermée côté gare.</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div></div><span class="absolute inset-x-2 bottom-[58px] rounded bg-ink px-2 py-1 text-[7px] text-white">✓ Commentaire publié.</span><div class="absolute inset-x-0 bottom-0 grid gap-1 border-t border-line bg-card p-2"><p class="text-[6px] text-muted">Commenter en tant que <b class="text-ink">Jean D.</b> ⌄</p><div class="flex items-center gap-1"><span class="flex-1 rounded-full border border-line px-2 py-1 text-[7px] text-muted">Ajouter un commentaire…</span><span class="grid h-5 w-5 place-items-center rounded-full bg-primary text-[8px] text-white">↑</span></div></div></div><p class="anno"><b>3 · Publié</b>Toast « Commentaire publié. », son commentaire en primary-soft (Flo), compteur à jour partout.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Commentaires · 9</span><span> </span></div><div class="absolute inset-x-2 top-[34px] grid gap-2"><div class="grid gap-0.5 "><p class="text-[7px]"><b class="text-ink">Inès B.</b> <span class="text-muted">· il y a 8 min</span></p><p class="text-[7px] text-ink">Fumée visible depuis l'Hautil.</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div></div><div class="absolute inset-0 bg-ink/30"></div><div class="absolute inset-x-0 bottom-0 grid gap-1.5 rounded-t-xl bg-card p-2.5 pb-9"><p class="text-[8px] font-bold text-ink">Commentaire de Inès B.</p><p class="text-[7px] text-ink">↩ Répondre</p><p class="text-[7px] text-ink">⚑ Signaler ce commentaire<br><span class="text-[6px] text-muted">Offensant, faux, données personnelles…</span></p><p class="text-[7px] text-incident">🗑 Supprimer · seulement le vôtre</p></div></div><p class="anno"><b>4 · Menu ⋯</b>Feuille avec une ligne d'aide par action (Nextdoor) ; Supprimer seulement sur ses commentaires.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span> </span></div><div class="absolute inset-x-2 top-[34px] grid gap-1"><p class="text-[9px] font-bold text-ink">Pourquoi signalez-vous ce commentaire ?</p><p class="text-[6px] text-muted">Choisissez le motif le plus proche : la modération vérifiera l'ensemble des règles.</p><span class="rounded border border-line px-1.5 py-0.5 text-[7px] text-ink">Contenu faux</span><span class="rounded border border-2 border-primary px-1.5 py-0.5 text-[7px] text-ink">Offensant ou inapproprié</span><span class="rounded border border-line px-1.5 py-0.5 text-[7px] text-ink">Information dangereuse</span><span class="rounded border border-line px-1.5 py-0.5 text-[7px] text-ink">Spam</span><span class="rounded border border-line px-1.5 py-0.5 text-[7px] text-ink">Autre…</span><p class="text-[6px] text-muted">Votre signalement est confidentiel.</p></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Continuer</span></div><p class="anno"><b>5 · Motif</b>Motifs du PRD en RadioCards compactes, phrase rassurante (YouTube), confidentialité (BeReal).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Signaler</span><span> </span></div><div class="absolute inset-x-2 top-[34px] grid gap-1.5"><p class="text-[9px] font-bold text-ink">Confirmer le signalement</p><div class="rounded border border-line p-1.5 text-[7px] text-ink"><p class="text-muted">Commentaire de Inès B.</p>« Fumée visible depuis l'Hautil. »</div><p class="text-[7px] text-ink">Motif : <b>Offensant ou inapproprié</b> · <span class="text-primary">Modifier</span></p><div class="h-8 rounded border border-line p-1 text-[6px] text-muted">Précisez si besoin (facultatif)</div><p class="text-[6px] text-muted">Envoyé à l'équipe de modération de 95 Alerte.</p></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Envoyer le signalement</span></div><p class="anno"><b>6 · Confirmer</b>Récapitulatif avant l'envoi (Bluesky) : la confirmation que demande le PRD (§10.2).</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-10 grid justify-items-center gap-1.5 text-center"><span class="grid h-10 w-10 place-items-center rounded-full bg-primary/15 text-primary">⚑</span><p class="text-[9px] font-bold text-ink">Merci pour votre signalement</p><p class="text-[7px] text-muted">L'équipe de modération va examiner ce commentaire. S'il ne respecte pas les règles, il sera masqué.</p><p class="text-[7px] text-primary underline">Règles de la communauté</p></div><span class="absolute inset-x-2 bottom-3 rounded-md bg-primary py-1.5 text-center text-[8px] font-semibold text-white">Terminé</span></div><p class="anno"><b>7 · Merci</b>Ce qui va se passer (komoot, Flo), lien vers les règles (Sora) ; un seul bouton.</p></div><div class="grid w-[176px] flex-none content-start gap-3" role="listitem"><div class="mini"><div class="absolute inset-x-2 top-4 flex items-center justify-between text-[9px] text-ink"><span>‹</span><span class="text-[8px] font-semibold">Commentaires · 9</span><span> </span></div><div class="absolute inset-x-2 top-[34px] grid gap-2"><div class="grid gap-0.5 "><p class="text-[7px]"><b class="text-ink">Sami L.</b> <span class="text-muted">· il y a 8 min</span></p><p class="text-[7px] text-ink">Les pompiers arrivent…</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div><p class="rounded bg-sunk p-1.5 text-[7px] italic text-muted">Ce commentaire a été masqué par la modération.</p><div class="grid gap-0.5 ml-3 border-l-2 border-line pl-1.5"><p class="text-[7px]"><b class="text-ink">Citoyen anonyme</b> <span class="text-muted">· il y a 1 min</span></p><p class="text-[7px] text-ink">D'accord avec Sami.</p><p class="text-[6px] text-primary">Répondre · ⋯</p></div><p class="rounded bg-sunk p-1.5 text-[7px] italic text-muted">Commentaire supprimé par son auteur.</p></div><div class="absolute inset-x-0 bottom-0 grid gap-1 border-t border-line bg-card p-2"><p class="text-[6px] text-muted">Commenter en tant que <b class="text-ink">Jean D.</b> ⌄</p><div class="flex items-center gap-1"><span class="flex-1 rounded-full border border-line px-2 py-1 text-[7px] text-muted">Ajouter un commentaire…</span><span class="grid h-5 w-5 place-items-center rounded-full bg-primary text-[8px] text-white">↑</span></div></div></div><p class="anno"><b>8 · Masqué, supprimé</b>Ligne grise à la place du contenu (Digg) ; les réponses gardent leur contexte.</p></div>
+  </div>
+  </div>
+</section>
+
+<section id="plan" class="wrap grid gap-8 py-14">
+  <div class="grid gap-3"><p class="eyebrow">09 · Plan</p><h2 class="h2">Refonte en six lots</h2><p class="lede">Chaque lot livre les trois versions (prototype React artefact, canevas en clair et en sombre, code source React + TypeScript). Il passe par la revue de direction artistique (390, 375, 430) et le test de bout en bout. Les nouveaux composants entrent d'abord dans le Design System, avec l'étiquette « New ». Les écrans de la phase rejoignent le catalogue « Écrans par phase » ; S5, S9 et S10 y deviennent jouables.</p></div>
+  <div class="grid gap-4">
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L0 · Fil · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Lire la discussion</h3><p class="mt-2 text-sm text-muted">Tâche 7.1</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">CommentsScreen</span> : écran empilé « Commentaires · n » depuis la fiche (smart animate du titre), bandeau de règle en tête</li><li><span class="tag">CommentThread</span> : CommentItem (nom public, date relative, ⋯), réponses d'un niveau repliées au-delà de deux, « Voir plus » par 10</li><li>États : chargement (skeleton), vide (« Aucun commentaire pour le moment. Soyez le premier à réagir. »), erreur, hors connexion (lecture seule)</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Jamais d'email, de téléphone ni de lieu personnel</li><li>Le compteur est le même sur la fiche, la carte et la liste</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L1 · Écrire · 2 j</p><h3 class="mt-1 text-xl font-bold">Commenter, répondre</h3><p class="mt-2 text-sm text-muted">Tâche 7.2</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">Composer</span> collé en bas : « Commenter en tant que Jean D. ⌄ » (I1), champ qui grandit, 500 caractères, compteur</li><li>« En réponse à Sami L. ✕ » au-dessus du champ ; répondre à une réponse reste au même niveau</li><li>Publication → toast « Commentaire publié. », son commentaire en primary-soft ; refus si téléphone, plaque ou e-mail (contrôle de la phase 6)</li><li>Invité : feuille « Connectez-vous pour commenter »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>S9 jouable de bout en bout</li><li>Clavier : le champ reste visible au-dessus</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L2 · Supprimer · 0,5 j</p><h3 class="mt-1 text-xl font-bold">Retirer son commentaire</h3><p class="mt-2 text-sm text-muted">Tâche 7.3</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Menu ⋯ en feuille : Répondre, Signaler, Supprimer (seulement le sien)</li><li>ConfirmModal « Supprimer ce commentaire ? » → toast « Commentaire supprimé. »</li><li>S'il a des réponses : « Commentaire supprimé par son auteur. » à sa place</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Confirmation obligatoire (PRD §10.2)</li><li>Compteurs mis à jour partout</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L3 · Signaler l'alerte · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Motif → confirmer → merci</h3><p class="mt-2 text-sm text-muted">Tâche 7.4</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li><span class="tag">ReportContentFlow</span> : motifs du PRD (faux, offensant, information dangereuse, spam, illégal, mauvaise catégorie, mauvaise localisation, doublon, autre) en RadioCards compactes</li><li>Confirmer : récapitulatif, précision facultative (300 caractères), « Envoyer le signalement »</li><li>Merci : Spot, ce qui va se passer, « Règles de la communauté » (I6) ; ensuite « Signalée » dans le menu ⋯</li><li>Information dangereuse : rappel « En cas de danger immédiat, appelez le 112 »</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>S10 jouable de bout en bout</li><li>Un seul signalement par contenu et par personne</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L4 · Signaler un commentaire, modération · 1 j</p><h3 class="mt-1 text-xl font-bold">Même parcours, autres motifs</h3><p class="mt-2 text-sm text-muted">Tâches 7.5, 7.6</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>Même ReportContentFlow pour un commentaire (motifs adaptés : sans « mauvaise catégorie, localisation, doublon »)</li><li>Commentaire masqué : « Ce commentaire a été masqué par la modération. » (mode démo et données de démonstration)</li><li>Son propre commentaire masqué : explication et lien vers les règles</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Aucun contenu masqué n'est lisible</li><li>Les réponses restent lisibles</li></ul></div>
+        </div>
+      </article>
+      <article class="card grid gap-4 p-5 sm:p-6 lg:grid-cols-[220px_1fr]">
+        <div><p class="font-mono text-xs text-brand-ink">L5 · États, canevas, React + TypeScript · 1,5 j</p><h3 class="mt-1 text-xl font-bold">Livrer les trois versions</h3><p class="mt-2 text-sm text-muted">Tâche 7.C</p></div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <div><p class="font-semibold">Livrables</p><ul class="mt-1 grid gap-1 text-muted"><li>PHASE_SCREENS phase 7 (écrans et états) ; S5, S9 et S10 jouables</li><li>Planches du canevas en clair et en sombre, reliées pour Play</li><li>apps/prototype-web : mêmes écrans en React + TypeScript (types Comment, ContentReport), typecheck et build sans erreur</li></ul></div>
+          <div><p class="font-semibold">Critères</p><ul class="mt-1 grid gap-1 text-muted"><li>Parité des deux prototypes (texte et rendu)</li><li>Revue DA 390, 375, 430</li></ul></div>
+        </div>
+      </article>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="card p-5"><p class="font-bold">Ordre et charge</p><p class="mt-2 text-sm text-muted">L0, puis L1 et L2, puis L3 et L4, puis L5 : environ 8 jours. Canevas et React + TypeScript au fil des lots.</p></div>
+    <div class="card p-5"><p class="font-bold">Indicateurs (tests)</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>S9 : commentaire publié en moins de 15 s</li><li>S10 : signalement envoyé en 3 écrans</li><li>Compteur identique sur la fiche, la carte et la liste</li></ul></div>
+    <div class="card p-5"><p class="font-bold">Risques</p><ul class="mt-2 grid gap-1 text-sm text-muted"><li>Lever l'anonymat d'un auteur par un badge (I1)</li><li>Promettre un retrait automatique (I5)</li><li>Données personnelles dans un commentaire : contrôle de la phase 6</li></ul></div>
+  </div>
+</section>
+
+<section id="decisions" class="border-t border-line bg-sunk/60">
+  <div class="wrap grid gap-6 py-14">
+  <div class="grid gap-3"><p class="eyebrow">10 · Décisions</p><h2 class="h2">Avant de démarrer</h2><p class="lede">Ces points touchent l'anonymat (PRD §13, point 3), les confirmations obligatoires (§10.2) ou annoncent des fonctionnalités de la phase B (modération) : selon AGENTS.md, ils demandent une validation.</p></div>
+  <div class="overflow-x-auto rounded-2xl border border-line bg-card">
+    <table class="w-full min-w-[720px] text-left text-sm">
+      <thead class="bg-sunk text-xs uppercase tracking-wider text-muted"><tr><th class="p-3">#</th><th class="p-3">Question</th><th class="p-3">Recommandation</th><th class="p-3">Impact si non</th></tr></thead>
+      <tbody class="divide-y divide-line">
+        <tr><td class="p-3 font-mono">I1</td><td class="p-3">Identité des commentaires (PRD §13, point 3) : quelle règle ?</td><td class="p-3">Même règle que les alertes : « Jean D. » ou « Citoyen anonyme », choisi dans le champ (« Commenter en tant que … ⌄ »). Par défaut : le dernier choix, sinon le profil. Pas de badge « Auteur » sur une alerte anonyme, pour ne pas lever l'anonymat.</td><td class="p-3 text-muted">Règle de l'auteur non tranchée ; risque de lever l'anonymat de l'auteur d'une alerte</td></tr>
+        <tr><td class="p-3 font-mono">I2</td><td class="p-3">Où lire et écrire : sur la fiche, en feuille ou dans un écran ?</td><td class="p-3">Écran empilé « Commentaires » ouvert depuis la fiche (« Voir les 8 commentaires » et « Commenter ») ; la fiche garde l'aperçu des 2 derniers (G6).</td><td class="p-3 text-muted">Feuille trop petite avec le clavier ; fiche trop longue</td></tr>
+        <tr><td class="p-3 font-mono">I3</td><td class="p-3">Profondeur des réponses ?</td><td class="p-3">Un seul niveau ; répondre à une réponse reste dans le même fil avec « En réponse à … ». Réponses repliées au-delà de deux.</td><td class="p-3 text-muted">Fils en escalier illisibles sur mobile</td></tr>
+        <tr><td class="p-3 font-mono">I4</td><td class="p-3">Signalement : combien d'étapes (PRD §10.2, S10) ?</td><td class="p-3">Trois : motif → confirmer (récapitulatif, précision facultative) → merci. La confirmation est l'écran de récapitulatif, pas une modale de plus.</td><td class="p-3 text-muted">Deux confirmations à la suite, ou aucune</td></tr>
+        <tr><td class="p-3 font-mono">I5</td><td class="p-3">Effet d'un signalement dans le prototype ?</td><td class="p-3">Le contenu reste visible (la modération est en phase B) ; pour la personne qui a signalé, l'action devient « Signalé » et ne peut pas être répétée. Le masquage se montre avec les données de démonstration et le mode démo.</td><td class="p-3 text-muted">Promettre un retrait automatique qui n'existe pas</td></tr>
+        <tr><td class="p-3 font-mono">I6</td><td class="p-3">Règles de la communauté : où les montrer avant la phase 9 (aide) ?</td><td class="p-3">Une feuille courte (5 règles : courtoisie, faits vérifiables, pas de données personnelles, pas d'appel au danger, signaler plutôt que répondre) ouverte depuis le bandeau du fil et le merci.</td><td class="p-3 text-muted">Lien vers une page qui n'existe pas</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="wrap flex flex-wrap items-center justify-between gap-3 py-8 text-sm text-muted">
+    <p>95 Alerte · rapport généré par <span class="font-mono">tools/build_benchmark_refonte.py commentaires-refonte</span> · sources Mobbin (iOS), aperçus à basse résolution.</p>
+    <p>Rapports liés : <span class="font-mono">signalement-refonte.html</span>, <span class="font-mono">fiche-refonte.html</span>, <span class="font-mono">benchmark-mobbin.html</span></p>
+  </div>
+</footer>
