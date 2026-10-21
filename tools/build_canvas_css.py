@@ -28,6 +28,9 @@ css = re.sub(r'@media \(prefers-color-scheme: dark\)\{:root:not\(\[data-theme="l
 css = css.replace(':root[data-theme="dark"] ', ".t-dark ")
 css = css.replace(':root[data-contrast="high"]', ".t-contrast")
 css = css.replace(':root[data-motion="reduce"] *', ".t-motion *")
+# Dans les planches, un bouton relié (Play) devient un <a> : les règles écrites pour « button » le couvrent aussi
+for sel in (".vote button", ".share-actions button", ".detail-thumbs button"):
+    css = css.replace(sel, sel.replace("button", ":is(button,a)"))
 
 SCREEN = r"""
 /* ============ ÉCRANS DU PROTOTYPE ============ */
@@ -53,6 +56,7 @@ SCREEN = r"""
 .modal-scrim{position:absolute;inset:0;z-index:45;background:rgba(15,23,42,.45);display:grid;place-items:center;padding:var(--s-6)}
 .modal-scrim .modal{width:100%}
 .toast-host{position:absolute;left:var(--s-3);right:var(--s-3);bottom:88px;z-index:50;display:grid;gap:var(--s-2)}
+.toast-host.no-tabbar{bottom:auto;top:calc(56px + var(--s-2))}
 .global-banner{border-radius:0;flex:none}
 .tabbar{flex:none;position:relative;z-index:30}
 .tabbar a.tab{text-decoration:none}

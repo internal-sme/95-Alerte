@@ -3275,7 +3275,7 @@ function ActivityScreen() {
         ) : tab === "comments" ? (
           <EmptyState icon="chat-circle" title="Aucun commentaire pour le moment.">Vos commentaires et les réponses reçues apparaîtront ici.</EmptyState>
         ) : followed.length ? followed.map((a) => <AlertCard key={a.id} alert={a} onOpen={() => open(a)} />)
-          : <EmptyState icon="bookmark-simple" title="Aucune alerte suivie.">Suivez une alerte pour être prévenu de son traitement.</EmptyState>}
+          : <EmptyState icon="bell" title="Aucune alerte suivie.">Suivez une alerte pour être prévenu de son traitement.</EmptyState>}
       </div>
     </div>
   );

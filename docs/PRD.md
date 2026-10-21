@@ -371,6 +371,6 @@ Dérivés des indicateurs prévus au back-office (§60) :
 2. Faut-il un compte pour **consulter** la carte, ou seulement pour signaler, commenter et voter ?
 3. Règle d'affichage de l'auteur des **commentaires** (« auteur ou anonyme selon règle »).
 4. Mode d'envoi réel aux services : email, accès agent au back-office, API.
-5. Numéros d'urgence affichés et contexte d'apparition du CTA « Appeler les services d'urgence ».
+5. Numéros d'urgence affichés et contexte d'apparition du CTA « Appeler les services d'urgence ». → **Décidé (phase 5, G3)** : 112, 18, 17, 15 et 114 (SMS) affichés sur l'écran « Situation urgente ? », ouvert depuis le rappel des catégories d'incident ; un seul bouton « Appeler le 112 » qui ouvre le clavier du téléphone, jamais d'appel automatique.
 6. Limites des médias : nombre de photos, durée et poids des vidéos.
 7. Fonctionnement réel du mode hors connexion.
